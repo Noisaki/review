@@ -2824,7 +2824,9 @@
     } else {
       desc.textContent = "บัญชีนี้ยังไม่ได้อยู่ในเซิร์ฟเวอร์ BGT — เข้าดิสคอร์ดผ่านปุ่มด้านบนแล้วกด 🔄 รีเฟรชยศ ได้เลย";
     }
-
+    if (usersCache && usersCache[profile.id]) {
+      myServerHearts = Number(usersCache[profile.id].heartsClicked) || 0;
+    }
     updateMyHeartsLine();
     updateCheerUI();
     renderLeaderboards();
