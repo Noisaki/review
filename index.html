@@ -2086,6 +2086,27 @@
 </head>
 <body>
 
+<!-- แถบเมนูด้านบนสไตล์เว็บเกม -->
+<nav class="top-navbar">
+  <div class="nav-left">
+    <img src="logo.png" alt="BGT" class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}">
+    <div class="nav-links">
+      <a onclick="window.scrollTo({top:0,behavior:'smooth'})">หน้าหลัก</a>
+      <a onclick="switchMainTab('eval'); document.getElementById('customForm').scrollIntoView({behavior:'smooth'});">ประเมินเกม</a>
+      <a onclick="switchMainTab('vote'); document.getElementById('gameVoteSection').scrollIntoView({behavior:'smooth'});">🔥 โหวตเกม</a>
+      <a href="#leaderboardSection">อันดับ</a>
+      <a href="#donateSection">🎁 สนับสนุน</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button type="button" class="nav-purple-btn" id="navLoginBtn" onclick="playClickSound(); openLoginInfo('');">ล็อกอิน</button>
+    <div id="navUserWrap" style="display:none; align-items:center; gap:8px;">
+      <span class="nav-user-badge"><span class="nav-user-tag">BGT</span> <span id="navUserName">-</span></span>
+      <button type="button" class="nav-purple-btn" onclick="playClickSound(); document.getElementById('profileCard').scrollIntoView({behavior:'smooth'});">โปรไฟล์</button>
+    </div>
+  </div>
+</nav>
+
 <!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
 <audio id="realCryAudio" src="cry.mp3" loop preload="auto" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/cry.mp3';}"></audio>
 
@@ -3027,6 +3048,8 @@
     flushPendingHearts();
     clearToken();
     applyLoggedOutUI();
+    const adminPanel = document.getElementById('voteAdminPanel');
+    if (adminPanel) adminPanel.style.display = 'none';
     showToast("ออกจากระบบเรียบร้อยแล้ว");
   }
 
