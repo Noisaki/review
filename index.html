@@ -5,1649 +5,541 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎄 แบบประเมินคุณภาพการแปลภาษาไทยในเกม | Ben the Game Translator</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- เชื่อมต่อ Firebase Realtime Database SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <style>
     :root {
-      --xmas-red: #dc2626;
-      --xmas-red-dark: #991b1b;
-      --xmas-green: #15803d;
-      --xmas-green-dark: #14532d;
-      --xmas-gold: #f59e0b;
-      --xmas-gold-light: #fde68a;
-      --discord: #5865F2;
-      --itch: #fa5c5c;
+      --xmas-red: #dc2626; --xmas-red-dark: #991b1b;
+      --xmas-green: #15803d; --xmas-green-dark: #14532d;
+      --xmas-gold: #f59e0b; --discord: #5865F2;
       --glow: rgba(245, 158, 11, 0.35);
       --card-bg: rgba(255, 255, 255, 0.94);
       --text-main: #1e293b;
-      --text-muted: #64748b;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       font-family: 'Prompt', sans-serif;
       background: linear-gradient(135deg, #052e16 0%, #0f3d2e 45%, #450a0a 100%);
-      color: var(--text-main);
-      margin: 0;
-      padding: 68px 16px 70px;
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-      transition: background 1.2s ease, filter 0.8s ease;
+      color: var(--text-main); margin: 0; padding: 68px 16px 70px;
+      min-height: 100vh; position: relative; overflow-x: hidden;
+      transition: background 1.2s ease;
     }
 
-    /* =========================================
-       ม่านเลือดหยดด้านบนจอ
-       ========================================= */
+    /* ม่านเลือด & เอฟเฟกต์โหมดสยองขวัญ */
     .blood-curtain {
-      position: fixed;
-      top: -320px;
-      left: 0;
-      width: 100%;
-      height: 320px;
-      z-index: 90;
-      pointer-events: none;
+      position: fixed; top: -320px; left: 0; width: 100%; height: 320px;
+      z-index: 90; pointer-events: none;
       transition: top 2.2s cubic-bezier(0.22, 1, 0.36, 1);
       filter: drop-shadow(0 10px 18px rgba(120, 0, 0, 0.85));
     }
-
-    body.horror-mode .blood-curtain {
-      top: -10px;
-    }
-
+    body.horror-mode .blood-curtain { top: -10px; }
     .blood-vignette {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 89;
-      opacity: 0;
+      position: fixed; inset: 0; pointer-events: none; z-index: 89; opacity: 0;
       box-shadow: inset 0 0 140px rgba(185, 0, 0, 0.95), inset 0 0 60px rgba(0, 0, 0, 0.95);
       transition: opacity 1.5s ease;
     }
-
-    body.horror-mode .blood-vignette {
-      opacity: 1;
-      animation: pulseVignette 2.5s infinite alternate ease-in-out;
-    }
-
+    body.horror-mode .blood-vignette { opacity: 1; animation: pulseVignette 2.5s infinite alternate ease-in-out; }
     @keyframes pulseVignette {
       0% { box-shadow: inset 0 0 120px rgba(150, 0, 0, 0.85), inset 0 0 50px rgba(0, 0, 0, 0.95); }
       100% { box-shadow: inset 0 0 190px rgba(220, 0, 0, 1), inset 0 0 80px rgba(0, 0, 0, 1); }
     }
-
-    /* =========================================
-       โหมดสยองขวัญ (HORROR CURSED THEME)
-       ========================================= */
-    body.horror-mode {
-      background: radial-gradient(circle at center, #2b0000 0%, #090000 75%, #000000 100%) !important;
-      color: #fca5a5;
-    }
-
+    body.horror-mode { background: radial-gradient(circle at center, #2b0000 0%, #090000 75%, #000000 100%) !important; color: #fca5a5; }
     body.horror-mode .orb-1 { background: #7f1d1d !important; opacity: 0.7; }
     body.horror-mode .orb-2 { background: #450a0a !important; opacity: 0.8; }
     body.horror-mode .orb-3 { background: #991b1b !important; opacity: 0.5; }
-
-    body.horror-mode .header-card,
-    body.horror-mode .cheer-spotlight-card,
-    body.horror-mode .section-card,
-    body.horror-mode .donate-card {
-      background: rgba(18, 2, 2, 0.94) !important;
-      border-color: #991b1b !important;
+    body.horror-mode .header-card, body.horror-mode .discord-profile-card,
+    body.horror-mode .cheer-spotlight-card, body.horror-mode .leaderboard-card,
+    body.horror-mode .section-card, body.horror-mode .donate-card {
+      background: rgba(18, 2, 2, 0.94) !important; border-color: #991b1b !important;
       box-shadow: 0 20px 50px rgba(185, 28, 28, 0.35), inset 0 0 30px rgba(127, 29, 29, 0.4) !important;
       color: #fecaca !important;
     }
-
-    body.horror-mode .logo-showcase {
-      background: radial-gradient(circle at center, #450a0a 0%, #000000 90%) !important;
-      border-bottom-color: #dc2626 !important;
-    }
-
-    body.horror-mode .studio-logo {
-      filter: sepia(1) hue-rotate(-50deg) saturate(6) drop-shadow(0 0 22px rgba(220, 38, 38, 0.9)) !important;
-      animation: creepyJitter 0.25s infinite !important;
-    }
-
+    body.horror-mode .logo-showcase { background: radial-gradient(circle at center, #450a0a 0%, #000000 90%) !important; border-bottom-color: #dc2626 !important; }
+    body.horror-mode .studio-logo { filter: sepia(1) hue-rotate(-50deg) saturate(6) drop-shadow(0 0 22px rgba(220, 38, 38, 0.9)) !important; animation: creepyJitter 0.25s infinite !important; }
     @keyframes creepyJitter {
-      0% { transform: translate(0, 0) skewX(0deg); }
+      0%, 100% { transform: translate(0, 0); }
       25% { transform: translate(-2px, 1px) skewX(-1deg); }
       50% { transform: translate(2px, -1px) skewX(1deg); }
-      75% { transform: translate(-1px, -2px) skewX(0deg); }
-      100% { transform: translate(0, 0) skewX(0deg); }
+      75% { transform: translate(-1px, -2px); }
     }
-
-    body.horror-mode .animated-title,
-    body.horror-mode .cheer-title {
+    body.horror-mode .animated-title, body.horror-mode .cheer-title {
       background: linear-gradient(90deg, #ef4444, #dc2626, #991b1b) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
+      -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important;
     }
-
-    body.horror-mode .section-title,
-    body.horror-mode .sub-question,
-    body.horror-mode .game-title,
-    body.horror-mode .total-score-label,
-    body.horror-mode .total-score-subtext,
-    body.horror-mode .cheer-subtext {
-      color: #fca5a5 !important;
+    body.horror-mode .section-title, body.horror-mode .sub-question, body.horror-mode .game-title,
+    body.horror-mode .total-score-label, body.horror-mode .total-score-subtext, body.horror-mode .cheer-subtext,
+    body.horror-mode .lb-title, body.horror-mode .lb-user-name, body.horror-mode .profile-name,
+    body.horror-mode .discord-guest-info h3, body.horror-mode .discord-guest-info p, body.horror-mode .profile-stats-line { color: #fca5a5 !important; }
+    body.horror-mode .section-header, body.horror-mode .lb-header { border-bottom-color: #7f1d1d !important; }
+    body.horror-mode .vn-dialogue-box, body.horror-mode .question-block, body.horror-mode .game-card,
+    body.horror-mode textarea, body.horror-mode .total-score-card, body.horror-mode .cheer-progress-box,
+    body.horror-mode .lb-row { background: rgba(30, 4, 4, 0.92) !important; border-color: #7f1d1d !important; color: #fecaca !important; }
+    body.horror-mode .social-btn, body.horror-mode .pill-control-btn, body.horror-mode .music-toggle-btn {
+      background: linear-gradient(135deg, #450a0a, #1f0202) !important; border-color: #dc2626 !important; color: #fca5a5 !important;
     }
-
-    body.horror-mode .section-header {
-      border-bottom-color: #7f1d1d !important;
-    }
-
-    body.horror-mode .vn-dialogue-box,
-    body.horror-mode .question-block,
-    body.horror-mode .game-card,
-    body.horror-mode textarea,
-    body.horror-mode .total-score-card,
-    body.horror-mode .cheer-progress-box {
-      background: rgba(30, 4, 4, 0.92) !important;
-      border-color: #7f1d1d !important;
-      color: #fecaca !important;
-    }
-
-    body.horror-mode .social-btn,
-    body.horror-mode .pill-control-btn,
-    body.horror-mode .music-toggle-btn {
-      background: linear-gradient(135deg, #450a0a, #1f0202) !important;
-      border-color: #dc2626 !important;
-      color: #fca5a5 !important;
-      box-shadow: 0 0 12px rgba(220, 38, 38, 0.35) !important;
-    }
-
     body.horror-mode .mega-cheer-btn {
-      background: linear-gradient(135deg, #7f1d1d, #450a0a) !important;
-      border-color: #ef4444 !important;
-      color: #ffffff !important;
-      box-shadow: 0 0 24px rgba(220, 38, 38, 0.65) !important;
-      animation: pulseVignette 1.8s infinite alternate !important;
+      background: linear-gradient(135deg, #7f1d1d, #450a0a) !important; border-color: #ef4444 !important;
+      color: #ffffff !important; box-shadow: 0 0 24px rgba(220, 38, 38, 0.65) !important; animation: pulseVignette 1.8s infinite alternate !important;
     }
-
     body.horror-mode .mega-cheer-btn.completed-part {
-      background: linear-gradient(135deg, #14532d, #166534) !important;
-      border-color: #4ade80 !important;
-      color: #dcfce7 !important;
-      box-shadow: 0 0 22px rgba(74, 222, 128, 0.5) !important;
-      animation: none !important;
+      background: linear-gradient(135deg, #14532d, #166534) !important; border-color: #4ade80 !important;
+      color: #dcfce7 !important; box-shadow: 0 0 22px rgba(74, 222, 128, 0.5) !important; animation: none !important;
+    }
+    body.horror-mode .cheer-bar-track { background: #2b0505 !important; }
+    body.horror-mode .cheer-bar-fill { background: linear-gradient(90deg, #991b1b, #ef4444, #fca5a5) !important; }
+    body.horror-mode .cheer-progress-labels { color: #fca5a5 !important; }
+    body.horror-mode .rating-btn span { background: #1f0404 !important; border-color: #7f1d1d !important; color: #f87171 !important; }
+    body.horror-mode .rating-btn input:checked + span { background: #991b1b !important; color: #ffffff !important; }
+    body.horror-mode .step-pill, body.horror-mode .rating-feedback, body.horror-mode .genre-tag,
+    body.horror-mode .cheer-rank-badge, body.horror-mode .live-sync-badge, body.horror-mode .lb-score-badge {
+      background: #450a0a !important; color: #fca5a5 !important; border-color: #991b1b !important;
     }
 
-    body.horror-mode .cheer-bar-track {
-      background: #2b0505 !important;
-    }
-
-    body.horror-mode .cheer-bar-fill {
-      background: linear-gradient(90deg, #991b1b, #ef4444, #fca5a5) !important;
-    }
-
-    body.horror-mode .cheer-progress-labels {
-      color: #fca5a5 !important;
-    }
-
-    body.horror-mode .rating-btn span {
-      background: #1f0404 !important;
-      border-color: #7f1d1d !important;
-      color: #f87171 !important;
-    }
-
-    body.horror-mode .rating-btn input:checked + span {
-      background: #991b1b !important;
-      color: #ffffff !important;
-      box-shadow: 0 0 15px rgba(220, 38, 38, 0.8) !important;
-    }
-
-    body.horror-mode .step-pill,
-    body.horror-mode .rating-feedback,
-    body.horror-mode .genre-tag,
-    body.horror-mode .cheer-rank-badge,
-    body.horror-mode .live-sync-badge {
-      background: #450a0a !important;
-      color: #fca5a5 !important;
-      border-color: #991b1b !important;
-    }
-
-    /* =========================================
-       แถบควบคุมลอยมุมขวาบน
-       ========================================= */
+    /* แถบควบคุมลอยด้านบน */
     .floating-controls {
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      left: 14px;
-      z-index: 100;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      pointer-events: none;
+      position: fixed; top: 14px; right: 14px; left: 14px; z-index: 100;
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; pointer-events: none;
     }
-
-    .floating-controls > * {
-      pointer-events: auto;
-    }
-
+    .floating-controls > * { pointer-events: auto; }
     .music-player-pill {
-      background: rgba(10, 35, 24, 0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: #fef3c7;
-      border: 1.5px solid rgba(251, 191, 36, 0.55);
-      padding: 6px 14px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-      font-size: 0.82rem;
+      background: rgba(10, 35, 24, 0.88); backdrop-filter: blur(12px); color: #fef3c7;
+      border: 1.5px solid rgba(251, 191, 36, 0.55); padding: 6px 14px; border-radius: 999px;
+      display: flex; align-items: center; gap: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.35); font-size: 0.82rem;
     }
-
     .music-toggle-btn {
-      background: linear-gradient(135deg, #dc2626, #b91c1c);
-      color: white;
-      border: none;
-      border-radius: 999px;
-      padding: 5px 12px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: transform 0.15s ease, filter 0.2s;
+      background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none;
+      border-radius: 999px; padding: 5px 12px; font-family: 'Prompt', sans-serif;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;
     }
-
-    .music-toggle-btn:hover {
-      filter: brightness(1.12);
-      transform: scale(1.04);
-    }
-
-    .volume-control {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .volume-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 78px;
-      height: 5px;
-      background: rgba(254, 243, 199, 0.3);
-      border-radius: 999px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #fbbf24;
-      border: 2px solid #ffffff;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
-    }
-
-    .volume-slider::-moz-range-thumb {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #fbbf24;
-      border: 2px solid #ffffff;
-      cursor: pointer;
-    }
-
-    .volume-percent {
-      font-size: 0.75rem;
-      color: #fde68a;
-      min-width: 32px;
-      text-align: right;
-      font-weight: 600;
-    }
-
+    .volume-control { display: flex; align-items: center; gap: 6px; }
+    .volume-slider { -webkit-appearance: none; appearance: none; width: 78px; height: 5px; background: rgba(254, 243, 199, 0.3); border-radius: 999px; outline: none; cursor: pointer; }
+    .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fbbf24; border: 2px solid #fff; cursor: pointer; }
+    .volume-percent { font-size: 0.75rem; color: #fde68a; min-width: 32px; text-align: right; font-weight: 600; }
     .pill-control-btn {
-      background: rgba(10, 35, 24, 0.88);
-      backdrop-filter: blur(12px);
-      color: #fef3c7;
-      border: 1.5px solid rgba(251, 191, 36, 0.45);
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
-      transition: all 0.2s ease;
-      text-decoration: none;
+      background: rgba(10, 35, 24, 0.88); backdrop-filter: blur(12px); color: #fef3c7;
+      border: 1.5px solid rgba(251, 191, 36, 0.45); padding: 8px 14px; border-radius: 999px;
+      font-family: 'Prompt', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+      transition: all 0.2s ease; text-decoration: none;
     }
+    .pill-control-btn:hover { background: #15803d; color: #fff; transform: translateY(-2px); }
+    .pill-donate-jump { background: linear-gradient(90deg, #dc2626, #f59e0b); border-color: rgba(255,255,255,0.7); color: #fff; font-weight: 600; }
 
-    .pill-control-btn:hover {
-      background: #15803d;
-      color: #ffffff;
-      transform: translateY(-2px);
-    }
-
-    .pill-donate-jump {
-      background: linear-gradient(90deg, #dc2626, #f59e0b);
-      border-color: rgba(255, 255, 255, 0.7);
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    /* พื้นหลังเอฟเฟกต์แสงคริสต์มาสและเกล็ดหิมะ */
-    .bg-effects {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(85px);
-      opacity: 0.55;
-      animation: floatOrb 14s infinite alternate ease-in-out;
-      transition: background 1.2s ease;
-    }
-
+    /* พื้นหลังแสง & หิมะ */
+    .bg-effects { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(85px); opacity: 0.55; animation: floatOrb 14s infinite alternate ease-in-out; }
     .orb-1 { width: 460px; height: 460px; background: #dc2626; top: -110px; left: -100px; }
     .orb-2 { width: 520px; height: 520px; background: #16a34a; bottom: -150px; right: -100px; animation-delay: -5s; }
     .orb-3 { width: 360px; height: 360px; background: #f59e0b; top: 38%; left: 58%; opacity: 0.35; animation-delay: -9s; }
-
     @keyframes floatOrb {
       0% { transform: translate(0, 0) scale(1); }
       50% { transform: translate(60px, -50px) scale(1.12); }
       100% { transform: translate(-40px, 70px) scale(0.95); }
     }
+    #snowCanvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+    .container { max-width: 940px; margin: 0 auto; position: relative; z-index: 1; }
 
-    #snowCanvas {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .container {
-      max-width: 920px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
-    @keyframes floatLogo {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-6px); }
-    }
-
-    @keyframes floatIcon {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-4px) rotate(8deg); }
-    }
-
-    @keyframes popIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      80% { transform: scale(1.08); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes scanLine {
-      0% { top: 6%; opacity: 0.25; }
-      50% { top: 90%; opacity: 1; }
-      100% { top: 6%; opacity: 0.25; }
-    }
-
-    @keyframes floatUpFade {
-      0% { transform: translateY(0) scale(0.85); opacity: 1; }
-      100% { transform: translateY(-145px) scale(1.55); opacity: 0; }
-    }
-
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes gradientFlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    @keyframes floatLogo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes floatIcon { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(8deg); } }
+    @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes scanLine { 0%, 100% { top: 6%; opacity: 0.25; } 50% { top: 90%; opacity: 1; } }
+    @keyframes floatUpFade { 0% { transform: translateY(0) scale(0.85); opacity: 1; } 100% { transform: translateY(-145px) scale(1.55); opacity: 0; } }
     @keyframes heartbeatGlow {
-      0%, 100% { transform: scale(1); box-shadow: 0 10px 28px rgba(236, 72, 153, 0.45), 0 0 0 0 rgba(244, 63, 94, 0.5); }
-      50% { transform: scale(1.025); box-shadow: 0 14px 36px rgba(236, 72, 153, 0.65), 0 0 0 10px rgba(244, 63, 94, 0); }
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 28px rgba(236,72,153,0.45), 0 0 0 0 rgba(244,63,94,0.5); }
+      50% { transform: scale(1.025); box-shadow: 0 14px 36px rgba(236,72,153,0.65), 0 0 0 10px rgba(244,63,94,0); }
     }
 
-    /* ส่วนหัวและแท่นโชว์โลโก้ BGT */
+    /* ส่วนหัวโลโก้ BGT */
     .header-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 2px solid rgba(253, 230, 138, 0.85);
-      border-radius: 26px;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
-      margin-bottom: 24px;
-      text-align: center;
-      animation: fadeSlideUp 0.6s ease-out;
-      position: relative;
+      background: var(--card-bg); backdrop-filter: blur(16px); border: 2px solid rgba(253,230,138,0.85);
+      border-radius: 26px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.38);
+      margin-bottom: 22px; text-align: center; animation: fadeSlideUp 0.6s ease-out;
     }
-
     .logo-showcase {
-      position: relative;
-      width: 100%;
-      padding: 16px 16px;
+      position: relative; width: 100%; padding: 16px;
       background: radial-gradient(circle at center, #15803d 0%, #7f1d1d 68%, #071f14 100%);
-      border-bottom: 3px solid #fbbf24;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-bottom: 3px solid #fbbf24; overflow: hidden; display: flex; align-items: center; justify-content: center;
     }
-
     .logo-showcase::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(253, 230, 138, 0.28) 1.2px, transparent 1.2px);
-      background-size: 22px 22px;
-      opacity: 0.7;
+      content: ""; position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(253,230,138,0.28) 1.2px, transparent 1.2px);
+      background-size: 22px 22px; opacity: 0.7;
     }
-
-    .festive-corner-decor {
-      position: absolute;
-      top: 12px;
-      font-size: 1.5rem;
-      z-index: 3;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-      animation: floatIcon 3s ease-in-out infinite;
-    }
+    .festive-corner-decor { position: absolute; top: 12px; font-size: 1.5rem; z-index: 3; animation: floatIcon 3s ease-in-out infinite; }
     .decor-left { left: 16px; }
     .decor-right { right: 16px; animation-delay: -1.5s; }
-
     .studio-logo {
-      position: relative;
-      z-index: 2;
-      max-width: 760px;
-      width: 98%;
-      height: auto;
-      margin: -62px auto -54px;
-      filter: drop-shadow(0 8px 26px rgba(251, 191, 36, 0.6)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.35));
-      animation: floatLogo 3.5s ease-in-out infinite;
-      transition: transform 0.3s ease;
+      position: relative; z-index: 2; max-width: 760px; width: 98%; height: auto; margin: -62px auto -54px;
+      filter: drop-shadow(0 8px 26px rgba(251,191,36,0.6)); animation: floatLogo 3.5s ease-in-out infinite;
     }
-
-    @media (max-width: 600px) {
-      .studio-logo {
-        max-width: 500px;
-        margin: -34px auto -30px;
-      }
-    }
-
-    .studio-logo:hover {
-      transform: scale(1.04) rotate(-1deg);
-    }
-
-    .header-text {
-      padding: 26px 24px 30px;
-      position: relative;
-    }
-
+    @media (max-width: 600px) { .studio-logo { max-width: 500px; margin: -34px auto -30px; } }
+    .header-text { padding: 24px 24px 28px; }
     .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706);
-      background-size: 200% 200%;
-      animation: gradientFlow 5s ease infinite;
-      color: white;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      padding: 6px 18px;
-      border-radius: 999px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 12px var(--glow);
-      position: relative;
-      overflow: hidden;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706); background-size: 200% 200%;
+      animation: gradientFlow 5s ease infinite; color: white; font-size: 0.8rem; font-weight: 600;
+      padding: 6px 18px; border-radius: 999px; margin-bottom: 12px; position: relative; overflow: hidden;
     }
-
-    .brand-badge::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
-      animation: shimmer 3s infinite;
-    }
-
+    .brand-badge::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent); animation: shimmer 3s infinite; }
     .animated-title {
-      font-family: 'Kanit', sans-serif;
-      margin: 0 0 10px 0;
-      font-size: 1.95rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706, #dc2626);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientFlow 5s ease infinite;
-      line-height: 1.3;
+      font-family: 'Kanit', sans-serif; margin: 0 0 10px 0; font-size: 1.95rem; font-weight: 700;
+      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706, #dc2626); background-size: 300% 300%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientFlow 5s ease infinite;
     }
-
-    .floating-gamepad {
-      display: inline-block;
-      -webkit-text-fill-color: initial;
-      animation: floatIcon 2.5s ease-in-out infinite;
-    }
-
+    .floating-gamepad { display: inline-block; -webkit-text-fill-color: initial; animation: floatIcon 2.5s ease-in-out infinite; }
     .vn-dialogue-box {
-      display: inline-block;
-      background: #fef2f2;
-      border: 1.5px solid #fecaca;
-      border-radius: 14px;
-      padding: 10px 18px;
-      margin-top: 6px;
-      margin-bottom: 18px;
-      color: #334155;
-      font-size: 0.95rem;
-      min-height: 44px;
+      display: inline-block; background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 14px;
+      padding: 10px 18px; margin: 6px 0 18px; color: #334155; font-size: 0.95rem; min-height: 44px;
     }
-
-    .cursor-blink {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background-color: var(--xmas-red);
-      margin-left: 3px;
-      vertical-align: middle;
-      animation: blink 0.8s infinite;
-    }
-
-    @keyframes blink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
-
-    .social-bar {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
+    .cursor-blink { display: inline-block; width: 2px; height: 1em; background: var(--xmas-red); margin-left: 3px; vertical-align: middle; animation: blink 0.8s infinite; }
+    @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    .social-bar { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
     .social-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-decoration: none;
-      color: white;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 600; text-decoration: none; color: white;
+      transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.18);
     }
-
-    .social-btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    }
-
+    .social-btn:hover { transform: translateY(-3px) scale(1.03); }
     .btn-itch { background: linear-gradient(135deg, #dc2626, #991b1b); }
     .btn-x { background: linear-gradient(135deg, #1e293b, #0f172a); }
     .btn-discord { background: linear-gradient(135deg, #5865F2, #4338ca); }
 
     /* =========================================
-       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
+       การ์ดโปรไฟล์ DISCORD & ปุ่ม LOGIN (Discord เท่านั้น)
+       ========================================= */
+    .discord-profile-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(238,242,255,0.96));
+      backdrop-filter: blur(16px); border: 2px solid #818cf8; border-radius: 22px;
+      padding: 18px 24px; box-shadow: 0 14px 34px rgba(88, 101, 242, 0.22);
+      margin-bottom: 22px; animation: fadeSlideUp 0.62s ease-out;
+    }
+    .discord-guest-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .discord-guest-info h3 { font-family: 'Kanit', sans-serif; margin: 0 0 4px 0; font-size: 1.18rem; color: #312e81; }
+    .discord-guest-info p { margin: 0; font-size: 0.88rem; color: #475569; }
+    .discord-login-cta-btn {
+      background: linear-gradient(135deg, #5865F2, #4338ca); color: #fff; border: 2px solid #c7d2fe;
+      padding: 12px 24px; border-radius: 14px; font-family: 'Kanit', sans-serif; font-size: 1.05rem;
+      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.35); transition: all 0.2s ease;
+    }
+    .discord-login-cta-btn:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.08); }
+
+    .discord-logged-bar { display: none; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .profile-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .profile-avatar-wrap {
+      width: 64px; height: 64px; border-radius: 50%; padding: 3px;
+      background: #cbd5e1; flex-shrink: 0; position: relative;
+    }
+    .profile-avatar-wrap.tier-1 { background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 0 12px rgba(34,197,94,0.5); }
+    .profile-avatar-wrap.tier-2 { background: linear-gradient(135deg, #38bdf8, #2563eb); box-shadow: 0 0 14px rgba(59,130,246,0.6); }
+    .profile-avatar-wrap.tier-3 { background: linear-gradient(135deg, #f43f5e, #ec4899); box-shadow: 0 0 16px rgba(244,63,94,0.65); }
+    .profile-avatar-wrap.tier-4 {
+      background: linear-gradient(135deg, #fde047, #f59e0b, #dc2626, #f59e0b); background-size: 200% 200%;
+      animation: gradientFlow 3s ease infinite; box-shadow: 0 0 20px rgba(245,158,11,0.85);
+    }
+    .profile-avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #1e293b; display: block; border: 2px solid #fff; }
+    .profile-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .profile-name { font-family: 'Kanit', sans-serif; font-size: 1.22rem; font-weight: 700; color: #1e293b; }
+    .profile-role-pill {
+      font-family: 'Kanit', sans-serif; font-size: 0.82rem; font-weight: 700; padding: 3px 12px;
+      border-radius: 999px; background: #e2e8f0; color: #475569; border: 1px solid #cbd5e1;
+    }
+    .profile-role-pill.tier-1 { background: #dcfce7; color: #166534; border-color: #86efac; }
+    .profile-role-pill.tier-2 { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
+    .profile-role-pill.tier-3 { background: #ffe4e6; color: #be123c; border-color: #fda4af; }
+    .profile-role-pill.tier-4 { background: linear-gradient(90deg, #fef08a, #fde68a); color: #92400e; border-color: #f59e0b; box-shadow: 0 2px 10px rgba(245,158,11,0.35); }
+    .profile-stats-line { font-size: 0.86rem; color: #475569; }
+    .profile-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .profile-mini-btn {
+      background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; padding: 7px 14px;
+      border-radius: 10px; font-family: 'Prompt', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    }
+    .profile-logout-btn { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+
+    /* =========================================
+       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000)
        ========================================= */
     .cheer-spotlight-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 241, 242, 0.96));
-      backdrop-filter: blur(16px);
-      border: 2.5px solid #fb7185;
-      border-radius: 26px;
-      padding: 26px 24px;
-      box-shadow: 0 18px 42px rgba(225, 29, 72, 0.22);
-      margin-bottom: 24px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      animation: fadeSlideUp 0.65s ease-out;
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(255,241,242,0.96));
+      backdrop-filter: blur(16px); border: 2.5px solid #fb7185; border-radius: 26px;
+      padding: 26px 24px; box-shadow: 0 18px 42px rgba(225,29,72,0.22);
+      margin-bottom: 22px; text-align: center; animation: fadeSlideUp 0.65s ease-out;
     }
-
-    .cheer-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
+    .cheer-top-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
     .cheer-title {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 0;
-      background: linear-gradient(90deg, #e11d48, #f59e0b, #dc2626);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientFlow 4s ease infinite;
+      font-family: 'Kanit', sans-serif; font-size: 1.5rem; font-weight: 700; margin: 0;
+      background: linear-gradient(90deg, #e11d48, #f59e0b, #dc2626); background-size: 200% 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientFlow 4s ease infinite;
     }
-
     .cheer-rank-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, #ffe4e6, #fef3c7);
-      border: 1.5px solid #fda4af;
-      color: #be123c;
-      font-family: 'Kanit', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 5px 14px;
-      border-radius: 999px;
-      box-shadow: 0 3px 10px rgba(225, 29, 72, 0.15);
-      transition: transform 0.2s ease;
+      display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #ffe4e6, #fef3c7);
+      border: 1.5px solid #fda4af; color: #be123c; font-family: 'Kanit', sans-serif; font-size: 0.9rem;
+      font-weight: 700; padding: 5px 14px; border-radius: 999px;
     }
-
     .live-sync-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: #dcfce7;
-      border: 1px solid #86efac;
-      color: #166534;
-      font-size: 0.76rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 5px; background: #dcfce7;
+      border: 1px solid #86efac; color: #166534; font-size: 0.76rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
     }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #22c55e;
-      display: inline-block;
-      animation: pulseLive 1.5s infinite;
-    }
-
-    @keyframes pulseLive {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.35); }
-    }
-
-    .cheer-subtext {
-      color: #475569;
-      font-size: 0.92rem;
-      margin: 0 0 18px 0;
-      line-height: 1.5;
-    }
-
-    .mega-cheer-wrapper {
-      position: relative;
-      display: inline-block;
-      margin-bottom: 18px;
-    }
-
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; animation: pulseLive 1.5s infinite; }
+    @keyframes pulseLive { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.35); } }
+    .cheer-subtext { color: #475569; font-size: 0.92rem; margin: 0 0 18px 0; line-height: 1.5; }
+    .mega-cheer-wrapper { position: relative; display: inline-block; margin-bottom: 18px; }
     .mega-cheer-btn {
-      background: linear-gradient(135deg, #f43f5e, #e11d48, #f59e0b);
-      background-size: 200% 200%;
-      color: white;
-      border: 3px solid #fde68a;
-      padding: 16px 36px;
-      border-radius: 999px;
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      animation: heartbeatGlow 2.2s infinite ease-in-out;
-      transition: transform 0.08s ease, filter 0.2s;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      background: linear-gradient(135deg, #f43f5e, #e11d48, #f59e0b); background-size: 200% 200%;
+      color: white; border: 3px solid #fde68a; padding: 16px 36px; border-radius: 999px;
+      font-family: 'Kanit', sans-serif; font-size: 1.3rem; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+      animation: heartbeatGlow 2.2s infinite ease-in-out; transition: transform 0.08s ease; user-select: none;
     }
-
-    .mega-cheer-btn:hover {
-      filter: brightness(1.08);
-    }
-
-    .mega-cheer-btn:active {
-      transform: scale(0.91) !important;
-    }
-
+    .mega-cheer-btn:active { transform: scale(0.91) !important; }
     .cheer-counter-pill {
-      background: rgba(0, 0, 0, 0.28);
-      padding: 4px 14px;
-      border-radius: 999px;
-      font-size: 1.12rem;
-      font-weight: 800;
-      color: #fef08a;
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(0,0,0,0.28); padding: 4px 14px; border-radius: 999px;
+      font-size: 1.12rem; font-weight: 800; color: #fef08a; border: 1px solid rgba(255,255,255,0.35);
     }
-
     .combo-pill {
-      position: absolute;
-      top: -12px;
-      right: -14px;
-      background: linear-gradient(135deg, #f59e0b, #dc2626);
-      color: white;
-      font-family: 'Kanit', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 800;
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 2px solid white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-      opacity: 0;
-      transform: scale(0.5);
-      transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
+      position: absolute; top: -12px; right: -14px; background: linear-gradient(135deg, #f59e0b, #dc2626);
+      color: white; font-family: 'Kanit', sans-serif; font-size: 0.85rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 999px; border: 2px solid white;
+      opacity: 0; transform: scale(0.5); transition: opacity 0.2s, transform 0.2s; pointer-events: none;
     }
-
-    .combo-pill.active {
-      opacity: 1;
-      transform: scale(1) rotate(8deg);
-    }
-
-    .cheer-progress-box {
-      max-width: 660px;
-      margin: 0 auto;
-      background: #fff1f2;
-      border: 1.5px solid #fecdd3;
-      border-radius: 16px;
-      padding: 12px 16px;
-    }
-
-    .cheer-progress-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #9f1239;
-      margin-bottom: 6px;
-      gap: 8px;
-    }
-
-    .cheer-bar-track {
-      width: 100%;
-      height: 12px;
-      background: #ffe4e6;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .cheer-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #f43f5e, #f59e0b, #16a34a);
-      border-radius: 999px;
-      transition: width 0.2s ease-out;
-    }
-
+    .combo-pill.active { opacity: 1; transform: scale(1) rotate(8deg); }
+    .cheer-progress-box { max-width: 660px; margin: 0 auto; background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 16px; padding: 12px 16px; }
+    .cheer-progress-labels { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; color: #9f1239; margin-bottom: 6px; gap: 8px; }
+    .cheer-bar-track { width: 100%; height: 12px; background: #ffe4e6; border-radius: 999px; overflow: hidden; }
+    .cheer-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f43f5e, #f59e0b, #16a34a); border-radius: 999px; transition: width 0.2s ease-out; }
     .cheer-celebration-banner {
-      display: none;
-      margin-top: 12px;
-      background: linear-gradient(90deg, #fef3c7, #fde68a, #fef3c7);
-      border: 2px solid #f59e0b;
-      color: #92400e;
-      font-family: 'Kanit', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      padding: 8px 16px;
-      border-radius: 12px;
-      animation: popIn 0.4s ease-out;
+      display: none; margin-top: 12px; background: linear-gradient(90deg, #fef3c7, #fde68a, #fef3c7);
+      border: 2px solid #f59e0b; color: #92400e; font-family: 'Kanit', sans-serif; font-size: 1rem;
+      font-weight: 700; padding: 8px 16px; border-radius: 12px; animation: popIn 0.4s ease-out;
     }
 
-    /* การ์ดแต่ละส่วน */
+    /* =========================================
+       กระดานจัดอันดับคู่: TOP DONATE & TOP CLICKERS
+       ========================================= */
+    .leaderboards-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+      margin-bottom: 24px; animation: fadeSlideUp 0.68s ease-out;
+    }
+    @media (max-width: 760px) { .leaderboards-grid { grid-template-columns: 1fr; } }
+    .leaderboard-card {
+      background: var(--card-bg); backdrop-filter: blur(16px); border: 1.5px solid rgba(253,230,138,0.85);
+      border-radius: 22px; padding: 20px; box-shadow: 0 14px 32px rgba(0,0,0,0.22);
+    }
+    .lb-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      border-bottom: 2px solid #fee2e2; padding-bottom: 10px; margin-bottom: 14px;
+    }
+    .lb-title { font-family: 'Kanit', sans-serif; font-size: 1.12rem; font-weight: 700; color: var(--xmas-red-dark); margin: 0; }
+    .lb-list { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; padding-right: 4px; }
+    .lb-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      background: #fffbeb; border: 1px solid #fde68a; border-radius: 14px; padding: 8px 12px;
+      transition: transform 0.15s ease;
+    }
+    .lb-row:hover { transform: translateX(3px); }
+    .lb-row.rank-1 { background: linear-gradient(90deg, #fef9c3, #fef3c7); border-color: #f59e0b; box-shadow: 0 3px 10px rgba(245,158,11,0.2); }
+    .lb-row.rank-2 { background: linear-gradient(90deg, #f8fafc, #f1f5f9); border-color: #94a3b8; }
+    .lb-row.rank-3 { background: linear-gradient(90deg, #fff7ed, #ffedd5); border-color: #fb923c; }
+    .lb-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .lb-rank-num { font-family: 'Kanit', sans-serif; font-size: 1.05rem; font-weight: 800; min-width: 28px; text-align: center; color: #991b1b; }
+    .lb-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.18); flex-shrink: 0; }
+    .lb-user-info { display: flex; flex-direction: column; min-width: 0; }
+    .lb-user-name { font-weight: 700; font-size: 0.9rem; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+    .lb-user-sub { font-size: 0.74rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+    .lb-score-badge {
+      background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
+      font-family: 'Kanit', sans-serif; font-size: 0.82rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+    }
+    .lb-empty { text-align: center; padding: 24px 12px; color: #64748b; font-size: 0.88rem; line-height: 1.5; }
+
+    /* การ์ดฟอร์ม & เกม */
     .section-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1.5px solid rgba(253, 230, 138, 0.75);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-      margin-bottom: 24px;
-      animation: fadeSlideUp 0.7s ease-out;
+      background: var(--card-bg); backdrop-filter: blur(16px); border: 1.5px solid rgba(253,230,138,0.75);
+      border-radius: 24px; padding: 28px; box-shadow: 0 18px 40px rgba(0,0,0,0.25); margin-bottom: 24px;
     }
+    .section-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; border-bottom: 2px solid #fee2e2; padding-bottom: 14px; margin-bottom: 20px; }
+    .section-title { font-family: 'Kanit', sans-serif; font-size: 1.3rem; font-weight: 600; color: var(--xmas-red-dark); display: flex; align-items: center; gap: 10px; margin: 0; }
+    .step-pill { background: #dcfce7; color: var(--xmas-green-dark); border: 1px solid #86efac; font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      border-bottom: 2px solid #fee2e2;
-      padding-bottom: 14px;
-      margin-bottom: 20px;
-    }
-
-    .section-title {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--xmas-red-dark);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0;
-    }
-
-    .step-pill {
-      background: #dcfce7;
-      color: var(--xmas-green-dark);
-      border: 1px solid #86efac;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 4px 12px;
-      border-radius: 999px;
-    }
-
-    /* ตารางการ์ดเลือกเกม */
-    .game-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 18px;
-    }
-
-    .game-option input[type="radio"] {
-      display: none;
-    }
-
+    .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+    .game-option input[type="radio"] { display: none; }
     .game-card {
-      position: relative;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      opacity: 0;
-      animation: fadeSlideUp 0.5s ease-out forwards;
+      position: relative; border: 2px solid #e2e8f0; border-radius: 18px; overflow: hidden; cursor: pointer;
+      transition: all 0.3s ease; background: #fff; display: flex; flex-direction: column; height: 100%;
     }
-
-    .game-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 12px 24px rgba(220, 38, 38, 0.22);
-      border-color: var(--xmas-gold);
-    }
-
-    .game-card img {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
-      background: #e2e8f0;
-      transition: transform 0.4s ease;
-    }
-
-    .game-card:hover img {
-      transform: scale(1.05);
-    }
-
-    .img-container {
-      overflow: hidden;
-      position: relative;
-    }
-
+    .game-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 24px rgba(220,38,38,0.22); border-color: var(--xmas-gold); }
+    .game-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #e2e8f0; transition: transform 0.4s ease; }
+    .game-card:hover img { transform: scale(1.05); }
+    .img-container { overflow: hidden; position: relative; }
     .genre-tag {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(20, 83, 45, 0.88);
-      backdrop-filter: blur(4px);
-      color: #fef3c7;
-      border: 1px solid rgba(253, 230, 138, 0.5);
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 8px;
-      z-index: 2;
+      position: absolute; top: 10px; left: 10px; background: rgba(20,83,45,0.88); color: #fef3c7;
+      border: 1px solid rgba(253,230,138,0.5); font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 8px; z-index: 2;
     }
-
     .check-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      background: linear-gradient(135deg, #dc2626, #f59e0b);
-      color: white;
-      border-radius: 50%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      font-weight: bold;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-      z-index: 2;
+      position: absolute; top: 10px; right: 10px; width: 30px; height: 30px;
+      background: linear-gradient(135deg, #dc2626, #f59e0b); color: white; border-radius: 50%;
+      display: none; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: bold; z-index: 2;
     }
+    .game-option input[type="radio"]:checked + .game-card { border-color: var(--xmas-red); background: #fef2f2; box-shadow: 0 0 0 4px rgba(220,38,38,0.25); transform: translateY(-4px); }
+    .game-option input[type="radio"]:checked + .game-card .check-badge { display: flex; animation: popIn 0.3s ease-out; }
+    .game-title { padding: 14px 12px; font-size: 0.92rem; font-weight: 600; text-align: center; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
 
-    .game-option input[type="radio"]:checked + .game-card {
-      border-color: var(--xmas-red);
-      background: #fef2f2;
-      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.25), 0 12px 24px rgba(220, 38, 38, 0.22);
-      transform: translateY(-4px);
-    }
-
-    .game-option input[type="radio"]:checked + .game-card .check-badge {
-      display: flex;
-      animation: popIn 0.3s ease-out;
-    }
-
-    .game-title {
-      padding: 14px 12px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      text-align: center;
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-main);
-    }
-
-    /* ส่วนให้คะแนน */
-    .question-block {
-      background: rgba(254, 252, 248, 0.95);
-      border: 1px solid #fde68a;
-      border-radius: 16px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
-      transition: border-color 0.2s;
-    }
-
-    .question-block:hover {
-      border-color: #f59e0b;
-    }
-
-    .sub-question {
-      font-size: 1.02rem;
-      font-weight: 600;
-      color: #1e293b;
-      margin: 0 0 12px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .rating-feedback {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--xmas-green-dark);
-      background: #dcfce7;
-      padding: 3px 10px;
-      border-radius: 8px;
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-
-    .rating-feedback.visible {
-      opacity: 1;
-    }
-
-    .rating-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .rating-btn input {
-      display: none;
-    }
-
+    /* ให้คะแนน & กล่องสรุปคะแนนรวม */
+    .question-block { background: rgba(254,252,248,0.95); border: 1px solid #fde68a; border-radius: 16px; padding: 18px 20px; margin-bottom: 16px; }
+    .sub-question { font-size: 1.02rem; font-weight: 600; color: #1e293b; margin: 0 0 12px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .rating-feedback { font-size: 0.85rem; font-weight: 500; color: var(--xmas-green-dark); background: #dcfce7; padding: 3px 10px; border-radius: 8px; opacity: 0; transition: opacity 0.25s; }
+    .rating-feedback.visible { opacity: 1; }
+    .rating-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .rating-btn input { display: none; }
     .rating-btn span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 54px;
-      padding: 10px 18px;
-      border-radius: 12px;
-      border: 2px solid #cbd5e1;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      background: #ffffff;
-      color: #475569;
+      display: inline-flex; align-items: center; justify-content: center; min-width: 54px; padding: 10px 18px;
+      border-radius: 12px; border: 2px solid #cbd5e1; cursor: pointer; font-weight: 600; background: #fff; color: #475569; transition: all 0.2s ease;
     }
+    .rating-btn span:hover { border-color: var(--xmas-red); color: var(--xmas-red-dark); transform: translateY(-2px); }
+    .rating-btn input:checked + span { background: linear-gradient(135deg, #dc2626, #15803d); color: white; border-color: transparent; transform: scale(1.05); }
 
-    .rating-btn span:hover {
-      border-color: var(--xmas-red);
-      color: var(--xmas-red-dark);
-      transform: translateY(-2px);
-    }
-
-    .rating-btn input:checked + span {
-      background: linear-gradient(135deg, #dc2626, #15803d);
-      color: white;
-      border-color: transparent;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
-      transform: scale(1.05);
-    }
-
-    /* กล่องสรุปผลคะแนนรวม 4 ระดับ */
-    .total-score-card {
-      margin-top: 20px;
-      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-      border: 2px solid #cbd5e1;
-      border-radius: 18px;
-      padding: 18px 22px;
-      transition: all 0.35s ease;
-    }
-
-    .total-score-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .total-score-label {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    .total-score-rank {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      padding: 5px 16px;
-      border-radius: 999px;
-      background: #e2e8f0;
-      color: #475569;
-      transition: all 0.3s ease;
-    }
-
-    .score-progress-track {
-      width: 100%;
-      height: 12px;
-      background: #e2e8f0;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    .score-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: #94a3b8;
-      border-radius: 999px;
-      transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.3s ease;
-    }
-
-    .total-score-subtext {
-      font-size: 0.88rem;
-      color: #64748b;
-      margin: 0;
-    }
-
-    .total-score-card.tier-terrible {
-      background: linear-gradient(135deg, #fef2f2, #fee2e2);
-      border-color: #ef4444;
-      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.2);
-    }
-    .total-score-card.tier-terrible .total-score-rank { background: #dc2626; color: #ffffff; }
+    .total-score-card { margin-top: 20px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 2px solid #cbd5e1; border-radius: 18px; padding: 18px 22px; transition: all 0.35s ease; }
+    .total-score-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+    .total-score-label { font-family: 'Kanit', sans-serif; font-size: 1.1rem; font-weight: 600; color: #334155; }
+    .total-score-rank { font-family: 'Kanit', sans-serif; font-size: 1.05rem; font-weight: 700; padding: 5px 16px; border-radius: 999px; background: #e2e8f0; color: #475569; }
+    .score-progress-track { width: 100%; height: 12px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
+    .score-progress-fill { height: 100%; width: 0%; background: #94a3b8; border-radius: 999px; transition: width 0.4s ease; }
+    .total-score-subtext { font-size: 0.88rem; color: #64748b; margin: 0; }
+    .total-score-card.tier-terrible { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-color: #ef4444; }
+    .total-score-card.tier-terrible .total-score-rank { background: #dc2626; color: #fff; }
     .total-score-card.tier-terrible .score-progress-fill { background: linear-gradient(90deg, #7f1d1d, #dc2626); }
-
-    .total-score-card.tier-bad {
-      background: linear-gradient(135deg, #fff7ed, #ffedd5);
-      border-color: #f97316;
-    }
-    .total-score-card.tier-bad .total-score-rank { background: #ea580c; color: #ffffff; }
+    .total-score-card.tier-bad { background: linear-gradient(135deg, #fff7ed, #ffedd5); border-color: #f97316; }
+    .total-score-card.tier-bad .total-score-rank { background: #ea580c; color: #fff; }
     .total-score-card.tier-bad .score-progress-fill { background: linear-gradient(90deg, #ea580c, #f59e0b); }
-
-    .total-score-card.tier-good {
-      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-      border-color: #22c55e;
-    }
-    .total-score-card.tier-good .total-score-rank { background: #16a34a; color: #ffffff; }
+    .total-score-card.tier-good { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #22c55e; }
+    .total-score-card.tier-good .total-score-rank { background: #16a34a; color: #fff; }
     .total-score-card.tier-good .score-progress-fill { background: linear-gradient(90deg, #15803d, #22c55e); }
-
-    .total-score-card.tier-verygood {
-      background: linear-gradient(135deg, #fefce8, #fef3c7);
-      border-color: #f59e0b;
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
-    }
-    .total-score-card.tier-verygood .total-score-rank { background: linear-gradient(90deg, #d97706, #15803d); color: #ffffff; }
+    .total-score-card.tier-verygood { background: linear-gradient(135deg, #fefce8, #fef3c7); border-color: #f59e0b; }
+    .total-score-card.tier-verygood .total-score-rank { background: linear-gradient(90deg, #d97706, #15803d); color: #fff; }
     .total-score-card.tier-verygood .score-progress-fill { background: linear-gradient(90deg, #16a34a, #f59e0b, #dc2626); }
 
-    textarea {
-      width: 100%;
-      border: 2px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 14px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.95rem;
-      resize: vertical;
-      min-height: 95px;
-      transition: all 0.2s;
-      background: #ffffff;
-    }
+    textarea { width: 100%; border: 2px solid #cbd5e1; border-radius: 14px; padding: 14px; font-family: 'Prompt', sans-serif; font-size: 0.95rem; resize: vertical; min-height: 95px; background: #fff; }
+    textarea:focus { outline: none; border-color: var(--xmas-green); box-shadow: 0 0 0 4px rgba(21,128,61,0.15); }
 
-    textarea:focus {
-      outline: none;
-      border-color: var(--xmas-green);
-      box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.15);
-    }
-
-    /* =========================================
-       ปุ่มส่งฟอร์ม & ซากปุ่ม
-       ========================================= */
-    .submit-zone {
-      position: relative;
-      margin-bottom: 28px;
-    }
-
+    /* ปุ่มส่ง & ซากปุ่ม */
+    .submit-zone { position: relative; margin-bottom: 28px; }
     .submit-btn {
-      width: 100%;
-      padding: 18px;
-      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706, #b91c1c);
-      background-size: 250% 250%;
-      animation: gradientFlow 5s ease infinite;
-      color: white;
-      border: 2px solid #fde68a;
-      border-radius: 16px;
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(185, 28, 28, 0.4);
-      transition: all 0.25s ease;
+      width: 100%; padding: 18px; background: linear-gradient(90deg, #b91c1c, #15803d, #d97706, #b91c1c);
+      background-size: 250% 250%; animation: gradientFlow 5s ease infinite; color: white; border: 2px solid #fde68a;
+      border-radius: 16px; font-family: 'Kanit', sans-serif; font-size: 1.2rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 10px 25px rgba(185,28,28,0.4); transition: all 0.25s ease;
     }
-
-    .submit-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(245, 158, 11, 0.5);
-    }
-
+    .submit-btn:hover { transform: translateY(-3px); }
     @keyframes buttonShatter {
-      0% { transform: scale(1) rotate(0deg); filter: brightness(1); opacity: 1; }
-      15% { transform: translate(-8px, 4px) rotate(-2deg); background: #7f1d1d; border-color: #ef4444; }
-      30% { transform: translate(8px, -4px) rotate(2deg); background: #450a0a; }
-      45% { transform: translate(-10px, -2px) rotate(-3deg) scale(1.04); filter: contrast(2); }
-      65% { transform: scale(0.92) rotate(4deg); opacity: 0.7; }
+      0% { transform: scale(1); opacity: 1; }
+      25% { transform: translate(-8px, 4px) rotate(-2deg); background: #7f1d1d; }
+      55% { transform: translate(8px, -4px) rotate(3deg) scale(1.04); }
       100% { transform: translateY(60px) scale(0.4) rotate(14deg); opacity: 0; }
     }
-
-    .submit-btn.destroying {
-      animation: buttonShatter 0.85s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53) !important;
-      pointer-events: none;
-    }
-
+    .submit-btn.destroying { animation: buttonShatter 0.85s forwards !important; pointer-events: none; }
     .destroyed-button-grave {
-      display: none;
-      width: 100%;
-      padding: 18px;
+      display: none; width: 100%; padding: 18px;
       background: repeating-linear-gradient(45deg, #1a0303, #1a0303 12px, #2b0505 12px, #2b0505 24px);
-      border: 2px dashed #991b1b;
-      border-radius: 16px;
-      color: #ef4444;
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.08rem;
-      font-weight: 700;
-      text-align: center;
-      letter-spacing: 0.5px;
-      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+      border: 2px dashed #991b1b; border-radius: 16px; color: #ef4444;
+      font-family: 'Kanit', sans-serif; font-size: 1.08rem; font-weight: 700; text-align: center;
     }
 
-    /* =========================================
-       โซน DONATE & QR CODE + ปุ่มขอโทษด้านล่าง (กด 3 ครั้ง)
-       ========================================= */
+    /* โซน Donate & QR Code + โซนขอโทษด้านล่าง */
     .donate-card {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(254, 242, 242, 0.95));
-      backdrop-filter: blur(16px);
-      border: 2px solid #fbbf24;
-      border-radius: 26px;
-      padding: 30px 26px;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
-      position: relative;
-      overflow: hidden;
-      animation: fadeSlideUp 0.8s ease-out;
+      background: linear-gradient(145deg, rgba(255,255,255,0.97), rgba(254,242,242,0.95));
+      backdrop-filter: blur(16px); border: 2px solid #fbbf24; border-radius: 26px; padding: 30px 26px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.3); position: relative; overflow: hidden;
     }
-
     .donate-ribbon {
-      position: absolute;
-      top: 18px;
-      right: -34px;
-      background: linear-gradient(90deg, #dc2626, #15803d);
-      color: #fef3c7;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 5px 40px;
-      transform: rotate(35deg);
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      position: absolute; top: 18px; right: -34px; background: linear-gradient(90deg, #dc2626, #15803d);
+      color: #fef3c7; font-size: 0.75rem; font-weight: 700; padding: 5px 40px; transform: rotate(35deg);
     }
-
-    .donate-layout {
-      display: grid;
-      grid-template-columns: 1.25fr 0.85fr;
-      gap: 24px;
-      align-items: center;
-    }
-
-    @media (max-width: 740px) {
-      .donate-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
+    .donate-layout { display: grid; grid-template-columns: 1.25fr 0.85fr; gap: 24px; align-items: center; }
+    @media (max-width: 740px) { .donate-layout { grid-template-columns: 1fr; } }
     .donate-title {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.45rem;
-      font-weight: 700;
-      margin: 0 0 8px 0;
-      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientFlow 4s ease infinite;
+      font-family: 'Kanit', sans-serif; font-size: 1.45rem; font-weight: 700; margin: 0 0 8px 0;
+      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706); background-size: 200% 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientFlow 4s ease infinite;
     }
-
-    .donate-desc {
-      color: #475569;
-      font-size: 0.92rem;
-      margin: 0 0 16px 0;
-      line-height: 1.55;
-    }
-
-    .role-showcase-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    @media (max-width: 480px) {
-      .role-showcase-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .role-badge-item {
-      background: #ffffff;
-      border: 1.5px solid #fde68a;
-      border-radius: 14px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.22s ease;
-    }
-
-    .role-badge-item:hover {
-      border-color: #dc2626;
-      background: #fef2f2;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(220, 38, 38, 0.14);
-    }
-
-    .role-emoji {
-      font-size: 1.45rem;
-    }
-
-    .role-info strong {
-      display: block;
-      font-size: 0.88rem;
-      color: #991b1b;
-    }
-
-    .role-info small {
-      font-size: 0.76rem;
-      color: #475569;
-    }
-
-    .discord-ticket-note {
-      background: rgba(21, 128, 61, 0.1);
-      border: 1px dashed #15803d;
-      color: #14532d;
-      padding: 11px 14px;
-      border-radius: 12px;
-      font-size: 0.84rem;
-      margin-bottom: 16px;
-      line-height: 1.55;
-    }
-
+    .donate-desc { color: #475569; font-size: 0.92rem; margin: 0 0 16px 0; line-height: 1.55; }
+    .role-showcase-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+    @media (max-width: 480px) { .role-showcase-grid { grid-template-columns: 1fr; } }
+    .role-badge-item { background: #fff; border: 1.5px solid #fde68a; border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+    .role-emoji { font-size: 1.45rem; }
+    .role-info strong { display: block; font-size: 0.88rem; color: #991b1b; }
+    .role-info small { font-size: 0.76rem; color: #475569; }
+    .discord-ticket-note { background: rgba(21,128,61,0.1); border: 1px dashed #15803d; color: #14532d; padding: 11px 14px; border-radius: 12px; font-size: 0.84rem; margin-bottom: 16px; line-height: 1.55; }
     .discord-ticket-btn {
-      width: 100%;
-      background: #5865F2;
-      color: white;
-      border: none;
-      padding: 13px 18px;
-      border-radius: 14px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 6px 16px rgba(88, 101, 242, 0.3);
-      transition: all 0.2s;
+      width: 100%; background: #5865F2; color: white; border: none; padding: 13px 18px; border-radius: 14px;
+      font-family: 'Prompt', sans-serif; font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 16px rgba(88,101,242,0.3);
     }
+    .qr-box-wrapper { background: linear-gradient(145deg, #14532d, #7f1d1d); border: 2px solid #fbbf24; border-radius: 22px; padding: 20px 18px; text-align: center; color: white; }
+    .qr-frame { position: relative; width: 215px; height: 245px; margin: 0 auto 12px; background: white; padding: 8px; border-radius: 16px; overflow: hidden; }
+    .qr-frame img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .qr-laser { position: absolute; left: 6%; width: 88%; height: 3px; background: linear-gradient(90deg, transparent, #dc2626, #fbbf24, #16a34a, transparent); animation: scanLine 2.6s ease-in-out infinite; pointer-events: none; }
+    .qr-badge-label { display: inline-block; background: rgba(251,191,36,0.22); border: 1px solid rgba(253,230,138,0.6); padding: 4px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; color: #fef3c7; margin-bottom: 8px; }
+    .qr-subtext { font-size: 0.82rem; color: #fef3c7; margin: 0; line-height: 1.5; }
+    .account-verify-tag { display: inline-block; margin-top: 6px; background: rgba(255,255,255,0.16); border: 1px solid rgba(253,230,138,0.4); padding: 4px 12px; border-radius: 8px; font-weight: 600; color: #fff; }
 
-    .discord-ticket-btn:hover {
-      background: #4752c4;
-      transform: translateY(-2px);
-    }
-
-    .qr-box-wrapper {
-      background: linear-gradient(145deg, #14532d, #7f1d1d);
-      border: 2px solid #fbbf24;
-      border-radius: 22px;
-      padding: 20px 18px;
-      text-align: center;
-      color: white;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
-      position: relative;
-    }
-
-    .qr-frame {
-      position: relative;
-      width: 215px;
-      height: 245px;
-      margin: 0 auto 12px;
-      background: white;
-      padding: 8px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 22px rgba(251, 191, 36, 0.55);
-    }
-
-    .qr-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .qr-laser {
-      position: absolute;
-      left: 6%;
-      width: 88%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #dc2626, #fbbf24, #16a34a, transparent);
-      box-shadow: 0 0 10px #fbbf24, 0 0 18px #dc2626;
-      border-radius: 999px;
-      animation: scanLine 2.6s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    .qr-badge-label {
-      display: inline-block;
-      background: rgba(251, 191, 36, 0.22);
-      border: 1px solid rgba(253, 230, 138, 0.6);
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #fef3c7;
-      margin-bottom: 8px;
-    }
-
-    .qr-subtext {
-      font-size: 0.82rem;
-      color: #fef3c7;
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    .account-verify-tag {
-      display: inline-block;
-      margin-top: 6px;
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(253, 230, 138, 0.4);
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-
-    /* =========================================
-       โซนปุ่มขอโทษด้านล่างสุด (กด 3 ครั้ง + คู่กับปุ่มด้านบน)
-       ========================================= */
-    .cursed-apology-zone {
-      display: none;
-      text-align: center;
-      padding: 26px 16px;
-      position: relative;
-    }
-
-    .cursed-stage-tag {
-      display: inline-block;
-      background: #450a0a;
-      border: 1px solid #ef4444;
-      color: #fca5a5;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 14px;
-      border-radius: 999px;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-    }
-
-    .cursed-apology-icon {
-      font-size: 3.6rem;
-      display: block;
-      margin: 0 auto 10px;
-      filter: drop-shadow(0 0 16px #ef4444);
-      animation: creepyJitter 0.3s infinite;
-    }
-
-    .cursed-apology-title {
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: #ef4444;
-      margin: 0 0 10px 0;
-      text-shadow: 0 0 14px #dc2626;
-    }
-
-    .cursed-apology-sub {
-      color: #fca5a5;
-      font-size: 0.96rem;
-      max-width: 600px;
-      margin: 0 auto 20px;
-      line-height: 1.65;
-    }
-
+    .cursed-apology-zone { display: none; text-align: center; padding: 26px 16px; }
+    .cursed-stage-tag { display: inline-block; background: #450a0a; border: 1px solid #ef4444; color: #fca5a5; font-size: 0.8rem; font-weight: 700; padding: 4px 14px; border-radius: 999px; margin-bottom: 10px; }
+    .cursed-apology-icon { font-size: 3.6rem; display: block; margin: 0 auto 10px; animation: creepyJitter 0.3s infinite; }
+    .cursed-apology-title { font-family: 'Kanit', sans-serif; font-size: 1.75rem; font-weight: 800; color: #ef4444; margin: 0 0 10px 0; }
+    .cursed-apology-sub { color: #fca5a5; font-size: 0.96rem; max-width: 600px; margin: 0 auto 20px; line-height: 1.65; }
     .apology-checklist-box {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 6px;
-      background: rgba(9, 0, 0, 0.75);
-      border: 1px solid #7f1d1d;
-      border-radius: 14px;
-      padding: 12px 20px;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-      color: #fecaca;
-      text-align: left;
+      display: inline-flex; flex-direction: column; gap: 6px; background: rgba(9,0,0,0.75);
+      border: 1px solid #7f1d1d; border-radius: 14px; padding: 12px 20px; margin-bottom: 20px; font-size: 0.9rem; color: #fecaca; text-align: left;
     }
-
     .apologize-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 16px 36px;
-      background: linear-gradient(135deg, #450a0a, #7f1d1d);
-      color: #ffffff;
-      border: 2px solid #ef4444;
-      border-radius: 999px;
-      font-family: 'Kanit', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 0 30px rgba(220, 38, 38, 0.65);
-      transition: transform 0.12s ease, background 0.25s, color 0.25s, border-color 0.25s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 16px 36px;
+      background: linear-gradient(135deg, #450a0a, #7f1d1d); color: #fff; border: 2px solid #ef4444;
+      border-radius: 999px; font-family: 'Kanit', sans-serif; font-size: 1.2rem; font-weight: 700; cursor: pointer;
     }
+    .apologize-btn.completed-part { background: linear-gradient(135deg, #14532d, #166534); border-color: #4ade80; color: #dcfce7; }
 
-    .apologize-btn:hover {
-      filter: brightness(1.15);
-      transform: scale(1.04);
-    }
+    .floating-heart { position: fixed; font-size: 1.65rem; pointer-events: none; z-index: 9999; animation: floatUpFade 1.2s ease-out forwards; }
+    .studio-footer { text-align: center; margin-top: 32px; color: #fde68a; font-size: 0.88rem; }
+    .studio-footer strong { color: #fff; }
 
-    .apologize-btn:active {
-      transform: scale(0.93);
-    }
-
-    .apologize-btn.completed-part {
-      background: linear-gradient(135deg, #14532d, #166534);
-      border-color: #4ade80;
-      color: #dcfce7;
-      box-shadow: 0 0 24px rgba(74, 222, 128, 0.55);
-    }
-
-    .floating-heart {
-      position: fixed;
-      font-size: 1.65rem;
-      pointer-events: none;
-      z-index: 9999;
-      animation: floatUpFade 1.2s ease-out forwards;
-    }
-
-    .studio-footer {
-      text-align: center;
-      margin-top: 32px;
-      color: #fde68a;
-      font-size: 0.88rem;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-    }
-
-    .studio-footer strong {
-      color: #ffffff;
-    }
-
-    /* หน้าต่างขอบคุณปกติ / หน้าต่างให้อภัย */
+    /* หน้าต่างป๊อปอัป */
     .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(5, 46, 22, 0.75);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 20px;
+      position: fixed; inset: 0; background: rgba(5,46,22,0.75); backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center; z-index: 999; padding: 20px;
     }
-
     .modal-box {
-      background: white;
-      border: 2px solid #fbbf24;
-      border-radius: 24px;
-      padding: 32px 28px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-      animation: popIn 0.35s ease-out;
+      background: white; border: 2px solid #fbbf24; border-radius: 24px; padding: 30px 26px;
+      max-width: 460px; width: 100%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.4); animation: popIn 0.35s ease-out;
     }
-
-    .modal-icon {
-      font-size: 3.5rem;
-      margin-bottom: 12px;
-      display: inline-block;
-      animation: floatIcon 2s infinite;
-    }
-
-    .modal-box h2 {
-      font-family: 'Kanit', sans-serif;
-      color: var(--xmas-red-dark);
-      margin: 0 0 10px 0;
-    }
-
-    .modal-box p {
-      color: #475569;
-      font-size: 0.95rem;
-      margin: 0 0 22px 0;
-      line-height: 1.5;
-    }
-
-    .modal-btns {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .modal-close-btn {
-      background: var(--xmas-green);
-      color: white;
-      border: none;
-      padding: 12px 22px;
-      border-radius: 12px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .modal-donate-btn {
-      background: linear-gradient(90deg, #dc2626, #f59e0b);
-      color: white;
-      border: none;
-      padding: 12px 22px;
-      border-radius: 12px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+    .modal-icon { font-size: 3.4rem; margin-bottom: 10px; display: inline-block; animation: floatIcon 2s infinite; }
+    .modal-box h2 { font-family: 'Kanit', sans-serif; color: var(--xmas-red-dark); margin: 0 0 10px 0; }
+    .modal-box p { color: #475569; font-size: 0.94rem; margin: 0 0 18px 0; line-height: 1.55; }
+    .trust-shield-list { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 12px 16px; text-align: left; font-size: 0.84rem; color: #334155; margin-bottom: 20px; line-height: 1.6; }
+    .modal-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .modal-close-btn { background: var(--xmas-green); color: white; border: none; padding: 12px 22px; border-radius: 12px; font-family: 'Prompt', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+    .modal-discord-go-btn { background: linear-gradient(135deg, #5865F2, #4338ca); color: white; border: none; padding: 12px 22px; border-radius: 12px; font-family: 'Prompt', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+    .modal-cancel-btn { background: #e2e8f0; color: #475569; border: none; padding: 12px 18px; border-radius: 12px; font-family: 'Prompt', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+    .modal-donate-btn { background: linear-gradient(90deg, #dc2626, #f59e0b); color: white; border: none; padding: 12px 22px; border-radius: 12px; font-family: 'Prompt', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
   </style>
 </head>
 <body>
 
-<!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
 <audio id="realCryAudio" src="cry.mp3" loop preload="auto" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/cry.mp3';}"></audio>
 
-<!-- ม่านเลือดไหลหยดจากขอบจอด้านบน -->
 <svg class="blood-curtain" viewBox="0 0 1440 320" preserveAspectRatio="none">
   <defs>
     <linearGradient id="bloodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#450a0a" />
-      <stop offset="55%" stop-color="#991b1b" />
-      <stop offset="100%" stop-color="#dc2626" />
+      <stop offset="0%" stop-color="#450a0a" /><stop offset="55%" stop-color="#991b1b" /><stop offset="100%" stop-color="#dc2626" />
     </linearGradient>
   </defs>
   <path fill="url(#bloodGrad)" d="M0,0 L1440,0 L1440,95 C1410,95 1405,210 1385,210 C1365,210 1360,115 1320,115 C1280,115 1275,265 1250,265 C1225,265 1220,105 1170,105 C1120,105 1110,190 1085,190 C1060,190 1055,85 1000,85 C945,85 940,295 910,295 C880,295 875,120 820,120 C765,120 760,225 735,225 C710,225 705,95 650,95 C595,95 585,275 555,275 C525,275 520,110 465,110 C410,110 400,200 375,200 C350,200 345,90 290,90 C235,90 230,285 200,285 C170,285 165,115 115,115 C65,115 55,230 30,230 C10,230 5,100 0,100 Z"></path>
 </svg>
 <div class="blood-vignette"></div>
 
-<!-- แถบควบคุมลอยมุมขวาบน -->
 <div class="floating-controls">
   <div class="music-player-pill">
     <button type="button" class="music-toggle-btn" id="musicToggleBtn" onclick="toggleChristmasMusic()">
@@ -1659,26 +551,16 @@
       <span class="volume-percent" id="volumePercentText">45%</span>
     </div>
   </div>
-
-  <a href="#donateSection" class="pill-control-btn pill-donate-jump corruptible" data-cursed="🙏 ไปขอโทษด้านล่าง..." onmouseenter="playHoverSound()" onclick="playCoinSound()">
-    🎁 สนับสนุนผลงาน
-  </a>
-
+  <a href="#donateSection" class="pill-control-btn pill-donate-jump corruptible" data-cursed="🙏 ไปขอโทษด้านล่าง..." onmouseenter="playHoverSound()" onclick="playCoinSound()">🎁 สนับสนุนผลงาน</a>
   <button type="button" class="pill-control-btn" id="soundToggle" onclick="toggleSound()">
     <span id="soundIcon">🔔</span> <span id="soundLabel" class="corruptible" data-cursed="👁️ หนีเสียงนี้ไม่ได้">เสียงปุ่ม: เปิด</span>
   </button>
 </div>
 
-<!-- เลเยอร์เอฟเฟกต์พื้นหลังคริสต์มาส & หิมะโปรยปราย -->
-<div class="bg-effects">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
+<div class="bg-effects"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
 <canvas id="snowCanvas"></canvas>
 
 <div class="container">
-  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT -->
   <div class="header-card">
     <div class="logo-showcase">
       <span class="festive-corner-decor decor-left" id="decorLeft">🎄✨</span>
@@ -1690,35 +572,56 @@
       <h1 class="animated-title" id="mainPageTitle">
         <span class="floating-gamepad" id="titleIcon">🎅</span> <span class="corruptible" data-cursed="นี่ผมดูแย่ขนาดนั้นเลยเหรอ...">แบบประเมินคุณภาพการแปลภาษาไทยในเกม</span>
       </h1>
-      <div class="vn-dialogue-box">
-        <span id="typewriterText"></span><span class="cursor-blink"></span>
-      </div>
-
+      <div class="vn-dialogue-box"><span id="typewriterText"></span><span class="cursor-blink"></span></div>
       <div class="social-bar">
-        <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="social-btn btn-itch corruptible" data-cursed="🥀 เกมที่ผมตั้งใจแปล... มันไร้ค่าเหรอ" onmouseenter="playHoverSound()" onclick="playClickSound()">
-          🎮 รวมเกมแปลไทยทั้งหมด (itch.io)
-        </a>
-        <a href="https://x.com/Benzielovely" target="_blank" rel="noopener" class="social-btn btn-x corruptible" data-cursed="🩸 ไม่มีใครอยากติดตามผมแล้ว..." onmouseenter="playHoverSound()" onclick="playClickSound()">
-          𝕏 ติดตามอัปเดต (@Benzielovely)
-        </a>
-        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="social-btn btn-discord corruptible" data-cursed="👁️ อย่าทิ้งผมไว้คนเดียวเลย..." onmouseenter="playHoverSound()" onclick="playClickSound()">
-          💬 เข้าดิสคอร์ดพูดคุย & รับยศ
-        </a>
+        <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="social-btn btn-itch corruptible" data-cursed="🥀 เกมที่ผมตั้งใจแปล... มันไร้ค่าเหรอ" onmouseenter="playHoverSound()" onclick="playClickSound()">🎮 รวมเกมแปลไทยทั้งหมด (itch.io)</a>
+        <a href="https://x.com/Benzielovely" target="_blank" rel="noopener" class="social-btn btn-x corruptible" data-cursed="🩸 ไม่มีใครอยากติดตามผมแล้ว..." onmouseenter="playHoverSound()" onclick="playClickSound()">𝕏 ติดตามอัปเดต (@Benzielovely)</a>
+        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="social-btn btn-discord corruptible" data-cursed="👁️ อย่าทิ้งผมไว้คนเดียวเลย..." onmouseenter="playHoverSound()" onclick="playClickSound()">💬 เข้าดิสคอร์ดพูดคุย & รับยศ</a>
       </div>
     </div>
   </div>
 
-  <!-- =========================================
-       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
-       ========================================= -->
+  <!-- การ์ดโปรไฟล์ DISCORD & ปุ่ม LOGIN (Discord เท่านั้น ไม่ใช้ Gmail) -->
+  <div class="discord-profile-card" id="discordProfileCard">
+    <div class="discord-guest-bar" id="discordGuestBar">
+      <div class="discord-guest-info">
+        <h3>💬 เข้าสู่ระบบด้วย Discord (สำหรับส่งหัวใจ & โชว์ยศโปรไฟล์)</h3>
+        <p>ล็อกอินผ่านระบบของ Discord โดยตรงเพื่อดึง <strong>รูปโปรไฟล์ + ยศผู้สนับสนุน</strong> และบันทึกยอดกดหัวใจขึ้นกระดานอันดับครับ</p>
+      </div>
+      <button type="button" class="discord-login-cta-btn" onmouseenter="playHoverSound()" onclick="openDiscordTrustModal()">
+        <svg width="22" height="22" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        Login with Discord
+      </button>
+    </div>
+
+    <div class="discord-logged-bar" id="discordLoggedBar">
+      <div class="profile-left">
+        <div class="profile-avatar-wrap" id="profileAvatarWrap">
+          <img src="" alt="Discord Avatar" class="profile-avatar-img" id="profileAvatarImg">
+        </div>
+        <div class="profile-meta">
+          <div class="profile-name-row">
+            <span class="profile-name" id="profileDisplayName">Username</span>
+            <span class="profile-role-pill" id="profileRoleBadge">กำลังตรวจยศ...</span>
+          </div>
+          <div class="profile-stats-line" id="profileStatsLine">ยอดส่งหัวใจของคุณ: <strong>0</strong> ดวง</div>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button type="button" class="profile-mini-btn" onclick="refreshDiscordRoles()" title="อัปเดตยศล่าสุดจาก Discord">🔄 รีเฟรชยศ</button>
+        <button type="button" class="profile-mini-btn profile-logout-btn" onclick="logoutDiscord()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- โซนปุ่มส่งหัวใจ 1,000,000 (Firebase Real-time + บังคับล็อกอิน Discord ก่อนกด) -->
   <div class="cheer-spotlight-card" id="cheerSpotlightSection">
     <div class="cheer-top-row">
       <h2 class="cheer-title" id="cheerTitle">💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator</h2>
       <span class="cheer-rank-badge" id="cheerRankBadge">🌱 ผู้เริ่มต้นส่งใจ</span>
       <span class="live-sync-badge" id="liveSyncBadge"><span class="live-dot"></span> <span id="liveSyncText">LIVE • ช่วยกันกดทั้งเว็บ</span></span>
     </div>
-    <p class="cheer-subtext" id="cheerSubtext">ทุกคนช่วยกันกดปุ่มหัวใจสะสมยอดรวมกันได้แบบเรียลไทม์! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีพลุฉลองพิเศษด้วยนะ UwU ✨</p>
-
+    <p class="cheer-subtext" id="cheerSubtext">ล็อกอินด้วย Discord แล้วกดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) พร้อมติดอันดับ Top 10! ✨</p>
     <div class="mega-cheer-wrapper">
       <button type="button" class="mega-cheer-btn" id="megaCheerBtn" onmouseenter="playHoverSound()" onclick="handleMegaCheerOrApology(event)">
         <span id="megaCheerLabel">❤️ กดส่งหัวใจให้กำลังใจ!</span>
@@ -1726,16 +629,31 @@
       </button>
       <span class="combo-pill" id="comboPill">COMBO x2!</span>
     </div>
-
     <div class="cheer-progress-box">
       <div class="cheer-progress-labels">
         <span id="cheerNextGoalText">เป้าหมายถัดไป: 10 หัวใจ (อุ้งเท้าให้กำลังใจ 🐾)</span>
         <span id="cheerPercentText">0%</span>
       </div>
-      <div class="cheer-bar-track">
-        <div class="cheer-bar-fill" id="cheerBarFill"></div>
-      </div>
+      <div class="cheer-bar-track"><div class="cheer-bar-fill" id="cheerBarFill"></div></div>
       <div class="cheer-celebration-banner" id="cheerCelebrationBanner"></div>
+    </div>
+  </div>
+
+  <!-- กระดานจัดอันดับคู่: TOP DONATE & TOP 10 นักส่งหัวใจ -->
+  <div class="leaderboards-grid" id="leaderboardsSection">
+    <div class="leaderboard-card">
+      <div class="lb-header">
+        <h3 class="lb-title">👑 Top Donate (ทำเนียบผู้สนับสนุน)</h3>
+        <span class="step-pill">ยศ Discord</span>
+      </div>
+      <div class="lb-list" id="topDonateList"><div class="lb-empty">กำลังโหลดรายชื่อผู้สนับสนุน... 🎄</div></div>
+    </div>
+    <div class="leaderboard-card">
+      <div class="lb-header">
+        <h3 class="lb-title">💖 Top 10 นักส่งหัวใจสูงสุด</h3>
+        <span class="step-pill">Real-time</span>
+      </div>
+      <div class="lb-list" id="topClickersList"><div class="lb-empty">กำลังโหลดอันดับนักส่งหัวใจ... 💖</div></div>
     </div>
   </div>
 
@@ -1743,7 +661,6 @@
   <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="return handleSubmit(event)">
     <input type="hidden" name="pageHistory" value="0,1,2,3">
 
-    <!-- ส่วนที่ 1: เลือกเกม -->
     <div class="section-card">
       <div class="section-header">
         <h2 class="section-title corruptible" data-cursed="🩸 ERROR // โปรเจกต์ทั้งหมดพังทลาย...">🎄 เลือกเกมที่ต้องการประเมิน</h2>
@@ -1752,7 +669,6 @@
       <div class="game-grid" id="gameGrid"></div>
     </div>
 
-    <!-- ส่วนที่ 2: ให้คะแนน + กล่องสรุปผลคะแนนรวม -->
     <div class="section-card">
       <div class="section-header">
         <h2 class="section-title corruptible" data-cursed="💔 คะแนนแห่งความผิดหวัง">⭐ ประเมินคุณภาพงานแปล</h2>
@@ -1760,10 +676,7 @@
       </div>
 
       <div class="question-block">
-        <div class="sub-question">
-          <span class="corruptible" data-cursed="1. ผมแปลผิดพลาดไปหมดเลยใช่ไหม...">1. ความถูกต้องของเนื้อหาและความหมาย</span>
-          <span class="rating-feedback" id="fb-1"></span>
-        </div>
+        <div class="sub-question"><span class="corruptible" data-cursed="1. ผมแปลผิดพลาดไปหมดเลยใช่ไหม...">1. ความถูกต้องของเนื้อหาและความหมาย</span><span class="rating-feedback" id="fb-1"></span></div>
         <div class="rating-group" data-target="fb-1">
           <label class="rating-btn"><input type="radio" name="entry.1009499701" value="1" required><span>1</span></label>
           <label class="rating-btn"><input type="radio" name="entry.1009499701" value="2"><span>2</span></label>
@@ -1774,10 +687,7 @@
       </div>
 
       <div class="question-block">
-        <div class="sub-question">
-          <span class="corruptible" data-cursed="2. ภาษาของผมมันอ่านไม่รู้เรื่องเลยเหรอ...">2. ความลื่นไหลและเป็นธรรมชาติของภาษาไทย</span>
-          <span class="rating-feedback" id="fb-2"></span>
-        </div>
+        <div class="sub-question"><span class="corruptible" data-cursed="2. ภาษาของผมมันอ่านไม่รู้เรื่องเลยเหรอ...">2. ความลื่นไหลและเป็นธรรมชาติของภาษาไทย</span><span class="rating-feedback" id="fb-2"></span></div>
         <div class="rating-group" data-target="fb-2">
           <label class="rating-btn"><input type="radio" name="entry.1063055141" value="1" required><span>1</span></label>
           <label class="rating-btn"><input type="radio" name="entry.1063055141" value="2"><span>2</span></label>
@@ -1788,10 +698,7 @@
       </div>
 
       <div class="question-block">
-        <div class="sub-question">
-          <span class="corruptible" data-cursed="3. ความพยายามตรวจคำของผมมันสูญเปล่าเหรอ...">3. การสะกดคำและเครื่องหมายวรรคตอน</span>
-          <span class="rating-feedback" id="fb-3"></span>
-        </div>
+        <div class="sub-question"><span class="corruptible" data-cursed="3. ความพยายามตรวจคำของผมมันสูญเปล่าเหรอ...">3. การสะกดคำและเครื่องหมายวรรคตอน</span><span class="rating-feedback" id="fb-3"></span></div>
         <div class="rating-group" data-target="fb-3">
           <label class="rating-btn"><input type="radio" name="entry.1066530576" value="1" required><span>1</span></label>
           <label class="rating-btn"><input type="radio" name="entry.1066530576" value="2"><span>2</span></label>
@@ -1802,10 +709,7 @@
       </div>
 
       <div class="question-block" style="margin-bottom: 0;">
-        <div class="sub-question">
-          <span class="corruptible" data-cursed="4. สุดท้ายผมก็ทำอะไรผิดทุกอย่างเลย...">4. ความพึงพอใจโดยรวมต่อแพตช์ภาษาไทย</span>
-          <span class="rating-feedback" id="fb-4"></span>
-        </div>
+        <div class="sub-question"><span class="corruptible" data-cursed="4. สุดท้ายผมก็ทำอะไรผิดทุกอย่างเลย...">4. ความพึงพอใจโดยรวมต่อแพตช์ภาษาไทย</span><span class="rating-feedback" id="fb-4"></span></div>
         <div class="rating-group" data-target="fb-4">
           <label class="rating-btn"><input type="radio" name="entry.1917282137" value="1" required><span>1</span></label>
           <label class="rating-btn"><input type="radio" name="entry.1917282137" value="2"><span>2</span></label>
@@ -1815,136 +719,73 @@
         </div>
       </div>
 
-      <!-- กล่องแสดงผลคะแนนรวม 4 ระดับ -->
       <div class="total-score-card" id="totalScoreCard">
         <div class="total-score-header">
           <span class="total-score-label" id="totalScoreText">📊 ผลคะแนนรวม: ยังให้คะแนนไม่ครบทั้ง 4 ข้อ</span>
           <span class="total-score-rank" id="totalScoreRank">รอการประเมิน</span>
         </div>
-        <div class="score-progress-track">
-          <div class="score-progress-fill" id="scoreProgressFill"></div>
-        </div>
+        <div class="score-progress-track"><div class="score-progress-fill" id="scoreProgressFill"></div></div>
         <p class="total-score-subtext" id="totalScoreDesc">กรุณาเลือกให้คะแนนทั้ง 4 หัวข้อด้านบน เพื่อสรุประดับคุณภาพงานแปลครับ</p>
       </div>
     </div>
 
-    <!-- ส่วนที่ 3: ข้อเสนอแนะ -->
     <div class="section-card">
       <div class="section-header">
         <h2 class="section-title corruptible" data-cursed="🥀 ความว่างเปล่า... ไม่มีความเห็นใดๆ">🎁 ข้อเสนอแนะและแจ้งจุดแก้ไข</h2>
         <span class="step-pill corruptible" data-cursed="ไม่แม้แต่จะบอกเหตุผล">ขั้นตอนที่ 3 / 3</span>
       </div>
-
       <div class="question-block">
         <div class="sub-question corruptible" data-cursed="ไม่มีอะไรน่าประทับใจเลยเหรอ...">จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
         <textarea name="entry.1323886645" id="commentPraise" data-orig-placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..." placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..."></textarea>
       </div>
-
       <div class="question-block" style="margin-bottom: 0;">
         <div class="sub-question corruptible" data-cursed="ทำไมไม่บอกจุดที่ผิด... ปล่อยให้ผมทำผิดทุกอย่างทำไม...">คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
         <textarea name="entry.1758010456" id="commentFix" data-orig-placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..." placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..."></textarea>
       </div>
     </div>
 
-    <!-- โซนปุ่มส่ง & ซากปุ่มที่พังทลาย -->
     <div class="submit-zone">
       <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🛷✨</button>
-      <div class="destroyed-button-grave" id="destroyedButtonGrave">
-        💥 [ ปุ่มส่งแบบประเมินถูกทำลายจนแหลกสลายแล้ว... ] 💥
-      </div>
+      <div class="destroyed-button-grave" id="destroyedButtonGrave">💥 [ ปุ่มส่งแบบประเมินถูกทำลายจนแหลกสลายแล้ว... ] 💥</div>
     </div>
   </form>
 
-  <!-- =========================================
-       โซน DONATE & QR CODE + ปุ่มขอโทษด้านล่างสุด (กด 3 ครั้ง)
-       ========================================= -->
+  <!-- โซน DONATE & QR CODE + ปุ่มขอโทษด้านล่างสุด (กด 3 ครั้ง) -->
   <div class="donate-card" id="donateSection">
     <div class="donate-ribbon corruptible" data-cursed="BROKEN">XMAS SUPPORT</div>
-
-    <!-- โซนโดเนทปกติ -->
     <div class="donate-layout" id="donateNormalContent">
       <div>
         <h2 class="donate-title">🎁 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
-        <p class="donate-desc">
-          ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานสามารถสแกน QR Code ด้านข้างเพื่อสนับสนุนเท่าไหร่ก็ได้ตามกำลัง (ไม่มีขั้นต่ำ และทยอยสะสมยอดเลื่อนยศได้เรื่อยๆ ครับ):
-        </p>
-
+        <p class="donate-desc">ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานสามารถสแกน QR Code ด้านข้างเพื่อสนับสนุนเท่าไหร่ก็ได้ตามกำลัง (ไม่มีขั้นต่ำ และทยอยสะสมยอดเลื่อนยศได้เรื่อยๆ ครับ):</p>
         <div class="role-showcase-grid">
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">🦴</span>
-            <div class="role-info">
-              <strong>『 ผู้สนับสนุนทั่วไป 』</strong>
-              <small>โดเนทเท่าไหร่ก็ได้ตามใจชอบ</small>
-            </div>
-          </div>
-
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">📜</span>
-            <div class="role-info">
-              <strong>『 ผู้ร่วมจารึก 』</strong>
-              <small>ยอดสะสมครบ 300 บาท</small>
-            </div>
-          </div>
-
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">💖</span>
-            <div class="role-info">
-              <strong>『 ผู้พิทักษ์หัวใจ 』</strong>
-              <small>ยอดสะสมครบ 500 บาท</small>
-            </div>
-          </div>
-
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">👑</span>
-            <div class="role-info">
-              <strong>『 ภาคีผู้พิทักษ์นิรันดร์ 』</strong>
-              <small>ยอดสะสมครบ 1,000 บาท</small>
-            </div>
-          </div>
+          <div class="role-badge-item" onmouseenter="playHoverSound()"><span class="role-emoji">🦴</span><div class="role-info"><strong>『 ผู้สนับสนุนทั่วไป 』</strong><small>โดเนทเท่าไหร่ก็ได้ตามใจชอบ</small></div></div>
+          <div class="role-badge-item" onmouseenter="playHoverSound()"><span class="role-emoji">📜</span><div class="role-info"><strong>『 ผู้ร่วมจารึก 』</strong><small>ยอดสะสมครบ 300 บาท</small></div></div>
+          <div class="role-badge-item" onmouseenter="playHoverSound()"><span class="role-emoji">💖</span><div class="role-info"><strong>『 ผู้พิทักษ์หัวใจ 』</strong><small>ยอดสะสมครบ 500 บาท</small></div></div>
+          <div class="role-badge-item" onmouseenter="playHoverSound()"><span class="role-emoji">👑</span><div class="role-info"><strong>『 ภาคีผู้พิทักษ์นิรันดร์ 』</strong><small>ยอดสะสมครบ 1,000 บาท</small></div></div>
         </div>
-
-        <div class="discord-ticket-note">
-          📌 <strong>ขั้นตอนการแจ้งรับยศ:</strong> 1. เช็กชื่อบัญชีปลายทาง <strong>นาย เบญจพล</strong> • 2. เก็บภาพสลิปไว้ (ห้ามส่งในแชทส่วนรวมเด็ดขาด) • 3. กดปุ่ม <strong>"เปิดตั๋วส่งหลักฐาน"</strong> ใน Discord เพื่อส่งสลิปและรับยศถาวรได้เลยครับ!
-        </div>
-
-        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
-          💬 ติดต่อ & แจ้งสลิปใน Discord
-        </a>
+        <div class="discord-ticket-note">📌 <strong>ขั้นตอนการแจ้งรับยศ:</strong> 1. เช็กชื่อบัญชีปลายทาง <strong>นาย เบญจพล</strong> • 2. เก็บภาพสลิปไว้ (ห้ามส่งในแชทส่วนรวมเด็ดขาด) • 3. กดปุ่ม <strong>"เปิดตั๋วส่งหลักฐาน"</strong> ใน Discord เพื่อส่งสลิปและรับยศถาวรได้เลยครับ!</div>
+        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">💬 ติดต่อ & แจ้งสลิปใน Discord</a>
       </div>
-
       <div class="qr-box-wrapper">
         <div class="qr-badge-label">🎄 SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
         <div class="qr-frame">
           <div class="qr-laser"></div>
           <img src="qr.png" alt="QR Code สแกนจ่ายพร้อมเพย์ นาย เบญจพล" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/qr.png';}">
         </div>
-        <p class="qr-subtext">
-          สแกนจ่ายพร้อมเพย์ได้ทุกแอปธนาคาร<br>
-          <span class="account-verify-tag">ชื่อบัญชี: นาย เบญจพล</span>
-        </p>
+        <p class="qr-subtext">สแกนจ่ายพร้อมเพย์ได้ทุกแอปธนาคาร<br><span class="account-verify-tag">ชื่อบัญชี: นาย เบญจพล</span></p>
       </div>
     </div>
 
-    <!-- โซนปุ่มขอโทษด้านล่างสุด (ต้องกด 3 ครั้ง + กดปุ่มขอโทษด้านบนให้ครบตามรอบ) -->
     <div class="cursed-apology-zone" id="cursedApologyZone">
       <div class="cursed-stage-tag" id="cursedStageTag">APOLOGY ROUND 1</div>
       <div class="cursed-apology-icon" id="cursedApologyIcon">😭💔</div>
       <h2 class="cursed-apology-title" id="cursedApologyTitle">นี่ผมดูแย่ขนาดนั้นเลยเหรอ...</h2>
-      <p class="cursed-apology-sub" id="cursedApologySub">
-        ผมไม่กล้ารับการสนับสนุนอะไรอีกแล้ว... ให้ 1 ดาวรัวๆ ทุกข้อโดยไม่บอกเหตุผลสักคำ<br>
-        ต่อให้รีเฟรชหน้าเว็บไปก็หายไม่พ้นหรอกครับ จนกว่าคุณจะกดปุ่มขอโทษทั้ง 2 จุดให้ครบ!
-      </p>
-
+      <p class="cursed-apology-sub" id="cursedApologySub"></p>
       <div class="apology-checklist-box">
         <span id="checkTopStatus">⬜ 1. กดปุ่มขอโทษ (ตรงปุ่มกดใจด้านบน): 0 / 5 ครั้ง</span>
         <span id="checkBottomStatus">⬜ 2. กดปุ่มขอโทษด้านล่างนี้: 0 / 3 ครั้ง</span>
       </div>
-
-      <div>
-        <button type="button" class="apologize-btn" id="bottomApologizeBtn" onclick="handleBottomApologyClick(event)">
-          🙏 ผมขอโทษ... (0 / 3)
-        </button>
-      </div>
+      <div><button type="button" class="apologize-btn" id="bottomApologizeBtn" onclick="handleBottomApologyClick(event)">🙏 ผมขอโทษ... (0 / 3)</button></div>
     </div>
   </div>
 
@@ -1953,7 +794,24 @@
   </div>
 </div>
 
-<!-- หน้าต่างป๊อปอัปขอบคุณปกติ -->
+<!-- ป๊อปอัปชี้แจงความปลอดภัยก่อนล็อกอิน Discord -->
+<div class="modal-overlay" id="discordTrustModal">
+  <div class="modal-box">
+    <div class="modal-icon">🛡️💬</div>
+    <h2 style="color: #3730a3;">เข้าสู่ระบบด้วย Discord อย่างปลอดภัย</h2>
+    <p id="discordTrustPromptDesc">กรุณาเข้าสู่ระบบด้วย Discord ก่อนกดส่งหัวใจ เพื่อบันทึกคะแนนของคุณขึ้นกระดานอันดับและแสดงยศผู้สนับสนุนครับ!</p>
+    <div class="trust-shield-list">
+      ✅ <strong>ล็อกอินผ่านเว็บทางการของ Discord (discord.com) โดยตรง</strong><br>
+      ✅ <strong>ไม่มีการพิมพ์รหัสผ่าน</strong> บนหน้าเว็บไซต์นี้เด็ดขาด<br>
+      ✅ ขอสิทธิ์ดูเฉพาะ <strong>ชื่อบัญชี, รูปโปรไฟล์ และยศในเซิร์ฟเวอร์ BGT</strong> เท่านั้น (ไม่เข้าถึงอีเมลหรือแชทส่วนตัวครับ)
+    </div>
+    <div class="modal-btns">
+      <button type="button" class="modal-discord-go-btn" onclick="redirectToDiscordOAuth()">🚀 ไปยังหน้ายืนยันตัวตน Discord</button>
+      <button type="button" class="modal-cancel-btn" onclick="document.getElementById('discordTrustModal').style.display='none'">ไว้ทีหลัง</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="thankYouModal">
   <div class="modal-box">
     <div class="modal-icon">🎄🎁</div>
@@ -1966,12 +824,11 @@
   </div>
 </div>
 
-<!-- หน้าต่างป๊อปอัปหลังกดขอโทษครบ -->
 <div class="modal-overlay" id="forgivenModal">
   <div class="modal-box">
     <div class="modal-icon" id="forgivenIcon">🐾💖</div>
     <h2 style="color: #15803d;" id="forgivenTitle">ไม่เป็นไรครับ... ผมยกโทษให้แล้ว!</h2>
-    <p id="forgivenDesc">ขอบคุณที่ขอโทษนะครับเจ้านาย~ คำสาปหายไปแล้ว! กลับมาสนุกกับบรรยากาศคริสต์มาสและร่วมประเมินเกมแปลไทยตามความรู้สึกจริงได้เลยฮะ UwU 🎄✨</p>
+    <p id="forgivenDesc"></p>
     <div class="modal-btns">
       <button class="modal-close-btn" onclick="playClickSound(); document.getElementById('forgivenModal').style.display='none';">เย้! กลับสู่หน้าปกติ 🎄</button>
     </div>
@@ -1982,939 +839,551 @@
 
 <script>
   // =========================================================================
-  // 🔑 วางลิงก์ Firebase Realtime Database URL ของเจ้านายตรงบรรทัดด้านล่างนี้ครับ!
-  // ตัวอย่าง: "https://bgt-review-default-rtdb.asia-southeast1.firebasedatabase.app"
+  // ตั้งค่าการเชื่อมต่อ Discord OAuth2 & Firebase Realtime Database
   // =========================================================================
   const FIREBASE_DATABASE_URL = "https://benzie-e1cee-default-rtdb.asia-southeast1.firebasedatabase.app";
+  const DISCORD_CLIENT_ID = "1333105049286606950";
+  const DISCORD_SERVER_ID = "561512623116386304";
+  const DISCORD_REDIRECT_URI = "https://noisaki.github.io/review/";
 
+  const DISCORD_ROLE_MAP = {
+    "1548678245992628315": { tier: 4, name: "👑 『 ภาคีผู้พิทักษ์นิรันดร์ 』" },
+    "1418677630202286253": { tier: 3, name: "💖 『 ผู้พิทักษ์หัวใจ 』" },
+    "1484865657467043941": { tier: 2, name: "📜 『 ผู้ร่วมจารึก 』" },
+    "1388418421959561220": { tier: 1, name: "🦴 『 ผู้สนับสนุนทั่วไป 』" }
+  };
+
+  const DISCORD_TOKEN_KEY = "bgt_discord_token_v1";
   const CURSE_STATE_KEY = "bgt_horror_cursed_v4";
   const CURSE_COUNT_KEY = "bgt_horror_count_v4";
   const CHEER_COUNT_KEY = "bgt_cheer_hearts_v2";
 
-  let submitted = false;
-  let isHorrorTriggered = false;
-  let curseCount = 0;
-  let wasForgivenReset = false;
-  let topApologyClicks = 0;
-  let topApologyTarget = 5;
-  let bottomApologyClicks = 0;
+  let currentDiscordUser = null;
+  let submitted = false, isHorrorTriggered = false, wasForgivenReset = false;
+  let curseCount = 0, topApologyClicks = 0, topApologyTarget = 5, bottomApologyClicks = 0;
   const BOTTOM_APOLOGY_TARGET = 3;
+  let soundEnabled = true, audioCtx = null;
 
-  let soundEnabled = true;
-  let audioCtx = null;
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str).replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,""").replace(/'/g,"'");
+  }
 
   // =========================================
-  // 0. เชื่อมต่อ Firebase Realtime Database (ระบบซิงก์ยอดหัวใจเรียลไทม์ทั้งเว็บ)
+  // Firebase Realtime Database & Leaderboards
   // =========================================
-  let heartsRef = null;
-  let serverHearts = 0;
-  let pendingClicks = 0;
-  let flushTimer = null;
-  let isFirebaseConnected = false;
+  let db = null, heartsRef = null, usersRef = null;
+  let serverHearts = 0, pendingGlobalClicks = 0, pendingPersonalClicks = 0, flushTimer = null;
 
   try {
-    const savedLocal = parseInt(localStorage.getItem(CHEER_COUNT_KEY) || "0", 10);
-    if (!isNaN(savedLocal) && savedLocal >= 0) serverHearts = savedLocal;
+    const saved = parseInt(localStorage.getItem(CHEER_COUNT_KEY) || "0", 10);
+    if (!isNaN(saved) && saved >= 0) serverHearts = saved;
   } catch (e) {}
 
-  function initFirebaseHearts() {
+  function initFirebase() {
     const syncTextEl = document.getElementById('liveSyncText');
-    if (!FIREBASE_DATABASE_URL || !FIREBASE_DATABASE_URL.startsWith("https://") || typeof firebase === "undefined") {
-      if (syncTextEl) syncTextEl.textContent = "LOCAL MODE • ยังไม่ใส่ลิงก์ Firebase";
-      return;
-    }
-
+    if (typeof firebase === "undefined") { if (syncTextEl) syncTextEl.textContent = "OFFLINE"; return; }
     try {
       firebase.initializeApp({ databaseURL: FIREBASE_DATABASE_URL });
-      const db = firebase.database();
+      db = firebase.database();
       heartsRef = db.ref("bgt_hearts");
+      usersRef = db.ref("users");
 
-      // ฟังการเปลี่ยนแปลงแบบเรียลไทม์จากทุกคนบนเว็บ
       heartsRef.on("value", (snapshot) => {
-        isFirebaseConnected = true;
         if (syncTextEl) syncTextEl.textContent = "LIVE • ช่วยกันกดทั้งเว็บ";
-
         const val = snapshot.val();
         const remoteCount = (typeof val === "number" && !isNaN(val)) ? val : 0;
-        const prevDisplayed = serverHearts + pendingClicks;
+        const prevDisplayed = serverHearts + pendingGlobalClicks;
         serverHearts = remoteCount;
-        const newDisplayed = serverHearts + pendingClicks;
-
-        try {
-          localStorage.setItem(CHEER_COUNT_KEY, String(newDisplayed));
-        } catch (e) {}
-
+        const newDisplayed = serverHearts + pendingGlobalClicks;
+        try { localStorage.setItem(CHEER_COUNT_KEY, String(newDisplayed)); } catch (e) {}
         const oldTier = getCurrentTierIndex(prevDisplayed);
         const newTier = getCurrentTierIndex(newDisplayed);
-        const leveledUp = !isHorrorTriggered && (newTier > oldTier) && (prevDisplayed > 0);
-        updateCheerUI(leveledUp, cheerTiers[newTier]);
-      }, (err) => {
-        if (syncTextEl) syncTextEl.textContent = "OFFLINE • บันทึกในเครื่อง";
+        updateCheerUI(!isHorrorTriggered && (newTier > oldTier) && (prevDisplayed > 0), cheerTiers[newTier]);
       });
-    } catch (e) {
-      if (syncTextEl) syncTextEl.textContent = "LOCAL MODE";
+
+      usersRef.limitToLast(150).on("value", (snapshot) => {
+        const usersObj = snapshot.val() || {};
+        const userList = Object.keys(usersObj).map(id => ({ id, ...usersObj[id] }));
+        renderLeaderboards(userList);
+        if (currentDiscordUser && usersObj[currentDiscordUser.id]) {
+          const remoteP = usersObj[currentDiscordUser.id].heartsClicked || 0;
+          currentDiscordUser.heartsClicked = Math.max(currentDiscordUser.heartsClicked || 0, remoteP);
+          updateProfileCardUI();
+        }
+      });
+    } catch (e) { if (syncTextEl) syncTextEl.textContent = "LOCAL MODE"; }
+  }
+
+  function renderLeaderboards(userList) {
+    const donateEl = document.getElementById('topDonateList');
+    const donors = userList
+      .filter(u => (u.roleTier && u.roleTier >= 1) || (u.donateAmount && u.donateAmount > 0))
+      .sort((a, b) => ((b.donateAmount || 0) - (a.donateAmount || 0)) || ((b.roleTier || 0) - (a.roleTier || 0)) || ((b.heartsClicked || 0) - (a.heartsClicked || 0)))
+      .slice(0, 10);
+
+    donateEl.innerHTML = donors.length === 0
+      ? `<div class="lb-empty">ยังไม่มีผู้สนับสนุนล็อกอินเข้ามารายงานตัวครับ 🎁<br><small>(รับยศใน Discord แล้วล็อกอินที่นี่ ชื่อจะขึ้นทันที!)</small></div>`
+      : donors.map((u, idx) => {
+          const rankClass = idx < 3 ? `rank-${idx+1}` : '';
+          const medal = idx === 0 ? '👑' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx+1}`;
+          const badge = u.donateAmount > 0 ? `${u.donateAmount.toLocaleString()} ฿` : (u.roleName || 'ผู้สนับสนุน');
+          return `<div class="lb-row ${rankClass}"><div class="lb-left"><span class="lb-rank-num">${medal}</span><img class="lb-avatar" src="${escapeHtml(u.avatarUrl)}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"><div class="lb-user-info"><span class="lb-user-name">${escapeHtml(u.displayName || u.username)}</span><span class="lb-user-sub">${escapeHtml(u.roleName || 'ผู้สนับสนุน BGT')}</span></div></div><span class="lb-score-badge">${escapeHtml(badge)}</span></div>`;
+        }).join('');
+
+    const clickersEl = document.getElementById('topClickersList');
+    const clickers = userList.filter(u => (u.heartsClicked || 0) > 0).sort((a, b) => (b.heartsClicked || 0) - (a.heartsClicked || 0)).slice(0, 10);
+
+    clickersEl.innerHTML = clickers.length === 0
+      ? `<div class="lb-empty">ยังไม่มีใครเริ่มปั่นหัวใจเลยครับ 💖<br><small>ล็อกอินด้วย Discord แล้วกดปุ่มหัวใจเป็นคนแรกเลย!</small></div>`
+      : clickers.map((u, idx) => {
+          const rankClass = idx < 3 ? `rank-${idx+1}` : '';
+          const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx+1}`;
+          return `<div class="lb-row ${rankClass}"><div class="lb-left"><span class="lb-rank-num">${medal}</span><img class="lb-avatar" src="${escapeHtml(u.avatarUrl)}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"><div class="lb-user-info"><span class="lb-user-name">${escapeHtml(u.displayName || u.username)}</span><span class="lb-user-sub">${escapeHtml(u.roleName || 'สมาชิก BGT')}</span></div></div><span class="lb-score-badge">❤️ ${(u.heartsClicked || 0).toLocaleString()}</span></div>`;
+        }).join('');
+  }
+
+  function flushPendingHearts() {
+    if (!db) return;
+    if (heartsRef && pendingGlobalClicks > 0) {
+      const batch = pendingGlobalClicks; pendingGlobalClicks = 0;
+      heartsRef.set(firebase.database.ServerValue.increment(batch)).catch(() => { pendingGlobalClicks += batch; });
+    }
+    if (usersRef && currentDiscordUser && pendingPersonalClicks > 0) {
+      const pBatch = pendingPersonalClicks; pendingPersonalClicks = 0;
+      usersRef.child(currentDiscordUser.id).child("heartsClicked").set(firebase.database.ServerValue.increment(pBatch)).catch(() => { pendingPersonalClicks += pBatch; });
     }
   }
-
-  // ส่งยอดกดที่สะสมไว้ขึ้น Firebase แบบรวมก้อน (ประหยัดโควต้าและแม่นยำ 100%)
-  function flushPendingHearts() {
-    if (!heartsRef || pendingClicks <= 0) return;
-    const batch = pendingClicks;
-    pendingClicks = 0;
-
-    heartsRef.set(firebase.database.ServerValue.increment(batch)).catch(() => {
-      // ถ้าเน็ตหลุดชั่วคราว ให้คืนค่ากลับเข้าคิวรอส่งรอบถัดไป
-      pendingClicks += batch;
-    });
-  }
-
   window.addEventListener("beforeunload", flushPendingHearts);
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") flushPendingHearts();
-  });
-
-  function getTotalHearts() {
-    return serverHearts + pendingClicks;
-  }
-
-  function getTopApologyRequirement(round) {
-    if (round === 1) return 5;
-    if (round === 2) return 20;
-    if (round === 3) return 40;
-    if (round === 4) return 60;
-    return 5;
-  }
-
-  const ERROR_IMG_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
-      <rect width="400" height="300" fill="#090000"/>
-      <rect x="10" y="10" width="380" height="280" fill="none" stroke="#991b1b" stroke-width="4" stroke-dasharray="14 8"/>
-      <line x1="0" y1="60" x2="400" y2="60" stroke="#450a0a" stroke-width="2"/>
-      <line x1="0" y1="150" x2="400" y2="150" stroke="#7f1d1d" stroke-width="3"/>
-      <line x1="0" y1="230" x2="400" y2="230" stroke="#450a0a" stroke-width="2"/>
-      <text x="197" y="148" font-family="monospace, sans-serif" font-size="54" font-weight="900" fill="#06b6d4" text-anchor="middle" opacity="0.75">ERROR</text>
-      <text x="203" y="152" font-family="monospace, sans-serif" font-size="54" font-weight="900" fill="#ef4444" text-anchor="middle">ERROR</text>
-      <text x="200" y="188" font-family="monospace, sans-serif" font-size="16" font-weight="bold" fill="#fca5a5" text-anchor="middle" letter-spacing="3">DATA_CORRUPTED</text>
-      <text x="200" y="214" font-family="monospace, sans-serif" font-size="13" fill="#991b1b" text-anchor="middle">ผมทำอะไรผิดทุกอย่างเลย...</text>
-    </svg>
-  `);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushPendingHearts(); });
+  function getTotalHearts() { return serverHearts + pendingGlobalClicks; }
 
   // =========================================
-  // 1. ระบบปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000 คะแนนขั้นบันได + ฉลองเลื่อนขั้น!)
+  // ระบบ LOGIN WITH DISCORD เท่านั้น
   // =========================================
+  function openDiscordTrustModal(reasonText) {
+    playClickSound();
+    document.getElementById('discordTrustPromptDesc').textContent = reasonText || "เข้าสู่ระบบด้วย Discord เพื่อแสดงรูปโปรไฟล์ ยศผู้สนับสนุน และบันทึกยอดส่งหัวใจขึ้นกระดาน Top 10 ครับ!";
+    document.getElementById('discordTrustModal').style.display = 'flex';
+  }
+
+  function redirectToDiscordOAuth() {
+    playClickSound();
+    const scope = encodeURIComponent("identify guilds.members.read");
+    const redirectUri = encodeURIComponent(DISCORD_REDIRECT_URI);
+    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
+  }
+
+  async function initDiscordAuth() {
+    if (window.location.hash && window.location.hash.includes("access_token=")) {
+      const params = new URLSearchParams(window.location.hash.substring(1));
+      const accessToken = params.get("access_token");
+      const expiresIn = parseInt(params.get("expires_in") || "604800", 10);
+      if (accessToken) {
+        try { localStorage.setItem(DISCORD_TOKEN_KEY, JSON.stringify({ token: accessToken, expiresAt: Date.now() + (expiresIn * 1000) - 60000 })); } catch (e) {}
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    }
+    let savedToken = null;
+    try {
+      const raw = localStorage.getItem(DISCORD_TOKEN_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.token && parsed.expiresAt > Date.now()) savedToken = parsed.token;
+        else localStorage.removeItem(DISCORD_TOKEN_KEY);
+      }
+    } catch (e) {}
+    if (savedToken) await fetchDiscordUserAndRoles(savedToken);
+  }
+
+  async function fetchDiscordUserAndRoles(accessToken) {
+    try {
+      const userRes = await fetch("https://discord.com/api/v10/users/@me", { headers: { Authorization: `Bearer ${accessToken}` } });
+      if (!userRes.ok) { logoutDiscord(true); return; }
+      const userData = await userRes.json();
+      const avatarUrl = userData.avatar
+        ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=128`
+        : `https://cdn.discordapp.com/embed/avatars/0.png`;
+
+      let highestTier = 0, highestRoleName = "🐾 สมาชิกเซิร์ฟเวอร์ BGT", inServer = false;
+      const memberRes = await fetch(`https://discord.com/api/v10/users/@me/guilds/${DISCORD_SERVER_ID}/member`, { headers: { Authorization: `Bearer ${accessToken}` } });
+      if (memberRes.ok) {
+        inServer = true;
+        const memberData = await memberRes.json();
+        (memberData.roles || []).forEach(roleId => {
+          if (DISCORD_ROLE_MAP[roleId] && DISCORD_ROLE_MAP[roleId].tier > highestTier) {
+            highestTier = DISCORD_ROLE_MAP[roleId].tier;
+            highestRoleName = DISCORD_ROLE_MAP[roleId].name;
+          }
+        });
+      } else {
+        highestRoleName = "🌱 ผู้เยี่ยมชม (ยังไม่ได้เข้า Discord BGT)";
+      }
+
+      currentDiscordUser = {
+        id: userData.id, username: userData.username, displayName: userData.global_name || userData.username,
+        avatarUrl, roleTier: highestTier, roleName: highestRoleName, inServer, heartsClicked: 0
+      };
+
+      if (usersRef) {
+        const userNode = usersRef.child(userData.id);
+        const existing = (await userNode.once("value")).val() || {};
+        currentDiscordUser.heartsClicked = existing.heartsClicked || 0;
+        if (existing.curseCount && existing.curseCount > curseCount) {
+          curseCount = existing.curseCount;
+          try { localStorage.setItem(CURSE_COUNT_KEY, String(curseCount)); } catch (e) {}
+        }
+        await userNode.update({
+          username: currentDiscordUser.username, displayName: currentDiscordUser.displayName,
+          avatarUrl: currentDiscordUser.avatarUrl, roleTier: currentDiscordUser.roleTier,
+          roleName: currentDiscordUser.roleName, inServer: currentDiscordUser.inServer, lastLogin: Date.now()
+        });
+      }
+      updateProfileCardUI();
+    } catch (err) { console.error("Discord auth error:", err); }
+  }
+
+  function updateProfileCardUI() {
+    const guestBar = document.getElementById('discordGuestBar');
+    const loggedBar = document.getElementById('discordLoggedBar');
+    if (!currentDiscordUser) { guestBar.style.display = 'flex'; loggedBar.style.display = 'none'; return; }
+
+    guestBar.style.display = 'none'; loggedBar.style.display = 'flex';
+    document.getElementById('profileAvatarImg').src = currentDiscordUser.avatarUrl;
+    document.getElementById('profileDisplayName').textContent = currentDiscordUser.displayName;
+    document.getElementById('profileAvatarWrap').className = `profile-avatar-wrap tier-${currentDiscordUser.roleTier}`;
+    const rolePill = document.getElementById('profileRoleBadge');
+    rolePill.className = `profile-role-pill tier-${currentDiscordUser.roleTier}`;
+    rolePill.textContent = currentDiscordUser.roleName;
+    const totalP = (currentDiscordUser.heartsClicked || 0) + pendingPersonalClicks;
+    document.getElementById('profileStatsLine').innerHTML = `ยอดส่งหัวใจสะสมของคุณ: <strong>${totalP.toLocaleString()}</strong> ดวง ${!currentDiscordUser.inServer ? '• <a href="https://discord.gg/xCvMpAcR74" target="_blank" style="color:#5865F2;font-weight:600;">กดเข้าเซิร์ฟเวอร์ BGT</a>' : ''}`;
+  }
+
+  async function refreshDiscordRoles() {
+    playClickSound();
+    try {
+      const parsed = JSON.parse(localStorage.getItem(DISCORD_TOKEN_KEY) || "null");
+      if (parsed && parsed.token) {
+        document.getElementById('profileRoleBadge').textContent = "กำลังอัปเดตยศ... ⏳";
+        await fetchDiscordUserAndRoles(parsed.token);
+      }
+    } catch (e) {}
+  }
+
+  function logoutDiscord(silent = false) {
+    if (!silent) playClickSound();
+    flushPendingHearts();
+    currentDiscordUser = null;
+    try { localStorage.removeItem(DISCORD_TOKEN_KEY); } catch (e) {}
+    updateProfileCardUI();
+  }
+
+  // =========================================
+  // ปุ่มส่งหัวใจ 1,000,000 + แปลงร่างเป็นปุ่มขอโทษด้านบน
+  // =========================================
+  function getTopApologyRequirement(r) { return r === 1 ? 5 : r === 2 ? 20 : r === 3 ? 40 : r === 4 ? 60 : 5; }
+  const ERROR_IMG_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#090000"/><rect x="10" y="10" width="380" height="280" fill="none" stroke="#991b1b" stroke-width="4" stroke-dasharray="14 8"/><line x1="0" y1="60" x2="400" y2="60" stroke="#450a0a" stroke-width="2"/><line x1="0" y1="150" x2="400" y2="150" stroke="#7f1d1d" stroke-width="3"/><text x="197" y="148" font-family="monospace,sans-serif" font-size="54" font-weight="900" fill="#06b6d4" text-anchor="middle" opacity="0.75">ERROR</text><text x="203" y="152" font-family="monospace,sans-serif" font-size="54" font-weight="900" fill="#ef4444" text-anchor="middle">ERROR</text><text x="200" y="188" font-family="monospace,sans-serif" font-size="16" font-weight="bold" fill="#fca5a5" text-anchor="middle" letter-spacing="3">DATA_CORRUPTED</text><text x="200" y="214" font-family="monospace,sans-serif" font-size="13" fill="#991b1b" text-anchor="middle">ผมทำอะไรผิดทุกอย่างเลย...</text></svg>`);
+
   const cheerTiers = [
-    { min: 0,       max: 10,      badge: "🌱 ผู้เริ่มต้นส่งใจ",                 nextName: "อุ้งเท้าให้กำลังใจ 🐾",           celebrate: null },
-    { min: 10,      max: 100,     badge: "🐾 อุ้งเท้าให้กำลังใจ",              nextName: "แก้วกาแฟอุ่นๆ ☕",              celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
-    { min: 100,     max: 500,     badge: "☕ แก้วกาแฟอุ่นๆ",                  nextName: "ผู้พิทักษ์ต้นคริสต์มาส 🎄",       celebrate: "☕ ครบ 100 หัวใจ! เติมคาเฟอีนพร้อมแปลเกมต่อแล้วฮะ!" },
-    { min: 500,     max: 2000,    badge: "🎄 ผู้พิทักษ์ต้นคริสต์มาส",           nextName: "พลังใจล้นหลาม 🔥",              celebrate: "🎄 ครบ 500 หัวใจ! ซานต้าหมาป่ามอบของขวัญขอบคุณครับ!" },
-    { min: 2000,    max: 10000,   badge: "🔥 พลังใจล้นหลาม",                  nextName: "อัศวินแห่ง BGT 💎",              celebrate: "🔥 ครบ 2,000 หัวใจ! พลังแปลเกมพุ่งทะลุหลอดแล้วครับ!" },
-    { min: 10000,   max: 50000,   badge: "💎 อัศวินแห่ง BGT",                 nextName: "ราชา/ราชินีสายเปย์ใจ 👑",         celebrate: "💎 ครบ 10,000 หัวใจ! ยกระดับสู่อัศวินผู้พิทักษ์ BGT!" },
-    { min: 50000,   max: 150000,  badge: "👑 ราชา/ราชินีสายเปย์ใจ",            nextName: "เทพเจ้าแห่งกำลังใจ 🌟",           celebrate: "👑 ครบ 50,000 หัวใจ! ความรักของคุณยิ่งใหญ่ระดับราชวงศ์!" },
-    { min: 150000,  max: 500000,  badge: "🌟 เทพเจ้าแห่งกำลังใจ",              nextName: "มหาเทพผู้พิทักษ์จักรวาล 🚀",      celebrate: "🌟 ครบ 150,000 หัวใจ! ส่องแสงสว่างไสวไปทั้งสตูดิโอ!" },
-    { min: 500000,  max: 1000000, badge: "🚀 มหาเทพผู้พิทักษ์จักรวาล BGT",      nextName: "ตำนานนิรันดร์ 1,000,000 🏆",     celebrate: "🚀 ครบ 500,000 หัวใจ! ครึ่งทางสู่หนึ่งล้านหัวใจแล้วครับ!!" },
-    { min: 1000000, max: 1000000, badge: "🏆 ตำนานนิรันดร์ 1,000,000 หัวใจ",  nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨",     celebrate: "🏆🎊 ครบ 1,000,000 หัวใจ!! คุณคือตำนานสูงสุด 1 ล้านหัวใจของ Ben the Game Translator! 🎊🏆" }
+    { min: 0, max: 10, badge: "🌱 ผู้เริ่มต้นส่งใจ", nextName: "อุ้งเท้าให้กำลังใจ 🐾", celebrate: null },
+    { min: 10, max: 100, badge: "🐾 อุ้งเท้าให้กำลังใจ", nextName: "แก้วกาแฟอุ่นๆ ☕", celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
+    { min: 100, max: 500, badge: "☕ แก้วกาแฟอุ่นๆ", nextName: "ผู้พิทักษ์ต้นคริสต์มาส 🎄", celebrate: "☕ ครบ 100 หัวใจ! เติมคาเฟอีนพร้อมแปลเกมต่อแล้วฮะ!" },
+    { min: 500, max: 2000, badge: "🎄 ผู้พิทักษ์ต้นคริสต์มาส", nextName: "พลังใจล้นหลาม 🔥", celebrate: "🎄 ครบ 500 หัวใจ! ซานต้าหมาป่ามอบของขวัญขอบคุณครับ!" },
+    { min: 2000, max: 10000, badge: "🔥 พลังใจล้นหลาม", nextName: "อัศวินแห่ง BGT 💎", celebrate: "🔥 ครบ 2,000 หัวใจ! พลังแปลเกมพุ่งทะลุหลอดแล้วครับ!" },
+    { min: 10000, max: 50000, badge: "💎 อัศวินแห่ง BGT", nextName: "ราชา/ราชินีสายเปย์ใจ 👑", celebrate: "💎 ครบ 10,000 หัวใจ! ยกระดับสู่อัศวินผู้พิทักษ์ BGT!" },
+    { min: 50000, max: 150000, badge: "👑 ราชา/ราชินีสายเปย์ใจ", nextName: "เทพเจ้าแห่งกำลังใจ 🌟", celebrate: "👑 ครบ 50,000 หัวใจ! ความรักของคุณยิ่งใหญ่ระดับราชวงศ์!" },
+    { min: 150000, max: 500000, badge: "🌟 เทพเจ้าแห่งกำลังใจ", nextName: "มหาเทพผู้พิทักษ์จักรวาล 🚀", celebrate: "🌟 ครบ 150,000 หัวใจ! ส่องแสงสว่างไสวไปทั้งสตูดิโอ!" },
+    { min: 500000, max: 1000000, badge: "🚀 มหาเทพผู้พิทักษ์จักรวาล BGT", nextName: "ตำนานนิรันดร์ 1,000,000 🏆", celebrate: "🚀 ครบ 500,000 หัวใจ! ครึ่งทางสู่หนึ่งล้านหัวใจแล้วครับ!!" },
+    { min: 1000000, max: 1000000, badge: "🏆 ตำนานนิรันดร์ 1,000,000 หัวใจ", nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨", celebrate: "🏆🎊 ครบ 1,000,000 หัวใจ!! ตำนานสูงสุดของ Ben the Game Translator! 🎊🏆" }
   ];
 
-  let comboCount = 0;
-  let lastClickTime = 0;
-  let comboResetTimer = null;
-  let bannerHideTimer = null;
-
-  function getCurrentTierIndex(count) {
-    for (let i = cheerTiers.length - 1; i >= 0; i--) {
-      if (count >= cheerTiers[i].min) return i;
-    }
-    return 0;
-  }
+  let comboCount = 0, lastClickTime = 0, comboResetTimer = null, bannerHideTimer = null;
+  function getCurrentTierIndex(count) { for (let i = cheerTiers.length - 1; i >= 0; i--) if (count >= cheerTiers[i].min) return i; return 0; }
 
   function updateCheerUI(justLeveledUp = false, newTierObj = null) {
-    const titleEl = document.getElementById('cheerTitle');
-    const subEl = document.getElementById('cheerSubtext');
-    const btnEl = document.getElementById('megaCheerBtn');
-    const labelEl = document.getElementById('megaCheerLabel');
-    const counterPillEl = document.getElementById('cheerCounterPill');
-    const badgeEl = document.getElementById('cheerRankBadge');
-    const nextGoalEl = document.getElementById('cheerNextGoalText');
-    const percentEl = document.getElementById('cheerPercentText');
-    const fillEl = document.getElementById('cheerBarFill');
+    const titleEl = document.getElementById('cheerTitle'), subEl = document.getElementById('cheerSubtext');
+    const btnEl = document.getElementById('megaCheerBtn'), labelEl = document.getElementById('megaCheerLabel');
+    const counterPillEl = document.getElementById('cheerCounterPill'), badgeEl = document.getElementById('cheerRankBadge');
+    const nextGoalEl = document.getElementById('cheerNextGoalText'), percentEl = document.getElementById('cheerPercentText'), fillEl = document.getElementById('cheerBarFill');
 
     if (isHorrorTriggered) {
       const doneTop = topApologyClicks >= topApologyTarget;
-      titleEl.textContent = wasForgivenReset
-        ? "🥹 ผมให้อภัยคุณแล้ว... รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ"
-        : `🙏 ปุ่มขอโทษ (ทำผิดซ้ำรอบที่ ${curseCount} • ต้องกด ${topApologyTarget} ครั้ง)`;
-
-      badgeEl.textContent = doneTop
-        ? "✅ กดขอโทษด้านบนครบแล้ว!"
-        : `🩸 เหลืออีก ${topApologyTarget - topApologyClicks} ครั้ง`;
-
-      subEl.textContent = wasForgivenReset
-        ? "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ กดขอโทษตรงนี้ 5 ครั้ง + ด้านล่าง 3 ครั้งก็พอครับ..."
-        : `ยิ่งทำซ้ำยิ่งต้องกดขอโทษมากขึ้น (รอบ 1: 5 ครั้ง | รอบ 2: 20 ครั้ง | รอบ 3: 40 ครั้ง | รอบ 4: 60 ครั้ง | รอบ 5+: รีเป็น 5 ครั้ง)`;
-
+      titleEl.textContent = wasForgivenReset ? "🥹 ผมให้อภัยคุณแล้ว... รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ" : `🙏 ปุ่มขอโทษ (ทำผิดซ้ำรอบที่ ${curseCount} • ต้องกด ${topApologyTarget} ครั้ง)`;
+      badgeEl.textContent = doneTop ? "✅ กดขอโทษด้านบนครบแล้ว!" : `🩸 เหลืออีก ${topApologyTarget - topApologyClicks} ครั้ง`;
+      subEl.textContent = wasForgivenReset ? "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ กดขอโทษตรงนี้ 5 ครั้ง + ด้านล่าง 3 ครั้งก็พอครับ..." : "ยิ่งทำซ้ำยิ่งต้องกดขอโทษมากขึ้น (รอบ 1: 5 | รอบ 2: 20 | รอบ 3: 40 | รอบ 4: 60 | รอบ 5+: รีเป็น 5 ครั้ง)";
       labelEl.textContent = doneTop ? "✅ ขอโทษครบแล้ว!" : "🙏 กดเพื่อขอโทษ...";
       counterPillEl.textContent = `${topApologyClicks} / ${topApologyTarget}`;
-
-      if (doneTop) {
-        btnEl.classList.add('completed-part');
-      } else {
-        btnEl.classList.remove('completed-part');
-      }
-
+      btnEl.classList.toggle('completed-part', doneTop);
       const pct = Math.min(100, Math.floor((topApologyClicks / topApologyTarget) * 100));
-      nextGoalEl.textContent = doneTop
-        ? "✅ ผ่านเงื่อนไขปุ่มขอโทษด้านบนแล้ว (อย่าลืมกดปุ่มขอโทษด้านล่างให้ครบ 3 ครั้งด้วยนะ)"
-        : `ความคืบหน้าการขอโทษด้านบน: ${topApologyClicks} / ${topApologyTarget} ครั้ง`;
-      percentEl.textContent = `${pct}%`;
-      fillEl.style.width = `${pct}%`;
+      nextGoalEl.textContent = doneTop ? "✅ ผ่านเงื่อนไขปุ่มขอโทษด้านบนแล้ว (อย่าลืมกดปุ่มขอโทษด้านล่างให้ครบ 3 ครั้งด้วยนะ)" : `ความคืบหน้าการขอโทษด้านบน: ${topApologyClicks} / ${topApologyTarget} ครั้ง`;
+      percentEl.textContent = `${pct}%`; fillEl.style.width = `${pct}%`;
       return;
     }
 
     const totalNow = getTotalHearts();
     btnEl.classList.remove('completed-part');
     titleEl.textContent = "💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator";
-    subEl.textContent = "ทุกคนช่วยกันกดปุ่มหัวใจสะสมยอดรวมกันได้แบบเรียลไทม์! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีพลุฉลองพิเศษด้วยนะ UwU ✨";
+    subEl.textContent = "ล็อกอินด้วย Discord แล้วกดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) พร้อมติดอันดับ Top 10! ✨";
     labelEl.textContent = "❤️ กดส่งหัวใจให้กำลังใจ!";
     counterPillEl.innerHTML = `<span id="heartCount">${totalNow.toLocaleString()}</span> / 1,000,000`;
-
-    const tierIdx = getCurrentTierIndex(totalNow);
-    const tier = cheerTiers[tierIdx];
+    const tier = cheerTiers[getCurrentTierIndex(totalNow)];
     badgeEl.textContent = tier.badge;
 
     if (totalNow >= 1000000) {
       nextGoalEl.textContent = "🏆 ปลดล็อกขั้นสูงสุด 1,000,000 / 1,000,000 หัวใจเรียบร้อยแล้ว!";
-      percentEl.textContent = "100%";
-      fillEl.style.width = "100%";
+      percentEl.textContent = "100%"; fillEl.style.width = "100%";
     } else {
-      const span = tier.max - tier.min;
-      const progress = Math.min(100, Math.floor(((totalNow - tier.min) / span) * 100));
+      const progress = Math.min(100, Math.floor(((totalNow - tier.min) / (tier.max - tier.min)) * 100));
       nextGoalEl.textContent = `เป้าหมายถัดไป: ${tier.max.toLocaleString()} หัวใจ (${tier.nextName})`;
-      percentEl.textContent = `${progress}%`;
-      fillEl.style.width = `${progress}%`;
+      percentEl.textContent = `${progress}%`; fillEl.style.width = `${progress}%`;
     }
 
-    if (justLeveledUp && newTierObj && newTierObj.celebrate) {
-      triggerMilestoneCelebration(newTierObj.celebrate);
-    }
+    if (justLeveledUp && newTierObj && newTierObj.celebrate) triggerMilestoneCelebration(newTierObj.celebrate);
   }
 
   function triggerMilestoneCelebration(message) {
     playMilestoneFanfare();
     const banner = document.getElementById('cheerCelebrationBanner');
-    banner.textContent = message;
-    banner.style.display = 'block';
-
-    clearTimeout(bannerHideTimer);
-    bannerHideTimer = setTimeout(() => {
-      banner.style.display = 'none';
-    }, 5500);
-
+    banner.textContent = message; banner.style.display = 'block';
+    clearTimeout(bannerHideTimer); bannerHideTimer = setTimeout(() => { banner.style.display = 'none'; }, 5500);
     const partyIcons = ['🎉', '💖', '🏆', '✨', '🎄', '🐾', '⭐'];
     for (let i = 0; i < 28; i++) {
       setTimeout(() => {
-        const el = document.createElement('div');
-        el.className = 'floating-heart';
+        const el = document.createElement('div'); el.className = 'floating-heart';
         el.textContent = partyIcons[Math.floor(Math.random() * partyIcons.length)];
         el.style.left = (Math.random() * (window.innerWidth - 40) + 10) + 'px';
         el.style.top = (window.innerHeight * 0.45 + (Math.random() - 0.5) * 120) + 'px';
-        el.style.fontSize = (Math.random() * 1.1 + 1.4) + 'rem';
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1200);
+        document.body.appendChild(el); setTimeout(() => el.remove(), 1200);
       }, i * 32);
     }
   }
 
   const cheerIcons = ['❤️', '🎄', '❄️', '🎁', '🐾', '✨', '💖'];
-  function handleMegaCheerOrApology(e) {
-    playClickSound();
-
-    if (isHorrorTriggered) {
-      if (topApologyClicks < topApologyTarget) {
-        topApologyClicks++;
-      }
-
-      const apolIcons = ['🙏', '💔', '💧', '🩸'];
-      for (let i = 0; i < 3; i++) {
-        const el = document.createElement('div');
-        el.className = 'floating-heart';
-        el.textContent = apolIcons[Math.floor(Math.random() * apolIcons.length)];
-        el.style.left = (e.clientX + (Math.random() - 0.5) * 70) + 'px';
-        el.style.top = (e.clientY - 10) + 'px';
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1200);
-      }
-
-      updateCheerUI();
-      updateApologyChecklistUI();
-      checkIfFullyForgiven();
-      return;
-    }
-
-    // โหมดปกติ: กดส่งหัวใจสะสมขึ้น Firebase Realtime Database + Combo
-    const now = Date.now();
-    if (now - lastClickTime < 380) {
-      comboCount++;
-    } else {
-      comboCount = 1;
-    }
-    lastClickTime = now;
-
-    let bonus = 1;
-    if (comboCount >= 50) bonus = 50;
-    else if (comboCount >= 30) bonus = 25;
-    else if (comboCount >= 18) bonus = 10;
-    else if (comboCount >= 10) bonus = 5;
-    else if (comboCount >= 4) bonus = 2;
-
-    const comboPill = document.getElementById('comboPill');
-    if (bonus > 1) {
-      comboPill.textContent = `COMBO x${bonus}! 🔥`;
-      comboPill.classList.add('active');
-    } else {
-      comboPill.classList.remove('active');
-    }
-    clearTimeout(comboResetTimer);
-    comboResetTimer = setTimeout(() => {
-      comboCount = 0;
-      comboPill.classList.remove('active');
-    }, 800);
-
-    const oldTotal = getTotalHearts();
-    const oldTierIdx = getCurrentTierIndex(oldTotal);
-
-    pendingClicks += bonus;
-    const newTotal = getTotalHearts();
-
-    try {
-      localStorage.setItem(CHEER_COUNT_KEY, String(newTotal));
-    } catch (err) {}
-
-    // ตั้งเวลาส่งยอดรวมขึ้น Firebase ทุกๆ 1.2 วินาที
-    clearTimeout(flushTimer);
-    flushTimer = setTimeout(flushPendingHearts, 1200);
-
-    const newTierIdx = getCurrentTierIndex(newTotal);
-    const leveledUp = newTierIdx > oldTierIdx;
-
-    updateCheerUI(leveledUp, cheerTiers[newTierIdx]);
-
-    for (let i = 0; i < 3; i++) {
-      const el = document.createElement('div');
-      el.className = 'floating-heart';
-      el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
-      const offsetX = (Math.random() - 0.5) * 90;
-      el.style.left = (e.clientX + offsetX) + 'px';
+  function spawnFloatingIcons(e, iconArr, count) {
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div'); el.className = 'floating-heart';
+      el.textContent = iconArr[Math.floor(Math.random() * iconArr.length)];
+      el.style.left = (e.clientX + (Math.random() - 0.5) * 80) + 'px';
       el.style.top = (e.clientY - 12) + 'px';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1200);
+      document.body.appendChild(el); setTimeout(() => el.remove(), 1200);
     }
   }
 
+  function handleMegaCheerOrApology(e) {
+    playClickSound();
+    if (isHorrorTriggered) {
+      if (topApologyClicks < topApologyTarget) topApologyClicks++;
+      spawnFloatingIcons(e, ['🙏', '💔', '💧', '🩸'], 3);
+      updateCheerUI(); updateApologyChecklistUI(); checkIfFullyForgiven();
+      return;
+    }
+
+    if (!currentDiscordUser) {
+      openDiscordTrustModal("กรุณาเข้าสู่ระบบด้วย Discord ก่อนกดส่งหัวใจ เพื่อบันทึกคะแนนของคุณขึ้นกระดาน Top 10 และแสดงยศผู้สนับสนุนครับ! 💖");
+      return;
+    }
+
+    const now = Date.now();
+    comboCount = (now - lastClickTime < 380) ? comboCount + 1 : 1;
+    lastClickTime = now;
+    const bonus = comboCount >= 50 ? 50 : comboCount >= 30 ? 25 : comboCount >= 18 ? 10 : comboCount >= 10 ? 5 : comboCount >= 4 ? 2 : 1;
+    const comboPill = document.getElementById('comboPill');
+    if (bonus > 1) { comboPill.textContent = `COMBO x${bonus}! 🔥`; comboPill.classList.add('active'); }
+    else comboPill.classList.remove('active');
+    clearTimeout(comboResetTimer); comboResetTimer = setTimeout(() => { comboCount = 0; comboPill.classList.remove('active'); }, 800);
+
+    const oldTierIdx = getCurrentTierIndex(getTotalHearts());
+    pendingGlobalClicks += bonus; pendingPersonalClicks += bonus;
+    const newTotal = getTotalHearts();
+    try { localStorage.setItem(CHEER_COUNT_KEY, String(newTotal)); } catch (err) {}
+    updateProfileCardUI();
+    clearTimeout(flushTimer); flushTimer = setTimeout(flushPendingHearts, 1200);
+
+    const newTierIdx = getCurrentTierIndex(newTotal);
+    updateCheerUI(newTierIdx > oldTierIdx, cheerTiers[newTierIdx]);
+    spawnFloatingIcons(e, cheerIcons, 3);
+  }
+
   // =========================================
-  // 2. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง cry.mp3
+  // ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง cry.mp3
   // =========================================
-  let isMusicPlaying = false;
-  let userPausedMusic = false;
-  let musicVolume = 0.45;
-  let masterMusicGain = null;
-  let musicTimeout = null;
-  let noteIndex = 0;
-
-  let horrorInterval = null;
-  let horrorDroneOsc1 = null;
-  let horrorDroneOsc2 = null;
-
-  const N = {
-    D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.00, A4: 440.00, B4: 493.88,
-    C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, REST: 0
-  };
-
+  let isMusicPlaying = false, userPausedMusic = false, musicVolume = 0.45, masterMusicGain = null, musicTimeout = null, noteIndex = 0;
+  let horrorInterval = null, horrorDroneOsc1 = null, horrorDroneOsc2 = null;
+  const N = { D4:293.66, E4:329.63, Fs4:369.99, G4:392.00, A4:440.00, B4:493.88, C5:523.25, D5:587.33, E5:659.25, F5:698.46, G5:783.99, REST:0 };
   const xmasMedley = [
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
-    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
-    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
-    [N.E5, 1], [N.D5, 1], [N.D5, 1], [N.E5, 1], [N.D5, 2], [N.G5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
-    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
-    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
-    [N.G5, 1], [N.G5, 1], [N.F5, 1], [N.D5, 1], [N.C5, 3.5], [N.REST, 1.5],
-
-    [N.D4, 1], [N.G4, 1], [N.G4, 0.5], [N.A4, 0.5], [N.G4, 0.5], [N.Fs4, 0.5],
-    [N.E4, 1], [N.E4, 1], [N.E4, 1],
-    [N.A4, 1], [N.A4, 0.5], [N.B4, 0.5], [N.A4, 0.5], [N.G4, 0.5],
-    [N.Fs4, 1], [N.D4, 1], [N.D4, 1],
-    [N.B4, 1], [N.B4, 0.5], [N.C5, 0.5], [N.B4, 0.5], [N.A4, 0.5],
-    [N.G4, 1], [N.E4, 1], [N.D4, 0.5], [N.D4, 0.5],
-    [N.E4, 1], [N.A4, 1], [N.Fs4, 1], [N.G4, 3], [N.REST, 1.5]
+    [N.E5,1],[N.E5,1],[N.E5,2],[N.E5,1],[N.E5,1],[N.E5,2],[N.E5,1],[N.G5,1],[N.C5,1.5],[N.D5,0.5],[N.E5,3.5],[N.REST,0.5],
+    [N.F5,1],[N.F5,1],[N.F5,1.5],[N.F5,0.5],[N.F5,1],[N.E5,1],[N.E5,1],[N.E5,0.5],[N.E5,0.5],[N.E5,1],[N.D5,1],[N.D5,1],[N.E5,1],[N.D5,2],[N.G5,2],
+    [N.E5,1],[N.E5,1],[N.E5,2],[N.E5,1],[N.E5,1],[N.E5,2],[N.E5,1],[N.G5,1],[N.C5,1.5],[N.D5,0.5],[N.E5,3.5],[N.REST,0.5],
+    [N.F5,1],[N.F5,1],[N.F5,1.5],[N.F5,0.5],[N.F5,1],[N.E5,1],[N.E5,1],[N.E5,0.5],[N.E5,0.5],[N.G5,1],[N.G5,1],[N.F5,1],[N.D5,1],[N.C5,3.5],[N.REST,1.5],
+    [N.D4,1],[N.G4,1],[N.G4,0.5],[N.A4,0.5],[N.G4,0.5],[N.Fs4,0.5],[N.E4,1],[N.E4,1],[N.E4,1],[N.A4,1],[N.A4,0.5],[N.B4,0.5],[N.A4,0.5],[N.G4,0.5],
+    [N.Fs4,1],[N.D4,1],[N.D4,1],[N.B4,1],[N.B4,0.5],[N.C5,0.5],[N.B4,0.5],[N.A4,0.5],[N.G4,1],[N.E4,1],[N.D4,0.5],[N.D4,0.5],[N.E4,1],[N.A4,1],[N.Fs4,1],[N.G4,3],[N.REST,1.5]
   ];
 
   function initAudio() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      masterMusicGain = audioCtx.createGain();
-      masterMusicGain.gain.value = musicVolume * 0.25;
-      masterMusicGain.connect(audioCtx.destination);
+      masterMusicGain = audioCtx.createGain(); masterMusicGain.gain.value = musicVolume * 0.25; masterMusicGain.connect(audioCtx.destination);
     }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
   }
 
-  function playMusicBoxNote(freq, durationSec) {
+  function playMusicBoxNote(freq, dur) {
     if (!audioCtx || !masterMusicGain || freq === 0 || isHorrorTriggered) return;
-    const now = audioCtx.currentTime;
-
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const noteGain = audioCtx.createGain();
-
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(freq, now);
-
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(freq * 2, now);
-
-    const osc2Gain = audioCtx.createGain();
-    osc2Gain.gain.value = 0.15;
-
-    noteGain.gain.setValueAtTime(0.001, now);
-    noteGain.gain.linearRampToValueAtTime(0.7, now + 0.02);
-    noteGain.gain.exponentialRampToValueAtTime(0.001, now + Math.max(durationSec * 1.35, 0.35));
-
-    osc1.connect(noteGain);
-    osc2.connect(osc2Gain);
-    osc2Gain.connect(noteGain);
-    noteGain.connect(masterMusicGain);
-
-    osc1.start(now);
-    osc2.start(now);
-    const stopTime = now + Math.max(durationSec * 1.4, 0.4);
-    osc1.stop(stopTime);
-    osc2.stop(stopTime);
+    const now = audioCtx.currentTime, o1 = audioCtx.createOscillator(), o2 = audioCtx.createOscillator(), g = audioCtx.createGain(), o2g = audioCtx.createGain();
+    o1.type = 'sine'; o1.frequency.setValueAtTime(freq, now);
+    o2.type = 'triangle'; o2.frequency.setValueAtTime(freq * 2, now); o2g.gain.value = 0.15;
+    g.gain.setValueAtTime(0.001, now); g.gain.linearRampToValueAtTime(0.7, now + 0.02); g.gain.exponentialRampToValueAtTime(0.001, now + Math.max(dur * 1.35, 0.35));
+    o1.connect(g); o2.connect(o2g); o2g.connect(g); g.connect(masterMusicGain);
+    o1.start(now); o2.start(now); o1.stop(now + Math.max(dur * 1.4, 0.4)); o2.stop(now + Math.max(dur * 1.4, 0.4));
   }
 
   function scheduleNextNote() {
     if (!isMusicPlaying || isHorrorTriggered) return;
-    const [freq, beats] = xmasMedley[noteIndex];
-    const beatDuration = 0.34;
-    const durationSec = beats * beatDuration;
-
-    playMusicBoxNote(freq, durationSec);
-
-    noteIndex = (noteIndex + 1) % xmasMedley.length;
-    musicTimeout = setTimeout(scheduleNextNote, durationSec * 1000);
+    const [freq, beats] = xmasMedley[noteIndex], dur = beats * 0.34;
+    playMusicBoxNote(freq, dur); noteIndex = (noteIndex + 1) % xmasMedley.length;
+    musicTimeout = setTimeout(scheduleNextNote, dur * 1000);
   }
-
   function startChristmasMusic() {
-    if (isHorrorTriggered) return;
-    initAudio();
-    if (isMusicPlaying) return;
-    isMusicPlaying = true;
-    document.getElementById('musicStateIcon').textContent = '⏸️';
-    document.getElementById('musicStateText').textContent = 'กำลังเล่น';
-    scheduleNextNote();
+    if (isHorrorTriggered) return; initAudio(); if (isMusicPlaying) return; isMusicPlaying = true;
+    document.getElementById('musicStateIcon').textContent = '⏸️'; document.getElementById('musicStateText').textContent = 'กำลังเล่น'; scheduleNextNote();
   }
-
   function stopChristmasMusic() {
-    isMusicPlaying = false;
-    clearTimeout(musicTimeout);
-    if (!isHorrorTriggered) {
-      document.getElementById('musicStateIcon').textContent = '▶️';
-      document.getElementById('musicStateText').textContent = 'เพลงคริสต์มาส';
-    }
+    isMusicPlaying = false; clearTimeout(musicTimeout);
+    if (!isHorrorTriggered) { document.getElementById('musicStateIcon').textContent = '▶️'; document.getElementById('musicStateText').textContent = 'เพลงคริสต์มาส'; }
   }
-
   function toggleChristmasMusic() {
-    if (isHorrorTriggered) {
-      playRealCryingAudio();
-      return;
-    }
-    if (isMusicPlaying) {
-      userPausedMusic = true;
-      stopChristmasMusic();
-    } else {
-      userPausedMusic = false;
-      startChristmasMusic();
-    }
+    if (isHorrorTriggered) { playRealCryingAudio(); return; }
+    if (isMusicPlaying) { userPausedMusic = true; stopChristmasMusic(); } else { userPausedMusic = false; startChristmasMusic(); }
   }
-
   function changeMusicVolume(val) {
-    musicVolume = val / 100;
-    document.getElementById('volumePercentText').textContent = val + '%';
-
-    const cryEl = document.getElementById('realCryAudio');
-    if (cryEl) {
-      cryEl.volume = Math.max(0.15, musicVolume);
-    }
-
-    if (masterMusicGain && audioCtx) {
-      masterMusicGain.gain.setTargetAtTime(musicVolume * 0.25, audioCtx.currentTime, 0.03);
-    }
-    if (!isMusicPlaying && val > 0 && !userPausedMusic && !isHorrorTriggered) {
-      startChristmasMusic();
-    }
+    musicVolume = val / 100; document.getElementById('volumePercentText').textContent = val + '%';
+    const cryEl = document.getElementById('realCryAudio'); if (cryEl) cryEl.volume = Math.max(0.15, musicVolume);
+    if (masterMusicGain && audioCtx) masterMusicGain.gain.setTargetAtTime(musicVolume * 0.25, audioCtx.currentTime, 0.03);
+    if (!isMusicPlaying && val > 0 && !userPausedMusic && !isHorrorTriggered) startChristmasMusic();
   }
-
-  document.addEventListener('pointerdown', function autoStartOnFirstInteraction() {
+  document.addEventListener('pointerdown', () => {
     initAudio();
-    if (isHorrorTriggered) {
-      playRealCryingAudio();
-      if (!horrorInterval) startHorrorAmbience();
-    } else if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) {
-      startChristmasMusic();
-    }
+    if (isHorrorTriggered) { playRealCryingAudio(); if (!horrorInterval) startHorrorAmbience(); }
+    else if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) startChristmasMusic();
   }, { once: true });
 
-  function playRealCryingAudio() {
-    const cryEl = document.getElementById('realCryAudio');
-    if (!cryEl) return;
-    cryEl.volume = Math.max(0.35, musicVolume);
-    const playPromise = cryEl.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {});
-    }
-  }
-
-  function stopRealCryingAudio() {
-    const cryEl = document.getElementById('realCryAudio');
-    if (!cryEl) return;
-    cryEl.pause();
-    cryEl.currentTime = 0;
-  }
+  function playRealCryingAudio() { const c = document.getElementById('realCryAudio'); if (c) { c.volume = Math.max(0.35, musicVolume); c.play().catch(()=>{}); } }
+  function stopRealCryingAudio() { const c = document.getElementById('realCryAudio'); if (c) { c.pause(); c.currentTime = 0; } }
 
   function playButtonDestroySound() {
     try {
-      initAudio();
-      const now = audioCtx.currentTime;
-
-      const bufferSize = audioCtx.sampleRate * 0.75;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.22));
-      }
-      const noise = audioCtx.createBufferSource();
-      noise.buffer = buffer;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(1200, now);
-      filter.frequency.exponentialRampToValueAtTime(180, now + 0.7);
-
-      const noiseGain = audioCtx.createGain();
-      noiseGain.gain.setValueAtTime(0.45, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
-
-      noise.connect(filter);
-      filter.connect(noiseGain);
-      noiseGain.connect(audioCtx.destination);
-      noise.start(now);
-
-      const subOsc = audioCtx.createOscillator();
-      const subGain = audioCtx.createGain();
-      subOsc.type = 'sawtooth';
-      subOsc.frequency.setValueAtTime(140, now);
-      subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.8);
-
-      subGain.gain.setValueAtTime(0.35, now);
-      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
-
-      subOsc.connect(subGain);
-      subGain.connect(audioCtx.destination);
-      subOsc.start(now);
-      subOsc.stop(now + 0.86);
+      initAudio(); const now = audioCtx.currentTime, bs = audioCtx.sampleRate * 0.75, buf = audioCtx.createBuffer(1, bs, audioCtx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < bs; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.22));
+      const n = audioCtx.createBufferSource(); n.buffer = buf;
+      const f = audioCtx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(1200, now); f.frequency.exponentialRampToValueAtTime(180, now + 0.7);
+      const ng = audioCtx.createGain(); ng.gain.setValueAtTime(0.45, now); ng.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+      n.connect(f); f.connect(ng); ng.connect(audioCtx.destination); n.start(now);
+      const s = audioCtx.createOscillator(), sg = audioCtx.createGain(); s.type = 'sawtooth'; s.frequency.setValueAtTime(140, now); s.frequency.exponentialRampToValueAtTime(28, now + 0.8);
+      sg.gain.setValueAtTime(0.35, now); sg.gain.exponentialRampToValueAtTime(0.001, now + 0.85); s.connect(sg); sg.connect(audioCtx.destination); s.start(now); s.stop(now + 0.86);
     } catch (e) {}
   }
 
   function startHorrorAmbience() {
-    playRealCryingAudio();
-    if (horrorInterval) return;
+    playRealCryingAudio(); if (horrorInterval) return;
     try {
-      initAudio();
-      const now = audioCtx.currentTime;
-
-      horrorDroneOsc1 = audioCtx.createOscillator();
-      horrorDroneOsc2 = audioCtx.createOscillator();
-      const droneFilter = audioCtx.createBiquadFilter();
-      const droneGain = audioCtx.createGain();
-
-      horrorDroneOsc1.type = 'sine';
-      horrorDroneOsc2.type = 'triangle';
-      horrorDroneOsc1.frequency.setValueAtTime(44, now);
-      horrorDroneOsc2.frequency.setValueAtTime(46.5, now);
-
-      droneFilter.type = 'lowpass';
-      droneFilter.frequency.setValueAtTime(110, now);
-
-      droneGain.gain.setValueAtTime(0.01, now);
-      droneGain.gain.linearRampToValueAtTime(0.16, now + 1.8);
-
-      horrorDroneOsc1.connect(droneFilter);
-      horrorDroneOsc2.connect(droneFilter);
-      droneFilter.connect(droneGain);
-      droneGain.connect(audioCtx.destination);
-
-      horrorDroneOsc1.start(now);
-      horrorDroneOsc2.start(now);
-
+      initAudio(); const now = audioCtx.currentTime;
+      horrorDroneOsc1 = audioCtx.createOscillator(); horrorDroneOsc2 = audioCtx.createOscillator();
+      const df = audioCtx.createBiquadFilter(), dg = audioCtx.createGain();
+      horrorDroneOsc1.type = 'sine'; horrorDroneOsc2.type = 'triangle';
+      horrorDroneOsc1.frequency.setValueAtTime(44, now); horrorDroneOsc2.frequency.setValueAtTime(46.5, now);
+      df.type = 'lowpass'; df.frequency.setValueAtTime(110, now);
+      dg.gain.setValueAtTime(0.01, now); dg.gain.linearRampToValueAtTime(0.16, now + 1.8);
+      horrorDroneOsc1.connect(df); horrorDroneOsc2.connect(df); df.connect(dg); dg.connect(audioCtx.destination);
+      horrorDroneOsc1.start(now); horrorDroneOsc2.start(now);
       horrorInterval = setInterval(() => {
-        if (!audioCtx || !isHorrorTriggered) return;
-        const t = audioCtx.currentTime;
-
-        [0, 0.24].forEach((offset, idx) => {
-          const hbOsc = audioCtx.createOscillator();
-          const hbGain = audioCtx.createGain();
-          hbOsc.type = 'sine';
-          hbOsc.frequency.setValueAtTime(idx === 0 ? 64 : 50, t + offset);
-          hbOsc.frequency.exponentialRampToValueAtTime(22, t + offset + 0.18);
-
-          hbGain.gain.setValueAtTime(idx === 0 ? 0.25 : 0.18, t + offset);
-          hbGain.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.2);
-
-          hbOsc.connect(hbGain);
-          hbGain.connect(audioCtx.destination);
-          hbOsc.start(t + offset);
-          hbOsc.stop(t + offset + 0.21);
+        if (!audioCtx || !isHorrorTriggered) return; const t = audioCtx.currentTime;
+        [0, 0.24].forEach((off, idx) => {
+          const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = 'sine';
+          o.frequency.setValueAtTime(idx === 0 ? 64 : 50, t + off); o.frequency.exponentialRampToValueAtTime(22, t + off + 0.18);
+          g.gain.setValueAtTime(idx === 0 ? 0.25 : 0.18, t + off); g.gain.exponentialRampToValueAtTime(0.001, t + off + 0.2);
+          o.connect(g); g.connect(audioCtx.destination); o.start(t + off); o.stop(t + off + 0.21);
         });
       }, 1650);
     } catch (e) {}
   }
-
   function stopHorrorAmbience() {
-    stopRealCryingAudio();
-    clearInterval(horrorInterval);
-    horrorInterval = null;
-    try {
-      if (horrorDroneOsc1) { horrorDroneOsc1.stop(); horrorDroneOsc1 = null; }
-      if (horrorDroneOsc2) { horrorDroneOsc2.stop(); horrorDroneOsc2 = null; }
-    } catch (e) {}
+    stopRealCryingAudio(); clearInterval(horrorInterval); horrorInterval = null;
+    try { if (horrorDroneOsc1) { horrorDroneOsc1.stop(); horrorDroneOsc1 = null; } if (horrorDroneOsc2) { horrorDroneOsc2.stop(); horrorDroneOsc2 = null; } } catch (e) {}
   }
-
-  function playMilestoneFanfare() {
+  function playSimpleNotes(notes, type, step, dur, vol) {
     if (!soundEnabled) return;
     try {
       initAudio();
-      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-      notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        const startTime = audioCtx.currentTime + idx * 0.07;
-        osc.frequency.setValueAtTime(freq, startTime);
-
-        gain.gain.setValueAtTime(0.11, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + 0.36);
+      notes.forEach((f, i) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain(), st = audioCtx.currentTime + i * step;
+        o.type = type; o.frequency.setValueAtTime(f, st); g.gain.setValueAtTime(vol, st); g.gain.exponentialRampToValueAtTime(0.001, st + dur);
+        o.connect(g); g.connect(audioCtx.destination); o.start(st); o.stop(st + dur + 0.02);
       });
     } catch (e) {}
   }
-
-  function playForgivenessSound() {
-    try {
-      initAudio();
-      const notes = [523.25, 659.25, 783.99, 987.77, 1046.50, 1318.51];
-      notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        const startTime = audioCtx.currentTime + idx * 0.11;
-        osc.frequency.setValueAtTime(freq, startTime);
-
-        gain.gain.setValueAtTime(0.12, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.65);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + 0.68);
-      });
-    } catch (e) {}
-  }
-
+  function playMilestoneFanfare() { playSimpleNotes([523.25, 659.25, 783.99, 1046.5, 1318.51], 'triangle', 0.07, 0.35, 0.11); }
+  function playForgivenessSound() { playSimpleNotes([523.25, 659.25, 783.99, 987.77, 1046.5, 1318.51], 'sine', 0.11, 0.65, 0.12); }
+  function playSuccessSound() { playSimpleNotes([523.25, 659.25, 783.99, 1046.5], 'sine', 0.08, 0.25, 0.09); }
+  function playCoinSound() { playSimpleNotes([987.77, 1318.51], 'sine', 0.07, 0.25, 0.1); }
+  function playHoverSound() { if (soundEnabled && !isHorrorTriggered) playSimpleNotes([780], 'sine', 0, 0.045, 0.035); }
+  function playClickSound() { if (soundEnabled) playSimpleNotes([isHorrorTriggered ? 130 : 880], isHorrorTriggered ? 'sine' : 'triangle', 0, 0.09, 0.09); }
   function toggleSound() {
-    soundEnabled = !soundEnabled;
-    document.getElementById('soundIcon').textContent = soundEnabled ? '🔔' : '🔕';
-    if (!isHorrorTriggered) {
-      document.getElementById('soundLabel').textContent = soundEnabled ? 'เสียงปุ่ม: เปิด' : 'เสียงปุ่ม: ปิด';
-    }
-    if (soundEnabled) {
-      initAudio();
-      playClickSound();
-    }
-  }
-
-  function playHoverSound() {
-    if (!soundEnabled || isHorrorTriggered) return;
-    try {
-      initAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(680, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(980, audioCtx.currentTime + 0.045);
-
-      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.05);
-    } catch (e) {}
-  }
-
-  function playClickSound() {
-    if (!soundEnabled) return;
-    try {
-      initAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = isHorrorTriggered ? 'sine' : 'triangle';
-      osc.frequency.setValueAtTime(isHorrorTriggered ? 140 : 784, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(isHorrorTriggered ? 80 : 1175, audioCtx.currentTime + 0.09);
-
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.11);
-    } catch (e) {}
-  }
-
-  function playCoinSound() {
-    if (!soundEnabled) return;
-    try {
-      initAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(987.77, audioCtx.currentTime);
-      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.07);
-
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.31);
-    } catch (e) {}
-  }
-
-  function playSuccessSound() {
-    if (!soundEnabled) return;
-    try {
-      initAudio();
-      const notes = [523.25, 659.25, 783.99, 1046.50];
-      notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        const startTime = audioCtx.currentTime + idx * 0.08;
-        osc.frequency.setValueAtTime(freq, startTime);
-
-        gain.gain.setValueAtTime(0.09, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + 0.26);
-      });
-    } catch (e) {}
+    soundEnabled = !soundEnabled; document.getElementById('soundIcon').textContent = soundEnabled ? '🔔' : '🔕';
+    if (!isHorrorTriggered) document.getElementById('soundLabel').textContent = soundEnabled ? 'เสียงปุ่ม: เปิด' : 'เสียงปุ่ม: ปิด';
+    if (soundEnabled) { initAudio(); playClickSound(); }
   }
 
   // =========================================
-  // 3. ระบบคำนวณผลคะแนนรวม 4 ระดับ
+  // ผลคะแนนรวม 4 ระดับ + หิมะ/เลือด + 12 เกม
   // =========================================
-  const ratingNames = [
-    "entry.1009499701",
-    "entry.1063055141",
-    "entry.1066530576",
-    "entry.1917282137"
-  ];
-
+  const ratingNames = ["entry.1009499701", "entry.1063055141", "entry.1066530576", "entry.1917282137"];
   function updateTotalScoreSummary() {
     if (isHorrorTriggered) return;
-
-    let sum = 0;
-    let answeredCount = 0;
-    let allOnes = true;
-
-    ratingNames.forEach(name => {
-      const checked = document.querySelector(`input[name="${name}"]:checked`);
-      if (checked) {
-        const val = parseInt(checked.value, 10);
-        sum += val;
-        answeredCount++;
-        if (val !== 1) allOnes = false;
-      } else {
-        allOnes = false;
-      }
+    let sum = 0, answered = 0, allOnes = true;
+    ratingNames.forEach(n => {
+      const c = document.querySelector(`input[name="${n}"]:checked`);
+      if (c) { const v = parseInt(c.value, 10); sum += v; answered++; if (v !== 1) allOnes = false; } else allOnes = false;
     });
-
-    const card = document.getElementById('totalScoreCard');
-    const textEl = document.getElementById('totalScoreText');
-    const rankEl = document.getElementById('totalScoreRank');
-    const fillEl = document.getElementById('scoreProgressFill');
-    const descEl = document.getElementById('totalScoreDesc');
-
+    const card = document.getElementById('totalScoreCard'), tEl = document.getElementById('totalScoreText'), rEl = document.getElementById('totalScoreRank'), fEl = document.getElementById('scoreProgressFill'), dEl = document.getElementById('totalScoreDesc');
     card.classList.remove('tier-terrible', 'tier-bad', 'tier-good', 'tier-verygood');
-
-    if (answeredCount < 4) {
-      textEl.textContent = `📊 ผลคะแนนรวม: ตอบแล้ว ${answeredCount} / 4 หัวข้อ (${sum} คะแนน)`;
-      rankEl.textContent = "รอให้คะแนนครบ";
-      fillEl.style.width = `${(sum / 20) * 100}%`;
-      descEl.textContent = "กรุณาเลือกให้คะแนนทั้ง 4 หัวข้อด้านบน เพื่อสรุประดับคุณภาพงานแปลครับ";
-      return;
+    if (answered < 4) {
+      tEl.textContent = `📊 ผลคะแนนรวม: ตอบแล้ว ${answered} / 4 หัวข้อ (${sum} คะแนน)`; rEl.textContent = "รอให้คะแนนครบ";
+      fEl.style.width = `${(sum / 20) * 100}%`; dEl.textContent = "กรุณาเลือกให้คะแนนทั้ง 4 หัวข้อด้านบน เพื่อสรุประดับคุณภาพงานแปลครับ"; return;
     }
-
-    const percent = (sum / 20) * 100;
-    fillEl.style.width = `${percent}%`;
-    textEl.textContent = `📊 ผลคะแนนรวม: ${sum} / 20 คะแนน`;
-
-    if (sum <= 7) {
-      card.classList.add('tier-terrible');
-      rankEl.textContent = "ระดับ: แย่สุดๆ 💀";
-      if (allOnes) {
-        descEl.textContent = "ให้ 1 ดาวครบทุกข้อเลยเหรอครับ... ถ้ามีจุดไหนไม่พอใจ พิมพ์บอกด้านล่างด้วยนะ...";
-      } else {
-        descEl.textContent = "คะแนนรวมอยู่ในระดับแย่สุดๆ ทีมแปลจะรีบนำไปตรวจสอบและแก้ไขอย่างเร่งด่วนครับ";
-      }
-    } else if (sum <= 11) {
-      card.classList.add('tier-bad');
-      rankEl.textContent = "ระดับ: แย่ 😢";
-      descEl.textContent = "คะแนนรวมอยู่ในระดับแย่ ยังมีจุดที่ต้องปรับปรุงอีกมาก รบกวนแจ้งจุดที่ติดขัดด้านล่างได้เลยครับ";
-    } else if (sum <= 16) {
-      card.classList.add('tier-good');
-      rankEl.textContent = "ระดับ: ดี 😊";
-      descEl.textContent = "คะแนนรวมอยู่ในระดับดี! งานแปลอ่านเข้าใจง่ายและน่าติดตาม ขอบคุณที่ร่วมประเมินครับ";
-    } else {
-      card.classList.add('tier-verygood');
-      rankEl.textContent = "ระดับ: ดีมาก 🎄✨";
-      descEl.textContent = "ยอดเยี่ยมระดับดีมาก! เป็นกำลังใจที่ยิ่งใหญ่ที่สุดสำหรับทีมแปล Ben the Game Translator เลยครับ!";
-    }
+    fEl.style.width = `${(sum / 20) * 100}%`; tEl.textContent = `📊 ผลคะแนนรวม: ${sum} / 20 คะแนน`;
+    if (sum <= 7) { card.classList.add('tier-terrible'); rEl.textContent = "ระดับ: แย่สุดๆ 💀"; dEl.textContent = allOnes ? "ให้ 1 ดาวครบทุกข้อเลยเหรอครับ... ถ้ามีจุดไหนไม่พอใจ พิมพ์บอกด้านล่างด้วยนะ..." : "คะแนนรวมอยู่ในระดับแย่สุดๆ ทีมแปลจะรีบนำไปตรวจสอบแก้ไขครับ"; }
+    else if (sum <= 11) { card.classList.add('tier-bad'); rEl.textContent = "ระดับ: แย่ 😢"; dEl.textContent = "คะแนนรวมอยู่ในระดับแย่ รบกวนแจ้งจุดที่ติดขัดด้านล่างได้เลยครับ"; }
+    else if (sum <= 16) { card.classList.add('tier-good'); rEl.textContent = "ระดับ: ดี 😊"; dEl.textContent = "คะแนนรวมอยู่ในระดับดี! งานแปลอ่านเข้าใจง่าย ขอบคุณที่ร่วมประเมินครับ"; }
+    else { card.classList.add('tier-verygood'); rEl.textContent = "ระดับ: ดีมาก 🎄✨"; dEl.textContent = "ยอดเยี่ยมระดับดีมาก! เป็นกำลังใจที่ยิ่งใหญ่ที่สุดสำหรับทีมแปลเลยครับ!"; }
   }
 
-  // =========================================
-  // 4. พื้นหลังเกล็ดหิมะ / หยดเลือด
-  // =========================================
-  const canvas = document.getElementById("snowCanvas");
-  const ctx = canvas.getContext("2d");
-  let snowflakes = [];
-  let mouse = { x: null, y: null };
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
-
-  window.addEventListener("mousemove", (e) => {
-    mouse.x = e.x;
-    mouse.y = e.y;
-  });
-
+  const canvas = document.getElementById("snowCanvas"), ctx = canvas.getContext("2d");
+  let snowflakes = [], mouse = { x: null, y: null };
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener("resize", resizeCanvas); resizeCanvas();
+  window.addEventListener("mousemove", e => { mouse.x = e.x; mouse.y = e.y; });
   class Snowflake {
-    constructor() {
-      this.reset(true);
-    }
-    reset(initial = false) {
-      this.x = Math.random() * canvas.width;
-      this.y = initial ? Math.random() * canvas.height : -15;
-      this.radius = Math.random() * 3.4 + 1.4;
-      this.speedY = Math.random() * 1.1 + 0.5;
-      this.wind = (Math.random() - 0.5) * 0.6;
-      this.angle = Math.random() * Math.PI * 2;
-      this.isGoldSparkle = Math.random() < 0.22;
-    }
+    constructor() { this.reset(true); }
+    reset(init = false) { this.x = Math.random() * canvas.width; this.y = init ? Math.random() * canvas.height : -15; this.r = Math.random() * 3.4 + 1.4; this.sy = Math.random() * 1.1 + 0.5; this.w = (Math.random() - 0.5) * 0.6; this.a = Math.random() * Math.PI * 2; this.g = Math.random() < 0.22; }
     update() {
-      this.angle += 0.015;
-      this.y += isHorrorTriggered ? this.speedY * 2.4 : this.speedY;
-      this.x += isHorrorTriggered ? Math.sin(this.angle) * 0.15 : (Math.sin(this.angle) * 0.45 + this.wind);
-
-      if (!isHorrorTriggered && mouse.x !== null) {
-        const dx = this.x - mouse.x;
-        const dy = this.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 110) {
-          this.x += (dx / dist) * 1.2;
-        }
-      }
-
-      if (this.y > canvas.height + 15 || this.x > canvas.width + 20 || this.x < -20) {
-        this.reset(false);
-      }
+      this.a += 0.015; this.y += isHorrorTriggered ? this.sy * 2.4 : this.sy;
+      this.x += isHorrorTriggered ? Math.sin(this.a) * 0.15 : (Math.sin(this.a) * 0.45 + this.w);
+      if (!isHorrorTriggered && mouse.x !== null) { const dx = this.x - mouse.x, dy = this.y - mouse.y, dist = Math.hypot(dx, dy); if (dist < 110) this.x += (dx / dist) * 1.2; }
+      if (this.y > canvas.height + 15 || this.x > canvas.width + 20 || this.x < -20) this.reset(false);
     }
     draw() {
       ctx.beginPath();
-      if (isHorrorTriggered) {
-        ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius * 2.2, 0, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(220, 20, 20, 0.88)";
-        ctx.shadowColor = "#990000";
-        ctx.shadowBlur = 8;
-      } else {
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        if (this.isGoldSparkle) {
-          ctx.fillStyle = "rgba(253, 224, 71, 0.85)";
-          ctx.shadowColor = "#fbbf24";
-          ctx.shadowBlur = 8;
-        } else {
-          ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-          ctx.shadowColor = "#ffffff";
-          ctx.shadowBlur = 4;
-        }
-      }
+      if (isHorrorTriggered) { ctx.ellipse(this.x, this.y, this.r * 0.85, this.r * 2.2, 0, 0, Math.PI * 2); ctx.fillStyle = "rgba(220,20,20,0.88)"; }
+      else { ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = this.g ? "rgba(253,224,71,0.85)" : "rgba(255,255,255,0.85)"; }
       ctx.fill();
-      ctx.shadowBlur = 0;
     }
   }
+  for (let i = 0; i < Math.min(115, Math.floor((canvas.width * canvas.height) / 9500)); i++) snowflakes.push(new Snowflake());
+  (function animateSnow() { ctx.clearRect(0, 0, canvas.width, canvas.height); snowflakes.forEach(s => { s.update(); s.draw(); }); requestAnimationFrame(animateSnow); })();
 
-  function initSnow() {
-    snowflakes = [];
-    const count = Math.min(115, Math.floor((canvas.width * canvas.height) / 9500));
-    for (let i = 0; i < count; i++) {
-      snowflakes.push(new Snowflake());
-    }
-  }
-  initSnow();
-
-  function animateSnow() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < snowflakes.length; i++) {
-      snowflakes[i].update();
-      snowflakes[i].draw();
-    }
-    requestAnimationFrame(animateSnow);
-  }
-  animateSnow();
-
-  // =========================================
-  // 5. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม
-  // =========================================
   const introText = "Ho Ho Ho~ รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! 🎄✨";
-  const typeTarget = document.getElementById("typewriterText");
-  let charIndex = 0;
-
-  function typeWriter() {
-    if (isHorrorTriggered) return;
-    if (charIndex < introText.length) {
-      typeTarget.textContent += introText.charAt(charIndex);
-      charIndex++;
-      setTimeout(typeWriter, 32);
-    }
-  }
+  const typeTarget = document.getElementById("typewriterText"); let charIndex = 0;
+  function typeWriter() { if (!isHorrorTriggered && charIndex < introText.length) { typeTarget.textContent += introText.charAt(charIndex++); setTimeout(typeWriter, 32); } }
 
   const games = [
     { name: "[VN] Tavern of Spear", tag: "VN", img: "images/tavern.jpg" },
@@ -2930,396 +1399,155 @@
     { name: "[VN] Flaming Flagon", tag: "VN", img: "images/flagon.jpg" },
     { name: "[VN] The Smoke Room", tag: "VN", img: "images/smoke.jpg" }
   ];
-
-  const GAME_ENTRY_ID = "entry.1291974658";
   const grid = document.getElementById('gameGrid');
-
-  games.forEach((game, index) => {
-    const cleanTitle = game.name.replace(/^\[.*?\]\s*/, '');
-    const delay = index * 0.05;
-    grid.innerHTML += `
-      <label class="game-option" onmouseenter="playHoverSound()">
-        <input type="radio" name="${GAME_ENTRY_ID}" value="${game.name}" ${index === 0 ? 'required' : ''} onchange="playClickSound()">
-        <div class="game-card" style="animation-delay: ${delay}s;">
-          <div class="img-container">
-            <span class="genre-tag" data-orig-tag="${game.tag}">${game.tag}</span>
-            <span class="check-badge">✓</span>
-            <img class="game-cover-img" data-orig-src="${game.img}" src="${game.img}" alt="${game.name}" onerror="if(!isHorrorTriggered){this.src='https://placehold.co/400x300/15803d/ffffff?text=${encodeURIComponent(cleanTitle)}';}">
-          </div>
-          <div class="game-title">${game.name}</div>
-        </div>
-      </label>
-    `;
+  games.forEach((game, idx) => {
+    const clean = game.name.replace(/^\[.*?\]\s*/, '');
+    grid.innerHTML += `<label class="game-option" onmouseenter="playHoverSound()"><input type="radio" name="entry.1291974658" value="${game.name}" ${idx === 0 ? 'required' : ''} onchange="playClickSound()"><div class="game-card"><div class="img-container"><span class="genre-tag" data-orig-tag="${game.tag}">${game.tag}</span><span class="check-badge">✓</span><img class="game-cover-img" data-orig-src="${game.img}" src="${game.img}" alt="${game.name}" onerror="if(!isHorrorTriggered){this.src='https://placehold.co/400x300/15803d/ffffff?text=${encodeURIComponent(clean)}';}"></div><div class="game-title">${game.name}</div></div></label>`;
   });
 
-  const ratingLabels = {
-    "1": "ควรปรับปรุงอย่างยิ่ง 😢",
-    "2": "พอใช้ได้ ยังมีจุดติดขัด 🤔",
-    "3": "ปานกลาง อ่านเข้าใจ 🙂",
-    "4": "ดีมาก ลื่นไหลน่าติดตาม 😊",
-    "5": "ยอดเยี่ยมระดับมือโปร! 🎄✨"
-  };
-
+  const ratingLabels = { "1": "ควรปรับปรุงอย่างยิ่ง 😢", "2": "พอใช้ได้ ยังมีจุดติดขัด 🤔", "3": "ปานกลาง อ่านเข้าใจ 🙂", "4": "ดีมาก ลื่นไหลน่าติดตาม 😊", "5": "ยอดเยี่ยมระดับมือโปร! 🎄✨" };
   document.querySelectorAll('.rating-group').forEach(group => {
-    const targetId = group.getAttribute('data-target');
-    const feedbackEl = document.getElementById(targetId);
+    const fb = document.getElementById(group.getAttribute('data-target'));
     group.querySelectorAll('.rating-btn').forEach(label => {
       label.addEventListener('mouseenter', playHoverSound);
-      const radio = label.querySelector('input[type="radio"]');
-      radio.addEventListener('change', () => {
-        playClickSound();
-        feedbackEl.textContent = isHorrorTriggered ? "ผมทำอะไรผิดทุกอย่างเลย..." : ratingLabels[radio.value];
-        feedbackEl.classList.add('visible');
-        updateTotalScoreSummary();
-      });
+      const radio = label.querySelector('input');
+      radio.addEventListener('change', () => { playClickSound(); fb.textContent = isHorrorTriggered ? "ผมทำอะไรผิดทุกอย่างเลย..." : ratingLabels[radio.value]; fb.classList.add('visible'); updateTotalScoreSummary(); });
     });
   });
 
-  document.getElementById('submitBtn').addEventListener('mouseenter', playHoverSound);
-
   // =========================================
-  // 6. ระบบปุ่มขอโทษ 2 จุด (ด้านบน 5/20/40/60/รีเป็น 5 + ด้านล่าง 3 ครั้ง)
+  // ระบบคำสาป & ปุ่มขอโทษ 2 จุด (ด้านบน 5/20/40/60/รี 5 + ด้านล่าง 3)
   // =========================================
   function updateApologyChecklistUI() {
-    const topDone = topApologyClicks >= topApologyTarget;
-    const bottomDone = bottomApologyClicks >= BOTTOM_APOLOGY_TARGET;
-
-    const topStatusEl = document.getElementById('checkTopStatus');
-    const bottomStatusEl = document.getElementById('checkBottomStatus');
-    const bottomBtn = document.getElementById('bottomApologizeBtn');
-
-    topStatusEl.textContent = `${topDone ? '✅' : '⬜'} 1. กดปุ่มขอโทษ (ตรงปุ่มกดใจด้านบน): ${topApologyClicks} / ${topApologyTarget} ครั้ง`;
-    bottomStatusEl.textContent = `${bottomDone ? '✅' : '⬜'} 2. กดปุ่มขอโทษด้านล่างนี้: ${bottomApologyClicks} / ${BOTTOM_APOLOGY_TARGET} ครั้ง`;
-
-    if (bottomDone) {
-      bottomBtn.textContent = `✅ กดขอโทษด้านล่างครบแล้ว (${BOTTOM_APOLOGY_TARGET} / ${BOTTOM_APOLOGY_TARGET})`;
-      bottomBtn.classList.add('completed-part');
-    } else {
-      bottomBtn.textContent = `🙏 ผมขอโทษ... (${bottomApologyClicks} / ${BOTTOM_APOLOGY_TARGET})`;
-      bottomBtn.classList.remove('completed-part');
-    }
+    const topDone = topApologyClicks >= topApologyTarget, bottomDone = bottomApologyClicks >= BOTTOM_APOLOGY_TARGET;
+    document.getElementById('checkTopStatus').textContent = `${topDone ? '✅' : '⬜'} 1. กดปุ่มขอโทษ (ตรงปุ่มกดใจด้านบน): ${topApologyClicks} / ${topApologyTarget} ครั้ง`;
+    document.getElementById('checkBottomStatus').textContent = `${bottomDone ? '✅' : '⬜'} 2. กดปุ่มขอโทษด้านล่างนี้: ${bottomApologyClicks} / ${BOTTOM_APOLOGY_TARGET} ครั้ง`;
+    const bBtn = document.getElementById('bottomApologizeBtn');
+    bBtn.textContent = bottomDone ? `✅ กดขอโทษด้านล่างครบแล้ว (${BOTTOM_APOLOGY_TARGET} / ${BOTTOM_APOLOGY_TARGET})` : `🙏 ผมขอโทษ... (${bottomApologyClicks} / ${BOTTOM_APOLOGY_TARGET})`;
+    bBtn.classList.toggle('completed-part', bottomDone);
   }
-
   function handleBottomApologyClick(e) {
-    if (!isHorrorTriggered) return;
-    playClickSound();
-
-    if (bottomApologyClicks < BOTTOM_APOLOGY_TARGET) {
-      bottomApologyClicks++;
-    }
-
-    const apolIcons = ['🙏', '💔', '💧', '🩸'];
-    for (let i = 0; i < 3; i++) {
-      const el = document.createElement('div');
-      el.className = 'floating-heart';
-      el.textContent = apolIcons[Math.floor(Math.random() * apolIcons.length)];
-      el.style.left = (e.clientX + (Math.random() - 0.5) * 70) + 'px';
-      el.style.top = (e.clientY - 10) + 'px';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1200);
-    }
-
-    updateApologyChecklistUI();
-    checkIfFullyForgiven();
+    if (!isHorrorTriggered) return; playClickSound();
+    if (bottomApologyClicks < BOTTOM_APOLOGY_TARGET) bottomApologyClicks++;
+    spawnFloatingIcons(e, ['🙏', '💔', '💧', '🩸'], 3);
+    updateApologyChecklistUI(); checkIfFullyForgiven();
   }
-
-  function checkIfFullyForgiven() {
-    if (topApologyClicks >= topApologyTarget && bottomApologyClicks >= BOTTOM_APOLOGY_TARGET) {
-      setTimeout(() => {
-        forgiveAndRestore();
-      }, 280);
-    }
-  }
+  function checkIfFullyForgiven() { if (topApologyClicks >= topApologyTarget && bottomApologyClicks >= BOTTOM_APOLOGY_TARGET) setTimeout(forgiveAndRestore, 280); }
 
   function corruptAllElements() {
-    document.querySelectorAll('.corruptible').forEach(el => {
-      if (!el.dataset.origText) {
-        el.dataset.origText = el.textContent;
-      }
-      if (el.dataset.cursed) {
-        el.textContent = el.dataset.cursed;
-      }
-    });
-
-    document.querySelectorAll('.game-cover-img').forEach(img => {
-      img.src = ERROR_IMG_SVG;
-    });
-
-    document.querySelectorAll('.genre-tag').forEach(tag => {
-      tag.textContent = "ERROR";
-    });
-
-    document.querySelectorAll('.game-title').forEach(el => {
-      if (!el.dataset.origText) {
-        el.dataset.origText = el.textContent;
-      }
-      el.textContent = "ผมทำอะไรผิดทุกอย่างเลย...";
-    });
-
-    const p1 = document.getElementById('commentPraise');
-    const p2 = document.getElementById('commentFix');
-    p1.placeholder = "ทำไมถึงไม่พิมพ์บอกผมสักคำ... ผมทำอะไรผิดเหรอ...";
-    p2.placeholder = "ผมพยายามแปลอย่างเต็มที่แล้ว... แต่ผมทำผิดทุกอย่างเลยใช่ไหม...";
-
-    const scoreCard = document.getElementById('totalScoreCard');
-    scoreCard.classList.remove('tier-bad', 'tier-good', 'tier-verygood');
-    scoreCard.classList.add('tier-terrible');
+    document.querySelectorAll('.corruptible').forEach(el => { if (!el.dataset.origText) el.dataset.origText = el.textContent; if (el.dataset.cursed) el.textContent = el.dataset.cursed; });
+    document.querySelectorAll('.game-cover-img').forEach(img => { img.src = ERROR_IMG_SVG; });
+    document.querySelectorAll('.genre-tag').forEach(t => { t.textContent = "ERROR"; });
+    document.querySelectorAll('.game-title').forEach(el => { if (!el.dataset.origText) el.dataset.origText = el.textContent; el.textContent = "ผมทำอะไรผิดทุกอย่างเลย..."; });
+    document.getElementById('commentPraise').placeholder = "ทำไมถึงไม่พิมพ์บอกผมสักคำ... ผมทำอะไรผิดเหรอ...";
+    document.getElementById('commentFix').placeholder = "ผมพยายามแปลอย่างเต็มที่แล้ว... แต่ผมทำผิดทุกอย่างเลยใช่ไหม...";
+    const sc = document.getElementById('totalScoreCard'); sc.classList.remove('tier-bad', 'tier-good', 'tier-verygood'); sc.classList.add('tier-terrible');
     document.getElementById('totalScoreText').textContent = "💀 ผลคะแนนรวม: ผมมันไร้ค่า... (0 / 20)";
     document.getElementById('totalScoreRank').textContent = wasForgivenReset ? "ให้อภัยแล้ว (รีเป็น 5 ครั้ง)" : `ติดคำสาปรอบที่ ${curseCount}`;
     document.getElementById('scoreProgressFill').style.width = "100%";
     document.getElementById('totalScoreDesc').textContent = "รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอกครับ... ต้องกดขอโทษทั้งด้านบนและด้านล่างให้ครบ...";
-
-    const stageTag = document.getElementById('cursedStageTag');
-    const apolIcon = document.getElementById('cursedApologyIcon');
-    const apolTitle = document.getElementById('cursedApologyTitle');
-    const apolSub = document.getElementById('cursedApologySub');
-
-    if (wasForgivenReset) {
-      stageTag.textContent = "FORGIVEN RESET • รีเซ็ตกลับเป็น 5 ครั้ง";
-      apolIcon.textContent = "🥹💖";
-      apolTitle.textContent = "ผมให้อภัยคุณแล้ว... รีเป็น 5 ครั้งพอครับ";
-      apolSub.innerHTML = "คุณแกล้งผมเกิน 4 รอบแล้ว... ผมไม่อยากโกรธคุณอีกต่อไปแล้วครับ<br>กดปุ่มขอโทษด้านบน <strong>5 ครั้ง</strong> และปุ่มด้านล่าง <strong>3 ครั้ง</strong> เพื่อกลับสู่หน้าปกติได้เลยครับ";
-    } else {
-      stageTag.textContent = `APOLOGY ROUND ${curseCount} • ด้านบน ${topApologyTarget} ครั้ง / ด้านล่าง 3 ครั้ง`;
-      apolIcon.textContent = "😭💔";
-      apolTitle.textContent = "นี่ผมดูแย่ขนาดนั้นเลยเหรอ...";
-      apolSub.innerHTML = `คุณทำซ้ำเป็นรอบที่ <strong>${curseCount}</strong> แล้วนะครับ... ยิ่งทำซ้ำยิ่งต้องกดขอโทษมากขึ้น!<br>กรุณากดปุ่มขอโทษทั้ง 2 จุดให้ครบตามรายการด้านล่างนี้ เพื่อกลับสู่หน้าปกติ:`;
-    }
-
+    document.getElementById('cursedStageTag').textContent = wasForgivenReset ? "FORGIVEN RESET • รีเซ็ตกลับเป็น 5 ครั้ง" : `APOLOGY ROUND ${curseCount} • ด้านบน ${topApologyTarget} ครั้ง / ด้านล่าง 3 ครั้ง`;
+    document.getElementById('cursedApologyIcon').textContent = wasForgivenReset ? "🥹💖" : "😭💔";
+    document.getElementById('cursedApologyTitle').textContent = wasForgivenReset ? "ผมให้อภัยคุณแล้ว... รีเป็น 5 ครั้งพอครับ" : "นี่ผมดูแย่ขนาดนั้นเลยเหรอ...";
+    document.getElementById('cursedApologySub').innerHTML = wasForgivenReset
+      ? "คุณแกล้งผมเกิน 4 รอบแล้ว... ผมไม่อยากโกรธคุณอีกต่อไปแล้วครับ<br>กดปุ่มขอโทษด้านบน <strong>5 ครั้ง</strong> และปุ่มด้านล่าง <strong>3 ครั้ง</strong> เพื่อกลับสู่หน้าปกติได้เลยครับ"
+      : `คุณทำซ้ำเป็นรอบที่ <strong>${curseCount}</strong> แล้วนะครับ... ยิ่งทำซ้ำยิ่งต้องกดขอโทษมากขึ้น!<br>กรุณากดปุ่มขอโทษทั้ง 2 จุดให้ครบตามรายการด้านล่างนี้ เพื่อกลับสู่หน้าปกติ:`;
     document.getElementById('donateNormalContent').style.display = 'none';
     document.getElementById('cursedApologyZone').style.display = 'block';
-    updateApologyChecklistUI();
-    updateCheerUI();
+    updateApologyChecklistUI(); updateCheerUI();
   }
 
   function restoreAllElements() {
-    document.querySelectorAll('.corruptible').forEach(el => {
-      if (el.dataset.origText) {
-        el.textContent = el.dataset.origText;
-      }
-    });
-
-    document.querySelectorAll('.game-cover-img').forEach(img => {
-      if (img.dataset.origSrc) {
-        img.src = img.dataset.origSrc;
-      }
-    });
-
-    document.querySelectorAll('.genre-tag').forEach(tag => {
-      if (tag.dataset.origTag) {
-        tag.textContent = tag.dataset.origTag;
-      }
-    });
-
-    document.querySelectorAll('.game-title').forEach(el => {
-      if (el.dataset.origText) {
-        el.textContent = el.dataset.origText;
-      }
-    });
-
-    const p1 = document.getElementById('commentPraise');
-    const p2 = document.getElementById('commentFix');
-    p1.placeholder = p1.dataset.origPlaceholder;
-    p2.placeholder = p2.dataset.origPlaceholder;
-
+    document.querySelectorAll('.corruptible').forEach(el => { if (el.dataset.origText) el.textContent = el.dataset.origText; });
+    document.querySelectorAll('.game-cover-img').forEach(img => { if (img.dataset.origSrc) img.src = img.dataset.origSrc; });
+    document.querySelectorAll('.genre-tag').forEach(t => { if (t.dataset.origTag) t.textContent = t.dataset.origTag; });
+    document.querySelectorAll('.game-title').forEach(el => { if (el.dataset.origText) el.textContent = el.dataset.origText; });
+    document.getElementById('commentPraise').placeholder = document.getElementById('commentPraise').dataset.origPlaceholder;
+    document.getElementById('commentFix').placeholder = document.getElementById('commentFix').dataset.origPlaceholder;
     document.getElementById('cursedApologyZone').style.display = 'none';
     document.getElementById('donateNormalContent').style.display = 'grid';
     updateCheerUI();
   }
 
-  // =========================================
-  // 7. ตรวจสอบเงื่อนไขส่งฟอร์ม & ปลุกคำสาป / ลบล้างคำสาป
-  // =========================================
   function checkHorrorEasterEggCondition() {
-    let allOneStar = true;
-    ratingNames.forEach(name => {
-      const checked = document.querySelector(`input[name="${name}"]:checked`);
-      if (!checked || checked.value !== "1") {
-        allOneStar = false;
-      }
-    });
-
-    const praiseEmpty = document.getElementById('commentPraise').value.trim() === "";
-    const fixEmpty = document.getElementById('commentFix').value.trim() === "";
-
-    return allOneStar && praiseEmpty && fixEmpty;
+    const allOne = ratingNames.every(n => { const c = document.querySelector(`input[name="${n}"]:checked`); return c && c.value === "1"; });
+    return allOne && document.getElementById('commentPraise').value.trim() === "" && document.getElementById('commentFix').value.trim() === "";
   }
 
   function triggerHorrorEasterEgg(isFromReload = false) {
-    isHorrorTriggered = true;
-    topApologyClicks = 0;
-    bottomApologyClicks = 0;
-
+    isHorrorTriggered = true; topApologyClicks = 0; bottomApologyClicks = 0;
     try {
       curseCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0;
       if (!isFromReload) {
         curseCount++;
-        if (curseCount > 4) {
-          curseCount = 1;
-          wasForgivenReset = true;
-        } else {
-          wasForgivenReset = false;
-        }
+        if (curseCount > 4) { curseCount = 1; wasForgivenReset = true; } else wasForgivenReset = false;
         localStorage.setItem(CURSE_COUNT_KEY, String(curseCount));
-      } else if (curseCount < 1) {
-        curseCount = 1;
-      }
+        if (usersRef && currentDiscordUser) usersRef.child(currentDiscordUser.id).update({ curseCount });
+      } else if (curseCount < 1) curseCount = 1;
       localStorage.setItem(CURSE_STATE_KEY, "1");
-    } catch (e) {
-      if (!isFromReload) {
-        curseCount++;
-        if (curseCount > 4) {
-          curseCount = 1;
-          wasForgivenReset = true;
-        }
-      }
-    }
-
+    } catch (e) {}
     topApologyTarget = getTopApologyRequirement(curseCount);
-
     stopChristmasMusic();
-    document.getElementById('musicStateIcon').textContent = '😭';
-    document.getElementById('musicSpeakerIcon').textContent = '🩸';
-
-    const btn = document.getElementById('submitBtn');
-    const grave = document.getElementById('destroyedButtonGrave');
-
-    if (isFromReload) {
-      btn.style.display = 'none';
-      grave.style.display = 'block';
-    } else {
-      btn.classList.add('destroying');
-      playButtonDestroySound();
-      setTimeout(() => {
-        btn.style.display = 'none';
-        grave.style.display = 'block';
-      }, 820);
-    }
+    document.getElementById('musicStateIcon').textContent = '😭'; document.getElementById('musicSpeakerIcon').textContent = '🩸';
+    const btn = document.getElementById('submitBtn'), grave = document.getElementById('destroyedButtonGrave');
+    if (isFromReload) { btn.style.display = 'none'; grave.style.display = 'block'; }
+    else { btn.classList.add('destroying'); playButtonDestroySound(); setTimeout(() => { btn.style.display = 'none'; grave.style.display = 'block'; }, 820); }
 
     setTimeout(() => {
       document.body.classList.add('horror-mode');
-      document.getElementById('decorLeft').textContent = '🩸😭';
-      document.getElementById('decorRight').textContent = '💀🩸';
-      document.getElementById('titleIcon').textContent = '💀';
+      document.getElementById('decorLeft').textContent = '🩸😭'; document.getElementById('decorRight').textContent = '💀🩸'; document.getElementById('titleIcon').textContent = '💀';
       corruptAllElements();
-
-      if (wasForgivenReset) {
-        typeTarget.textContent = "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ ผมให้อภัยคุณแล้ว... รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ...";
-      } else if (isFromReload) {
-        typeTarget.textContent = `คิดว่าจะหนีพ้นด้วยการรีเฟรชเหรอครับ... รอบที่ ${curseCount} ต้องกดขอโทษด้านบน ${topApologyTarget} ครั้ง และด้านล่าง 3 ครั้ง!`;
-      } else {
-        typeTarget.textContent = `นี่ผมดูแย่ขนาดนั้นเลยเหรอ... (รอบที่ ${curseCount}: กดขอโทษด้านบน ${topApologyTarget} ครั้ง + ด้านล่าง 3 ครั้ง)`;
-      }
-
+      typeTarget.textContent = wasForgivenReset ? "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ..." : `นี่ผมดูแย่ขนาดนั้นเลยเหรอ... (รอบที่ ${curseCount}: กดขอโทษด้านบน ${topApologyTarget} ครั้ง + ด้านล่าง 3 ครั้ง)`;
       startHorrorAmbience();
     }, isFromReload ? 50 : 450);
   }
 
   function forgiveAndRestore() {
-    isHorrorTriggered = false;
-    topApologyClicks = 0;
-    bottomApologyClicks = 0;
-
-    try {
-      localStorage.removeItem(CURSE_STATE_KEY);
-    } catch (e) {}
-
-    stopHorrorAmbience();
-    playForgivenessSound();
-
+    isHorrorTriggered = false; topApologyClicks = 0; bottomApologyClicks = 0;
+    try { localStorage.removeItem(CURSE_STATE_KEY); } catch (e) {}
+    stopHorrorAmbience(); playForgivenessSound();
     document.body.classList.remove('horror-mode');
-
-    document.getElementById('decorLeft').textContent = '🎄✨';
-    document.getElementById('decorRight').textContent = '🎅❄️';
-    document.getElementById('titleIcon').textContent = '🎅';
-    document.getElementById('musicStateIcon').textContent = '▶️';
-    document.getElementById('musicSpeakerIcon').textContent = '🎄🔊';
-
+    document.getElementById('decorLeft').textContent = '🎄✨'; document.getElementById('decorRight').textContent = '🎅❄️';
+    document.getElementById('titleIcon').textContent = '🎅'; document.getElementById('musicStateIcon').textContent = '▶️'; document.getElementById('musicSpeakerIcon').textContent = '🎄🔊';
     restoreAllElements();
-
     const btn = document.getElementById('submitBtn');
-    const grave = document.getElementById('destroyedButtonGrave');
-    grave.style.display = 'none';
-    btn.classList.remove('destroying');
-    btn.style.display = 'block';
-    btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨";
-    btn.style.opacity = "1";
+    document.getElementById('destroyedButtonGrave').style.display = 'none';
+    btn.classList.remove('destroying'); btn.style.display = 'block'; btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨"; btn.style.opacity = "1";
+    document.getElementById('customForm').reset(); document.querySelectorAll('.rating-feedback').forEach(el => el.classList.remove('visible'));
+    updateTotalScoreSummary(); typeTarget.textContent = introText; window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    document.getElementById('customForm').reset();
-    document.querySelectorAll('.rating-feedback').forEach(el => el.classList.remove('visible'));
-    updateTotalScoreSummary();
-
-    typeTarget.textContent = introText;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    const fTitle = document.getElementById('forgivenTitle');
-    const fDesc = document.getElementById('forgivenDesc');
-    if (wasForgivenReset) {
-      fTitle.textContent = "ผมให้อภัยคุณแล้วจริงๆ ครับ! 💖";
-      fDesc.textContent = "ถึงจะแกล้งกันเกิน 4 รอบ ผมก็ยอมรีเซ็ตกลับเป็น 5 ครั้งและให้อภัยเจ้านายแล้วฮะ~ กลับมาสนุกกับธีมคริสต์มาสกันต่อนะ UwU 🎄✨";
-    } else {
-      fTitle.textContent = `ไม่เป็นไรครับ... ผมยกโทษให้แล้ว! (รอบที่ ${curseCount})`;
-      fDesc.textContent = "ขอบคุณที่กดขอโทษครบทั้งด้านบนและด้านล่างนะครับเจ้านาย~ คำสาปหายไปแล้ว กลับมาส่งกำลังใจสู่ 1,000,000 หัวใจกันต่อได้เลยฮะ! 🎄✨";
-    }
-
+    document.getElementById('forgivenTitle').textContent = wasForgivenReset ? "ผมให้อภัยคุณแล้วจริงๆ ครับ! 💖" : `ไม่เป็นไรครับ... ผมยกโทษให้แล้ว! (รอบที่ ${curseCount})`;
+    document.getElementById('forgivenDesc').textContent = wasForgivenReset ? "ถึงจะแกล้งกันเกิน 4 รอบ ผมก็ยอมรีเซ็ตกลับเป็น 5 ครั้งและให้อภัยเจ้านายแล้วฮะ~ กลับมาสนุกกันต่อนะ UwU 🎄✨" : "ขอบคุณที่กดขอโทษครบทั้งด้านบนและด้านล่างนะครับเจ้านาย~ คำสาปหายไปแล้ว กลับมาส่งกำลังใจสู่ 1,000,000 หัวใจกันต่อได้เลยฮะ! 🎄✨";
     document.getElementById('forgivenModal').style.display = 'flex';
-    if (!userPausedMusic && musicVolume > 0) {
-      startChristmasMusic();
-    }
+    if (!userPausedMusic && musicVolume > 0) startChristmasMusic();
   }
 
   function handleSubmit(e) {
-    if (checkHorrorEasterEggCondition()) {
-      if (e) e.preventDefault();
-      submitted = false;
-      triggerHorrorEasterEgg(false);
-      return false;
-    }
-
-    submitted = true;
-    playClickSound();
-    const btn = document.getElementById('submitBtn');
-    btn.textContent = "กำลังส่งข้อมูล... ⏳";
-    btn.style.opacity = "0.8";
-    return true;
+    if (checkHorrorEasterEggCondition()) { if (e) e.preventDefault(); submitted = false; triggerHorrorEasterEgg(false); return false; }
+    submitted = true; playClickSound();
+    const btn = document.getElementById('submitBtn'); btn.textContent = "กำลังส่งข้อมูล... ⏳"; btn.style.opacity = "0.8"; return true;
   }
-
   function onIframeLoad() {
     if (submitted && !isHorrorTriggered) {
-      submitted = false;
-      playSuccessSound();
-      const btn = document.getElementById('submitBtn');
-      btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨";
-      btn.style.opacity = "1";
+      submitted = false; playSuccessSound();
+      const btn = document.getElementById('submitBtn'); btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨"; btn.style.opacity = "1";
       document.getElementById('thankYouModal').style.display = 'flex';
     }
   }
-
   function closeModal() {
-    document.getElementById('thankYouModal').style.display = 'none';
-    document.getElementById('customForm').reset();
+    document.getElementById('thankYouModal').style.display = 'none'; document.getElementById('customForm').reset();
     document.querySelectorAll('.rating-feedback').forEach(el => el.classList.remove('visible'));
-    updateTotalScoreSummary();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateTotalScoreSummary(); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  window.addEventListener("DOMContentLoaded", () => {
-    initFirebaseHearts();
+  window.addEventListener("DOMContentLoaded", async () => {
+    initFirebase();
+    await initDiscordAuth();
     updateCheerUI();
-
     let wasCursed = false;
-    try {
-      curseCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0;
-      wasCursed = localStorage.getItem(CURSE_STATE_KEY) === "1";
-    } catch (e) {}
-
-    if (wasCursed) {
-      triggerHorrorEasterEgg(true);
-    } else {
-      typeWriter();
-    }
+    try { curseCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0; wasCursed = localStorage.getItem(CURSE_STATE_KEY) === "1"; } catch (e) {}
+    if (wasCursed) triggerHorrorEasterEgg(true); else typeWriter();
   });
 </script>
-
 </body>
 </html>
