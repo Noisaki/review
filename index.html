@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>แบบประเมินคุณภาพการแปลภาษาไทยในเกม | Ben the Game Translator</title>
+  <title>🎄 แบบประเมินคุณภาพการแปลภาษาไทยในเกม | Ben the Game Translator</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #0ea5e9;
-      --primary-dark: #0369a1;
-      --accent: #38bdf8;
+      --xmas-red: #dc2626;
+      --xmas-red-dark: #991b1b;
+      --xmas-green: #15803d;
+      --xmas-green-dark: #14532d;
+      --xmas-gold: #f59e0b;
+      --xmas-gold-light: #fde68a;
       --discord: #5865F2;
       --itch: #fa5c5c;
-      --glow: rgba(14, 165, 233, 0.35);
-      --card-bg: rgba(255, 255, 255, 0.92);
+      --glow: rgba(245, 158, 11, 0.35);
+      --card-bg: rgba(255, 255, 255, 0.94);
       --text-main: #1e293b;
       --text-muted: #64748b;
     }
@@ -24,32 +27,122 @@
 
     body {
       font-family: 'Prompt', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 50%, #0369a1 100%);
+      background: linear-gradient(135deg, #052e16 0%, #0f3d2e 45%, #450a0a 100%);
       color: var(--text-main);
       margin: 0;
-      padding: 28px 16px 70px;
+      padding: 68px 16px 70px;
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
     }
 
-    /* ปุ่มควบคุมลอยมุมขวาบน */
+    /* =========================================
+       แถบควบคุมลอยมุมขวาบน (เพลงคริสต์มาส + ปรับเสียง + โดเนท)
+       ========================================= */
     .floating-controls {
       position: fixed;
-      top: 16px;
-      right: 16px;
+      top: 14px;
+      right: 14px;
+      left: 14px;
       z-index: 100;
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       justify-content: flex-end;
+      pointer-events: none;
+    }
+
+    .floating-controls > * {
+      pointer-events: auto;
+    }
+
+    .music-player-pill {
+      background: rgba(10, 35, 24, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #fef3c7;
+      border: 1.5px solid rgba(251, 191, 36, 0.55);
+      padding: 6px 14px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      font-size: 0.82rem;
+    }
+
+    .music-toggle-btn {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.15s ease, filter 0.2s;
+    }
+
+    .music-toggle-btn:hover {
+      filter: brightness(1.12);
+      transform: scale(1.04);
+    }
+
+    .volume-control {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 78px;
+      height: 5px;
+      background: rgba(254, 243, 199, 0.3);
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fbbf24;
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fbbf24;
+      border: 2px solid #ffffff;
+      cursor: pointer;
+    }
+
+    .volume-percent {
+      font-size: 0.75rem;
+      color: #fde68a;
+      min-width: 32px;
+      text-align: right;
+      font-weight: 600;
     }
 
     .pill-control-btn {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(10px);
-      color: #e0f2fe;
-      border: 1px solid rgba(56, 189, 248, 0.5);
+      background: rgba(10, 35, 24, 0.88);
+      backdrop-filter: blur(12px);
+      color: #fef3c7;
+      border: 1.5px solid rgba(251, 191, 36, 0.45);
       padding: 8px 14px;
       border-radius: 999px;
       font-family: 'Prompt', sans-serif;
@@ -59,29 +152,25 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
       transition: all 0.2s ease;
       text-decoration: none;
     }
 
     .pill-control-btn:hover {
-      background: #0284c7;
+      background: #15803d;
       color: #ffffff;
       transform: translateY(-2px);
     }
 
     .pill-donate-jump {
-      background: linear-gradient(90deg, #f59e0b, #ec4899);
-      border-color: rgba(255, 255, 255, 0.6);
+      background: linear-gradient(90deg, #dc2626, #f59e0b);
+      border-color: rgba(255, 255, 255, 0.7);
       color: #ffffff;
       font-weight: 600;
     }
 
-    .pill-donate-jump:hover {
-      filter: brightness(1.1);
-    }
-
-    /* พื้นหลังเอฟเฟกต์แสงออโรร่าและ Canvas */
+    /* พื้นหลังเอฟเฟกต์แสงคริสต์มาสและเกล็ดหิมะ */
     .bg-effects {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -93,14 +182,14 @@
     .orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.65;
+      filter: blur(85px);
+      opacity: 0.55;
       animation: floatOrb 14s infinite alternate ease-in-out;
     }
 
-    .orb-1 { width: 450px; height: 450px; background: #38bdf8; top: -100px; left: -100px; }
-    .orb-2 { width: 500px; height: 500px; background: #818cf8; bottom: -150px; right: -100px; animation-delay: -5s; }
-    .orb-3 { width: 350px; height: 350px; background: #2dd4bf; top: 40%; left: 60%; animation-delay: -9s; }
+    .orb-1 { width: 460px; height: 460px; background: #dc2626; top: -110px; left: -100px; }
+    .orb-2 { width: 520px; height: 520px; background: #16a34a; bottom: -150px; right: -100px; animation-delay: -5s; }
+    .orb-3 { width: 360px; height: 360px; background: #f59e0b; top: 38%; left: 58%; opacity: 0.35; animation-delay: -9s; }
 
     @keyframes floatOrb {
       0% { transform: translate(0, 0) scale(1); }
@@ -108,7 +197,7 @@
       100% { transform: translate(-40px, 70px) scale(0.95); }
     }
 
-    #particleCanvas {
+    #snowCanvas {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       z-index: -1;
@@ -146,7 +235,7 @@
 
     @keyframes floatIcon {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-4px) rotate(6deg); }
+      50% { transform: translateY(-4px) rotate(8deg); }
     }
 
     @keyframes popIn {
@@ -167,27 +256,28 @@
     }
 
     /* =========================================
-       ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่เต็มตา
+       ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่พิเศษ (ธีมคริสต์มาส)
        ========================================= */
     .header-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 24px;
+      border: 2px solid rgba(253, 230, 138, 0.85);
+      border-radius: 26px;
       overflow: hidden;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
       margin-bottom: 28px;
       text-align: center;
       animation: fadeSlideUp 0.6s ease-out;
+      position: relative;
     }
 
     .logo-showcase {
       position: relative;
       width: 100%;
-      padding: 12px 20px;
-      background: radial-gradient(circle at center, #0284c7 0%, #0f172a 85%);
-      border-bottom: 3px solid #38bdf8;
+      padding: 16px 16px;
+      background: radial-gradient(circle at center, #15803d 0%, #7f1d1d 68%, #071f14 100%);
+      border-bottom: 3px solid #fbbf24;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -198,28 +288,39 @@
       content: "";
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(rgba(56, 189, 248, 0.25) 1px, transparent 1px);
-      background-size: 20px 20px;
-      opacity: 0.65;
+      background-image: radial-gradient(rgba(253, 230, 138, 0.28) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      opacity: 0.7;
     }
 
-    /* ขยายโลโก้ให้ใหญ่ขึ้นและบีบขอบใสบน-ล่างออกให้พอดีกรอบ */
+    .festive-corner-decor {
+      position: absolute;
+      top: 12px;
+      font-size: 1.5rem;
+      z-index: 3;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+    .decor-left { left: 16px; }
+    .decor-right { right: 16px; animation-delay: -1.5s; }
+
+    /* ขยายโลโก้ให้ใหญ่ขึ้นอีกขั้นตามคำขอเจ้านาย */
     .studio-logo {
       position: relative;
       z-index: 2;
-      max-width: 660px;
-      width: 96%;
+      max-width: 760px;
+      width: 98%;
       height: auto;
-      margin: -48px auto -42px;
-      filter: drop-shadow(0 8px 24px rgba(56, 189, 248, 0.65));
+      margin: -62px auto -54px;
+      filter: drop-shadow(0 8px 26px rgba(251, 191, 36, 0.6)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.35));
       animation: floatLogo 3.5s ease-in-out infinite;
       transition: transform 0.3s ease;
     }
 
     @media (max-width: 600px) {
       .studio-logo {
-        max-width: 440px;
-        margin: -28px auto -24px;
+        max-width: 500px;
+        margin: -34px auto -30px;
       }
     }
 
@@ -236,12 +337,14 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: linear-gradient(90deg, #0284c7, #0ea5e9);
+      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706);
+      background-size: 200% 200%;
+      animation: gradientFlow 5s ease infinite;
       color: white;
       font-size: 0.8rem;
       font-weight: 600;
       letter-spacing: 0.5px;
-      padding: 6px 16px;
+      padding: 6px 18px;
       border-radius: 999px;
       margin-bottom: 14px;
       box-shadow: 0 4px 12px var(--glow);
@@ -262,7 +365,7 @@
       margin: 0 0 10px 0;
       font-size: 1.95rem;
       font-weight: 700;
-      background: linear-gradient(90deg, #0369a1, #0ea5e9, #6366f1, #0284c7);
+      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706, #dc2626);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -278,8 +381,8 @@
 
     .vn-dialogue-box {
       display: inline-block;
-      background: #f0f9ff;
-      border: 1px solid #bae6fd;
+      background: #fef2f2;
+      border: 1.5px solid #fecaca;
       border-radius: 14px;
       padding: 10px 18px;
       margin-top: 6px;
@@ -293,7 +396,7 @@
       display: inline-block;
       width: 2px;
       height: 1em;
-      background-color: var(--primary);
+      background-color: var(--xmas-red);
       margin-left: 3px;
       vertical-align: middle;
       animation: blink 0.8s infinite;
@@ -324,35 +427,27 @@
       text-decoration: none;
       color: white;
       transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
     }
 
     .social-btn:hover {
       transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
 
-    .btn-itch {
-      background: linear-gradient(135deg, #fa5c5c, #e11d48);
-    }
-
-    .btn-x {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-    }
-
-    .btn-discord {
-      background: linear-gradient(135deg, #5865F2, #4338ca);
-    }
+    .btn-itch { background: linear-gradient(135deg, #dc2626, #991b1b); }
+    .btn-x { background: linear-gradient(135deg, #1e293b, #0f172a); }
+    .btn-discord { background: linear-gradient(135deg, #5865F2, #4338ca); }
 
     /* การ์ดแต่ละส่วน */
     .section-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.75);
+      border: 1.5px solid rgba(253, 230, 138, 0.75);
       border-radius: 24px;
       padding: 28px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
       margin-bottom: 24px;
       animation: fadeSlideUp 0.7s ease-out;
     }
@@ -363,7 +458,7 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 8px;
-      border-bottom: 2px solid #e0f2fe;
+      border-bottom: 2px solid #fee2e2;
       padding-bottom: 14px;
       margin-bottom: 20px;
     }
@@ -372,7 +467,7 @@
       font-family: 'Kanit', sans-serif;
       font-size: 1.3rem;
       font-weight: 600;
-      color: var(--primary-dark);
+      color: var(--xmas-red-dark);
       display: flex;
       align-items: center;
       gap: 10px;
@@ -380,8 +475,9 @@
     }
 
     .step-pill {
-      background: #e0f2fe;
-      color: var(--primary-dark);
+      background: #dcfce7;
+      color: var(--xmas-green-dark);
+      border: 1px solid #86efac;
       font-size: 0.8rem;
       font-weight: 600;
       padding: 4px 12px;
@@ -416,8 +512,8 @@
 
     .game-card:hover {
       transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 12px 24px rgba(14, 165, 233, 0.28);
-      border-color: var(--accent);
+      box-shadow: 0 12px 24px rgba(220, 38, 38, 0.22);
+      border-color: var(--xmas-gold);
     }
 
     .game-card img {
@@ -441,9 +537,10 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      background: rgba(15, 23, 42, 0.78);
+      background: rgba(20, 83, 45, 0.88);
       backdrop-filter: blur(4px);
-      color: #fff;
+      color: #fef3c7;
+      border: 1px solid rgba(253, 230, 138, 0.5);
       font-size: 0.72rem;
       font-weight: 600;
       padding: 3px 9px;
@@ -455,9 +552,9 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      width: 28px;
-      height: 28px;
-      background: var(--primary);
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, #dc2626, #f59e0b);
       color: white;
       border-radius: 50%;
       display: none;
@@ -465,14 +562,14 @@
       justify-content: center;
       font-size: 0.9rem;
       font-weight: bold;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
       z-index: 2;
     }
 
     .game-option input[type="radio"]:checked + .game-card {
-      border-color: var(--primary);
-      background: #f0f9ff;
-      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.35), 0 12px 24px rgba(14, 165, 233, 0.25);
+      border-color: var(--xmas-red);
+      background: #fef2f2;
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.25), 0 12px 24px rgba(220, 38, 38, 0.22);
       transform: translateY(-4px);
     }
 
@@ -495,8 +592,8 @@
 
     /* ส่วนให้คะแนน */
     .question-block {
-      background: rgba(248, 250, 252, 0.9);
-      border: 1px solid #e2e8f0;
+      background: rgba(254, 252, 248, 0.95);
+      border: 1px solid #fde68a;
       border-radius: 16px;
       padding: 18px 20px;
       margin-bottom: 16px;
@@ -504,7 +601,7 @@
     }
 
     .question-block:hover {
-      border-color: #7dd3fc;
+      border-color: #f59e0b;
     }
 
     .sub-question {
@@ -522,8 +619,8 @@
     .rating-feedback {
       font-size: 0.85rem;
       font-weight: 500;
-      color: var(--primary-dark);
-      background: #e0f2fe;
+      color: var(--xmas-green-dark);
+      background: #dcfce7;
       padding: 3px 10px;
       border-radius: 8px;
       opacity: 0;
@@ -560,16 +657,16 @@
     }
 
     .rating-btn span:hover {
-      border-color: var(--primary);
-      color: var(--primary-dark);
+      border-color: var(--xmas-red);
+      color: var(--xmas-red-dark);
       transform: translateY(-2px);
     }
 
     .rating-btn input:checked + span {
-      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      background: linear-gradient(135deg, #dc2626, #15803d);
       color: white;
       border-color: transparent;
-      box-shadow: 0 4px 12px var(--glow);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
       transform: scale(1.05);
     }
 
@@ -588,44 +685,44 @@
 
     textarea:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+      border-color: var(--xmas-green);
+      box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.15);
     }
 
     .submit-btn {
       width: 100%;
       padding: 18px;
-      background: linear-gradient(90deg, #0284c7, #38bdf8, #0ea5e9);
-      background-size: 200% 200%;
-      animation: gradientFlow 4s ease infinite;
+      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706, #b91c1c);
+      background-size: 250% 250%;
+      animation: gradientFlow 5s ease infinite;
       color: white;
-      border: none;
+      border: 2px solid #fde68a;
       border-radius: 16px;
       font-family: 'Kanit', sans-serif;
       font-size: 1.2rem;
       font-weight: 600;
       letter-spacing: 0.5px;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 25px rgba(185, 28, 28, 0.4);
       transition: all 0.25s ease;
       margin-bottom: 28px;
     }
 
     .submit-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.55);
+      box-shadow: 0 14px 30px rgba(245, 158, 11, 0.5);
     }
 
     /* =========================================
-       โซน DONATE & QR CODE + ตารางยศถาวร DISCORD
+       โซน DONATE & QR CODE + ตารางยศถาวร (ธีมคริสต์มาส)
        ========================================= */
     .donate-card {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 249, 255, 0.95));
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(254, 242, 242, 0.95));
       backdrop-filter: blur(16px);
-      border: 2px solid #7dd3fc;
+      border: 2px solid #fbbf24;
       border-radius: 26px;
       padding: 30px 26px;
-      box-shadow: 0 20px 45px rgba(2, 132, 199, 0.25);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
       position: relative;
       overflow: hidden;
       animation: fadeSlideUp 0.8s ease-out;
@@ -635,13 +732,13 @@
       position: absolute;
       top: 18px;
       right: -34px;
-      background: linear-gradient(90deg, #f59e0b, #ec4899);
-      color: white;
+      background: linear-gradient(90deg, #dc2626, #15803d);
+      color: #fef3c7;
       font-size: 0.75rem;
       font-weight: 700;
       padding: 5px 40px;
       transform: rotate(35deg);
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
 
     .donate-layout {
@@ -662,7 +759,7 @@
       font-size: 1.45rem;
       font-weight: 700;
       margin: 0 0 8px 0;
-      background: linear-gradient(90deg, #0284c7, #ec4899, #f59e0b);
+      background: linear-gradient(90deg, #b91c1c, #15803d, #d97706);
       background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -676,7 +773,6 @@
       line-height: 1.55;
     }
 
-    /* ป้ายแสดงรายการยศถาวร (อ่านอย่างเดียว ไม่สับสนว่าเป็นปุ่มโอนเงิน) */
     .role-showcase-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -692,7 +788,7 @@
 
     .role-badge-item {
       background: #ffffff;
-      border: 1.5px solid #bae6fd;
+      border: 1.5px solid #fde68a;
       border-radius: 14px;
       padding: 10px 12px;
       display: flex;
@@ -702,10 +798,10 @@
     }
 
     .role-badge-item:hover {
-      border-color: #38bdf8;
-      background: #f0f9ff;
+      border-color: #dc2626;
+      background: #fef2f2;
       transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(14, 165, 233, 0.14);
+      box-shadow: 0 6px 14px rgba(220, 38, 38, 0.14);
     }
 
     .role-emoji {
@@ -715,7 +811,7 @@
     .role-info strong {
       display: block;
       font-size: 0.88rem;
-      color: #0369a1;
+      color: #991b1b;
     }
 
     .role-info small {
@@ -724,9 +820,9 @@
     }
 
     .discord-ticket-note {
-      background: rgba(88, 101, 242, 0.1);
-      border: 1px dashed #5865F2;
-      color: #3730a3;
+      background: rgba(21, 128, 61, 0.1);
+      border: 1px dashed #15803d;
+      color: #14532d;
       padding: 11px 14px;
       border-radius: 12px;
       font-size: 0.84rem;
@@ -743,7 +839,7 @@
     .heart-cheer-btn {
       flex: 1;
       min-width: 180px;
-      background: linear-gradient(90deg, #ec4899, #f43f5e);
+      background: linear-gradient(90deg, #dc2626, #e11d48);
       color: white;
       border: none;
       padding: 12px 16px;
@@ -756,7 +852,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
       transition: transform 0.15s ease;
     }
 
@@ -790,12 +886,13 @@
 
     /* กรอบ QR Code สแกนพร้อมเพย์จริง */
     .qr-box-wrapper {
-      background: linear-gradient(145deg, #0f172a, #0369a1);
+      background: linear-gradient(145deg, #14532d, #7f1d1d);
+      border: 2px solid #fbbf24;
       border-radius: 22px;
       padding: 20px 18px;
       text-align: center;
       color: white;
-      box-shadow: 0 12px 28px rgba(3, 105, 161, 0.3);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
       position: relative;
     }
 
@@ -808,7 +905,7 @@
       padding: 8px;
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 0 22px rgba(56, 189, 248, 0.55);
+      box-shadow: 0 0 22px rgba(251, 191, 36, 0.55);
     }
 
     .qr-frame img {
@@ -823,8 +920,8 @@
       left: 6%;
       width: 88%;
       height: 3px;
-      background: linear-gradient(90deg, transparent, #0ea5e9, #38bdf8, #0ea5e9, transparent);
-      box-shadow: 0 0 10px #38bdf8, 0 0 18px #0ea5e9;
+      background: linear-gradient(90deg, transparent, #dc2626, #fbbf24, #16a34a, transparent);
+      box-shadow: 0 0 10px #fbbf24, 0 0 18px #dc2626;
       border-radius: 999px;
       animation: scanLine 2.6s ease-in-out infinite;
       pointer-events: none;
@@ -832,19 +929,19 @@
 
     .qr-badge-label {
       display: inline-block;
-      background: rgba(56, 189, 248, 0.25);
-      border: 1px solid rgba(125, 211, 252, 0.5);
+      background: rgba(251, 191, 36, 0.22);
+      border: 1px solid rgba(253, 230, 138, 0.6);
       padding: 4px 12px;
       border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 600;
-      color: #bae6fd;
+      color: #fef3c7;
       margin-bottom: 8px;
     }
 
     .qr-subtext {
       font-size: 0.82rem;
-      color: #e0f2fe;
+      color: #fef3c7;
       margin: 0;
       line-height: 1.5;
     }
@@ -852,14 +949,14 @@
     .account-verify-tag {
       display: inline-block;
       margin-top: 6px;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(253, 230, 138, 0.4);
       padding: 4px 12px;
       border-radius: 8px;
       font-weight: 600;
       color: #ffffff;
     }
 
-    /* หัวใจลอยตอนกดปุ่ม Cheer */
     .floating-heart {
       position: fixed;
       font-size: 1.6rem;
@@ -871,9 +968,9 @@
     .studio-footer {
       text-align: center;
       margin-top: 32px;
-      color: #bae6fd;
+      color: #fde68a;
       font-size: 0.88rem;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
 
     .studio-footer strong {
@@ -884,7 +981,7 @@
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(5, 46, 22, 0.75);
       backdrop-filter: blur(6px);
       display: none;
       align-items: center;
@@ -895,12 +992,13 @@
 
     .modal-box {
       background: white;
+      border: 2px solid #fbbf24;
       border-radius: 24px;
       padding: 32px 28px;
       max-width: 440px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
       animation: popIn 0.35s ease-out;
     }
 
@@ -913,7 +1011,7 @@
 
     .modal-box h2 {
       font-family: 'Kanit', sans-serif;
-      color: var(--primary-dark);
+      color: var(--xmas-red-dark);
       margin: 0 0 10px 0;
     }
 
@@ -932,7 +1030,7 @@
     }
 
     .modal-close-btn {
-      background: var(--primary);
+      background: var(--xmas-green);
       color: white;
       border: none;
       padding: 12px 22px;
@@ -945,11 +1043,11 @@
     }
 
     .modal-close-btn:hover {
-      background: var(--primary-dark);
+      background: var(--xmas-green-dark);
     }
 
     .modal-donate-btn {
-      background: linear-gradient(90deg, #f59e0b, #ec4899);
+      background: linear-gradient(90deg, #dc2626, #f59e0b);
       color: white;
       border: none;
       padding: 12px 22px;
@@ -964,34 +1062,48 @@
 </head>
 <body>
 
-<!-- ปุ่มลอยมุมขวาบน -->
+<!-- แถบควบคุมลอยมุมขวาบน: เครื่องเล่นเพลงคริสต์มาส + ปรับเสียง + เสียงปุ่ม + โดเนท -->
 <div class="floating-controls">
+  <div class="music-player-pill">
+    <button type="button" class="music-toggle-btn" id="musicToggleBtn" onclick="toggleChristmasMusic()">
+      <span id="musicStateIcon">▶️</span> <span id="musicStateText">เพลงคริสต์มาส</span>
+    </button>
+    <div class="volume-control" title="ปรับระดับเสียงเพลงคริสต์มาส">
+      <span>🎄🔊</span>
+      <input type="range" id="musicVolumeSlider" class="volume-slider" min="0" max="100" value="45" oninput="changeMusicVolume(this.value)">
+      <span class="volume-percent" id="volumePercentText">45%</span>
+    </div>
+  </div>
+
   <a href="#donateSection" class="pill-control-btn pill-donate-jump" onmouseenter="playHoverSound()" onclick="playCoinSound()">
-    💖 สนับสนุนผลงาน
+    🎁 สนับสนุนผลงาน
   </a>
+
   <button type="button" class="pill-control-btn" id="soundToggle" onclick="toggleSound()">
-    <span id="soundIcon">🔊</span> <span id="soundLabel">เสียง UI: เปิด</span>
+    <span id="soundIcon">🔔</span> <span id="soundLabel">เสียงปุ่ม: เปิด</span>
   </button>
 </div>
 
-<!-- เลเยอร์เอฟเฟกต์พื้นหลังออโรร่า & อนุภาคเคลื่อนไหว -->
+<!-- เลเยอร์เอฟเฟกต์พื้นหลังคริสต์มาส & หิมะโปรยปราย -->
 <div class="bg-effects">
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
 </div>
-<canvas id="particleCanvas"></canvas>
+<canvas id="snowCanvas"></canvas>
 
 <div class="container">
-  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่เต็มตา -->
+  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่ -->
   <div class="header-card">
     <div class="logo-showcase">
+      <span class="festive-corner-decor decor-left">🎄✨</span>
+      <span class="festive-corner-decor decor-right">🎅❄️</span>
       <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}else{this.style.display='none';}">
     </div>
     <div class="header-text">
-      <div class="brand-badge">🐾 BEN THE GAME TRANSLATOR • THAI LOCALIZATION</div>
+      <div class="brand-badge">🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️</div>
       <h1 class="animated-title">
-        <span class="floating-gamepad">🎮</span> แบบประเมินคุณภาพการแปลภาษาไทยในเกม
+        <span class="floating-gamepad">🎅</span> แบบประเมินคุณภาพการแปลภาษาไทยในเกม
       </h1>
       <div class="vn-dialogue-box">
         <span id="typewriterText"></span><span class="cursor-blink"></span>
@@ -1018,7 +1130,7 @@
     <!-- ส่วนที่ 1: เลือกเกม -->
     <div class="section-card">
       <div class="section-header">
-        <h2 class="section-title">🎯 เลือกเกมที่ต้องการประเมิน</h2>
+        <h2 class="section-title">🎄 เลือกเกมที่ต้องการประเมิน</h2>
         <span class="step-pill">ขั้นตอนที่ 1 / 3 (เลือกได้ 1 เกมต่อครั้ง)</span>
       </div>
       <div class="game-grid" id="gameGrid"></div>
@@ -1091,7 +1203,7 @@
     <!-- ส่วนที่ 3: ข้อเสนอแนะ -->
     <div class="section-card">
       <div class="section-header">
-        <h2 class="section-title">💬 ข้อเสนอแนะและแจ้งจุดแก้ไข</h2>
+        <h2 class="section-title">🎁 ข้อเสนอแนะและแจ้งจุดแก้ไข</h2>
         <span class="step-pill">ขั้นตอนที่ 3 / 3</span>
       </div>
 
@@ -1106,23 +1218,21 @@
       </div>
     </div>
 
-    <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🚀</button>
+    <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🛷✨</button>
   </form>
 
   <!-- =========================================
        โซน DONATE & QR CODE + ตารางยศถาวร DISCORD
        ========================================= -->
   <div class="donate-card" id="donateSection">
-    <div class="donate-ribbon">SUPPORT BGT</div>
+    <div class="donate-ribbon">XMAS SUPPORT</div>
     <div class="donate-layout">
-      <!-- ฝั่งซ้าย: รายละเอียดยศถาวร Discord + ขั้นตอนแจ้งรับยศ + ส่งหัวใจ -->
       <div>
-        <h2 class="donate-title">💖 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
+        <h2 class="donate-title">🎁 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
         <p class="donate-desc">
           ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานสามารถสแกน QR Code ด้านข้างเพื่อสนับสนุนเท่าไหร่ก็ได้ตามกำลัง (ไม่มีขั้นต่ำ และทยอยสะสมยอดเลื่อนยศได้เรื่อยๆ ครับ):
         </p>
 
-        <!-- ป้ายแสดงระดับยศถาวร (อ่านอย่างเดียว ไม่สับสน) -->
         <div class="role-showcase-grid">
           <div class="role-badge-item" onmouseenter="playHoverSound()">
             <span class="role-emoji">🦴</span>
@@ -1173,7 +1283,7 @@
 
       <!-- ฝั่งขวา: กรอบ QR Code สแกนพร้อมเพย์จริง -->
       <div class="qr-box-wrapper">
-        <div class="qr-badge-label">⚡ SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
+        <div class="qr-badge-label">🎄 SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
         <div class="qr-frame">
           <div class="qr-laser"></div>
           <img src="qr.png" alt="QR Code สแกนจ่ายพร้อมเพย์ นาย เบญจพล" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/qr.png';}">
@@ -1187,19 +1297,19 @@
   </div>
 
   <div class="studio-footer">
-    จัดทำโดย <strong>Ben the Game Translator</strong> • ขอบคุณทุกกำลังใจและคำติชมจากผู้เล่นทุกคนครับ 🐾
+    จัดทำโดย <strong>Ben the Game Translator</strong> • Merry Christmas & ขอบคุณทุกกำลังใจจากผู้เล่นทุกคนครับ 🎄🐾
   </div>
 </div>
 
 <!-- หน้าต่างป๊อปอัปขอบคุณ -->
 <div class="modal-overlay" id="thankYouModal">
   <div class="modal-box">
-    <div class="modal-icon">🎉🐾</div>
+    <div class="modal-icon">🎄🎁</div>
     <h2>ส่งแบบประเมินสำเร็จแล้ว!</h2>
-    <p>ขอบคุณมากๆ เลยฮะ! ทุกคะแนนและความคิดเห็นของเจ้านายมีค่ามาก เพื่อนำไปพัฒนาผลงานแปลไทยเกมต่อๆ ไปให้ดียิ่งขึ้นครับ 💕</p>
+    <p>ขอบคุณมากๆ เลยฮะ! สุขสันต์วันคริสต์มาสล่วงหน้านะครับ ทุกคะแนนและความคิดเห็นของเจ้านายมีค่ามาก เพื่อนำไปพัฒนาผลงานแปลไทยเกมต่อๆ ไปให้ดียิ่งขึ้นครับ ❄️💕</p>
     <div class="modal-btns">
       <button class="modal-close-btn" onclick="playClickSound(); closeModal();">ตกลง / ประเมินเกมอื่นต่อ</button>
-      <button class="modal-donate-btn" onclick="playCoinSound(); closeModal(); document.getElementById('donateSection').scrollIntoView({behavior:'smooth'});">💖 ดูช่องทางสนับสนุน</button>
+      <button class="modal-donate-btn" onclick="playCoinSound(); closeModal(); document.getElementById('donateSection').scrollIntoView({behavior:'smooth'});">🎁 ดูช่องทางสนับสนุน</button>
     </div>
   </div>
 </div>
@@ -1212,21 +1322,153 @@
   let audioCtx = null;
 
   // =========================================
-  // 1. ระบบเสียงเอฟเฟกต์ UI เกม (Web Audio API)
+  // 1. ระบบเสียง UI + เครื่องเล่นเพลงคริสต์มาส Music Box
   // =========================================
+  let isMusicPlaying = false;
+  let userPausedMusic = false;
+  let musicVolume = 0.45;
+  let masterMusicGain = null;
+  let musicTimeout = null;
+  let noteIndex = 0;
+
+  // โน้ตเพลงคริสต์มาส (Jingle Bells + We Wish You a Merry Christmas)
+  const N = {
+    D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.00, A4: 440.00, B4: 493.88,
+    C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, REST: 0
+  };
+
+  const xmasMedley = [
+    // Jingle Bells
+    [N.E5, 1], [N.E5, 1], [N.E5, 2],
+    [N.E5, 1], [N.E5, 1], [N.E5, 2],
+    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
+    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
+    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
+    [N.E5, 1], [N.D5, 1], [N.D5, 1], [N.E5, 1], [N.D5, 2], [N.G5, 2],
+    [N.E5, 1], [N.E5, 1], [N.E5, 2],
+    [N.E5, 1], [N.E5, 1], [N.E5, 2],
+    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
+    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
+    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
+    [N.G5, 1], [N.G5, 1], [N.F5, 1], [N.D5, 1], [N.C5, 3.5], [N.REST, 1.5],
+
+    // We Wish You a Merry Christmas
+    [N.D4, 1], [N.G4, 1], [N.G4, 0.5], [N.A4, 0.5], [N.G4, 0.5], [N.Fs4, 0.5],
+    [N.E4, 1], [N.E4, 1], [N.E4, 1],
+    [N.A4, 1], [N.A4, 0.5], [N.B4, 0.5], [N.A4, 0.5], [N.G4, 0.5],
+    [N.Fs4, 1], [N.D4, 1], [N.D4, 1],
+    [N.B4, 1], [N.B4, 0.5], [N.C5, 0.5], [N.B4, 0.5], [N.A4, 0.5],
+    [N.G4, 1], [N.E4, 1], [N.D4, 0.5], [N.D4, 0.5],
+    [N.E4, 1], [N.A4, 1], [N.Fs4, 1], [N.G4, 3], [N.REST, 1.5]
+  ];
+
   function initAudio() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterMusicGain = audioCtx.createGain();
+      masterMusicGain.gain.value = musicVolume * 0.25;
+      masterMusicGain.connect(audioCtx.destination);
     }
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
     }
   }
 
+  function playMusicBoxNote(freq, durationSec) {
+    if (!audioCtx || !masterMusicGain || freq === 0) return;
+    const now = audioCtx.currentTime;
+
+    // เสียงหลักนุ่มๆ สไตล์กล่องดนตรี (Sine + Harmonic Octave)
+    const osc1 = audioCtx.createOscillator();
+    const osc2 = audioCtx.createOscillator();
+    const noteGain = audioCtx.createGain();
+
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(freq, now);
+
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(freq * 2, now);
+
+    const osc2Gain = audioCtx.createGain();
+    osc2Gain.gain.value = 0.15;
+
+    noteGain.gain.setValueAtTime(0.001, now);
+    noteGain.gain.linearRampToValueAtTime(0.7, now + 0.02);
+    noteGain.gain.exponentialRampToValueAtTime(0.001, now + Math.max(durationSec * 1.35, 0.35));
+
+    osc1.connect(noteGain);
+    osc2.connect(osc2Gain);
+    osc2Gain.connect(noteGain);
+    noteGain.connect(masterMusicGain);
+
+    osc1.start(now);
+    osc2.start(now);
+    const stopTime = now + Math.max(durationSec * 1.4, 0.4);
+    osc1.stop(stopTime);
+    osc2.stop(stopTime);
+  }
+
+  function scheduleNextNote() {
+    if (!isMusicPlaying) return;
+    const [freq, beats] = xmasMedley[noteIndex];
+    const beatDuration = 0.34; // จังหวะกำลังสบายๆ
+    const durationSec = beats * beatDuration;
+
+    playMusicBoxNote(freq, durationSec);
+
+    noteIndex = (noteIndex + 1) % xmasMedley.length;
+    musicTimeout = setTimeout(scheduleNextNote, durationSec * 1000);
+  }
+
+  function startChristmasMusic() {
+    initAudio();
+    if (isMusicPlaying) return;
+    isMusicPlaying = true;
+    document.getElementById('musicStateIcon').textContent = '⏸️';
+    document.getElementById('musicStateText').textContent = 'กำลังเล่น';
+    scheduleNextNote();
+  }
+
+  function stopChristmasMusic() {
+    isMusicPlaying = false;
+    clearTimeout(musicTimeout);
+    document.getElementById('musicStateIcon').textContent = '▶️';
+    document.getElementById('musicStateText').textContent = 'เพลงคริสต์มาส';
+  }
+
+  function toggleChristmasMusic() {
+    if (isMusicPlaying) {
+      userPausedMusic = true;
+      stopChristmasMusic();
+    } else {
+      userPausedMusic = false;
+      startChristmasMusic();
+    }
+  }
+
+  function changeMusicVolume(val) {
+    musicVolume = val / 100;
+    document.getElementById('volumePercentText').textContent = val + '%';
+    if (masterMusicGain && audioCtx) {
+      masterMusicGain.gain.setTargetAtTime(musicVolume * 0.25, audioCtx.currentTime, 0.03);
+    }
+    if (!isMusicPlaying && val > 0 && !userPausedMusic) {
+      startChristmasMusic();
+    }
+  }
+
+  // เริ่มเล่นเพลงคริสต์มาสอัตโนมัติเมื่อผู้ใช้คลิกครั้งแรกบนหน้าเว็บ (ตามนโยบายเบราว์เซอร์)
+  document.addEventListener('click', function autoStartOnFirstClick() {
+    if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) {
+      startChristmasMusic();
+    }
+    document.removeEventListener('click', autoStartOnFirstClick);
+  });
+
   function toggleSound() {
     soundEnabled = !soundEnabled;
-    document.getElementById('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
-    document.getElementById('soundLabel').textContent = soundEnabled ? 'เสียง UI: เปิด' : 'เสียง UI: ปิด';
+    document.getElementById('soundIcon').textContent = soundEnabled ? '🔔' : '🔕';
+    document.getElementById('soundLabel').textContent = soundEnabled ? 'เสียงปุ่ม: เปิด' : 'เสียงปุ่ม: ปิด';
     if (soundEnabled) {
       initAudio();
       playClickSound();
@@ -1240,10 +1482,10 @@
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(520, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(760, audioCtx.currentTime + 0.045);
+      osc.frequency.setValueAtTime(680, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(980, audioCtx.currentTime + 0.045);
 
-      gain.gain.setValueAtTime(0.045, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
 
       osc.connect(gain);
@@ -1260,10 +1502,10 @@
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(660, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1050, audioCtx.currentTime + 0.09);
+      osc.frequency.setValueAtTime(784, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1175, audioCtx.currentTime + 0.09);
 
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
 
       osc.connect(gain);
@@ -1283,7 +1525,7 @@
       osc.frequency.setValueAtTime(987.77, audioCtx.currentTime);
       osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.07);
 
-      gain.gain.setValueAtTime(0.11, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
 
       osc.connect(gain);
@@ -1305,7 +1547,7 @@
         const startTime = audioCtx.currentTime + idx * 0.08;
         osc.frequency.setValueAtTime(freq, startTime);
 
-        gain.gain.setValueAtTime(0.1, startTime);
+        gain.gain.setValueAtTime(0.09, startTime);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
 
         osc.connect(gain);
@@ -1317,20 +1559,20 @@
   }
 
   // =========================================
-  // 2. ลูกเล่นปุ่มส่งหัวใจให้กำลังใจ
+  // 2. ลูกเล่นปุ่มส่งหัวใจคริสต์มาส
   // =========================================
   let heartTotal = 128;
-  const cheerIcons = ['❤️', '🐾', '💙', '✨', '🐺'];
+  const cheerIcons = ['❤️', '🎄', '❄️', '🎁', '🐾', '✨'];
   function sendHeartCheer(e) {
     playClickSound();
     heartTotal++;
     document.getElementById('heartCount').textContent = heartTotal;
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       const el = document.createElement('div');
       el.className = 'floating-heart';
       el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
-      const offsetX = (Math.random() - 0.5) * 60;
+      const offsetX = (Math.random() - 0.5) * 70;
       el.style.left = (e.clientX + offsetX) + 'px';
       el.style.top = (e.clientY - 10) + 'px';
       document.body.appendChild(el);
@@ -1339,11 +1581,11 @@
   }
 
   // =========================================
-  // 3. พื้นหลังอนุภาค & เส้นเชื่อมโยงตามเมาส์
+  // 3. พื้นหลังเกล็ดหิมะโปรยปราย & ประกายดาวสีทอง
   // =========================================
-  const canvas = document.getElementById("particleCanvas");
+  const canvas = document.getElementById("snowCanvas");
   const ctx = canvas.getContext("2d");
-  let particles = [];
+  let snowflakes = [];
   let mouse = { x: null, y: null };
 
   function resizeCanvas() {
@@ -1358,79 +1600,77 @@
     mouse.y = e.y;
   });
 
-  class Particle {
+  class Snowflake {
     constructor() {
+      this.reset(true);
+    }
+    reset(initial = false) {
       this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 2.8 + 1;
-      this.speedX = (Math.random() - 0.5) * 0.7;
-      this.speedY = (Math.random() - 0.5) * 0.7;
+      this.y = initial ? Math.random() * canvas.height : -10;
+      this.radius = Math.random() * 3.4 + 1.2;
+      this.speedY = Math.random() * 1.1 + 0.45;
+      this.wind = (Math.random() - 0.5) * 0.6;
+      this.angle = Math.random() * Math.PI * 2;
+      this.isGoldSparkle = Math.random() < 0.22; // 22% เป็นประกายดาวสีทอง
     }
     update() {
-      this.x += this.speedX;
+      this.angle += 0.015;
       this.y += this.speedY;
-      if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-      if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-    }
-    draw() {
-      ctx.fillStyle = "rgba(186, 230, 253, 0.75)";
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function initParticles() {
-    particles = [];
-    const count = Math.min(75, Math.floor((canvas.width * canvas.height) / 14000));
-    for (let i = 0; i < count; i++) {
-      particles.push(new Particle());
-    }
-  }
-  initParticles();
-
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < particles.length; i++) {
-      particles[i].update();
-      particles[i].draw();
-
-      for (let j = i; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          ctx.strokeStyle = `rgba(125, 211, 252, ${0.22 - dist / 550})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
+      this.x += Math.sin(this.angle) * 0.45 + this.wind;
 
       if (mouse.x !== null) {
-        const dx = particles[i].x - mouse.x;
-        const dy = particles[i].y - mouse.y;
+        const dx = this.x - mouse.x;
+        const dy = this.y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 150) {
-          ctx.strokeStyle = `rgba(255, 255, 255, ${0.45 - dist / 350})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.stroke();
+        if (dist < 110) {
+          this.x += (dx / dist) * 1.2;
         }
       }
+
+      if (this.y > canvas.height + 10 || this.x > canvas.width + 20 || this.x < -20) {
+        this.reset(false);
+      }
     }
-    requestAnimationFrame(animateParticles);
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      if (this.isGoldSparkle) {
+        ctx.fillStyle = "rgba(253, 224, 71, 0.85)";
+        ctx.shadowColor = "#fbbf24";
+        ctx.shadowBlur = 8;
+      } else {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+        ctx.shadowColor = "#ffffff";
+        ctx.shadowBlur = 4;
+      }
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
   }
-  animateParticles();
+
+  function initSnow() {
+    snowflakes = [];
+    const count = Math.min(110, Math.floor((canvas.width * canvas.height) / 10000));
+    for (let i = 0; i < count; i++) {
+      snowflakes.push(new Snowflake());
+    }
+  }
+  initSnow();
+
+  function animateSnow() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < snowflakes.length; i++) {
+      snowflakes[i].update();
+      snowflakes[i].draw();
+    }
+    requestAnimationFrame(animateSnow);
+  }
+  animateSnow();
 
   // =========================================
-  // 4. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม
+  // 4. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม (แก้ smoke.jpg แล้ว!)
   // =========================================
-  const introText = "รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! ✨";
+  const introText = "Ho Ho Ho~ รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! 🎄✨";
   const typeTarget = document.getElementById("typewriterText");
   let charIndex = 0;
 
@@ -1455,7 +1695,7 @@
     { name: "[VN] Do Not Kill Me Jacob Extra", tag: "VN", img: "images/jacob.jpg" },
     { name: "[VN] After Class", tag: "VN", img: "images/afterclass.jpg" },
     { name: "[VN] Flaming Flagon", tag: "VN", img: "images/flagon.jpg" },
-    { name: "[VN] The Smoke Room", tag: "VN", img: "images/smokeroom.jpg" }
+    { name: "[VN] The Smoke Room", tag: "VN", img: "images/smoke.jpg" }
   ];
 
   const GAME_ENTRY_ID = "entry.1291974658";
@@ -1471,7 +1711,7 @@
           <div class="img-container">
             <span class="genre-tag">${game.tag}</span>
             <span class="check-badge">✓</span>
-            <img src="${game.img}" alt="${game.name}" onerror="this.src='https://placehold.co/400x300/0ea5e9/ffffff?text=${encodeURIComponent(cleanTitle)}'">
+            <img src="${game.img}" alt="${game.name}" onerror="this.src='https://placehold.co/400x300/15803d/ffffff?text=${encodeURIComponent(cleanTitle)}'">
           </div>
           <div class="game-title">${game.name}</div>
         </div>
@@ -1484,7 +1724,7 @@
     "2": "พอใช้ได้ ยังมีจุดติดขัด 🤔",
     "3": "ปานกลาง อ่านเข้าใจ 🙂",
     "4": "ดีมาก ลื่นไหลน่าติดตาม 😊",
-    "5": "ยอดเยี่ยมระดับมือโปร! ✨"
+    "5": "ยอดเยี่ยมระดับมือโปร! 🎄✨"
   };
 
   document.querySelectorAll('.rating-group').forEach(group => {
@@ -1516,7 +1756,7 @@
       submitted = false;
       playSuccessSound();
       const btn = document.getElementById('submitBtn');
-      btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🚀";
+      btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨";
       btn.style.opacity = "1";
       document.getElementById('thankYouModal').style.display = 'flex';
     }
