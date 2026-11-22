@@ -3063,8 +3063,6 @@
     sep.textContent = `อันดับของคุณ • ลำดับที่ ${myRank > 100 ? "99+" : myRank}`;
     listEl.appendChild(sep);
 
-  listEl.appendChild(buildLbRow(myRank, mine.id, mine.u, formatterFn(mine.u)));
-
     listEl.appendChild(buildLbRow(myIndex + 1, mine.id, mine.u, formatterFn(mine.u)));
   }
 
