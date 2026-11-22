@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎄 แบบประเมินคุณภาพการแปลภาษาไทยในเกม | Ben the Game Translator</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- เชื่อมต่อ Firebase Realtime Database SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <style>
     :root {
       --xmas-red: #dc2626;
@@ -156,7 +159,6 @@
       box-shadow: 0 0 12px rgba(220, 38, 38, 0.35) !important;
     }
 
-    /* ปุ่มขอโทษด้านบน (แปลงร่างมาจากปุ่มกดใจ) */
     body.horror-mode .mega-cheer-btn {
       background: linear-gradient(135deg, #7f1d1d, #450a0a) !important;
       border-color: #ef4444 !important;
@@ -200,7 +202,8 @@
     body.horror-mode .step-pill,
     body.horror-mode .rating-feedback,
     body.horror-mode .genre-tag,
-    body.horror-mode .cheer-rank-badge {
+    body.horror-mode .cheer-rank-badge,
+    body.horror-mode .live-sync-badge {
       background: #450a0a !important;
       color: #fca5a5 !important;
       border-color: #991b1b !important;
@@ -611,8 +614,7 @@
     .btn-discord { background: linear-gradient(135deg, #5865F2, #4338ca); }
 
     /* =========================================
-       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000)
-       และแปลงร่างเป็น "ปุ่มขอโทษ" ตามรอบคำสาป (5 -> 20 -> 40 -> 60 -> รีเป็น 5)
+       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
        ========================================= */
     .cheer-spotlight-card {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 241, 242, 0.96));
@@ -663,6 +665,33 @@
       border-radius: 999px;
       box-shadow: 0 3px 10px rgba(225, 29, 72, 0.15);
       transition: transform 0.2s ease;
+    }
+
+    .live-sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      color: #166534;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      display: inline-block;
+      animation: pulseLive 1.5s infinite;
+    }
+
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.35); }
     }
 
     .cheer-subtext {
@@ -1680,15 +1709,15 @@
   </div>
 
   <!-- =========================================
-       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000 คะแนนขั้นบันได)
-       และแปลงร่างเป็นปุ่ม "กดเพื่อขอโทษ..." เมื่อติดคำสาป (5 -> 20 -> 40 -> 60 -> รีเป็น 5)
+       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
        ========================================= -->
   <div class="cheer-spotlight-card" id="cheerSpotlightSection">
     <div class="cheer-top-row">
       <h2 class="cheer-title" id="cheerTitle">💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator</h2>
       <span class="cheer-rank-badge" id="cheerRankBadge">🌱 ผู้เริ่มต้นส่งใจ</span>
+      <span class="live-sync-badge" id="liveSyncBadge"><span class="live-dot"></span> <span id="liveSyncText">LIVE • ช่วยกันกดทั้งเว็บ</span></span>
     </div>
-    <p class="cheer-subtext" id="cheerSubtext">กดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีเอฟเฟกต์พลุฉลองพิเศษด้วยนะ UwU ✨</p>
+    <p class="cheer-subtext" id="cheerSubtext">ทุกคนช่วยกันกดปุ่มหัวใจสะสมยอดรวมกันได้แบบเรียลไทม์! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีพลุฉลองพิเศษด้วยนะ UwU ✨</p>
 
     <div class="mega-cheer-wrapper">
       <button type="button" class="mega-cheer-btn" id="megaCheerBtn" onmouseenter="playHoverSound()" onclick="handleMegaCheerOrApology(event)">
@@ -1952,13 +1981,19 @@
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 
 <script>
+  // =========================================================================
+  // 🔑 วางลิงก์ Firebase Realtime Database URL ของเจ้านายตรงบรรทัดด้านล่างนี้ครับ!
+  // ตัวอย่าง: "https://bgt-review-default-rtdb.asia-southeast1.firebasedatabase.app"
+  // =========================================================================
+  const FIREBASE_DATABASE_URL = "https://benzie-e1cee-default-rtdb.asia-southeast1.firebasedatabase.app";
+
   const CURSE_STATE_KEY = "bgt_horror_cursed_v4";
   const CURSE_COUNT_KEY = "bgt_horror_count_v4";
   const CHEER_COUNT_KEY = "bgt_cheer_hearts_v2";
 
   let submitted = false;
   let isHorrorTriggered = false;
-  let curseCount = 0;         // จำนวนรอบที่แกล้งกด 1 ดาว (1, 2, 3, 4 -> ถ้ามากกว่า 4 จะรีเซ็ตเป็น 1 = กด 5 ครั้ง)
+  let curseCount = 0;
   let wasForgivenReset = false;
   let topApologyClicks = 0;
   let topApologyTarget = 5;
@@ -1968,7 +2003,80 @@
   let soundEnabled = true;
   let audioCtx = null;
 
-  // คำนวณจำนวนครั้งที่ต้องกดปุ่มขอโทษด้านบนตามรอบ (1->5, 2->20, 3->40, 4->60, มากกว่านั้นรีเป็น 5)
+  // =========================================
+  // 0. เชื่อมต่อ Firebase Realtime Database (ระบบซิงก์ยอดหัวใจเรียลไทม์ทั้งเว็บ)
+  // =========================================
+  let heartsRef = null;
+  let serverHearts = 0;
+  let pendingClicks = 0;
+  let flushTimer = null;
+  let isFirebaseConnected = false;
+
+  try {
+    const savedLocal = parseInt(localStorage.getItem(CHEER_COUNT_KEY) || "0", 10);
+    if (!isNaN(savedLocal) && savedLocal >= 0) serverHearts = savedLocal;
+  } catch (e) {}
+
+  function initFirebaseHearts() {
+    const syncTextEl = document.getElementById('liveSyncText');
+    if (!FIREBASE_DATABASE_URL || !FIREBASE_DATABASE_URL.startsWith("https://") || typeof firebase === "undefined") {
+      if (syncTextEl) syncTextEl.textContent = "LOCAL MODE • ยังไม่ใส่ลิงก์ Firebase";
+      return;
+    }
+
+    try {
+      firebase.initializeApp({ databaseURL: FIREBASE_DATABASE_URL });
+      const db = firebase.database();
+      heartsRef = db.ref("bgt_hearts");
+
+      // ฟังการเปลี่ยนแปลงแบบเรียลไทม์จากทุกคนบนเว็บ
+      heartsRef.on("value", (snapshot) => {
+        isFirebaseConnected = true;
+        if (syncTextEl) syncTextEl.textContent = "LIVE • ช่วยกันกดทั้งเว็บ";
+
+        const val = snapshot.val();
+        const remoteCount = (typeof val === "number" && !isNaN(val)) ? val : 0;
+        const prevDisplayed = serverHearts + pendingClicks;
+        serverHearts = remoteCount;
+        const newDisplayed = serverHearts + pendingClicks;
+
+        try {
+          localStorage.setItem(CHEER_COUNT_KEY, String(newDisplayed));
+        } catch (e) {}
+
+        const oldTier = getCurrentTierIndex(prevDisplayed);
+        const newTier = getCurrentTierIndex(newDisplayed);
+        const leveledUp = !isHorrorTriggered && (newTier > oldTier) && (prevDisplayed > 0);
+        updateCheerUI(leveledUp, cheerTiers[newTier]);
+      }, (err) => {
+        if (syncTextEl) syncTextEl.textContent = "OFFLINE • บันทึกในเครื่อง";
+      });
+    } catch (e) {
+      if (syncTextEl) syncTextEl.textContent = "LOCAL MODE";
+    }
+  }
+
+  // ส่งยอดกดที่สะสมไว้ขึ้น Firebase แบบรวมก้อน (ประหยัดโควต้าและแม่นยำ 100%)
+  function flushPendingHearts() {
+    if (!heartsRef || pendingClicks <= 0) return;
+    const batch = pendingClicks;
+    pendingClicks = 0;
+
+    heartsRef.set(firebase.database.ServerValue.increment(batch)).catch(() => {
+      // ถ้าเน็ตหลุดชั่วคราว ให้คืนค่ากลับเข้าคิวรอส่งรอบถัดไป
+      pendingClicks += batch;
+    });
+  }
+
+  window.addEventListener("beforeunload", flushPendingHearts);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flushPendingHearts();
+  });
+
+  function getTotalHearts() {
+    return serverHearts + pendingClicks;
+  }
+
   function getTopApologyRequirement(round) {
     if (round === 1) return 5;
     if (round === 2) return 20;
@@ -1977,7 +2085,6 @@
     return 5;
   }
 
-  // ภาพกราฟิก ERROR สีแดง-ฟ้า สำหรับแทนที่รูปปกเกมทุกใบเมื่อติดคำสาป
   const ERROR_IMG_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
       <rect width="400" height="300" fill="#090000"/>
@@ -1995,12 +2102,6 @@
   // =========================================
   // 1. ระบบปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000 คะแนนขั้นบันได + ฉลองเลื่อนขั้น!)
   // =========================================
-  let heartTotal = 0;
-  try {
-    const savedHearts = parseInt(localStorage.getItem(CHEER_COUNT_KEY) || "0", 10);
-    if (!isNaN(savedHearts) && savedHearts >= 0) heartTotal = savedHearts;
-  } catch (e) {}
-
   const cheerTiers = [
     { min: 0,       max: 10,      badge: "🌱 ผู้เริ่มต้นส่งใจ",                 nextName: "อุ้งเท้าให้กำลังใจ 🐾",           celebrate: null },
     { min: 10,      max: 100,     badge: "🐾 อุ้งเท้าให้กำลังใจ",              nextName: "แก้วกาแฟอุ่นๆ ☕",              celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
@@ -2038,7 +2139,6 @@
     const fillEl = document.getElementById('cheerBarFill');
 
     if (isHorrorTriggered) {
-      // โหมดคำสาป: ปุ่มกดใจเปลี่ยนเป็น "ปุ่มขอโทษ" (5 -> 20 -> 40 -> 60 -> รีเป็น 5)
       const doneTop = topApologyClicks >= topApologyTarget;
       titleEl.textContent = wasForgivenReset
         ? "🥹 ผมให้อภัยคุณแล้ว... รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ"
@@ -2070,24 +2170,24 @@
       return;
     }
 
-    // โหมดปกติ: ปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000)
+    const totalNow = getTotalHearts();
     btnEl.classList.remove('completed-part');
     titleEl.textContent = "💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator";
-    subEl.textContent = "กดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีเอฟเฟกต์พลุฉลองพิเศษด้วยนะ UwU ✨";
+    subEl.textContent = "ทุกคนช่วยกันกดปุ่มหัวใจสะสมยอดรวมกันได้แบบเรียลไทม์! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีพลุฉลองพิเศษด้วยนะ UwU ✨";
     labelEl.textContent = "❤️ กดส่งหัวใจให้กำลังใจ!";
-    counterPillEl.innerHTML = `<span id="heartCount">${heartTotal.toLocaleString()}</span> / 1,000,000`;
+    counterPillEl.innerHTML = `<span id="heartCount">${totalNow.toLocaleString()}</span> / 1,000,000`;
 
-    const tierIdx = getCurrentTierIndex(heartTotal);
+    const tierIdx = getCurrentTierIndex(totalNow);
     const tier = cheerTiers[tierIdx];
     badgeEl.textContent = tier.badge;
 
-    if (heartTotal >= 1000000) {
+    if (totalNow >= 1000000) {
       nextGoalEl.textContent = "🏆 ปลดล็อกขั้นสูงสุด 1,000,000 / 1,000,000 หัวใจเรียบร้อยแล้ว!";
       percentEl.textContent = "100%";
       fillEl.style.width = "100%";
     } else {
       const span = tier.max - tier.min;
-      const progress = Math.min(100, Math.floor(((heartTotal - tier.min) / span) * 100));
+      const progress = Math.min(100, Math.floor(((totalNow - tier.min) / span) * 100));
       nextGoalEl.textContent = `เป้าหมายถัดไป: ${tier.max.toLocaleString()} หัวใจ (${tier.nextName})`;
       percentEl.textContent = `${progress}%`;
       fillEl.style.width = `${progress}%`;
@@ -2128,7 +2228,6 @@
   function handleMegaCheerOrApology(e) {
     playClickSound();
 
-    // กรณีติดคำสาป: ปุ่มนี้ทำหน้าที่เป็น "ปุ่มขอโทษ" (5 / 20 / 40 / 60 / รีเป็น 5)
     if (isHorrorTriggered) {
       if (topApologyClicks < topApologyTarget) {
         topApologyClicks++;
@@ -2151,7 +2250,7 @@
       return;
     }
 
-    // กรณีปกติ: กดส่งหัวใจสะสมสู่ 1,000,000 หัวใจ + Combo
+    // โหมดปกติ: กดส่งหัวใจสะสมขึ้น Firebase Realtime Database + Combo
     const now = Date.now();
     if (now - lastClickTime < 380) {
       comboCount++;
@@ -2180,18 +2279,26 @@
       comboPill.classList.remove('active');
     }, 800);
 
-    const oldTierIdx = getCurrentTierIndex(heartTotal);
-    heartTotal += bonus;
+    const oldTotal = getTotalHearts();
+    const oldTierIdx = getCurrentTierIndex(oldTotal);
+
+    pendingClicks += bonus;
+    const newTotal = getTotalHearts();
+
     try {
-      localStorage.setItem(CHEER_COUNT_KEY, String(heartTotal));
+      localStorage.setItem(CHEER_COUNT_KEY, String(newTotal));
     } catch (err) {}
 
-    const newTierIdx = getCurrentTierIndex(heartTotal);
+    // ตั้งเวลาส่งยอดรวมขึ้น Firebase ทุกๆ 1.2 วินาที
+    clearTimeout(flushTimer);
+    flushTimer = setTimeout(flushPendingHearts, 1200);
+
+    const newTierIdx = getCurrentTierIndex(newTotal);
     const leveledUp = newTierIdx > oldTierIdx;
 
     updateCheerUI(leveledUp, cheerTiers[newTierIdx]);
 
-    for (let i = 0; i < Math.min(5, 3); i++) {
+    for (let i = 0; i < 3; i++) {
       const el = document.createElement('div');
       el.className = 'floating-heart';
       el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
@@ -2962,7 +3069,6 @@
     document.getElementById('scoreProgressFill').style.width = "100%";
     document.getElementById('totalScoreDesc').textContent = "รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอกครับ... ต้องกดขอโทษทั้งด้านบนและด้านล่างให้ครบ...";
 
-    // ตั้งค่าข้อความโซนขอโทษด้านล่าง
     const stageTag = document.getElementById('cursedStageTag');
     const apolIcon = document.getElementById('cursedApologyIcon');
     const apolTitle = document.getElementById('cursedApologyTitle');
@@ -3049,7 +3155,6 @@
       if (!isFromReload) {
         curseCount++;
         if (curseCount > 4) {
-          // มากกว่า 4 ครั้ง ไม่มีแล้ว -> รีเซ็ตกลับเป็น 1 (กด 5 ครั้ง) เพราะให้อภัยแล้ว!
           curseCount = 1;
           wasForgivenReset = true;
         } else {
@@ -3199,6 +3304,7 @@
   }
 
   window.addEventListener("DOMContentLoaded", () => {
+    initFirebaseHearts();
     updateCheerUI();
 
     let wasCursed = false;
