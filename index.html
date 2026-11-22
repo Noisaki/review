@@ -2037,6 +2037,51 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+
+    /* แถบเมนูด้านบนสไตล์เว็บเกม */
+    .top-navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 62px;
+      background: rgba(11, 11, 18, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      gap: 14px;
+    }
+    .nav-left { display: flex; align-items: center; gap: 22px; }
+    .nav-logo { height: 38px; width: auto; cursor: pointer; }
+    .nav-links { display: flex; align-items: center; gap: 18px; }
+    .nav-links a {
+      color: #e2e8f0; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+      transition: color 0.2s; cursor: pointer; white-space: nowrap;
+    }
+    .nav-links a:hover { color: #fbbf24; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-user-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #f8fafc; font-size: 0.8rem; padding: 5px 12px; border-radius: 10px;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .nav-user-tag {
+      background: #65a30d; color: #fff; font-size: 0.68rem; font-weight: 700;
+      padding: 1px 6px; border-radius: 6px;
+    }
+    .nav-purple-btn {
+      background: linear-gradient(135deg, #9333ea, #7c3aed);
+      color: #fff; border: none; padding: 8px 20px; border-radius: 10px;
+      font-family: 'Kanit', sans-serif; font-size: 0.92rem; font-weight: 600;
+      cursor: pointer; transition: transform 0.15s, filter 0.2s;
+    }
+    .nav-purple-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+    body.horror-mode .top-navbar { background: rgba(20, 0, 0, 0.96); border-bottom-color: #991b1b; }
+    @media (max-width: 720px) { .nav-links { display: none; } }
+    
   </style>
 </head>
 <body>
@@ -2853,10 +2898,13 @@
   function applyProfileToUI(profile) {
     currentUser = profile;
     const info = getRoleInfoByTier(profile.roleTier);
-
+    const adminPanel = document.getElementById('voteAdminPanel');
+    if (adminPanel) adminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
-
+    document.getElementById('navLoginBtn').style.display = 'none';
+    document.getElementById('navUserWrap').style.display = 'flex';
+    document.getElementById('navUserName').textContent = profile.name;
     const avatarImg = document.getElementById('profileAvatar');
     avatarImg.src = profile.avatarUrl;
 
@@ -2891,6 +2939,8 @@
   function applyLoggedOutUI() {
     currentUser = null;
     myServerHearts = 0;
+    document.getElementById('navLoginBtn').style.display = 'inline-block';
+    document.getElementById('navUserWrap').style.display = 'none';
     document.getElementById('profileLoggedOut').style.display = 'flex';
     document.getElementById('profileLoggedIn').style.display = 'none';
     updateMyHeartsLine();
@@ -4389,6 +4439,7 @@
 
   window.addEventListener("DOMContentLoaded", () => {
     initFirebaseHearts();
+    initGameVoteSystem();
     updateCheerUI();
 
     let wasCursed = false;
@@ -4453,6 +4504,7 @@
     if (!db) return;
     db.ref("game_vote").on("value", (snap) => {
       voteData = snap.val();
+      renderVoteGames();
       updateVoteCountdown();
       if (!voteTimerInterval) {
         voteTimerInterval = setInterval(updateVoteCountdown, 1000);
