@@ -89,9 +89,10 @@
     body.horror-mode .orb-3 { background: #991b1b !important; opacity: 0.5; }
 
     body.horror-mode .header-card,
+    body.horror-mode .cheer-spotlight-card,
     body.horror-mode .section-card,
     body.horror-mode .donate-card {
-      background: rgba(18, 2, 2, 0.93) !important;
+      background: rgba(18, 2, 2, 0.94) !important;
       border-color: #991b1b !important;
       box-shadow: 0 20px 50px rgba(185, 28, 28, 0.35), inset 0 0 30px rgba(127, 29, 29, 0.4) !important;
       color: #fecaca !important;
@@ -115,19 +116,19 @@
       100% { transform: translate(0, 0) skewX(0deg); }
     }
 
-    body.horror-mode .animated-title {
+    body.horror-mode .animated-title,
+    body.horror-mode .cheer-title {
       background: linear-gradient(90deg, #ef4444, #dc2626, #991b1b) !important;
       -webkit-background-clip: text !important;
       -webkit-text-fill-color: transparent !important;
-      font-size: 2.15rem !important;
-      text-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
     }
 
     body.horror-mode .section-title,
     body.horror-mode .sub-question,
     body.horror-mode .game-title,
     body.horror-mode .total-score-label,
-    body.horror-mode .total-score-subtext {
+    body.horror-mode .total-score-subtext,
+    body.horror-mode .cheer-subtext {
       color: #fca5a5 !important;
     }
 
@@ -139,7 +140,8 @@
     body.horror-mode .question-block,
     body.horror-mode .game-card,
     body.horror-mode textarea,
-    body.horror-mode .total-score-card {
+    body.horror-mode .total-score-card,
+    body.horror-mode .cheer-progress-box {
       background: rgba(30, 4, 4, 0.92) !important;
       border-color: #7f1d1d !important;
       color: #fecaca !important;
@@ -147,11 +149,12 @@
 
     body.horror-mode .social-btn,
     body.horror-mode .pill-control-btn,
-    body.horror-mode .music-toggle-btn {
+    body.horror-mode .music-toggle-btn,
+    body.horror-mode .mega-cheer-btn {
       background: linear-gradient(135deg, #450a0a, #1f0202) !important;
-      border: 1px solid #dc2626 !important;
+      border-color: #dc2626 !important;
       color: #fca5a5 !important;
-      box-shadow: 0 0 12px rgba(220, 38, 38, 0.35) !important;
+      box-shadow: 0 0 16px rgba(220, 38, 38, 0.4) !important;
     }
 
     body.horror-mode .rating-btn span {
@@ -168,7 +171,8 @@
 
     body.horror-mode .step-pill,
     body.horror-mode .rating-feedback,
-    body.horror-mode .genre-tag {
+    body.horror-mode .genre-tag,
+    body.horror-mode .cheer-rank-badge {
       background: #450a0a !important;
       color: #fca5a5 !important;
       border-color: #991b1b !important;
@@ -389,8 +393,13 @@
     }
 
     @keyframes floatUpFade {
-      0% { transform: translateY(0) scale(0.8); opacity: 1; }
-      100% { transform: translateY(-130px) scale(1.4); opacity: 0; }
+      0% { transform: translateY(0) scale(0.85); opacity: 1; }
+      100% { transform: translateY(-145px) scale(1.55); opacity: 0; }
+    }
+
+    @keyframes heartbeatGlow {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 28px rgba(236, 72, 153, 0.45), 0 0 0 0 rgba(244, 63, 94, 0.5); }
+      50% { transform: scale(1.025); box-shadow: 0 14px 36px rgba(236, 72, 153, 0.65), 0 0 0 10px rgba(244, 63, 94, 0); }
     }
 
     /* ส่วนหัวและแท่นโชว์โลโก้ BGT */
@@ -402,7 +411,7 @@
       border-radius: 26px;
       overflow: hidden;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       text-align: center;
       animation: fadeSlideUp 0.6s ease-out;
       position: relative;
@@ -572,6 +581,183 @@
     .btn-itch { background: linear-gradient(135deg, #dc2626, #991b1b); }
     .btn-x { background: linear-gradient(135deg, #1e293b, #0f172a); }
     .btn-discord { background: linear-gradient(135deg, #5865F2, #4338ca); }
+
+    /* =========================================
+       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 10,000 คะแนนขั้นบันได)
+       ========================================= */
+    .cheer-spotlight-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 241, 242, 0.96));
+      backdrop-filter: blur(16px);
+      border: 2.5px solid #fb7185;
+      border-radius: 26px;
+      padding: 26px 24px;
+      box-shadow: 0 18px 42px rgba(225, 29, 72, 0.22);
+      margin-bottom: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: fadeSlideUp 0.65s ease-out;
+    }
+
+    .cheer-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .cheer-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(90deg, #e11d48, #f59e0b, #dc2626);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientFlow 4s ease infinite;
+    }
+
+    .cheer-rank-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #ffe4e6, #fef3c7);
+      border: 1.5px solid #fda4af;
+      color: #be123c;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 999px;
+      box-shadow: 0 3px 10px rgba(225, 29, 72, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .cheer-subtext {
+      color: #475569;
+      font-size: 0.92rem;
+      margin: 0 0 18px 0;
+    }
+
+    .mega-cheer-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 18px;
+    }
+
+    .mega-cheer-btn {
+      background: linear-gradient(135deg, #f43f5e, #e11d48, #f59e0b);
+      background-size: 200% 200%;
+      color: white;
+      border: 3px solid #fde68a;
+      padding: 16px 36px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      animation: heartbeatGlow 2.2s infinite ease-in-out;
+      transition: transform 0.08s ease, filter 0.2s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mega-cheer-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .mega-cheer-btn:active {
+      transform: scale(0.91) !important;
+    }
+
+    .cheer-counter-pill {
+      background: rgba(0, 0, 0, 0.28);
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fef08a;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .combo-pill {
+      position: absolute;
+      top: -12px;
+      right: -14px;
+      background: linear-gradient(135deg, #f59e0b, #dc2626);
+      color: white;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 2px solid white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+
+    .combo-pill.active {
+      opacity: 1;
+      transform: scale(1) rotate(8deg);
+    }
+
+    .cheer-progress-box {
+      max-width: 640px;
+      margin: 0 auto;
+      background: #fff1f2;
+      border: 1.5px solid #fecdd3;
+      border-radius: 16px;
+      padding: 12px 16px;
+    }
+
+    .cheer-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #9f1239;
+      margin-bottom: 6px;
+    }
+
+    .cheer-bar-track {
+      width: 100%;
+      height: 12px;
+      background: #ffe4e6;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .cheer-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f43f5e, #f59e0b, #16a34a);
+      border-radius: 999px;
+      transition: width 0.25s ease-out;
+    }
+
+    .cheer-celebration-banner {
+      display: none;
+      margin-top: 12px;
+      background: linear-gradient(90deg, #fef3c7, #fde68a, #fef3c7);
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 12px;
+      animation: popIn 0.4s ease-out;
+    }
 
     /* การ์ดแต่ละส่วน */
     .section-card {
@@ -975,7 +1161,7 @@
     }
 
     /* =========================================
-       โซน DONATE & QR CODE (และโซนปุ่ม "ผมขอโทษ" แทนที่เมื่อติดคำสาป)
+       โซน DONATE & QR CODE + ระบบความทรงจำ 3 ระดับ
        ========================================= */
     .donate-card {
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(254, 242, 242, 0.95));
@@ -1091,51 +1277,22 @@
       line-height: 1.55;
     }
 
-    .action-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .heart-cheer-btn {
-      flex: 1;
-      min-width: 180px;
-      background: linear-gradient(90deg, #dc2626, #e11d48);
-      color: white;
-      border: none;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
-      transition: transform 0.15s ease;
-    }
-
-    .heart-cheer-btn:active {
-      transform: scale(0.94);
-    }
-
     .discord-ticket-btn {
+      width: 100%;
       background: #5865F2;
       color: white;
       border: none;
-      padding: 12px 18px;
+      padding: 13px 18px;
       border-radius: 14px;
       font-family: 'Prompt', sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       box-shadow: 0 6px 16px rgba(88, 101, 242, 0.3);
       transition: all 0.2s;
     }
@@ -1217,24 +1374,41 @@
       color: #ffffff;
     }
 
-    /* กล่องปุ่มไถ่บาป "ผมขอโทษ..." ที่ขึ้นมาแทนที่โซนโดเนทเมื่อติดคำสาป */
+    /* =========================================
+       กล่องไถ่บาป 3 ระดับ (แทนที่โซนโดเนทเมื่อติดคำสาป)
+       ========================================= */
     .cursed-apology-zone {
       display: none;
       text-align: center;
       padding: 26px 16px;
+      min-height: 230px;
+      position: relative;
+    }
+
+    .cursed-stage-tag {
+      display: inline-block;
+      background: #450a0a;
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
     }
 
     .cursed-apology-icon {
       font-size: 3.6rem;
-      display: inline-block;
-      margin-bottom: 10px;
+      display: block;
+      margin: 0 auto 10px;
       filter: drop-shadow(0 0 16px #ef4444);
       animation: creepyJitter 0.3s infinite;
     }
 
     .cursed-apology-title {
       font-family: 'Kanit', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.75rem;
       font-weight: 800;
       color: #ef4444;
       margin: 0 0 10px 0;
@@ -1243,9 +1417,9 @@
 
     .cursed-apology-sub {
       color: #fca5a5;
-      font-size: 0.98rem;
-      max-width: 560px;
-      margin: 0 auto 24px;
+      font-size: 0.96rem;
+      max-width: 580px;
+      margin: 0 auto 22px;
       line-height: 1.6;
     }
 
@@ -1254,18 +1428,19 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 16px 36px;
+      padding: 15px 34px;
       background: linear-gradient(135deg, #450a0a, #7f1d1d);
       color: #ffffff;
       border: 2px solid #ef4444;
       border-radius: 999px;
       font-family: 'Kanit', sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 0 30px rgba(220, 38, 38, 0.65);
-      transition: all 0.25s ease;
-      animation: gentlePulse 2s infinite ease-in-out;
+      transition: transform 0.18s ease, background 0.2s, color 0.2s, border-color 0.2s;
+      position: relative;
+      z-index: 5;
     }
 
     .apologize-btn:hover {
@@ -1273,17 +1448,54 @@
       color: #15803d;
       border-color: #4ade80;
       box-shadow: 0 0 36px rgba(74, 222, 128, 0.9);
-      transform: scale(1.06);
     }
 
-    @keyframes gentlePulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.04); }
+    .dodge-hint-text {
+      font-size: 0.88rem;
+      color: #f87171;
+      margin-top: 12px;
+      min-height: 22px;
+      font-weight: 600;
+    }
+
+    /* ช่องสารภาพผิดระดับที่ 3 (True Bad End) */
+    .stage3-confession-box {
+      display: none;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .stage3-input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 2px solid #dc2626;
+      background: #090000;
+      color: #fca5a5;
+      font-family: 'Prompt', sans-serif;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .stage3-input:focus {
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.7);
+    }
+
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .shake-anim {
+      animation: shakeError 0.35s ease;
     }
 
     .floating-heart {
       position: fixed;
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       pointer-events: none;
       z-index: 9999;
       animation: floatUpFade 1.2s ease-out forwards;
@@ -1382,7 +1594,7 @@
 </head>
 <body>
 
-<!-- ไฟล์เสียงร้องไห้จริง (วางไฟล์ cry.mp3 ไว้ข้างๆ index.html หรือในโฟลเดอร์ images ได้เลยครับ) -->
+<!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
 <audio id="realCryAudio" src="cry.mp3" loop preload="auto" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/cry.mp3';}"></audio>
 
 <!-- ม่านเลือดไหลหยดจากขอบจอด้านบน -->
@@ -1456,6 +1668,36 @@
           💬 เข้าดิสคอร์ดพูดคุย & รับยศ
         </a>
       </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 10,000 คะแนนขั้นบันได + ฉลองเลื่อนขั้น!)
+       ========================================= -->
+  <div class="cheer-spotlight-card" id="cheerSpotlightSection">
+    <div class="cheer-top-row">
+      <h2 class="cheer-title corruptible" data-cursed="💔 หัวใจที่แตกสลาย (0 / 10,000)">💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator</h2>
+      <span class="cheer-rank-badge" id="cheerRankBadge">🌱 ผู้เริ่มต้นส่งใจ</span>
+    </div>
+    <p class="cheer-subtext" id="cheerSubtext">กดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 10,000 หัวใจ) มีเอฟเฟกต์ฉลองพิเศษด้วยนะ UwU ✨</p>
+
+    <div class="mega-cheer-wrapper">
+      <button type="button" class="mega-cheer-btn" id="megaCheerBtn" onmouseenter="playHoverSound()" onclick="sendHeartCheer(event)">
+        <span id="megaCheerLabel">❤️ กดส่งหัวใจให้กำลังใจ!</span>
+        <span class="cheer-counter-pill"><span id="heartCount">0</span> / 10,000</span>
+      </button>
+      <span class="combo-pill" id="comboPill">COMBO x2!</span>
+    </div>
+
+    <div class="cheer-progress-box">
+      <div class="cheer-progress-labels">
+        <span id="cheerNextGoalText">เป้าหมายถัดไป: 10 หัวใจ (อุ้งเท้าให้กำลังใจ 🐾)</span>
+        <span id="cheerPercentText">0%</span>
+      </div>
+      <div class="cheer-bar-track">
+        <div class="cheer-bar-fill" id="cheerBarFill"></div>
+      </div>
+      <div class="cheer-celebration-banner" id="cheerCelebrationBanner"></div>
     </div>
   </div>
 
@@ -1576,7 +1818,7 @@
   </form>
 
   <!-- =========================================
-       โซน DONATE & QR CODE (และจะถูกแทนที่ด้วยปุ่ม "ผมขอโทษ..." เมื่อติดคำสาป!)
+       โซน DONATE & QR CODE + ระบบความทรงจำคำสาป 3 ระดับ
        ========================================= -->
   <div class="donate-card" id="donateSection">
     <div class="donate-ribbon corruptible" data-cursed="BROKEN">XMAS SUPPORT</div>
@@ -1627,14 +1869,9 @@
           📌 <strong>ขั้นตอนการแจ้งรับยศ:</strong> 1. เช็กชื่อบัญชีปลายทาง <strong>นาย เบญจพล</strong> • 2. เก็บภาพสลิปไว้ (ห้ามส่งในแชทส่วนรวมเด็ดขาด) • 3. กดปุ่ม <strong>"เปิดตั๋วส่งหลักฐาน"</strong> ใน Discord เพื่อส่งสลิปและรับยศถาวรได้เลยครับ!
         </div>
 
-        <div class="action-row">
-          <button type="button" class="heart-cheer-btn" onmouseenter="playHoverSound()" onclick="sendHeartCheer(event)">
-            ❤️ ส่งหัวใจให้กำลังใจ (<span id="heartCount">128</span>)
-          </button>
-          <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
-            💬 ติดต่อ & แจ้งสลิปใน Discord
-          </a>
-        </div>
+        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
+          💬 ติดต่อ & แจ้งสลิปใน Discord
+        </a>
       </div>
 
       <div class="qr-box-wrapper">
@@ -1650,17 +1887,32 @@
       </div>
     </div>
 
-    <!-- โซนปุ่ม "ผมขอโทษ..." ที่ขึ้นมาแทนที่โซนโดเนทเวลาติดคำสาป -->
+    <!-- โซนไถ่บาป 3 ระดับ (แทนที่โซนโดเนทเมื่อติดคำสาป!) -->
     <div class="cursed-apology-zone" id="cursedApologyZone">
-      <div class="cursed-apology-icon">😭💔</div>
-      <h2 class="cursed-apology-title">นี่ผมดูแย่ขนาดนั้นเลยเหรอ...</h2>
-      <p class="cursed-apology-sub">
+      <div class="cursed-stage-tag" id="cursedStageTag">MEMORY STAGE 1 / 3</div>
+      <div class="cursed-apology-icon" id="cursedApologyIcon">😭💔</div>
+      <h2 class="cursed-apology-title" id="cursedApologyTitle">นี่ผมดูแย่ขนาดนั้นเลยเหรอ...</h2>
+      <p class="cursed-apology-sub" id="cursedApologySub">
         ผมไม่กล้ารับการสนับสนุนอะไรอีกแล้ว... ให้ 1 ดาวรัวๆ ทุกข้อโดยไม่บอกเหตุผลสักคำ<br>
         ต่อให้รีเฟรชหน้าเว็บไปก็หายไม่พ้นหรอกครับ จนกว่าคุณจะกดปุ่มด้านล่างนี้...
       </p>
-      <button type="button" class="apologize-btn" onclick="forgiveAndRestore()">
-        🙏 ผมขอโทษ... (ยกโทษให้ผมเถอะนะ)
-      </button>
+
+      <!-- ปุ่มขอโทษ (สำหรับระดับ 1 และระดับ 2 ที่วิ่งหนีเมาส์) -->
+      <div id="stage12ButtonArea">
+        <button type="button" class="apologize-btn" id="apologizeBtn" onpointerenter="handleApologizeHover()" onclick="handleApologizeClick()">
+          🙏 ผมขอโทษ... (ยกโทษให้ผมเถอะนะ)
+        </button>
+        <div class="dodge-hint-text" id="dodgeHintText"></div>
+      </div>
+
+      <!-- ช่องพิมพ์สารภาพผิดด้วยตัวเอง (สำหรับระดับ 3 ขึ้นไป!) -->
+      <div class="stage3-confession-box" id="stage3ConfessionBox">
+        <input type="text" id="stage3Input" class="stage3-input" placeholder="พิมพ์คำว่า: ผมขอโทษจริงๆ" autocomplete="off">
+        <button type="button" class="apologize-btn" onclick="submitStage3Confession()">
+          🩸 ยืนยันคำขอโทษจากใจจริง
+        </button>
+        <div class="dodge-hint-text" id="stage3HintText"></div>
+      </div>
     </div>
   </div>
 
@@ -1682,12 +1934,12 @@
   </div>
 </div>
 
-<!-- หน้าต่างป๊อปอัปหลังกด "ผมขอโทษ" (คืนดีกันแล้ว!) -->
+<!-- หน้าต่างป๊อปอัปหลังกด "ผมขอโทษ" -->
 <div class="modal-overlay" id="forgivenModal">
   <div class="modal-box">
-    <div class="modal-icon">🐾💖</div>
-    <h2 style="color: #15803d;">ไม่เป็นไรครับ... ผมยกโทษให้แล้ว!</h2>
-    <p>ขอบคุณที่ขอโทษนะครับเจ้านาย~ คำสาปหายไปแล้ว! กลับมาสนุกกับบรรยากาศคริสต์มาสและร่วมประเมินเกมแปลไทยตามความรู้สึกจริงได้เลยฮะ UwU 🎄✨</p>
+    <div class="modal-icon" id="forgivenIcon">🐾💖</div>
+    <h2 style="color: #15803d;" id="forgivenTitle">ไม่เป็นไรครับ... ผมยกโทษให้แล้ว!</h2>
+    <p id="forgivenDesc">ขอบคุณที่ขอโทษนะครับเจ้านาย~ คำสาปหายไปแล้ว! กลับมาสนุกกับบรรยากาศคริสต์มาสและร่วมประเมินเกมแปลไทยตามความรู้สึกจริงได้เลยฮะ UwU 🎄✨</p>
     <div class="modal-btns">
       <button class="modal-close-btn" onclick="playClickSound(); document.getElementById('forgivenModal').style.display='none';">เย้! กลับสู่หน้าปกติ 🎄</button>
     </div>
@@ -1697,9 +1949,15 @@
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 
 <script>
-  const CURSE_STORAGE_KEY = "bgt_horror_cursed_v2";
+  const CURSE_STATE_KEY = "bgt_horror_cursed_v3";
+  const CURSE_COUNT_KEY = "bgt_horror_count_v3";
+  const CHEER_COUNT_KEY = "bgt_cheer_hearts_v1";
+
   let submitted = false;
   let isHorrorTriggered = false;
+  let curseCount = 0; // เก็บความทรงจำว่าเคยติดคำสาปมาแล้วกี่รอบ (1, 2, 3+)
+  let dodgeAttempts = 0;
+  let stage2Clicks = 0;
   let soundEnabled = true;
   let audioCtx = null;
 
@@ -1719,7 +1977,175 @@
   `);
 
   // =========================================
-  // 1. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง (cry.mp3)
+  // 1. ระบบปุ่มส่งหัวใจให้กำลังใจ (1 - 10,000 ขั้นบันได + ฉลองเลื่อนขั้น!)
+  // =========================================
+  let heartTotal = 0;
+  try {
+    const savedHearts = parseInt(localStorage.getItem(CHEER_COUNT_KEY) || "0", 10);
+    if (!isNaN(savedHearts) && savedHearts >= 0) heartTotal = savedHearts;
+  } catch (e) {}
+
+  const cheerTiers = [
+    { min: 0,     max: 10,    badge: "🌱 ผู้เริ่มต้นส่งใจ",             nextName: "อุ้งเท้าให้กำลังใจ 🐾",       celebrate: null },
+    { min: 10,    max: 50,    badge: "🐾 อุ้งเท้าให้กำลังใจ",          nextName: "แก้วกาแฟอุ่นๆ ☕",          celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
+    { min: 50,    max: 100,   badge: "☕ แก้วกาแฟอุ่นๆ",              nextName: "ผู้พิทักษ์ต้นคริสต์มาส 🎄",   celebrate: "☕ ครบ 50 หัวใจ! เติมคาเฟอีนพร้อมแปลเกมต่อแล้วฮะ!" },
+    { min: 100,   max: 500,   badge: "🎄 ผู้พิทักษ์ต้นคริสต์มาส",       nextName: "พลังใจล้นหลาม 🔥",          celebrate: "🎄 ครบ 100 หัวใจ! ซานต้าหมาป่ามอบของขวัญขอบคุณครับ!" },
+    { min: 500,   max: 1000,  badge: "🔥 พลังใจล้นหลาม",              nextName: "อัศวินแห่ง BGT 💎",          celebrate: "🔥 ครบ 500 หัวใจ! พลังแปลเกมพุ่งทะลุหลอดแล้วครับ!" },
+    { min: 1000,  max: 3000,  badge: "💎 อัศวินแห่ง BGT",             nextName: "ราชา/ราชินีสายเปย์ใจ 👑",     celebrate: "💎 ครบ 1,000 หัวใจ! ยกระดับสู่อัศวินผู้พิทักษ์ BGT!" },
+    { min: 3000,  max: 7000,  badge: "👑 ราชา/ราชินีสายเปย์ใจ",        nextName: "เทพเจ้าแห่งกำลังใจ 🌟",       celebrate: "👑 ครบ 3,000 หัวใจ! ความรักของคุณยิ่งใหญ่ระดับราชวงศ์!" },
+    { min: 7000,  max: 10000, badge: "🌟 เทพเจ้าแห่งกำลังใจ",          nextName: "ตำนานนิรันดร์ 10,000 🏆",    celebrate: "🌟 ครบ 7,000 หัวใจ! อีกนิดเดียวจะแตะ 10,000 แล้วครับ!" },
+    { min: 10000, max: 10000, badge: "🏆 ตำนานนิรันดร์ 10,000 หัวใจ", nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨", celebrate: "🏆🎊 ครบ 10,000 หัวใจ!! คุณคือตำนานสูงสุดของ Ben the Game Translator! 🎊🏆" }
+  ];
+
+  let comboCount = 0;
+  let lastClickTime = 0;
+  let comboResetTimer = null;
+  let bannerHideTimer = null;
+
+  function getCurrentTierIndex(count) {
+    for (let i = cheerTiers.length - 1; i >= 0; i--) {
+      if (count >= cheerTiers[i].min) return i;
+    }
+    return 0;
+  }
+
+  function updateCheerUI(justLeveledUp = false, newTierObj = null) {
+    const countEl = document.getElementById('heartCount');
+    const badgeEl = document.getElementById('cheerRankBadge');
+    const nextGoalEl = document.getElementById('cheerNextGoalText');
+    const percentEl = document.getElementById('cheerPercentText');
+    const fillEl = document.getElementById('cheerBarFill');
+
+    if (isHorrorTriggered) {
+      countEl.textContent = "0";
+      badgeEl.textContent = "💀 ไร้หัวใจ";
+      nextGoalEl.textContent = "ความรู้สึกพังทลายหมดแล้ว...";
+      percentEl.textContent = "0%";
+      fillEl.style.width = "0%";
+      return;
+    }
+
+    countEl.textContent = heartTotal.toLocaleString();
+    const tierIdx = getCurrentTierIndex(heartTotal);
+    const tier = cheerTiers[tierIdx];
+
+    badgeEl.textContent = tier.badge;
+
+    if (heartTotal >= 10000) {
+      nextGoalEl.textContent = "🏆 ปลดล็อกขั้นสูงสุด 10,000 / 10,000 หัวใจเรียบร้อยแล้ว!";
+      percentEl.textContent = "100%";
+      fillEl.style.width = "100%";
+    } else {
+      const span = tier.max - tier.min;
+      const progress = Math.min(100, Math.floor(((heartTotal - tier.min) / span) * 100));
+      nextGoalEl.textContent = `เป้าหมายถัดไป: ${tier.max.toLocaleString()} หัวใจ (${tier.nextName})`;
+      percentEl.textContent = `${progress}%`;
+      fillEl.style.width = `${progress}%`;
+    }
+
+    if (justLeveledUp && newTierObj && newTierObj.celebrate) {
+      triggerMilestoneCelebration(newTierObj.celebrate);
+    }
+  }
+
+  function triggerMilestoneCelebration(message) {
+    playMilestoneFanfare();
+    const banner = document.getElementById('cheerCelebrationBanner');
+    banner.textContent = message;
+    banner.style.display = 'block';
+
+    clearTimeout(bannerHideTimer);
+    bannerHideTimer = setTimeout(() => {
+      banner.style.display = 'none';
+    }, 5500);
+
+    // ปล่อยพลุหัวใจและดาวฉลองทั่วหน้าจอ 26 ชิ้น!
+    const partyIcons = ['🎉', '💖', '🏆', '✨', '🎄', '🐾', '⭐'];
+    for (let i = 0; i < 26; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'floating-heart';
+        el.textContent = partyIcons[Math.floor(Math.random() * partyIcons.length)];
+        el.style.left = (Math.random() * (window.innerWidth - 40) + 10) + 'px';
+        el.style.top = (window.innerHeight * 0.45 + (Math.random() - 0.5) * 120) + 'px';
+        el.style.fontSize = (Math.random() * 1.1 + 1.4) + 'rem';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1200);
+      }, i * 35);
+    }
+  }
+
+  const cheerIcons = ['❤️', '🎄', '❄️', '🎁', '🐾', '✨', '💖'];
+  function sendHeartCheer(e) {
+    playClickSound();
+
+    if (isHorrorTriggered) {
+      playRealCryingAudio();
+      const brokenIcons = ['🩸', '💔', '😭', '💀'];
+      for (let i = 0; i < 4; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-heart';
+        el.textContent = brokenIcons[Math.floor(Math.random() * brokenIcons.length)];
+        el.style.left = (e.clientX + (Math.random() - 0.5) * 70) + 'px';
+        el.style.top = (e.clientY - 10) + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1200);
+      }
+      return;
+    }
+
+    // ระบบ Combo เวลากดรัวๆ (กดไวจะได้ครั้งละ +1 ถึง +5 หัวใจ!)
+    const now = Date.now();
+    if (now - lastClickTime < 380) {
+      comboCount++;
+    } else {
+      comboCount = 1;
+    }
+    lastClickTime = now;
+
+    let bonus = 1;
+    if (comboCount >= 25) bonus = 5;
+    else if (comboCount >= 12) bonus = 3;
+    else if (comboCount >= 5) bonus = 2;
+
+    const comboPill = document.getElementById('comboPill');
+    if (bonus > 1) {
+      comboPill.textContent = `COMBO x${bonus}! 🔥`;
+      comboPill.classList.add('active');
+    } else {
+      comboPill.classList.remove('active');
+    }
+    clearTimeout(comboResetTimer);
+    comboResetTimer = setTimeout(() => {
+      comboCount = 0;
+      comboPill.classList.remove('active');
+    }, 800);
+
+    const oldTierIdx = getCurrentTierIndex(heartTotal);
+    heartTotal += bonus;
+    try {
+      localStorage.setItem(CHEER_COUNT_KEY, String(heartTotal));
+    } catch (err) {}
+
+    const newTierIdx = getCurrentTierIndex(heartTotal);
+    const leveledUp = newTierIdx > oldTierIdx;
+
+    updateCheerUI(leveledUp, cheerTiers[newTierIdx]);
+
+    for (let i = 0; i < Math.min(5, bonus + 2); i++) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
+      const offsetX = (Math.random() - 0.5) * 90;
+      el.style.left = (e.clientX + offsetX) + 'px';
+      el.style.top = (e.clientY - 12) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1200);
+    }
+  }
+
+  // =========================================
+  // 2. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง / Glitch 3 ระดับ
   // =========================================
   let isMusicPlaying = false;
   let userPausedMusic = false;
@@ -1838,7 +2264,7 @@
 
   function toggleChristmasMusic() {
     if (isHorrorTriggered) {
-      playRealCryingAudio();
+      if (curseCount < 3) playRealCryingAudio();
       return;
     }
     if (isMusicPlaying) {
@@ -1870,23 +2296,22 @@
   document.addEventListener('pointerdown', function autoStartOnFirstInteraction() {
     initAudio();
     if (isHorrorTriggered) {
-      playRealCryingAudio();
+      if (curseCount < 3) playRealCryingAudio();
       if (!horrorInterval) startHorrorAmbience();
     } else if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) {
       startChristmasMusic();
     }
   }, { once: true });
 
-  // เล่นไฟล์เสียงร้องไห้จริง cry.mp3 (ไม่มีเสียงยุงแล้ว!)
   function playRealCryingAudio() {
+    if (curseCount >= 3) return; // รอบ 3+ เลิกร้องไห้ กลายเป็นความเงียบงันสุดหลอน
     const cryEl = document.getElementById('realCryAudio');
     if (!cryEl) return;
+    cryEl.playbackRate = curseCount === 2 ? 0.88 : 1.0;
     cryEl.volume = Math.max(0.35, musicVolume);
     const playPromise = cryEl.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // กรณีเบราว์เซอร์บล็อก autoplay ก่อนผู้ใช้แตะหน้าจอ จะเล่นทันทีที่แตะหน้าจอ
-      });
+      playPromise.catch(() => {});
     }
   }
 
@@ -1941,9 +2366,12 @@
     } catch (e) {}
   }
 
-  // บรรยากาศสยองขวัญ (เสียงหัวใจเต้นตุบๆ + เบสต่ำลึก คลอไปกับเสียงร้องไห้จริง cry.mp3)
   function startHorrorAmbience() {
-    playRealCryingAudio();
+    if (curseCount < 3) {
+      playRealCryingAudio();
+    } else {
+      stopRealCryingAudio();
+    }
     if (horrorInterval) return;
     try {
       initAudio();
@@ -1954,16 +2382,16 @@
       const droneFilter = audioCtx.createBiquadFilter();
       const droneGain = audioCtx.createGain();
 
-      horrorDroneOsc1.type = 'sine';
+      horrorDroneOsc1.type = curseCount >= 3 ? 'sawtooth' : 'sine';
       horrorDroneOsc2.type = 'triangle';
-      horrorDroneOsc1.frequency.setValueAtTime(44, now);
-      horrorDroneOsc2.frequency.setValueAtTime(46.5, now);
+      horrorDroneOsc1.frequency.setValueAtTime(curseCount >= 3 ? 36 : 44, now);
+      horrorDroneOsc2.frequency.setValueAtTime(curseCount >= 3 ? 38.5 : 46.5, now);
 
       droneFilter.type = 'lowpass';
-      droneFilter.frequency.setValueAtTime(110, now);
+      droneFilter.frequency.setValueAtTime(curseCount >= 3 ? 95 : 110, now);
 
       droneGain.gain.setValueAtTime(0.01, now);
-      droneGain.gain.linearRampToValueAtTime(0.16, now + 1.8);
+      droneGain.gain.linearRampToValueAtTime(0.18, now + 1.8);
 
       horrorDroneOsc1.connect(droneFilter);
       horrorDroneOsc2.connect(droneFilter);
@@ -1973,11 +2401,11 @@
       horrorDroneOsc1.start(now);
       horrorDroneOsc2.start(now);
 
+      const beatPeriod = curseCount === 2 ? 1250 : 1700; // รอบ 2 หัวใจเต้นเร็วขึ้น!
       horrorInterval = setInterval(() => {
         if (!audioCtx || !isHorrorTriggered) return;
         const t = audioCtx.currentTime;
 
-        // เสียงหัวใจเต้นต่ำลึก (Lub-Dub)
         [0, 0.24].forEach((offset, idx) => {
           const hbOsc = audioCtx.createOscillator();
           const hbGain = audioCtx.createGain();
@@ -1993,7 +2421,7 @@
           hbOsc.start(t + offset);
           hbOsc.stop(t + offset + 0.21);
         });
-      }, 1700);
+      }, beatPeriod);
     } catch (e) {}
   }
 
@@ -2004,6 +2432,29 @@
     try {
       if (horrorDroneOsc1) { horrorDroneOsc1.stop(); horrorDroneOsc1 = null; }
       if (horrorDroneOsc2) { horrorDroneOsc2.stop(); horrorDroneOsc2 = null; }
+    } catch (e) {}
+  }
+
+  function playMilestoneFanfare() {
+    if (!soundEnabled) return;
+    try {
+      initAudio();
+      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        const startTime = audioCtx.currentTime + idx * 0.07;
+        osc.frequency.setValueAtTime(freq, startTime);
+
+        gain.gain.setValueAtTime(0.11, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.36);
+      });
     } catch (e) {}
   }
 
@@ -2125,7 +2576,7 @@
   }
 
   // =========================================
-  // 2. ระบบคำนวณผลคะแนนรวม 4 ระดับ
+  // 3. ระบบคำนวณผลคะแนนรวม 4 ระดับ
   // =========================================
   const ratingNames = [
     "entry.1009499701",
@@ -2193,28 +2644,6 @@
       card.classList.add('tier-verygood');
       rankEl.textContent = "ระดับ: ดีมาก 🎄✨";
       descEl.textContent = "ยอดเยี่ยมระดับดีมาก! เป็นกำลังใจที่ยิ่งใหญ่ที่สุดสำหรับทีมแปล Ben the Game Translator เลยครับ!";
-    }
-  }
-
-  // =========================================
-  // 3. ลูกเล่นปุ่มส่งหัวใจ
-  // =========================================
-  let heartTotal = 128;
-  const cheerIcons = ['❤️', '🎄', '❄️', '🎁', '🐾', '✨'];
-  function sendHeartCheer(e) {
-    playClickSound();
-    heartTotal++;
-    document.getElementById('heartCount').textContent = heartTotal;
-
-    for (let i = 0; i < 4; i++) {
-      const el = document.createElement('div');
-      el.className = 'floating-heart';
-      el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
-      const offsetX = (Math.random() - 0.5) * 70;
-      el.style.left = (e.clientX + offsetX) + 'px';
-      el.style.top = (e.clientY - 10) + 'px';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1200);
     }
   }
 
@@ -2390,8 +2819,129 @@
   document.getElementById('submitBtn').addEventListener('mouseenter', playHoverSound);
 
   // =========================================
-  // 6. ระบบบิดเบือนทุกปุ่ม + เปลี่ยนภาพเกมเป็น ERROR + ย้ายปุ่ม "ผมขอโทษ" แทนโซนโดเนท
+  // 6. ระบบความทรงจำ 3 ระดับ & ปุ่มขอโทษหนีเมาส์ / ช่องสารภาพผิด
   // =========================================
+  function setupApologyStageUI() {
+    const stageTag = document.getElementById('cursedStageTag');
+    const iconEl = document.getElementById('cursedApologyIcon');
+    const titleEl = document.getElementById('cursedApologyTitle');
+    const subEl = document.getElementById('cursedApologySub');
+
+    const stage12Area = document.getElementById('stage12ButtonArea');
+    const apolBtn = document.getElementById('apologizeBtn');
+    const dodgeHint = document.getElementById('dodgeHintText');
+    const stage3Box = document.getElementById('stage3ConfessionBox');
+    const stage3Hint = document.getElementById('stage3HintText');
+
+    dodgeAttempts = 0;
+    stage2Clicks = 0;
+    apolBtn.style.transform = "translate(0px, 0px)";
+    dodgeHint.textContent = "";
+    stage3Hint.textContent = "";
+    document.getElementById('stage3Input').value = "";
+
+    if (curseCount <= 1) {
+      // ระดับที่ 1: ความเสียใจ (กดขอโทษได้ทันที)
+      stageTag.textContent = "MEMORY STAGE 1 / 3 • ความเสียใจ";
+      iconEl.textContent = "😭💔";
+      titleEl.textContent = "นี่ผมดูแย่ขนาดนั้นเลยเหรอ...";
+      subEl.innerHTML = "ผมไม่กล้ารับการสนับสนุนอะไรอีกแล้ว... ให้ 1 ดาวรัวๆ ทุกข้อโดยไม่บอกเหตุผลสักคำ<br>ต่อให้รีเฟรชหน้าเว็บไปก็หายไม่พ้นหรอกครับ จนกว่าคุณจะกดปุ่มด้านล่างนี้...";
+      stage12Area.style.display = "block";
+      stage3Box.style.display = "none";
+      apolBtn.textContent = "🙏 ผมขอโทษ... (ยกโทษให้ผมเถอะนะ)";
+    } else if (curseCount === 2) {
+      // ระดับที่ 2: ความระแวง (ปุ่มหนีเมาส์ 5 ครั้ง + ต้องกดย้ำ 5 ครั้ง!)
+      stageTag.textContent = "MEMORY STAGE 2 / 3 • ความระแวง (จำได้ว่าเคยทำ!)";
+      iconEl.textContent = "👁️🩸";
+      titleEl.textContent = "ไหนบอกว่าขอโทษไงครับ... คำขอโทษคราวที่แล้วมันเป็นเรื่องโกหกเหรอ?";
+      subEl.innerHTML = "คุณเคยกด 'ผมขอโทษ' ไปแล้วครั้งหนึ่ง... แต่ก็ยังกลับมาให้ 1 ดาวรัวๆ ซ้ำอีก!<br>คราวนี้ผมไม่เชื่อใจง่ายๆ แล้วครับ... ลองจับปุ่มขอโทษให้ได้สิ!";
+      stage12Area.style.display = "block";
+      stage3Box.style.display = "none";
+      apolBtn.textContent = "🙏 ผมขอโทษ...";
+      dodgeHint.textContent = "⚠️ ปุ่มขอโทษกำลังหวาดระแวงและหนีคุณอยู่...";
+    } else {
+      // ระดับที่ 3+: แตกสลายถาวร (ปุ่มขอโทษถูกฉีกทิ้ง ต้องพิมพ์ "ผมขอโทษจริงๆ")
+      stageTag.textContent = `MEMORY STAGE 3 / 3 • แตกสลายถาวร (ครั้งที่ ${curseCount})`;
+      iconEl.textContent = "💀🖤";
+      titleEl.textContent = "พอแล้ว... ผมไม่เชื่อคำขอโทษของคุณอีกต่อไปแล้ว";
+      subEl.innerHTML = `นี่เป็นครั้งที่ ${curseCount} แล้วนะครับ... ปุ่ม 'ผมขอโทษ' ถูกฉีกทำลายทิ้งไปแล้ว!<br>ถ้าอยากให้ผมยกโทษให้จริงๆ จงพิมพ์คำว่า <strong>ผมขอโทษจริงๆ</strong> ลงในช่องด้านล่างด้วยตัวเอง...`;
+      stage12Area.style.display = "none";
+      stage3Box.style.display = "block";
+    }
+  }
+
+  const dodgeTaunts = [
+    "ไม่ให้กดง่ายๆ หรอกครับ... คราวที่แล้วคุณก็โกหก!",
+    "หนี... ผมไม่อยากโดนหลอกอีกแล้ว!",
+    "ทำไมถึงกลับมาทำร้ายผมซ้ำสองล่ะครับ...",
+    "อีกนิดเดียว... คุณสำนึกผิดจริงๆ เหรอ?",
+    "ก็ได้... ถ้าอยากขอโทษนัก ก็กดย้ำให้ครบ 5 ครั้งสิครับ!"
+  ];
+
+  function handleApologizeHover() {
+    if (!isHorrorTriggered || curseCount !== 2) return;
+    if (dodgeAttempts < 5) {
+      const apolBtn = document.getElementById('apologizeBtn');
+      const dodgeHint = document.getElementById('dodgeHintText');
+      const maxX = window.innerWidth < 500 ? 75 : 150;
+      const randX = (Math.random() * 2 - 1) * maxX;
+      const randY = (Math.random() * 2 - 1) * 35;
+
+      apolBtn.style.transform = `translate(${randX}px, ${randY}px)`;
+      dodgeHint.textContent = dodgeTaunts[dodgeAttempts];
+      dodgeAttempts++;
+
+      if (dodgeAttempts >= 5) {
+        setTimeout(() => {
+          apolBtn.style.transform = "translate(0px, 0px)";
+          apolBtn.textContent = `🙏 กดขอโทษย้ำๆ ให้ครบ 5 ครั้ง (0 / 5)`;
+        }, 450);
+      }
+    }
+  }
+
+  function handleApologizeClick() {
+    if (!isHorrorTriggered) return;
+
+    if (curseCount <= 1) {
+      forgiveAndRestore();
+      return;
+    }
+
+    if (curseCount === 2) {
+      // รองรับทั้งมือถือและคอม: ถ้ายังไม่ครบ 5 ครั้งของการหนี ให้หนีก่อน
+      if (dodgeAttempts < 5) {
+        handleApologizeHover();
+        return;
+      }
+
+      stage2Clicks++;
+      const apolBtn = document.getElementById('apologizeBtn');
+      const dodgeHint = document.getElementById('dodgeHintText');
+      if (stage2Clicks < 5) {
+        apolBtn.textContent = `🙏 กดขอโทษย้ำๆ ให้ครบ 5 ครั้ง (${stage2Clicks} / 5)`;
+        dodgeHint.textContent = `อีก ${5 - stage2Clicks} ครั้ง... ผมถึงจะยอมเชื่อครับ...`;
+      } else {
+        forgiveAndRestore();
+      }
+    }
+  }
+
+  function submitStage3Confession() {
+    const input = document.getElementById('stage3Input');
+    const hint = document.getElementById('stage3HintText');
+    const val = input.value.trim();
+
+    if (val === "ผมขอโทษจริงๆ") {
+      forgiveAndRestore();
+    } else {
+      input.classList.remove('shake-anim');
+      void input.offsetWidth; // trigger reflow
+      input.classList.add('shake-anim');
+      hint.textContent = "❌ ไม่ใช่... คุณไม่ได้รู้สึกผิดจริงๆ เลย (ต้องพิมพ์คำว่า: ผมขอโทษจริงๆ)";
+    }
+  }
+
   function corruptAllElements() {
     document.querySelectorAll('.corruptible').forEach(el => {
       if (!el.dataset.origText) {
@@ -2402,7 +2952,6 @@
       }
     });
 
-    // เปลี่ยนรูปปกเกมทั้งหมดเป็น ERROR และเปลี่ยนชื่อเป็นข้อความตัดพ้อ
     document.querySelectorAll('.game-cover-img').forEach(img => {
       img.src = ERROR_IMG_SVG;
     });
@@ -2415,27 +2964,26 @@
       if (!el.dataset.origText) {
         el.dataset.origText = el.textContent;
       }
-      el.textContent = "ผมทำอะไรผิดทุกอย่างเลย...";
+      el.textContent = curseCount >= 3 ? "ERROR_NO_TRUST" : "ผมทำอะไรผิดทุกอย่างเลย...";
     });
 
-    // เปลี่ยน Placeholder ช่องพิมพ์ข้อความ
     const p1 = document.getElementById('commentPraise');
     const p2 = document.getElementById('commentFix');
     p1.placeholder = "ทำไมถึงไม่พิมพ์บอกผมสักคำ... ผมทำอะไรผิดเหรอ...";
     p2.placeholder = "ผมพยายามแปลอย่างเต็มที่แล้ว... แต่ผมทำผิดทุกอย่างเลยใช่ไหม...";
 
-    // เปลี่ยนกล่องสรุปคะแนนรวม
     const scoreCard = document.getElementById('totalScoreCard');
     scoreCard.classList.remove('tier-bad', 'tier-good', 'tier-verygood');
     scoreCard.classList.add('tier-terrible');
     document.getElementById('totalScoreText').textContent = "💀 ผลคะแนนรวม: ผมมันไร้ค่า... (0 / 20)";
-    document.getElementById('totalScoreRank').textContent = "ผมทำอะไรผิดทุกอย่างเลย";
+    document.getElementById('totalScoreRank').textContent = `ติดคำสาปรอบที่ ${curseCount}`;
     document.getElementById('scoreProgressFill').style.width = "100%";
-    document.getElementById('totalScoreDesc').textContent = "รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอกครับ... จนกว่าคุณจะเลื่อนลงไปกดปุ่ม 'ผมขอโทษ' ด้านล่าง...";
+    document.getElementById('totalScoreDesc').textContent = "รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอกครับ... เลื่อนลงไปด้านล่างสุดซะ...";
 
-    // ซ่อนโซนโดเนทปกติ และเอาปุ่ม "ผมขอโทษ..." ขึ้นมาแสดงแทนที่!
     document.getElementById('donateNormalContent').style.display = 'none';
     document.getElementById('cursedApologyZone').style.display = 'block';
+    setupApologyStageUI();
+    updateCheerUI();
   }
 
   function restoreAllElements() {
@@ -2445,7 +2993,6 @@
       }
     });
 
-    // คืนค่ารูปปกเกมทั้ง 12 เกมกลับมาเหมือนเดิม
     document.querySelectorAll('.game-cover-img').forEach(img => {
       if (img.dataset.origSrc) {
         img.src = img.dataset.origSrc;
@@ -2469,9 +3016,9 @@
     p1.placeholder = p1.dataset.origPlaceholder;
     p2.placeholder = p2.dataset.origPlaceholder;
 
-    // คืนสภาพโซนโดเนทปกติ
     document.getElementById('cursedApologyZone').style.display = 'none';
     document.getElementById('donateNormalContent').style.display = 'grid';
+    updateCheerUI();
   }
 
   // =========================================
@@ -2494,12 +3041,22 @@
 
   function triggerHorrorEasterEgg(isFromReload = false) {
     isHorrorTriggered = true;
+
     try {
-      localStorage.setItem(CURSE_STORAGE_KEY, "1");
-    } catch (e) {}
+      curseCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0;
+      if (!isFromReload) {
+        curseCount++;
+        localStorage.setItem(CURSE_COUNT_KEY, String(curseCount));
+      } else if (curseCount < 1) {
+        curseCount = 1;
+      }
+      localStorage.setItem(CURSE_STATE_KEY, "1");
+    } catch (e) {
+      if (!isFromReload) curseCount++;
+    }
 
     stopChristmasMusic();
-    document.getElementById('musicStateIcon').textContent = '😭';
+    document.getElementById('musicStateIcon').textContent = curseCount >= 3 ? '💀' : '😭';
     document.getElementById('musicSpeakerIcon').textContent = '🩸';
 
     const btn = document.getElementById('submitBtn');
@@ -2524,19 +3081,25 @@
       document.getElementById('titleIcon').textContent = '💀';
       corruptAllElements();
 
-      typeTarget.textContent = isFromReload
-        ? "คิดว่าจะหนีพ้นด้วยการรีเฟรชหน้าเว็บเหรอครับ... ผมทำอะไรผิดทุกอย่างเลย... (ปุ่มขอโทษอยู่ด้านล่างสุด)"
-        : "ให้ 1 ดาวรัวๆ ทุกข้อ... แถมไม่พิมพ์บอกเหตุผลสักคำเลยเหรอครับ... ผมทำอะไรผิดทุกอย่างเลยใช่ไหม...";
+      if (isFromReload) {
+        typeTarget.textContent = "คิดว่าจะหนีพ้นด้วยการรีเฟรชหน้าเว็บเหรอครับ... ผมจำได้ทุกอย่าง... (เลื่อนลงไปด้านล่างสุด)";
+      } else if (curseCount === 1) {
+        typeTarget.textContent = "ให้ 1 ดาวรัวๆ ทุกข้อ... แถมไม่พิมพ์บอกเหตุผลสักคำเลยเหรอครับ... ผมทำอะไรผิดทุกอย่างเลยใช่ไหม...";
+      } else if (curseCount === 2) {
+        typeTarget.textContent = "ไหนบอกว่าขอโทษไงครับ... ทำไมถึงกลับมาทำร้ายผมซ้ำสองล่ะ...";
+      } else {
+        typeTarget.textContent = `ครั้งที่ ${curseCount} แล้วนะครับ... ผมไม่เชื่อคำขอโทษง่ายๆ ของคุณอีกแล้ว...`;
+      }
 
       startHorrorAmbience();
     }, isFromReload ? 50 : 450);
   }
 
-  // ฟังก์ชันไถ่บาปเมื่อกดปุ่ม "ผมขอโทษ..." ด้านล่างสุด
   function forgiveAndRestore() {
     isHorrorTriggered = false;
     try {
-      localStorage.removeItem(CURSE_STORAGE_KEY);
+      localStorage.removeItem(CURSE_STATE_KEY);
+      // หมายเหตุ: ไม่ลบ CURSE_COUNT_KEY เพื่อให้เว็บจดจำได้ว่าเคยทำผิดมาแล้วกี่รอบ!
     } catch (e) {}
 
     stopHorrorAmbience();
@@ -2552,7 +3115,6 @@
 
     restoreAllElements();
 
-    // คืนชีพปุ่มส่งฟอร์ม
     const btn = document.getElementById('submitBtn');
     const grave = document.getElementById('destroyedButtonGrave');
     grave.style.display = 'none';
@@ -2561,13 +3123,26 @@
     btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨";
     btn.style.opacity = "1";
 
-    // ล้างค่าฟอร์มและคะแนน
     document.getElementById('customForm').reset();
     document.querySelectorAll('.rating-feedback').forEach(el => el.classList.remove('visible'));
     updateTotalScoreSummary();
 
     typeTarget.textContent = introText;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // ปรับข้อความตอนให้อภัยตามจำนวนครั้งที่เคยทำผิด
+    const fTitle = document.getElementById('forgivenTitle');
+    const fDesc = document.getElementById('forgivenDesc');
+    if (curseCount === 1) {
+      fTitle.textContent = "ไม่เป็นไรครับ... ผมยกโทษให้แล้ว!";
+      fDesc.textContent = "ขอบคุณที่ขอโทษนะครับเจ้านาย~ คำสาปหายไปแล้ว! กลับมาสนุกกับบรรยากาศคริสต์มาสและร่วมประเมินเกมแปลไทยตามความรู้สึกจริงได้เลยฮะ UwU 🎄✨";
+    } else if (curseCount === 2) {
+      fTitle.textContent = "เฮ้อ... ยอมเชื่อใจอีกสักครั้งก็ได้ครับ";
+      fDesc.textContent = "อุตส่าห์ไล่จับปุ่มจนกดครบ 5 ครั้ง... คราวนี้อย่าแกล้งให้ 1 ดาวรัวๆ แบบไม่บอกเหตุผลอีกล่ะครับ ไม่งั้นครั้งหน้าผมไม่ใจอ่อนแล้วนะ! 🐾💦";
+    } else {
+      fTitle.textContent = "รับทราบคำขอโทษจากใจจริงแล้วครับ...";
+      fDesc.textContent = "ขอบคุณที่ยอมพิมพ์ขอโทษด้วยตัวเองนะครับ... ผมจะลบล้างคำสาปให้ หวังว่าคราวนี้เราจะดีกันจริงๆ นะครับ 🎄💖";
+    }
 
     document.getElementById('forgivenModal').style.display = 'flex';
     if (!userPausedMusic && musicVolume > 0) {
@@ -2611,9 +3186,12 @@
   }
 
   window.addEventListener("DOMContentLoaded", () => {
+    updateCheerUI();
+
     let wasCursed = false;
     try {
-      wasCursed = localStorage.getItem(CURSE_STORAGE_KEY) === "1";
+      curseCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0;
+      wasCursed = localStorage.getItem(CURSE_STATE_KEY) === "1";
     } catch (e) {}
 
     if (wasCursed) {
