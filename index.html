@@ -10,8 +10,10 @@
       --primary: #0ea5e9;
       --primary-dark: #0369a1;
       --accent: #38bdf8;
+      --gold: #f59e0b;
+      --pink: #ec4899;
       --glow: rgba(14, 165, 233, 0.35);
-      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.91);
       --text-main: #1e293b;
       --text-muted: #64748b;
     }
@@ -25,26 +27,33 @@
       background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 50%, #0369a1 100%);
       color: var(--text-main);
       margin: 0;
-      padding: 28px 16px 60px;
+      padding: 28px 16px 70px;
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
     }
 
-    /* ปุ่มเปิด-ปิดเสียงลอยมุมขวาบน */
-    .sound-toggle-btn {
+    /* ปุ่มควบคุมลอยมุมขวาบน */
+    .floating-controls {
       position: fixed;
-      top: 18px;
-      right: 18px;
+      top: 16px;
+      right: 16px;
       z-index: 100;
-      background: rgba(15, 23, 42, 0.8);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill-control-btn {
+      background: rgba(15, 23, 42, 0.82);
       backdrop-filter: blur(10px);
       color: #e0f2fe;
       border: 1px solid rgba(56, 189, 248, 0.5);
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 999px;
       font-family: 'Prompt', sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
       cursor: pointer;
       display: flex;
@@ -52,21 +61,30 @@
       gap: 6px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       transition: all 0.2s ease;
+      text-decoration: none;
     }
 
-    .sound-toggle-btn:hover {
+    .pill-control-btn:hover {
       background: #0284c7;
       color: #ffffff;
       transform: translateY(-2px);
     }
 
+    .pill-donate-jump {
+      background: linear-gradient(90deg, #f59e0b, #ec4899);
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .pill-donate-jump:hover {
+      filter: brightness(1.1);
+    }
+
     /* พื้นหลังเอฟเฟกต์แสงออโรร่าและ Canvas */
     .bg-effects {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       z-index: -1;
       overflow: hidden;
       pointer-events: none;
@@ -80,31 +98,9 @@
       animation: floatOrb 14s infinite alternate ease-in-out;
     }
 
-    .orb-1 {
-      width: 450px;
-      height: 450px;
-      background: #38bdf8;
-      top: -100px;
-      left: -100px;
-    }
-
-    .orb-2 {
-      width: 500px;
-      height: 500px;
-      background: #818cf8;
-      bottom: -150px;
-      right: -100px;
-      animation-delay: -5s;
-    }
-
-    .orb-3 {
-      width: 350px;
-      height: 350px;
-      background: #2dd4bf;
-      top: 40%;
-      left: 60%;
-      animation-delay: -9s;
-    }
+    .orb-1 { width: 450px; height: 450px; background: #38bdf8; top: -100px; left: -100px; }
+    .orb-2 { width: 500px; height: 500px; background: #818cf8; bottom: -150px; right: -100px; animation-delay: -5s; }
+    .orb-3 { width: 350px; height: 350px; background: #2dd4bf; top: 40%; left: 60%; animation-delay: -9s; }
 
     @keyframes floatOrb {
       0% { transform: translate(0, 0) scale(1); }
@@ -114,10 +110,7 @@
 
     #particleCanvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       z-index: -1;
       pointer-events: none;
     }
@@ -158,8 +151,19 @@
 
     @keyframes popIn {
       0% { transform: scale(0.5); opacity: 0; }
-      80% { transform: scale(1.1); opacity: 1; }
+      80% { transform: scale(1.08); opacity: 1; }
       100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes scanLine {
+      0% { top: 8%; opacity: 0.2; }
+      50% { top: 88%; opacity: 1; }
+      100% { top: 8%; opacity: 0.2; }
+    }
+
+    @keyframes floatUpFade {
+      0% { transform: translateY(0) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-130px) scale(1.4); opacity: 0; }
     }
 
     /* ส่วนหัวและแท่นโชว์โลโก้ BGT */
@@ -176,7 +180,6 @@
       animation: fadeSlideUp 0.6s ease-out;
     }
 
-    /* แท่นโชว์โลโก้สีเข้มไล่เฉด เพื่อให้โลโก้สีขาวเด่นชัด */
     .logo-showcase {
       position: relative;
       width: 100%;
@@ -207,7 +210,7 @@
     }
 
     .studio-logo:hover {
-      transform: scale(1.04);
+      transform: scale(1.05) rotate(-1deg);
     }
 
     .header-text {
@@ -550,11 +553,253 @@
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
       transition: all 0.25s ease;
+      margin-bottom: 28px;
     }
 
     .submit-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 14px 30px rgba(56, 189, 248, 0.55);
+    }
+
+    /* =========================================
+       โซน DONATE & QR CODE สนับสนุนทีมแปล
+       ========================================= */
+    .donate-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 249, 255, 0.95));
+      backdrop-filter: blur(16px);
+      border: 2px solid #7dd3fc;
+      border-radius: 26px;
+      padding: 30px 26px;
+      box-shadow: 0 20px 45px rgba(2, 132, 199, 0.25);
+      position: relative;
+      overflow: hidden;
+      animation: fadeSlideUp 0.8s ease-out;
+    }
+
+    .donate-ribbon {
+      position: absolute;
+      top: 18px;
+      right: -34px;
+      background: linear-gradient(90deg, #f59e0b, #ec4899);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 40px;
+      transform: rotate(35deg);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+
+    .donate-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .donate-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .donate-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      background: linear-gradient(90deg, #0284c7, #ec4899, #f59e0b);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientFlow 4s ease infinite;
+    }
+
+    .donate-desc {
+      color: #475569;
+      font-size: 0.92rem;
+      margin: 0 0 18px 0;
+      line-height: 1.55;
+    }
+
+    /* ปุ่มเลือกแพ็กเกจโดเนท */
+    .tip-tiers {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .tip-btn {
+      background: #ffffff;
+      border: 2px solid #bae6fd;
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Prompt', sans-serif;
+      transition: all 0.22s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tip-btn:hover {
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(14, 165, 233, 0.18);
+    }
+
+    .tip-btn.active {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+      transform: scale(1.02);
+    }
+
+    .tip-emoji {
+      font-size: 1.5rem;
+    }
+
+    .tip-info strong {
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .tip-info small {
+      font-size: 0.76rem;
+      opacity: 0.85;
+    }
+
+    .wolf-reaction-box {
+      background: #f0f9ff;
+      border-left: 4px solid #0ea5e9;
+      padding: 10px 14px;
+      border-radius: 0 12px 12px 0;
+      font-size: 0.88rem;
+      color: #0369a1;
+      font-weight: 500;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+    }
+
+    /* ปุ่มส่งหัวใจฟรี & ปุ่มคัดลอกเลขบัญชี */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .heart-cheer-btn {
+      flex: 1;
+      min-width: 170px;
+      background: linear-gradient(90deg, #ec4899, #f43f5e);
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
+      transition: transform 0.15s ease;
+      position: relative;
+    }
+
+    .heart-cheer-btn:active {
+      transform: scale(0.94);
+    }
+
+    .copy-acc-btn {
+      background: #ffffff;
+      color: #0369a1;
+      border: 2px solid #7dd3fc;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-acc-btn:hover {
+      background: #e0f2fe;
+    }
+
+    /* กรอบ QR Code พร้อมเส้นเลเซอร์สแกน */
+    .qr-box-wrapper {
+      background: linear-gradient(145deg, #0f172a, #0369a1);
+      border-radius: 22px;
+      padding: 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 12px 28px rgba(3, 105, 161, 0.3);
+      position: relative;
+    }
+
+    .qr-frame {
+      position: relative;
+      width: 190px;
+      height: 190px;
+      margin: 0 auto 12px;
+      background: white;
+      padding: 10px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    }
+
+    .qr-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* เส้นเลเซอร์สแกน QR */
+    .qr-laser {
+      position: absolute;
+      left: 6%;
+      width: 88%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #0ea5e9, #38bdf8, #0ea5e9, transparent);
+      box-shadow: 0 0 10px #38bdf8, 0 0 18px #0ea5e9;
+      border-radius: 999px;
+      animation: scanLine 2.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .qr-badge-label {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.25);
+      border: 1px solid rgba(125, 211, 252, 0.5);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #bae6fd;
+      margin-bottom: 6px;
+    }
+
+    .qr-subtext {
+      font-size: 0.8rem;
+      color: #e0f2fe;
+      margin: 0;
+    }
+
+    /* หัวใจลอยตอนกดปุ่ม Cheer */
+    .floating-heart {
+      position: fixed;
+      font-size: 1.6rem;
+      pointer-events: none;
+      z-index: 9999;
+      animation: floatUpFade 1.2s ease-out forwards;
     }
 
     .studio-footer {
@@ -586,7 +831,7 @@
       background: white;
       border-radius: 24px;
       padding: 32px 28px;
-      max-width: 420px;
+      max-width: 440px;
       width: 100%;
       text-align: center;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
@@ -609,18 +854,25 @@
     .modal-box p {
       color: #475569;
       font-size: 0.95rem;
-      margin: 0 0 24px 0;
+      margin: 0 0 22px 0;
       line-height: 1.5;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .modal-close-btn {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 12px 28px;
+      padding: 12px 22px;
       border-radius: 12px;
       font-family: 'Prompt', sans-serif;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: 0.2s;
@@ -629,14 +881,32 @@
     .modal-close-btn:hover {
       background: var(--primary-dark);
     }
+
+    .modal-donate-btn {
+      background: linear-gradient(90deg, #f59e0b, #ec4899);
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
   </style>
 </head>
 <body>
 
-<!-- ปุ่มควบคุมเสียงเอฟเฟกต์ UI -->
-<button type="button" class="sound-toggle-btn" id="soundToggle" onclick="toggleSound()">
-  <span id="soundIcon">🔊</span> <span id="soundLabel">เสียง UI: เปิด</span>
-</button>
+<!-- ปุ่มลอยมุมขวาบน: เปิด/ปิดเสียง + วาร์ปไปโดเนท -->
+<div class="floating-controls">
+  <a href="#donateSection" class="pill-control-btn pill-donate-jump" onmouseenter="playHoverSound()" onclick="playCoinSound()">
+    ☕ เลี้ยงขนมหมาป่า
+  </a>
+  <button type="button" class="pill-control-btn" id="soundToggle" onclick="toggleSound()">
+    <span id="soundIcon">🔊</span> <span id="soundLabel">เสียง UI: เปิด</span>
+  </button>
+</div>
 
 <!-- เลเยอร์เอฟเฟกต์พื้นหลังออโรร่า & อนุภาคเคลื่อนไหว -->
 <div class="bg-effects">
@@ -650,7 +920,6 @@
   <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT -->
   <div class="header-card">
     <div class="logo-showcase">
-      <!-- อัปโหลดไฟล์โลโก้ชื่อ logo.png ไว้ข้างๆ index.html บน GitHub ได้เลยฮะ -->
       <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="this.style.display='none'">
     </div>
     <div class="header-text">
@@ -761,6 +1030,81 @@
     <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🚀</button>
   </form>
 
+  <!-- =========================================
+       โซน DONATE & QR CODE สนับสนุนทีมแปล
+       ========================================= -->
+  <div class="donate-card" id="donateSection">
+    <div class="donate-ribbon">SUPPORT BGT</div>
+    <div class="donate-layout">
+      <!-- ฝั่งซ้าย: เลือกแพ็กเกจ + รีแอคชัน + ส่งหัวใจ -->
+      <div>
+        <h2 class="donate-title">💖 สนับสนุนค่าขนมหมาป่า & ค่ากาแฟทีมแปล</h2>
+        <p class="donate-desc">
+          ทุกแพตช์ภาษาไทยเปิดให้โหลดเล่นฟรีเสมอฮะ! แต่ถ้าเจ้านายชอบผลงานและอยากช่วยเติมพลังให้มีแรงแปลเกมดีๆ ต่อไป สามารถสแกน QR Code ด้านข้าง หรือกดส่งหัวใจให้กำลังใจฟรีได้เลยนะฮะ UwU
+        </p>
+
+        <div class="tip-tiers">
+          <button type="button" class="tip-btn active" onmouseenter="playHoverSound()" onclick="selectTip(this, '20฿', 'งั่มๆ! ขอบคุณสำหรับขนมหมาป่านะฮะ อร่อยมากๆ เลย! 🦴🐾')">
+            <span class="tip-emoji">🦴</span>
+            <div class="tip-info">
+              <strong>20 บาท</strong>
+              <small>ค่าขนมหมาป่า</small>
+            </div>
+          </button>
+
+          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, '50฿', 'ซู้ดด~ กาแฟแก้วนี้ช่วยให้แปลได้อีก 500 บรรทัดเลยฮะ! ☕✨')">
+            <span class="tip-emoji">☕</span>
+            <div class="tip-info">
+              <strong>50 บาท</strong>
+              <small>ค่ากาแฟปั่นซับ</small>
+            </div>
+          </button>
+
+          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, '100฿', 'ว้าวว! ข้าวหน้าเนื้อชุดใหญ่ เติมพลังเต็มหลอด 100% เลยฮะ! 🍱🔥')">
+            <span class="tip-emoji">🍱</span>
+            <div class="tip-info">
+              <strong>100 บาท</strong>
+              <small>มื้อใหญ่ทีมแปล</small>
+            </div>
+          </button>
+
+          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'ตามศรัทธา', 'กรี๊ดดด! ป๋าเปย์ระดับตำนาน หมาป่าขอคารวะ 3 จอกเลยฮะ! 👑💎')">
+            <span class="tip-emoji">👑</span>
+            <div class="tip-info">
+              <strong>ตามศรัทธา</strong>
+              <small>ป๋าเปย์ระดับ VIP</small>
+            </div>
+          </button>
+        </div>
+
+        <div class="wolf-reaction-box" id="wolfReaction">
+          🐾 <strong>น้องหมาป่า BGT:</strong> งั่มๆ! ขอบคุณสำหรับขนมหมาป่านะฮะ อร่อยมากๆ เลย! 🦴🐾
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="heart-cheer-btn" onmouseenter="playHoverSound()" onclick="sendHeartCheer(event)">
+            ❤️ ส่งหัวใจให้กำลังใจ (<span id="heartCount">58</span>)
+          </button>
+          <!-- เปลี่ยนเลขพร้อมเพย์/วอลเล็ทของเจ้านายตรงฟังก์ชัน copyDonateInfo ด้านล่างได้เลยฮะ -->
+          <button type="button" class="copy-acc-btn" id="copyBtn" onmouseenter="playHoverSound()" onclick="copyDonateInfo()">
+            📋 คัดลอกเบอร์ PromptPay
+          </button>
+        </div>
+      </div>
+
+      <!-- ฝั่งขวา: กรอบ QR Code พร้อมเลเซอร์สแกน -->
+      <div class="qr-box-wrapper">
+        <div class="qr-badge-label">⚡ SCAN TO DONATE • <span id="selectedTipBadge">20฿</span></div>
+        <div class="qr-frame">
+          <div class="qr-laser"></div>
+          <!-- อัปโหลดรูป QR Code ของเจ้านายชื่อ qr.png ไว้ข้างๆ index.html บน GitHub ได้เลยฮะ -->
+          <img src="qr.png" alt="QR Code สนับสนุน Ben the Game Translator" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BenTheGameTranslator-Support'">
+        </div>
+        <p class="qr-subtext">รองรับทุกแอปธนาคาร & TrueMoney Wallet<br><strong>ชื่อบัญชี: Ben the Game Translator</strong></p>
+      </div>
+    </div>
+  </div>
+
   <div class="studio-footer">
     จัดทำโดย <strong>Ben the Game Translator</strong> • ขอบคุณทุกกำลังใจและคำติชมจากผู้เล่นทุกคนครับ 🐾
   </div>
@@ -772,7 +1116,10 @@
     <div class="modal-icon">🎉🐾</div>
     <h2>ส่งแบบประเมินสำเร็จแล้ว!</h2>
     <p>ขอบคุณมากๆ เลยฮะ! ทุกคะแนนและความคิดเห็นของเจ้านายมีค่ามาก เพื่อนำไปพัฒนาผลงานแปลไทยเกมต่อๆ ไปให้ดียิ่งขึ้นครับ 💕</p>
-    <button class="modal-close-btn" onclick="playClickSound(); closeModal();">ตกลง / ประเมินเกมอื่นต่อ</button>
+    <div class="modal-btns">
+      <button class="modal-close-btn" onclick="playClickSound(); closeModal();">ตกลง / ประเมินเกมอื่นต่อ</button>
+      <button class="modal-donate-btn" onclick="playCoinSound(); closeModal(); document.getElementById('donateSection').scrollIntoView({behavior:'smooth'});">☕ เลี้ยงขนมทีมแปล</button>
+    </div>
   </div>
 </div>
 
@@ -783,7 +1130,9 @@
   let soundEnabled = true;
   let audioCtx = null;
 
-  // ระบบสังเคราะห์เสียงเอฟเฟกต์ UI เกม (Web Audio API)
+  // =========================================
+  // 1. ระบบเสียงเอฟเฟกต์ UI เกม (Web Audio API)
+  // =========================================
   function initAudio() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -803,7 +1152,6 @@
     }
   }
 
-  // เสียงตอนเอาเมาส์ชี้ปุ่ม (Hover - นุ่มๆ ใสๆ)
   function playHoverSound() {
     if (!soundEnabled) return;
     try {
@@ -824,7 +1172,6 @@
     } catch (e) {}
   }
 
-  // เสียงตอนกดเลือก (Click - ปิ๊ง! สไตล์เกม VN)
   function playClickSound() {
     if (!soundEnabled) return;
     try {
@@ -845,12 +1192,32 @@
     } catch (e) {}
   }
 
-  // เสียงทำนองตอนส่งสำเร็จ (Success Fanfare)
+  // เสียงเหรียญทองตอนกดแพ็กเกจโดเนท (Coin Sound)
+  function playCoinSound() {
+    if (!soundEnabled) return;
+    try {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); // B5
+      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.07); // E6
+
+      gain.gain.setValueAtTime(0.11, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.31);
+    } catch (e) {}
+  }
+
   function playSuccessSound() {
     if (!soundEnabled) return;
     try {
       initAudio();
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5 - E5 - G5 - C6
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, idx) => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -869,7 +1236,52 @@
     } catch (e) {}
   }
 
-  // 1. เอฟเฟกต์พื้นหลังอนุภาค & เส้นเชื่อมโยงตามเมาส์
+  // =========================================
+  // 2. ลูกเล่นโซน Donate & ส่งหัวใจ
+  // =========================================
+  function selectTip(btn, amountText, reactionMsg) {
+    playCoinSound();
+    document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('selectedTipBadge').textContent = amountText;
+    document.getElementById('wolfReaction').innerHTML = `🐾 <strong>น้องหมาป่า BGT:</strong> ${reactionMsg}`;
+  }
+
+  let heartTotal = 58;
+  const cheerIcons = ['❤️', '🐾', '💙', '✨', '🐺'];
+  function sendHeartCheer(e) {
+    playClickSound();
+    heartTotal++;
+    document.getElementById('heartCount').textContent = heartTotal;
+
+    // สร้างหัวใจและอุ้งเท้าลอยพุ่งขึ้นจากจุดที่กด
+    for (let i = 0; i < 3; i++) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
+      const offsetX = (Math.random() - 0.5) * 60;
+      el.style.left = (e.clientX + offsetX) + 'px';
+      el.style.top = (e.clientY - 10) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1200);
+    }
+  }
+
+  function copyDonateInfo() {
+    playClickSound();
+    // เปลี่ยนเลขพร้อมเพย์/เบอร์วอลเล็ทของเจ้านายตรงเครื่องหมายคำพูดด้านล่างนี้ได้เลยฮะ
+    const promptPayNumber = "08X-XXX-XXXX"; 
+    navigator.clipboard.writeText(promptPayNumber).then(() => {
+      const btn = document.getElementById('copyBtn');
+      const oldText = btn.textContent;
+      btn.textContent = "✅ คัดลอกแล้วฮะ!";
+      setTimeout(() => btn.textContent = oldText, 2000);
+    });
+  }
+
+  // =========================================
+  // 3. พื้นหลังอนุภาค & เส้นเชื่อมโยงตามเมาส์
+  // =========================================
   const canvas = document.getElementById("particleCanvas");
   const ctx = canvas.getContext("2d");
   let particles = [];
@@ -956,7 +1368,9 @@
   }
   animateParticles();
 
-  // 2. เอฟเฟกต์พิมพ์ดีดสไตล์ Visual Novel
+  // =========================================
+  // 4. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม
+  // =========================================
   const introText = "รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! ✨";
   const typeTarget = document.getElementById("typewriterText");
   let charIndex = 0;
@@ -970,7 +1384,6 @@
   }
   window.addEventListener("DOMContentLoaded", typeWriter);
 
-  // 3. รายชื่อเกมครบทั้ง 12 เกม
   const games = [
     { name: "[VN] Tavern of Spear", tag: "VN", img: "images/tavern.jpg" },
     { name: "[VN] Promises to Keep", tag: "VN", img: "images/promises.jpg" },
@@ -983,7 +1396,7 @@
     { name: "[VN] Do Not Kill Me Jacob Extra", tag: "VN", img: "images/jacob.jpg" },
     { name: "[VN] After Class", tag: "VN", img: "images/afterclass.jpg" },
     { name: "[VN] Flaming Flagon", tag: "VN", img: "images/flagon.jpg" },
-    { name: "[VN] The Smoke Room", tag: "VN", img: "images/smokeroom.jpg" }
+    { name: "[VN] The Smoke Room", tag: "VN", img: "images/smoke.jpg" }
   ];
 
   const GAME_ENTRY_ID = "entry.1291974658";
@@ -1007,7 +1420,6 @@
     `;
   });
 
-  // 4. แสดงข้อความกำกับคะแนน + ผูกเสียง Hover / Click ให้ปุ่มให้คะแนนและปุ่มส่ง
   const ratingLabels = {
     "1": "ควรปรับปรุงอย่างยิ่ง 😢",
     "2": "พอใช้ได้ ยังมีจุดติดขัด 🤔",
@@ -1032,7 +1444,6 @@
 
   document.getElementById('submitBtn').addEventListener('mouseenter', playHoverSound);
 
-  // 5. จัดการการส่งฟอร์มและป๊อปอัปขอบคุณ
   function handleSubmit() {
     playClickSound();
     submitted = true;
