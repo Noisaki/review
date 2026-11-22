@@ -2260,6 +2260,12 @@
     <div class="lb-grid">
       <div class="lb-column">
         <h3 class="lb-col-title">🎁 ทำเนียบผู้สนับสนุน (Top Donate)</h3>
+        <!-- แผงแอดมินค้นหาชื่อ & ใส่ยอดโดเนท (โผล่เฉพาะแอดมิน) -->
+        <div id="donateAdminPanel" style="display:none; background:#fff1f2; border:1.5px dashed #e11d48; border-radius:12px; padding:10px; margin-bottom:10px;">
+          <div style="font-size:0.8rem; font-weight:700; color:#9f1239; margin-bottom:6px;">👑 แอดมิน: ค้นหาชื่อเพื่อใส่ยอดโดเนท (บาท)</div>
+          <input type="text" id="adminDonateSearch" placeholder="พิมพ์ชื่อ หรือ username..." oninput="renderAdminDonateSearch()" style="width:100%; padding:6px 10px; border-radius:8px; border:1px solid #fda4af; font-family:'Prompt',sans-serif; font-size:0.84rem; margin-bottom:6px;">
+          <div id="adminDonateResults"></div>
+        </div>
         <div class="lb-list" id="lbDonateList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
       </div>
       <div class="lb-column">
@@ -2921,6 +2927,8 @@
     const info = getRoleInfoByTier(profile.roleTier);
     const adminPanel = document.getElementById('voteAdminPanel');
     if (adminPanel) adminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
+    const donateAdminPanel = document.getElementById('donateAdminPanel');
+    if (donateAdminPanel) donateAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
     document.getElementById('navLoginBtn').style.display = 'none';
@@ -2958,6 +2966,8 @@
   }
 
   function applyLoggedOutUI() {
+    const donateAdminPanel = document.getElementById('donateAdminPanel');
+    if (donateAdminPanel) donateAdminPanel.style.display = 'none';
     currentUser = null;
     myServerHearts = 0;
     document.getElementById('navLoginBtn').style.display = 'inline-block';
@@ -3146,16 +3156,23 @@
 
     const entries = Object.keys(usersCache || {}).map(id => ({ id: id, u: usersCache[id] || {} }));
 
-    const donors = entries.filter(e => (Number(e.u.donateAmount) || 0) > 0 || (Number(e.u.roleTier) || 0) > 0);
-    donors.sort((a, b) => {
-      const da = Number(a.u.donateAmount) || 0;
-      const dbb = Number(b.u.donateAmount) || 0;
-      if (dbb !== da) return dbb - da;
-      const ta = Number(a.u.roleTier) || 0;
-      const tb = Number(b.u.roleTier) || 0;
-      if (tb !== ta) return tb - ta;
-      return (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0);
-    });
+    const donors = entries.filter(e => (Number(e.u.donateAmount) || 0) > 0);
+    donors.sort((a, b) => (Number(b.u.donateAmount) || 0) - (Number(a.u.donateAmount) || 0));
+
+    donateList.textContent = "";
+    if (donors.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = "lb-empty";
+      empty.textContent = "ยังไม่มีผู้สนับสนุนบนกระดาน — เป็นคนแรกเลยสิ! 🎁";
+      donateList.appendChild(empty);
+    } else {
+      const top5Donors = donors.slice(0, 5);
+      const formatDonor = (u) => "฿" + formatNum(u.donateAmount);
+      top5Donors.forEach((e, i) => {
+        donateList.appendChild(buildLbRow(i + 1, e.id, e.u, formatDonor(e.u)));
+      });
+      appendMyRankRow(donateList, donors, top5Donors, formatDonor);
+    }
 
     donateList.textContent = "";
     if (donors.length === 0) {
@@ -4647,6 +4664,77 @@
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 900);
     }
+  }
+  // =========================================
+  // 9. แผงแอดมินค้นหาชื่อ & อัปเดตยอดโดเนท
+  // =========================================
+  function renderAdminDonateSearch() {
+    const inputEl = document.getElementById('adminDonateSearch');
+    const box = document.getElementById('adminDonateResults');
+    if (!inputEl || !box) return;
+
+    const q = inputEl.value.trim().toLowerCase();
+    if (!q) {
+      box.innerHTML = "";
+      return;
+    }
+
+    const matches = Object.keys(usersCache || {})
+      .map(id => ({ id, u: usersCache[id] || {} }))
+      .filter(e => {
+        const name = (e.u.name || "").toLowerCase();
+        const uname = (e.u.username || "").toLowerCase();
+        return name.includes(q) || uname.includes(q) || e.id.includes(q);
+      })
+      .slice(0, 6);
+
+    if (matches.length === 0) {
+      box.innerHTML = '<div style="font-size:0.78rem; color:#9f1239;">ไม่พบรายชื่อ (คนนั้นต้องเคยล็อกอินเว็บอย่างน้อย 1 ครั้ง)</div>';
+      return;
+    }
+
+    box.innerHTML = "";
+    matches.forEach(m => {
+      const row = document.createElement('div');
+      row.style.cssText = "display:flex; align-items:center; gap:6px; background:#fff; padding:6px 8px; border-radius:8px; border:1px solid #fecdd3; margin-top:4px; flex-wrap:wrap;";
+      const currentAmt = Number(m.u.donateAmount) || 0;
+
+      const label = document.createElement('span');
+      label.style.cssText = "flex:1; font-size:0.82rem; font-weight:600; color:#1e293b; min-width:110px;";
+      label.textContent = `${m.u.name || "User"} (฿${formatNum(currentAmt)})`;
+
+      const numInput = document.createElement('input');
+      numInput.type = "number";
+      numInput.min = "0";
+      numInput.value = currentAmt;
+      numInput.id = "donateAmtInput_" + m.id;
+      numInput.style.cssText = "width:85px; padding:4px 6px; border-radius:6px; border:1px solid #cbd5e1; font-size:0.82rem;";
+
+      const btn = document.createElement('button');
+      btn.type = "button";
+      btn.textContent = "บันทึก";
+      btn.style.cssText = "background:#15803d; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:0.78rem; cursor:pointer; font-weight:600;";
+      btn.onclick = () => adminSaveDonate(m.id);
+
+      row.appendChild(label);
+      row.appendChild(numInput);
+      row.appendChild(btn);
+      box.appendChild(row);
+    });
+  }
+  function adminSaveDonate(uid) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    const inp = document.getElementById("donateAmtInput_" + uid);
+    if (!inp) return;
+    const amt = Math.max(0, Number(inp.value) || 0);
+
+    db.ref("users/" + uid + "/donateAmount").set(amt).then(() => {
+      const name = (usersCache[uid] && usersCache[uid].name) || uid;
+      showToast(`✅ บันทึกยอดโดเนทของ ${name} เป็น ฿${formatNum(amt)} แล้ว!`);
+      renderAdminDonateSearch();
+    }).catch(() => {
+      showToast("⚠️ บันทึกยอดโดเนทไม่สำเร็จ");
+    });
   }
 </script>
 
