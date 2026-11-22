@@ -2202,7 +2202,42 @@
       </div>
     </div>
   </div>
+  <!-- ปุ่มสลับหน้า ประเมินเกม / แข่งกดใจโหวตเกม -->
+  <div style="display:flex; gap:12px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;">
+    <button type="button" id="tabBtnEval" class="discord-login-btn" onclick="switchMainTab('eval')">📝 ประเมินคุณภาพเกม</button>
+    <button type="button" id="tabBtnVote" class="discord-login-btn" style="background:linear-gradient(135deg,#e11d48,#f59e0b);" onclick="switchMainTab('vote')">🔥 แข่งกดใจโหวตเกม</button>
+  </div>
 
+  <!-- หน้าแข่งกดใจโหวตเกม (ซ่อนไว้ก่อน กดแท็บแล้วจะโผล่) -->
+  <div class="section-card" id="gameVoteSection" style="display:none;">
+    <div class="section-header">
+      <h2 class="section-title">🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)</h2>
+      <span class="step-pill" id="voteCountdownText">⏳ รอแอดมินเปิดรอบโหวต...</span>
+    </div>
+
+    <!-- แผงแอดมิน (โผล่เฉพาะคนมียศ 1388417035842748506) -->
+    <div id="voteAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
+      <h3 style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินตั้งค่าโหวตเกม</h3>
+      <div style="margin-bottom:10px;">
+        <label style="font-weight:600;">⏱️ เวลาแข่งขัน (ชั่วโมง): </label>
+        <input type="number" id="adminVoteHours" value="24" min="0.01" step="any" style="width:90px; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:8px; margin-bottom:12px;">
+        <div><input type="text" id="adminGameName1" placeholder="ชื่อเกม 1" value="เกมที่ 1" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg1" value="เกม1.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+        <div><input type="text" id="adminGameName2" placeholder="ชื่อเกม 2" value="เกมที่ 2" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg2" value="เกม2.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+        <div><input type="text" id="adminGameName3" placeholder="ชื่อเกม 3" value="เกมที่ 3" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg3" value="เกม3.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+        <div><input type="text" id="adminGameName4" placeholder="ชื่อเกม 4" value="เกมที่ 4" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg4" value="เกม4.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+        <div><input type="text" id="adminGameName5" placeholder="ชื่อเกม 5" value="เกมที่ 5" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg5" value="เกม5.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+        <div><input type="text" id="adminGameName6" placeholder="ชื่อเกม 6" value="เกมที่ 6" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg6" value="เกม6.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+      </div>
+      <button type="button" class="submit-btn" style="padding:10px; font-size:1rem;" onclick="adminStartVoteEvent()">🚀 บันทึกเกม & เริ่มจับเวลาโหวต!</button>
+    </div>
+
+    <!-- ตารางการ์ด 6 เกมแข่งกดใจ -->
+    <div class="game-grid" id="voteGamesGrid">
+      <div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีรอบโหวตที่เปิดอยู่ครับ</div>
+    </div>
+  </div>
   <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
   <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="return handleSubmit(event)">
     <input type="hidden" name="pageHistory" value="0,1,2,3">
@@ -2462,6 +2497,18 @@
     <div class="modal-btns">
       <button class="modal-close-btn" onclick="playClickSound(); document.getElementById('forgivenModal').style.display='none';">เย้! กลับสู่หน้าปกติ 🎄</button>
     </div>
+  </div>
+</div>
+
+<!-- ป๊อปอัปประกาศเกมที่ชนะการโหวต -->
+<div class="modal-overlay" id="voteWinnerModal">
+  <div class="modal-box">
+    <div class="modal-icon">🏆🎉</div>
+    <h2>หมดเวลาโหวตแล้ว! เกมนี้ชนะ!</h2>
+    <img id="winnerGameImg" src="" style="width:100%; max-width:260px; border-radius:14px; margin:10px auto; display:block;">
+    <h3 id="winnerGameName" style="font-family:'Kanit',sans-serif; color:#b91c1c; margin:6px 0;">-</h3>
+    <p id="winnerGameScore" style="font-weight:700; font-size:1.1rem; color:#e11d48; margin-bottom:16px;">❤️ 0 ดวง</p>
+    <button class="modal-close-btn" onclick="document.getElementById('voteWinnerModal').style.display='none';">ปิดหน้าต่าง</button>
   </div>
 </div>
 
@@ -4454,6 +4501,75 @@
       document.getElementById('winnerGameName').textContent = winner.name;
       document.getElementById('winnerGameScore').textContent = `❤️ ${formatNum(winner.hearts)} ดวง`;
       modal.style.display = 'flex';
+    }
+  }
+  // สลับหน้า แท็บประเมิน / แท็บโหวตเกม
+  function switchMainTab(tab) {
+    playClickSound();
+    document.getElementById('customForm').style.display = (tab === 'eval') ? 'block' : 'none';
+    document.getElementById('gameVoteSection').style.display = (tab === 'vote') ? 'block' : 'none';
+  }
+
+  // วาดการ์ด 6 เกม + รายชื่อคนกดของแต่ละเกม
+  function renderVoteGames() {
+    const grid = document.getElementById('voteGamesGrid');
+    if (!grid || !voteData || !voteData.games) return;
+
+    const isEnded = !voteData.endTime || (Date.now() >= voteData.endTime);
+    const list = Object.keys(voteData.games).map(k => ({ id: k, ...voteData.games[k] }));
+    list.sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
+
+    grid.innerHTML = list.map((g, idx) => {
+      const voters = g.voters ? Object.values(g.voters).sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, 3) : [];
+      const voterHtml = voters.length
+        ? voters.map(v => `<div style="font-size:0.75rem; color:#475569;">• ${v.name}: ❤️${formatNum(v.count)}</div>`).join('')
+        : `<div style="font-size:0.75rem; color:#94a3b8;">ยังไม่มีคนกด</div>`;
+
+      return `
+        <div class="game-card" style="opacity:1; padding-bottom:12px; cursor:default;">
+          <div class="img-container">
+            <span class="genre-tag">#${idx + 1}</span>
+            <img src="${g.img}" alt="${g.name}" onerror="this.src='https://placehold.co/400x300/dc2626/ffffff?text=${encodeURIComponent(g.name)}'">
+          </div>
+          <div class="game-title" style="padding:10px 8px 4px;">${g.name}</div>
+          <div style="text-align:center; font-weight:700; color:#e11d48; margin-bottom:8px;">❤️ ${formatNum(g.hearts)}</div>
+          <div style="padding:0 10px 8px;">
+            <button type="button" class="music-toggle-btn" style="width:100%; justify-content:center; padding:8px; font-size:0.9rem;" ${isEnded ? 'disabled' : ''} onclick="voteHeartClick('${g.id}', event)">
+              ${isEnded ? '🏁 หมดเวลาแล้ว' : '❤️ กดใจโหวต!'}
+            </button>
+          </div>
+          <div style="padding:0 10px; border-top:1px dashed #e2e8f0; padding-top:6px;">
+            <div style="font-size:0.72rem; font-weight:600; color:#991b1b; margin-bottom:2px;">ผู้ช่วยกดสูงสุด:</div>
+            ${voterHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // กดรัวๆ เพิ่มหัวใจให้เกมนั้น + บันทึกรายชื่อคนกด
+  function voteHeartClick(gameId, e) {
+    if (!currentUser) {
+      openLoginInfo("🔐 ล็อกอินด้วย Discord ก่อนจึงจะกดโหวตเกมได้นะครับ");
+      return;
+    }
+    if (!voteData || !voteData.endTime || Date.now() >= voteData.endTime) return;
+
+    playClickSound();
+    const updates = {};
+    updates[`game_vote/games/${gameId}/hearts`] = firebase.database.ServerValue.increment(1);
+    updates[`game_vote/games/${gameId}/voters/${currentUser.id}/name`] = currentUser.name;
+    updates[`game_vote/games/${gameId}/voters/${currentUser.id}/count`] = firebase.database.ServerValue.increment(1);
+    db.ref().update(updates).catch(() => {});
+
+    if (e) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = '❤️';
+      el.style.left = e.clientX + 'px';
+      el.style.top = (e.clientY - 10) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
     }
   }
 </script>
