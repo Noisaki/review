@@ -2698,8 +2698,22 @@
     showToast._t = setTimeout(() => el.classList.remove('show'), 3200);
   }
 
-  function formatNum(n) {
-    return (Number(n) || 0).toLocaleString();
+  function formatCompact(n) {
+    const num = Number(n) || 0;
+    if (num < 1000) return num.toLocaleString();
+    const units = [
+      { v: 1e15, s: "q" }, // พันล้านล้าน
+      { v: 1e12, s: "t" }, // ล้านล้าน
+      { v: 1e9,  s: "b" }, // พันล้าน
+      { v: 1e6,  s: "m" }, // ล้าน
+      { v: 1e3,  s: "k" }  // พัน
+    ];
+    for (const u of units) {
+      if (num >= u.v) {
+        return (num / u.v).toFixed(1).replace(/\.0$/, '') + u.s;
+      }
+    }
+    return num.toLocaleString();
   }
 
   // =========================================
@@ -3064,7 +3078,7 @@
     if (!currentUser) {
       el.textContent = "🔐 ล็อกอินด้วย Discord ก่อน จึงจะกดส่งหัวใจได้";
     } else {
-      el.textContent = `💝 หัวใจที่คุณส่งทั้งหมด: ${formatNum(myServerHearts + pendingClicks)} ดวง`;
+      el.textContent = `💝 หัวใจที่คุณส่งทั้งหมด: ${formatCompact(myServerHearts + pendingClicks)} ดวง`;
     }
   }
 
@@ -3286,6 +3300,13 @@
     { min: 100000000,  max: 500000000,  badge: "👑✨ ราชันร้อยล้านหัวใจ",            nextName: "ตำนานพันล้านหัวใจ 🏆",             celebrate: "👑✨ ครบ 100,000,000 หัวใจ! ทะลุหลักร้อยล้านอย่างเกรียงไกร!" },
     { min: 500000000,  max: 1000000000, badge: "🚀🔥 ครึ่งทางสู่พันล้านดวง",          nextName: "ตำนานนิรันดร์ 1,000,000,000 🏆",   celebrate: "🔥 ครบ 500,000,000 หัวใจ! ครึ่งทางสู่หนึ่งพันล้านหัวใจแล้วครับ!!" },
     { min: 1000000000, max: 1000000000, badge: "🏆 ตำนานนิรันดร์ 1,000,000,000 หัวใจ", nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨",       celebrate: "🏆🎊 ครบ 1,000,000,000 หัวใจ!! คุณคือตำนานสูงสุด 1 พันล้านหัวใจของ Ben the Game Translator! 🎊🏆" }
+    { min: 1e9,   max: 1e10,  badge: "🏆 ตำนานพันล้านหัวใจ",             nextName: "จ้าวแห่งมิติหมื่นล้าน 🌀",        celebrate: "🏆 ครบ 1b หัวใจ!! ตำนานพันล้านหัวใจถือกำเนิดแล้ว!" },
+    { min: 1e10,  max: 1e11,  badge: "🌀 จ้าวแห่งมิติหมื่นล้าน",          nextName: "ผู้ปกครองแสนล้านดวง 🪐",         celebrate: "🌀 ครบ 10b หัวใจ! พลังใจทะลุมิติไปแล้วครับ!" },
+    { min: 1e11,  max: 1e12,  badge: "🪐 ผู้ปกครองแสนล้านดวง",           nextName: "มหาเทพหนึ่งล้านล้าน 🌌👑",        celebrate: "🪐 ครบ 100b หัวใจ! แสนล้านดวงแห่งความรัก!" },
+    { min: 1e12,  max: 1e13,  badge: "🌌👑 มหาเทพหนึ่งล้านล้าน",         nextName: "ผู้สร้างพหุจักรวาลสิบล้านล้าน ✨", celebrate: "🌌 ครบ 1t หัวใจ!! ทะลุหลักหนึ่งล้านล้านแล้วฮะ!!" },
+    { min: 1e13,  max: 1e14,  badge: "✨ ผู้สร้างพหุจักรวาลสิบล้านล้าน", nextName: "นิรันดร์กาลร้อยล้านล้าน ♾️",      celebrate: "✨ ครบ 10t หัวใจ! ยิ่งใหญ่ระดับพหุจักรวาล!" },
+    { min: 1e14,  max: 1e15,  badge: "♾️ นิรันดร์กาลร้อยล้านล้าน",        nextName: "จุดสูงสุดแห่งกาลเวลา 1q 👑🔥",    celebrate: "♾️ ครบ 100t หัวใจ! ก้าวสู่ความเป็นนิรันดร์!" },
+    { min: 1e15,  max: 1e15,  badge: "👑🔥 จุดสูงสุดแห่งกาลเวลา (1q)",   nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨",       celebrate: "👑🔥 ครบ 1q หัวใจ!! คุณคือตำนานสูงสุดตลอดกาลของ BGT! 🎊" }
   ];
 
   let comboCount = 0;
@@ -3351,20 +3372,20 @@
     titleEl.textContent = "💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator";
     subEl.textContent = "ช่วยกันกดหัวใจสะสมยอดรวมทั้งเว็บ! ยิ่งกดเยอะ ยิ่งปลดล็อกฉายาเท่ๆ โชว์บนโปรไฟล์และกระดานอันดับนะ UwU ✨";
     labelEl.textContent = "❤️ ยอดกดทั้งหมด:";
-    counterPillEl.innerHTML = `<span id="heartCount">${totalNow.toLocaleString()}</span> ดวง`;
+    counterPillEl.innerHTML = `<span id="heartCount">${formatCompact(totalNow)}</span> ดวง`;
 
     const tierIdx = getCurrentTierIndex(myTotal);
     const tier = cheerTiers[tierIdx];
     badgeEl.textContent = currentUser ? `ฉายาของคุณ: ${tier.badge}` : "🔐 ล็อกอินเพื่อรับฉายาส่วนตัว";
 
-    if (myTotal >= 1000000000) {
+    if (myTotal >= 1e15) {
       nextGoalEl.textContent = "🏆 คุณปลดล็อกฉายาขั้นสูงสุดแล้ว!";
       percentEl.textContent = "100%";
       fillEl.style.width = "100%";
     } else {
       const span = tier.max - tier.min;
       const progress = Math.min(100, Math.floor(((myTotal - tier.min) / span) * 100));
-      nextGoalEl.textContent = `ฉายาถัดไปของคุณ: ${tier.max.toLocaleString()} ดวง (${tier.nextName})`;
+      nextGoalEl.textContent = `ฉายาถัดไปของคุณ: ${formatCompact(tier.max)} ดวง (${tier.nextName})`;
       percentEl.textContent = `${progress}%`;
       fillEl.style.width = `${progress}%`;
     }
