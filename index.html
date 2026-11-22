@@ -2404,6 +2404,71 @@
     body.horror-mode .podium-score {
       color: #fca5a5 !important;
     }
+    .vote-history-scroll {
+      max-height: 640px; /* โชว์พอดีประมาณ 3 แถว (3x3 = 9 เกม) เกินกว่านี้เลื่อนลงดูได้ */
+      overflow-y: auto;
+      padding: 4px 6px 4px 2px;
+      scrollbar-width: thin;
+      scrollbar-color: #f59e0b #fef3c7;
+    }
+    .vote-history-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 640px) {
+      .vote-history-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .history-card {
+      position: relative;
+      background: #ffffff;
+      border: 1.5px solid #fde68a;
+      border-radius: 14px;
+      overflow: hidden;
+      text-align: center;
+      padding-bottom: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+    .history-card img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      background: #e2e8f0;
+    }
+    .history-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #1e293b;
+      padding: 8px 6px 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-meta {
+      font-size: 0.76rem;
+      color: #e11d48;
+      font-weight: 600;
+    }
+    .history-date {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .history-del-btn {
+      position: absolute;
+      top: 6px; right: 6px;
+      background: rgba(15, 23, 42, 0.78);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    body.horror-mode .history-card { background: #1f0404 !important; border-color: #7f1d1d !important; }
+    body.horror-mode .history-name, body.horror-mode .history-meta { color: #fca5a5 !important; }
   </style>
 </head>
 <body>
@@ -2655,6 +2720,16 @@
     <div class="lb-column" id="voteTopVotersBox" style="margin-top:20px; display:none;">
       <h3 class="lb-col-title">🏅 Top 10 ผู้มีส่วนร่วมโหวตเกมสูงสุด (รอบนี้)</h3>
       <div class="lb-list" id="voteTopVotersList"></div>
+    </div> <!-- ✅ ปิด voteTopVotersBox ตรงนี้ -->
+
+    <!-- ประวัติโปรเจกต์ที่ชนะการโหวต (3x3 เลื่อนลงดูได้) -->
+    <div class="lb-column" id="voteHistoryBox" style="margin-top:20px;">
+      <h3 class="lb-col-title">🏆 ประวัติโปรเจกต์ที่ชนะการโหวต</h3>
+      <div class="vote-history-scroll">
+        <div class="vote-history-grid" id="voteHistoryGrid">
+          <div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีประวัติผู้ชนะในขณะนี้</div>
+        </div>
+      </div>
     </div>
   </div>
   <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
@@ -4983,6 +5058,10 @@
       if (!voteTimerInterval) {
         voteTimerInterval = setInterval(updateVoteCountdown, 1000);
       }
+    }); // ✅ ต้องปิดตรงนี้ก่อนครับ
+
+    db.ref("game_vote_history").on("value", (snap) => {
+      renderVoteHistory(snap.val());
     });
   }
 
@@ -5020,6 +5099,16 @@
 
     list.sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
     const winner = list[0];
+
+    // ✅ ย้ายมาวางตรงนี้หลังหาตัว winner เจอแล้ว
+    if (db && voteData.endTime) {
+      db.ref("game_vote_history/" + voteData.endTime).set({
+        name: winner.name,
+        img: winner.img || "",
+        hearts: Number(winner.hearts) || 0,
+        endedAt: voteData.endTime
+      }).catch(() => {});
+    }
 
     playMilestoneFanfare();
     const modal = document.getElementById('voteWinnerModal');
@@ -5268,7 +5357,49 @@
     });
   }
     
+  function renderVoteHistory(data) {
+    const grid = document.getElementById('voteHistoryGrid');
+    if (!grid) return;
 
+    if (!data || Object.keys(data).length === 0) {
+      grid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีประวัติโปรเจกต์ที่ชนะในขณะนี้ 🏆</div>`;
+      return;
+    }
+
+    const items = Object.keys(data)
+      .map(k => ({ key: k, ...data[k] }))
+      .sort((a, b) => (Number(b.endedAt) || 0) - (Number(a.endedAt) || 0));
+
+    const isAdmin = currentUser && currentUser.isVoteAdmin;
+
+    grid.innerHTML = items.map(item => {
+      const dateStr = item.endedAt
+        ? new Date(item.endedAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' })
+        : '';
+      const fallbackUrl = `https://placehold.co/400x300/dc2626/ffffff?text=${encodeURIComponent(item.name || 'Winner')}`;
+      const delBtn = isAdmin
+        ? `<button type="button" class="history-del-btn" onclick="adminDeleteHistory('${item.key}')">🗑️</button>`
+        : '';
+
+      return `
+        <div class="history-card">
+          ${delBtn}
+          <img src="${item.img}" alt="${item.name}" onerror="if(!this.dataset.tried && !this.src.includes('images/')){this.dataset.tried=1;this.src='images/${item.img}';}else{this.src='${fallbackUrl}';}">
+          <div class="history-name" title="${item.name}">🏆 ${item.name}</div>
+          <div class="history-meta">❤️ ${formatCompact(item.hearts)} ดวง</div>
+          <div class="history-date">${dateStr}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function adminDeleteHistory(key) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!confirm("ต้องการลบประวัตินี้ออกใช่ไหมครับ?")) return;
+    db.ref("game_vote_history/" + key).remove().then(() => {
+      showToast("🗑️ ลบประวัติเรียบร้อยแล้ว");
+    });
+  }
 </script>
 
 </body>
