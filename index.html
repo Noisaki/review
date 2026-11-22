@@ -2698,23 +2698,22 @@
     showToast._t = setTimeout(() => el.classList.remove('show'), 3200);
   }
 
-  function formatNum(n) {
-    return (Number(n) || 0).toLocaleString();
-  }
-
   function formatCompact(n) {
     const num = Number(n) || 0;
     if (num < 1000) return num.toLocaleString();
     const units = [
-      { v: 1e15, s: "q" }, // พันล้านล้าน
-      { v: 1e12, s: "t" }, // ล้านล้าน
-      { v: 1e9,  s: "b" }, // พันล้าน
-      { v: 1e6,  s: "m" }, // ล้าน
-      { v: 1e3,  s: "k" }  // พัน
+      { v: 1e15, s: " พันล้านล้าน" },
+      { v: 1e12, s: " ล้านล้าน" },
+      { v: 1e9,  s: " พันล้าน" },
+      { v: 1e6,  s: " ล้าน" },
+      { v: 1e5,  s: " แสน" },
+      { v: 1e4,  s: " หมื่น" },
+      { v: 1e3,  s: " พัน" }
     ];
     for (const u of units) {
       if (num >= u.v) {
-        return (num / u.v).toFixed(1).replace(/\.0$/, '') + u.s;
+        const val = Math.floor((num / u.v) * 10) / 10;
+        return val + u.s;
       }
     }
     return num.toLocaleString();
@@ -3276,7 +3275,7 @@
       heartsList.appendChild(empty);
     } else {
       const top5Hearters = hearters.slice(0, 5);
-      const formatHearter = (u) => "❤️ " + formatNum(u.heartsClicked);
+      const formatHearter = (u) => "❤️ " + formatCompact(u.heartsClicked);
       top5Hearters.forEach((e, i) => {
         heartsList.appendChild(buildLbRow(i + 1, e.id, e.u, formatHearter(e.u)));
       });
