@@ -2142,27 +2142,172 @@
       margin-left: 4px;
       margin-top: 2px;
     }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #cbd5e1;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-tab-btn:hover {
+      color: #fef3c7;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .nav-tab-btn.active {
+      background: linear-gradient(135deg, #dc2626, #f59e0b);
+      color: #ffffff;
+      font-weight: 600;
+      border-color: rgba(253, 230, 138, 0.75);
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.45);
+    }
+
+    /* รองรับมือถือ: ไม่ซ่อนเมนู แต่จัดเป็นแถบเลื่อนแนวนอนด้านล่างโลโก้ */
+    @media (max-width: 780px) {
+      .top-navbar {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        gap: 8px;
+      }
+      .nav-left {
+        width: 100%;
+        justify-content: space-between;
+        order: 1;
+      }
+      .nav-right {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+      }
+      .nav-links {
+        display: flex !important;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        gap: 6px;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .floating-controls { top: 112px; }
+      body { padding-top: 165px; }
+    }
+
+    /* การ์ดเมนูลัด 4 ปุ่มบนหน้าหลัก */
+    .home-quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+      animation: fadeSlideUp 0.6s ease-out;
+    }
+    @media (max-width: 720px) {
+      .home-quick-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .quick-hub-card {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(253, 230, 138, 0.8);
+      border-radius: 20px;
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      font-family: 'Prompt', sans-serif;
+    }
+    .quick-hub-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: #f59e0b;
+      box-shadow: 0 14px 30px rgba(245, 158, 11, 0.35);
+    }
+    .quick-hub-icon {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .quick-hub-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #991b1b;
+      margin: 0 0 3px 0;
+    }
+    .quick-hub-sub {
+      font-size: 0.76rem;
+      color: #64748b;
+      margin: 0;
+    }
+    body.horror-mode .quick-hub-card {
+      background: rgba(18, 2, 2, 0.94) !important;
+      border-color: #991b1b !important;
+    }
+    body.horror-mode .quick-hub-title,
+    body.horror-mode .quick-hub-sub {
+      color: #fca5a5 !important;
+    }
+
+    /* แอนิเมชันนุ่มๆ ตอนสลับหน้า */
+    .page-animate {
+      animation: fadeSlideUp 0.35s ease-out;
+    }
+      <!-- เมนูลัดหน้าหลัก กดปุ๊บวาร์ปไปหน้าย่อยปั๊บ -->
+<div class="home-quick-grid" id="homeQuickGrid">
+  <button type="button" class="quick-hub-card" onmouseenter="playHoverSound()" onclick="switchPage('rank')">
+    <span class="quick-hub-icon">🏆</span>
+    <div class="quick-hub-title">กระดานอันดับ</div>
+    <p class="quick-hub-sub">Top Donate & นักส่งใจ</p>
+  </button>
+  <button type="button" class="quick-hub-card" onmouseenter="playHoverSound()" onclick="switchPage('vote')">
+    <span class="quick-hub-icon">🔥</span>
+    <div class="quick-hub-title">แข่งโหวตเกม</div>
+    <p class="quick-hub-sub">กดใจรัวๆ เลือกเกมแปล</p>
+  </button>
+  <button type="button" class="quick-hub-card" onmouseenter="playHoverSound()" onclick="switchPage('eval')">
+    <span class="quick-hub-icon">📝</span>
+    <div class="quick-hub-title">ประเมินงานแปล</div>
+    <p class="quick-hub-sub">ให้คะแนน & แจ้งคำผิด</p>
+  </button>
+  <button type="button" class="quick-hub-card" onmouseenter="playHoverSound()" onclick="switchPage('donate')">
+    <span class="quick-hub-icon">🎁</span>
+    <div class="quick-hub-title">สนับสนุน & ยศ</div>
+    <p class="quick-hub-sub">PromptPay รับยศถาวร</p>
+  </button>
+</div>
   </style>
 </head>
 <body>
 
-<!-- แถบเมนูด้านบนสไตล์เว็บเกม -->
 <nav class="top-navbar">
   <div class="nav-left">
-    <img src="logo.png" alt="BGT" class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}">
+    <img src="logo.png" alt="BGT" class="nav-logo" onclick="switchPage('home')" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}">
     <div class="nav-links">
-      <a onclick="window.scrollTo({top:0,behavior:'smooth'})">หน้าหลัก</a>
-      <a onclick="switchMainTab('eval'); document.getElementById('customForm').scrollIntoView({behavior:'smooth'});">ประเมินเกม</a>
-      <a onclick="switchMainTab('vote'); document.getElementById('gameVoteSection').scrollIntoView({behavior:'smooth'});">🔥 โหวตเกม</a>
-      <a href="#leaderboardSection">อันดับ</a>
-      <a href="#donateSection">🎁 สนับสนุน</a>
+      <button type="button" class="nav-tab-btn active" id="nav-home" onclick="switchPage('home')">🏠 หน้าหลัก</button>
+      <button type="button" class="nav-tab-btn" id="nav-rank" onclick="switchPage('rank')">🏆 อันดับ</button>
+      <button type="button" class="nav-tab-btn" id="nav-vote" onclick="switchPage('vote')">🔥 โหวตเกม</button>
+      <button type="button" class="nav-tab-btn" id="nav-eval" onclick="switchPage('eval')">📝 ประเมินเกม</button>
+      <button type="button" class="nav-tab-btn" id="nav-donate" onclick="switchPage('donate')">🎁 สนับสนุน</button>
     </div>
   </div>
   <div class="nav-right">
     <button type="button" class="nav-purple-btn" id="navLoginBtn" onclick="playClickSound(); openLoginInfo('');">ล็อกอิน</button>
     <div id="navUserWrap" style="display:none; align-items:center; gap:8px;">
       <span class="nav-user-badge"><span class="nav-user-tag">BGT</span> <span id="navUserName">-</span></span>
-      <button type="button" class="nav-purple-btn" onclick="playClickSound(); document.getElementById('profileCard').scrollIntoView({behavior:'smooth'});">โปรไฟล์</button>
+      <button type="button" class="nav-purple-btn" onclick="switchPage('home'); setTimeout(()=>document.getElementById('profileCard').scrollIntoView({behavior:'smooth', block:'center'}), 120);">โปรไฟล์</button>
     </div>
   </div>
 </nav>
@@ -2196,9 +2341,9 @@
     </div>
   </div>
 
-  <a href="#donateSection" class="pill-control-btn pill-donate-jump corruptible" data-cursed="🙏 ไปขอโทษด้านล่าง..." onmouseenter="playHoverSound()" onclick="playCoinSound()">
+  <button type="button" class="pill-control-btn pill-donate-jump corruptible" data-cursed="🙏 ไปขอโทษด้านล่าง..." onmouseenter="playHoverSound()" onclick="playCoinSound(); switchPage('donate');">
     🎁 สนับสนุนผลงาน
-  </a>
+  </button>
 
   <button type="button" class="pill-control-btn" id="soundToggle" onclick="toggleSound()">
     <span id="soundIcon">🔔</span> <span id="soundLabel" class="corruptible" data-cursed="👁️ หนีเสียงนี้ไม่ได้">เสียงปุ่ม: เปิด</span>
@@ -2224,7 +2369,7 @@
     <div class="header-text">
       <div class="brand-badge corruptible" id="brandBadge" data-cursed="🩸 ผมทำอะไรผิดทุกอย่างเลยใช่ไหม... 🩸">🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️</div>
       <h1 class="animated-title" id="mainPageTitle">
-        <span class="floating-gamepad" id="titleIcon">🎅</span> <span class="corruptible" data-cursed="นี่ผมดูแย่ขนาดนั้นเลยเหรอ...">แบบประเมินคุณภาพการแปลภาษาไทยในเกม</span>
+        <span class="floating-gamepad" id="titleIcon">🎅</span> <span class="corruptible" data-cursed="นี่ผมดูแย่ขนาดนั้นเลยเหรอ...">ศูนย์รวมชุมชน Ben the Game Translator</span>
       </h1>
       <div class="vn-dialogue-box">
         <span id="typewriterText"></span><span class="cursor-blink"></span>
@@ -2334,11 +2479,6 @@
         <div class="lb-list" id="lbHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
       </div>
     </div>
-  </div>
-  <!-- ปุ่มสลับหน้า ประเมินเกม / แข่งกดใจโหวตเกม -->
-  <div style="display:flex; gap:12px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;">
-    <button type="button" id="tabBtnEval" class="discord-login-btn" onclick="switchMainTab('eval')">📝 ประเมินคุณภาพเกม</button>
-    <button type="button" id="tabBtnVote" class="discord-login-btn" style="background:linear-gradient(135deg,#e11d48,#f59e0b);" onclick="switchMainTab('vote')">🔥 แข่งกดใจโหวตเกม</button>
   </div>
 
   <!-- หน้าแข่งกดใจโหวตเกม (ซ่อนไว้ก่อน กดแท็บแล้วจะโผล่) -->
@@ -2616,7 +2756,7 @@
     <p>ขอบคุณมากๆ เลยฮะ! สุขสันต์วันคริสต์มาสล่วงหน้านะครับ ทุกคะแนนและความคิดเห็นของเจ้านายมีค่ามาก เพื่อนำไปพัฒนาผลงานแปลไทยเกมต่อๆ ไปให้ดียิ่งขึ้นครับ ❄️💕</p>
     <div class="modal-btns">
       <button class="modal-close-btn" onclick="playClickSound(); closeModal();">ตกลง / ประเมินเกมอื่นต่อ</button>
-      <button class="modal-donate-btn" onclick="playCoinSound(); closeModal(); document.getElementById('donateSection').scrollIntoView({behavior:'smooth'});">🎁 ดูช่องทางสนับสนุน</button>
+      <button class="modal-donate-btn" onclick="playCoinSound(); closeModal(); switchPage('donate');">🎁 ดูช่องทางสนับสนุน</button>
     </div>
   </div>
 </div>
@@ -4463,7 +4603,7 @@
       document.getElementById('decorRight').textContent = '💀🩸';
       document.getElementById('titleIcon').textContent = '💀';
       corruptAllElements();
-
+      switchPage('home', true);
       if (wasForgivenReset) {
         typeTarget.textContent = "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ ผมให้อภัยคุณแล้ว... รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ...";
       } else if (isFromReload) {
@@ -4498,7 +4638,7 @@
     document.getElementById('musicSpeakerIcon').textContent = '🎄🔊';
 
     restoreAllElements();
-
+    switchPage('home', true);
     const btn = document.getElementById('submitBtn');
     const grave = document.getElementById('destroyedButtonGrave');
     grave.style.display = 'none';
@@ -4580,6 +4720,7 @@
       triggerHorrorEasterEgg(true);
     } else {
       typeWriter();
+      switchPage('home', true);
     }
 
     // เริ่มระบบ Discord (อ่าน token จาก URL หลังล็อกอิน / โหลดเซสชันเดิม)
@@ -4684,12 +4825,122 @@
       modal.style.display = 'flex';
     }
   }
-  // สลับหน้า แท็บประเมิน / แท็บโหวตเกม
-  function switchMainTab(tab) {
-    playClickSound();
-    document.getElementById('customForm').style.display = (tab === 'eval') ? 'block' : 'none';
-    document.getElementById('gameVoteSection').style.display = (tab === 'vote') ? 'block' : 'none';
+
+  let currentPage = 'home';
+
+  function switchPage(page, silent = false) {
+    if (!silent) playClickSound();
+    currentPage = page;
+
+    const headerCard = document.querySelector('.header-card');
+    const quickGrid = document.getElementById('homeQuickGrid');
+    const profileCard = document.getElementById('profileCard');
+    const cheerCard = document.getElementById('cheerSpotlightSection');
+    const lbCard = document.getElementById('leaderboardSection');
+    const voteCard = document.getElementById('gameVoteSection');
+    const evalForm = document.getElementById('customForm');
+    const donateCard = document.getElementById('donateSection');
+
+    if (isHorrorTriggered) {
+      if (headerCard) headerCard.style.display = 'block';
+      if (quickGrid) quickGrid.style.display = 'none';
+      if (profileCard) profileCard.style.display = 'none';
+      if (cheerCard) cheerCard.style.display = 'block';
+      if (lbCard) lbCard.style.display = 'none';
+      if (voteCard) voteCard.style.display = 'none';
+      if (evalForm) evalForm.style.display = 'block';
+      if (donateCard) donateCard.style.display = 'block';
+      return;
+    }
+
+    const pageMap = {
+      home:   [headerCard, quickGrid, profileCard, cheerCard],
+      rank:   [lbCard],
+      vote:   [voteCard],
+      eval:   [evalForm],
+      donate: [donateCard]
+    };
+
+    const allSections = [headerCard, quickGrid, profileCard, cheerCard, lbCard, voteCard, evalForm, donateCard];
+    allSections.forEach(el => {
+      if (!el) return;
+      el.style.display = 'none';
+      el.classList.remove('page-animate');
+    });
+
+    (pageMap[page] || pageMap.home).forEach(el => {
+      if (!el) return;
+      el.style.display = (el === quickGrid) ? 'grid' : 'block';
+      void el.offsetWidth;
+      el.classList.add('page-animate');
+    });
+
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.getElementById('nav-' + page);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    if (!silent) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
+
+  function switchMainTab(tab) {
+    switchPage(tab);
+  }
+    // กรณีติดคำสาป Horror Mode ให้แสดงหน้าหลัก + ปุ่มส่งใจ + ฟอร์ม + โซนขอโทษด้านล่างครบพร้อมกัน จะได้กดขอโทษแก้คำสาปได้ไม่หลงทาง
+    const headerCard = document.querySelector('.header-card');
+    const quickGrid = document.getElementById('homeQuickGrid');
+    const profileCard = document.getElementById('profileCard');
+    const cheerCard = document.getElementById('cheerSpotlightSection');
+    const lbCard = document.getElementById('leaderboardSection');
+    const voteCard = document.getElementById('gameVoteSection');
+    const evalForm = document.getElementById('customForm');
+    const donateCard = document.getElementById('donateSection');
+
+    if (isHorrorTriggered) {
+      if (headerCard) headerCard.style.display = 'block';
+      if (quickGrid) quickGrid.style.display = 'none';
+      if (profileCard) profileCard.style.display = 'none';
+      if (cheerCard) cheerCard.style.display = 'block';
+      if (lbCard) lbCard.style.display = 'none';
+      if (voteCard) voteCard.style.display = 'none';
+      if (evalForm) evalForm.style.display = 'block';
+      if (donateCard) donateCard.style.display = 'block';
+      return;
+    }
+
+    const pageMap = {
+      home:   [headerCard, quickGrid, profileCard, cheerCard],
+      rank:   [lbCard],
+      vote:   [voteCard],
+      eval:   [evalForm],
+      donate: [donateCard]
+    };
+
+    const allSections = [headerCard, quickGrid, profileCard, cheerCard, lbCard, voteCard, evalForm, donateCard];
+    allSections.forEach(el => {
+      if (!el) return;
+      el.style.display = 'none';
+      el.classList.remove('page-animate');
+    });
+
+    (pageMap[page] || pageMap.home).forEach(el => {
+      if (!el) return;
+      el.style.display = 'block';
+      void el.offsetWidth; // รีสตาร์ทแอนิเมชัน
+      el.classList.add('page-animate');
+    });
+
+    // อัปเดตปุ่ม Active บน Navbar
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.getElementById('nav-' + page);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    if (!silent) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
 
   // วาดการ์ด 6 เกม + รายชื่อคนกดของแต่ละเกม
   function renderVoteGames() {
