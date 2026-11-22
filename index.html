@@ -3,95 +3,225 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>แบบประเมินคุณภาพการแปลภาษาไทยในเกม - Ben the Game Translator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>แบบประเมินคุณภาพการแปลภาษาไทยในเกม | Ben the Game Translator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #29b6f6;
-      --primary-dark: #0288d1;
-      --bg-gradient: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
-      --card-bg: #ffffff;
-      --text-main: #263238;
+      --primary: #0ea5e9;
+      --primary-dark: #0369a1;
+      --accent: #38bdf8;
+      --glow: rgba(14, 165, 233, 0.35);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       font-family: 'Prompt', sans-serif;
-      background: var(--bg-gradient);
+      background-color: #e0f2fe;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.35) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(2, 132, 199, 0.25) 0px, transparent 50%),
+        radial-gradient(#bae6fd 1.2px, transparent 1.2px);
+      background-size: 100% 100%, 100% 100%, 24px 24px;
       color: var(--text-main);
       margin: 0;
-      padding: 20px;
+      padding: 28px 16px 60px;
       min-height: 100vh;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
     }
 
-    /* ส่วนแบนเนอร์ด้านบน */
+    /* แอนิเมชันพื้นฐาน */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(6deg); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      80% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ส่วนหัวและแบรนด์ */
     .header-card {
       background: var(--card-bg);
-      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 8px 25px rgba(2, 136, 209, 0.12);
-      margin-bottom: 24px;
+      box-shadow: 0 15px 35px rgba(3, 105, 161, 0.12);
+      margin-bottom: 28px;
       text-align: center;
+      animation: fadeSlideUp 0.6s ease-out;
+    }
+
+    .banner-wrapper {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(120deg, #0284c7, #38bdf8, #0ea5e9);
+      background-size: 200% 200%;
+      animation: gradientFlow 6s ease infinite;
     }
 
     .banner-img {
       width: 100%;
-      max-height: 220px;
+      max-height: 230px;
       object-fit: cover;
-      background: linear-gradient(90deg, #29b6f6, #81d4fa);
       display: block;
     }
 
     .header-text {
-      padding: 24px;
+      padding: 28px 24px 32px;
+      position: relative;
     }
 
-    .header-text h1 {
-      margin: 0 0 8px 0;
-      color: var(--primary-dark);
-      font-size: 1.6rem;
+    /* ป้ายชื่อแบรนด์ BGT */
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(90deg, #0284c7, #0ea5e9);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px var(--glow);
+      position: relative;
+      overflow: hidden;
     }
 
-    .header-text p {
-      margin: 0;
-      color: #546e7a;
+    .brand-badge::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    /* ฟอนต์หัวข้อหลักเคลื่อนไหวไล่สี */
+    .animated-title {
+      font-family: 'Kanit', sans-serif;
+      margin: 0 0 10px 0;
+      font-size: 1.95rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #0369a1, #0ea5e9, #6366f1, #0284c7);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientFlow 5s ease infinite;
+      line-height: 1.3;
+    }
+
+    .floating-gamepad {
+      display: inline-block;
+      -webkit-text-fill-color: initial;
+      animation: floatIcon 2.5s ease-in-out infinite;
+    }
+
+    /* ข้อความพิมพ์ดีดสไตล์ VN */
+    .vn-dialogue-box {
+      display: inline-block;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 14px;
+      padding: 10px 18px;
+      margin-top: 6px;
+      color: #334155;
       font-size: 0.95rem;
+      min-height: 44px;
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background-color: var(--primary);
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
     }
 
     /* การ์ดแต่ละส่วน */
     .section-card {
       background: var(--card-bg);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 8px 25px rgba(2, 136, 209, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(3, 105, 161, 0.08);
       margin-bottom: 24px;
+      animation: fadeSlideUp 0.7s ease-out;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 2px solid #e0f2fe;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
     }
 
     .section-title {
-      font-size: 1.2rem;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.3rem;
       font-weight: 600;
       color: var(--primary-dark);
-      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      margin: 0;
     }
 
-    .sub-question {
-      font-size: 1rem;
+    .step-pill {
+      background: #e0f2fe;
+      color: var(--primary-dark);
+      font-size: 0.8rem;
       font-weight: 600;
-      color: #37474f;
-      margin: 18px 0 10px 0;
+      padding: 4px 12px;
+      border-radius: 999px;
     }
 
+    /* ตารางการ์ดเลือกเกม */
     .game-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 18px;
     }
 
     .game-option input[type="radio"] {
@@ -99,53 +229,146 @@
     }
 
     .game-card {
-      border: 2px solid #e0f2f1;
-      border-radius: 16px;
+      position: relative;
+      border: 2px solid #e2e8f0;
+      border-radius: 18px;
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.25s ease;
-      background: #fafafa;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      background: #ffffff;
       display: flex;
       flex-direction: column;
       height: 100%;
+      opacity: 0;
+      animation: fadeSlideUp 0.5s ease-out forwards;
     }
 
     .game-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 15px rgba(41, 182, 246, 0.2);
-      border-color: #81d4fa;
-    }
-
-    .game-option input[type="radio"]:checked + .game-card {
-      border-color: var(--primary);
-      background: #e1f5fe;
-      box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.3);
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(14, 165, 233, 0.22);
+      border-color: var(--accent);
     }
 
     .game-card img {
       width: 100%;
       aspect-ratio: 4 / 3;
       object-fit: cover;
-      background: #cfd8dc;
+      background: #e2e8f0;
+      transition: transform 0.4s ease;
+    }
+
+    .game-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .img-container {
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* แท็กประเภทเกม VN / RPG */
+    .genre-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 8px;
+      z-index: 2;
+    }
+
+    /* ไอคอนติ๊กถูกเวลาเลือกเกม */
+    .check-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: bold;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      z-index: 2;
+    }
+
+    .game-option input[type="radio"]:checked + .game-card {
+      border-color: var(--primary);
+      background: #f0f9ff;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.25), 0 12px 24px rgba(14, 165, 233, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .game-option input[type="radio"]:checked + .game-card .check-badge {
+      display: flex;
+      animation: popIn 0.3s ease-out;
     }
 
     .game-title {
-      padding: 12px;
-      font-size: 0.9rem;
+      padding: 14px 12px;
+      font-size: 0.92rem;
       font-weight: 600;
       text-align: center;
       flex-grow: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--text-main);
     }
 
-    /* ปุ่มให้คะแนน 1-5 */
+    /* ส่วนให้คะแนน */
+    .question-block {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .question-block:hover {
+      border-color: #bae6fd;
+    }
+
+    .sub-question {
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0 0 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .rating-feedback {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+      background: #e0f2fe;
+      padding: 3px 10px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .rating-feedback.visible {
+      opacity: 1;
+    }
+
     .rating-group {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
     }
 
     .rating-btn input {
@@ -156,63 +379,149 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 48px;
+      min-width: 54px;
       padding: 10px 18px;
       border-radius: 12px;
-      border: 2px solid #b3e5fc;
+      border: 2px solid #cbd5e1;
       cursor: pointer;
       font-weight: 600;
-      transition: 0.2s;
-      background: #f8fdff;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      color: #475569;
     }
 
     .rating-btn span:hover {
       border-color: var(--primary);
-      background: #e1f5fe;
+      color: var(--primary-dark);
+      transform: translateY(-2px);
     }
 
     .rating-btn input:checked + span {
-      background: var(--primary);
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
       color: white;
-      border-color: var(--primary);
-      box-shadow: 0 4px 10px rgba(41, 182, 246, 0.3);
+      border-color: transparent;
+      box-shadow: 0 4px 12px var(--glow);
+      transform: scale(1.05);
     }
 
     textarea {
       width: 100%;
-      box-sizing: border-box;
-      border: 2px solid #b3e5fc;
-      border-radius: 12px;
-      padding: 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 14px;
       font-family: 'Prompt', sans-serif;
       font-size: 0.95rem;
       resize: vertical;
-      min-height: 90px;
+      min-height: 95px;
+      transition: all 0.2s;
+      background: #ffffff;
     }
 
     textarea:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
     }
 
+    /* ปุ่มส่งฟอร์ม */
     .submit-btn {
       width: 100%;
-      padding: 16px;
-      background: linear-gradient(90deg, #0288d1, #29b6f6);
+      padding: 18px;
+      background: linear-gradient(90deg, #0369a1, #0ea5e9, #0284c7);
+      background-size: 200% 200%;
+      animation: gradientFlow 4s ease infinite;
       color: white;
       border: none;
-      border-radius: 14px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 1.1rem;
+      border-radius: 16px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.2rem;
       font-weight: 600;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(2, 136, 209, 0.3);
-      transition: 0.2s;
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.35);
+      transition: all 0.25s ease;
     }
 
     .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(2, 136, 209, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(2, 132, 199, 0.45);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Footer แบรนด์ */
+    .studio-footer {
+      text-align: center;
+      margin-top: 32px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .studio-footer strong {
+      color: var(--primary-dark);
+    }
+
+    /* หน้าต่างขอบคุณ (Custom Modal) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 24px;
+      padding: 32px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      animation: popIn 0.35s ease-out;
+    }
+
+    .modal-icon {
+      font-size: 3.5rem;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: floatIcon 2s infinite;
+    }
+
+    .modal-box h2 {
+      font-family: 'Kanit', sans-serif;
+      color: var(--primary-dark);
+      margin: 0 0 10px 0;
+    }
+
+    .modal-box p {
+      color: #475569;
+      font-size: 0.95rem;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
+    }
+
+    .modal-close-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--primary-dark);
     }
   </style>
 </head>
@@ -221,120 +530,235 @@
 <div class="container">
   <!-- ส่วนหัวและแบนเนอร์ -->
   <div class="header-card">
-    <!-- ใส่ไฟล์รูปแบนเนอร์ชื่อ banner.png ไว้โฟลเดอร์เดียวกับไฟล์นี้ได้เลยฮะ -->
-    <img src="banner.png" alt="ประเมินแปลเกม" class="banner-img" onerror="this.style.display='none'">
+    <div class="banner-wrapper">
+      <img src="banner.png" alt="Ben the Game Translator" class="banner-img" onerror="this.style.display='none'">
+    </div>
     <div class="header-text">
-      <h1>🎮 แบบประเมินคุณภาพการแปลภาษาไทยในเกม</h1>
-      <p>รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดีขึ้นฮะ!</p>
+      <div class="brand-badge">🐾 BEN THE GAME TRANSLATOR • THAI LOCALIZATION</div>
+      <h1 class="animated-title">
+        <span class="floating-gamepad">🎮</span> แบบประเมินคุณภาพการแปลภาษาไทยในเกม
+      </h1>
+      <div class="vn-dialogue-box">
+        <span id="typewriterText"></span><span class="cursor-blink"></span>
+      </div>
     </div>
   </div>
 
-  <!-- ฟอร์มส่งข้อมูลเข้า Google Forms ของเจ้านายโดยตรง -->
-  <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+  <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
+  <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="handleSubmit()">
     
-    <!-- ส่วนเลือกเกม (entry.1291974658) -->
+    <!-- ส่วนที่ 1: เลือกเกม -->
     <div class="section-card">
-      <div class="section-title">🐾 เลือกเกมที่เจ้านายอยากประเมินได้เลยฮะ! (1 ครั้งต่อ 1 เกม)</div>
+      <div class="section-header">
+        <h2 class="section-title">🎯 เลือกเกมที่ต้องการประเมิน</h2>
+        <span class="step-pill">ขั้นตอนที่ 1 / 3 (เลือกได้ 1 เกมต่อครั้ง)</span>
+      </div>
       <div class="game-grid" id="gameGrid"></div>
     </div>
 
-    <!-- ส่วนให้คะแนน 4 หัวข้อ -->
+    <!-- ส่วนที่ 2: ให้คะแนน -->
     <div class="section-card">
-      <div class="section-title">⭐ ให้คะแนนคุณภาพงานแปล (1 = น้อยสุด, 5 = ดีเยี่ยม)</div>
-
-      <!-- หัวข้อคะแนนที่ 1 (entry.1009499701) -->
-      <div class="sub-question">1. ความถูกต้องของเนื้อหาและความหมาย</div>
-      <div class="rating-group">
-        <label class="rating-btn"><input type="radio" name="entry.1009499701" value="1" required><span>1</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1009499701" value="2"><span>2</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1009499701" value="3"><span>3</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1009499701" value="4"><span>4</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1009499701" value="5"><span>5 ⭐</span></label>
+      <div class="section-header">
+        <h2 class="section-title">⭐ ประเมินคุณภาพงานแปล</h2>
+        <span class="step-pill">ขั้นตอนที่ 2 / 3</span>
       </div>
 
-      <!-- หัวข้อคะแนนที่ 2 (entry.1063055141) -->
-      <div class="sub-question">2. ความลื่นไหลและเป็นธรรมชาติของภาษาไทย</div>
-      <div class="rating-group">
-        <label class="rating-btn"><input type="radio" name="entry.1063055141" value="1" required><span>1</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1063055141" value="2"><span>2</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1063055141" value="3"><span>3</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1063055141" value="4"><span>4</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1063055141" value="5"><span>5 ⭐</span></label>
+      <!-- หัวข้อคะแนนที่ 1 -->
+      <div class="question-block">
+        <div class="sub-question">
+          <span>1. ความถูกต้องของเนื้อหาและความหมาย</span>
+          <span class="rating-feedback" id="fb-1"></span>
+        </div>
+        <div class="rating-group" data-target="fb-1">
+          <label class="rating-btn"><input type="radio" name="entry.1009499701" value="1" required><span>1</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1009499701" value="2"><span>2</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1009499701" value="3"><span>3</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1009499701" value="4"><span>4</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1009499701" value="5"><span>5 ⭐</span></label>
+        </div>
       </div>
 
-      <!-- หัวข้อคะแนนที่ 3 (entry.1066530576) -->
-      <div class="sub-question">3. การสะกดคำและเครื่องหมายวรรคตอน</div>
-      <div class="rating-group">
-        <label class="rating-btn"><input type="radio" name="entry.1066530576" value="1" required><span>1</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1066530576" value="2"><span>2</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1066530576" value="3"><span>3</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1066530576" value="4"><span>4</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1066530576" value="5"><span>5 ⭐</span></label>
+      <!-- หัวข้อคะแนนที่ 2 -->
+      <div class="question-block">
+        <div class="sub-question">
+          <span>2. ความลื่นไหลและเป็นธรรมชาติของภาษาไทย</span>
+          <span class="rating-feedback" id="fb-2"></span>
+        </div>
+        <div class="rating-group" data-target="fb-2">
+          <label class="rating-btn"><input type="radio" name="entry.1063055141" value="1" required><span>1</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1063055141" value="2"><span>2</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1063055141" value="3"><span>3</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1063055141" value="4"><span>4</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1063055141" value="5"><span>5 ⭐</span></label>
+        </div>
       </div>
 
-      <!-- หัวข้อคะแนนที่ 4 (entry.1917282137) -->
-      <div class="sub-question">4. ความพึงพอใจโดยรวมต่อแพตช์ภาษาไทย</div>
-      <div class="rating-group">
-        <label class="rating-btn"><input type="radio" name="entry.1917282137" value="1" required><span>1</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1917282137" value="2"><span>2</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1917282137" value="3"><span>3</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1917282137" value="4"><span>4</span></label>
-        <label class="rating-btn"><input type="radio" name="entry.1917282137" value="5"><span>5 ⭐</span></label>
+      <!-- หัวข้อคะแนนที่ 3 -->
+      <div class="question-block">
+        <div class="sub-question">
+          <span>3. การสะกดคำและเครื่องหมายวรรคตอน</span>
+          <span class="rating-feedback" id="fb-3"></span>
+        </div>
+        <div class="rating-group" data-target="fb-3">
+          <label class="rating-btn"><input type="radio" name="entry.1066530576" value="1" required><span>1</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1066530576" value="2"><span>2</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1066530576" value="3"><span>3</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1066530576" value="4"><span>4</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1066530576" value="5"><span>5 ⭐</span></label>
+        </div>
+      </div>
+
+      <!-- หัวข้อคะแนนที่ 4 -->
+      <div class="question-block" style="margin-bottom: 0;">
+        <div class="sub-question">
+          <span>4. ความพึงพอใจโดยรวมต่อแพตช์ภาษาไทย</span>
+          <span class="rating-feedback" id="fb-4"></span>
+        </div>
+        <div class="rating-group" data-target="fb-4">
+          <label class="rating-btn"><input type="radio" name="entry.1917282137" value="1" required><span>1</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1917282137" value="2"><span>2</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1917282137" value="3"><span>3</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1917282137" value="4"><span>4</span></label>
+          <label class="rating-btn"><input type="radio" name="entry.1917282137" value="5"><span>5 ⭐</span></label>
+        </div>
       </div>
     </div>
 
-    <!-- ส่วนความคิดเห็นเพิ่มเติม -->
+    <!-- ส่วนที่ 3: ข้อเสนอแนะ -->
     <div class="section-card">
-      <div class="section-title">💬 ข้อเสนอแนะและคำติชมเพิ่มเติม</div>
+      <div class="section-header">
+        <h2 class="section-title">💬 ข้อเสนอแนะและแจ้งจุดแก้ไข</h2>
+        <span class="step-pill">ขั้นตอนที่ 3 / 3</span>
+      </div>
 
-      <!-- ช่องข้อความที่ 1 (entry.1323886645) -->
-      <div class="sub-question">จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
-      <textarea name="entry.1323886645" placeholder="พิมพ์บอกจุดที่ชอบได้เลยฮะ..."></textarea>
+      <div class="question-block">
+        <div class="sub-question">จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
+        <textarea name="entry.1323886645" placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..."></textarea>
+      </div>
 
-      <!-- ช่องข้อความที่ 2 (entry.1758010456) -->
-      <div class="sub-question">คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
-      <textarea name="entry.1758010456" placeholder="แจ้งจุดที่อยากให้แก้ไขได้เลยฮะ..."></textarea>
+      <div class="question-block" style="margin-bottom: 0;">
+        <div class="sub-question">คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
+        <textarea name="entry.1758010456" placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..."></textarea>
+      </div>
     </div>
 
-    <button type="submit" class="submit-btn">ส่งแบบประเมินเลยฮะ! 🚀</button>
+    <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🚀</button>
   </form>
+
+  <div class="studio-footer">
+    จัดทำโดย <strong>Ben the Game Translator</strong> • ขอบคุณทุกกำลังใจและคำติชมจากผู้เล่นทุกคนครับ 🐾
+  </div>
 </div>
 
-<!-- ตัวช่วยส่งฟอร์มแบบเนียนๆ ไม่เด้งไปหน้าขาว -->
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { alert('ส่งแบบประเมินเรียบร้อยแล้วฮะ! ขอบคุณมากนะฮะเจ้านาย 🐾💕'); document.getElementById('customForm').reset(); window.scrollTo({top: 0, behavior: 'smooth'}); submitted=false; }"></iframe>
+<!-- หน้าต่างป๊อปอัปขอบคุณ -->
+<div class="modal-overlay" id="thankYouModal">
+  <div class="modal-box">
+    <div class="modal-icon">🎉🐾</div>
+    <h2>ส่งแบบประเมินสำเร็จแล้ว!</h2>
+    <p>ขอบคุณมากๆ เลยฮะ! ทุกคะแนนและความคิดเห็นของเจ้านายมีค่ามาก เพื่อนำไปพัฒนาผลงานแปลไทยเกมต่อๆ ไปให้ดียิ่งขึ้นครับ 💕</p>
+    <button class="modal-close-btn" onclick="closeModal()">ตกลง / ประเมินเกมอื่นต่อ</button>
+  </div>
+</div>
+
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 
 <script>
   let submitted = false;
 
-  // รายชื่อเกมทั้ง 11 เกม (เจ้านายเอาไฟล์รูปมาใส่โฟลเดอร์ images แล้วแก้ชื่อไฟล์ตรง img ได้เลยฮะ)
+  // 1. เอฟเฟกต์พิมพ์ดีดสไตล์ Visual Novel
+  const introText = "รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! ✨";
+  const typeTarget = document.getElementById("typewriterText");
+  let charIndex = 0;
+
+  function typeWriter() {
+    if (charIndex < introText.length) {
+      typeTarget.textContent += introText.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeWriter, 32);
+    }
+  }
+  window.addEventListener("DOMContentLoaded", typeWriter);
+
+  // 2. รายชื่อเกมทั้ง 11 เกม
   const games = [
-    { name: "[VN] Tavern of Spear", img: "images/tavern.jpg" },
-    { name: "[VN] Promises to Keep", img: "images/promises.jpg" },
-    { name: "[RPG] Grove", img: "images/grove.jpg" },
-    { name: "[VN] Arches", img: "images/arches.jpg" },
-    { name: "[VN] Echo", img: "images/echo.jpg" },
-    { name: "[VN] 2 Hours", img: "images/2hours.jpg" },
-    { name: "[VN] Temptation's Ballad", img: "images/temptation.jpg" },
-    { name: "[VN] Repeat", img: "images/repeat.jpg" },
-    { name: "[VN] Do Not Kill Me Jacob Extra", img: "images/jacob.jpg" },
-    { name: "[VN] After Class", img: "images/afterclass.jpg" },
-    { name: "[VN] Flaming Flagon", img: "images/flagon.jpg" }
+    { name: "[VN] Tavern of Spear", tag: "VN", img: "images/tavern.jpg" },
+    { name: "[VN] Promises to Keep", tag: "VN", img: "images/promises.jpg" },
+    { name: "[RPG] Grove", tag: "RPG", img: "images/grove.jpg" },
+    { name: "[VN] Arches", tag: "VN", img: "images/arches.jpg" },
+    { name: "[VN] Echo", tag: "VN", img: "images/echo.jpg" },
+    { name: "[VN] 2 Hours", tag: "VN", img: "images/2hours.jpg" },
+    { name: "[VN] Temptation's Ballad", tag: "VN", img: "images/temptation.jpg" },
+    { name: "[VN] Repeat", tag: "VN", img: "images/repeat.jpg" },
+    { name: "[VN] Do Not Kill Me Jacob Extra", tag: "VN", img: "images/jacob.jpg" },
+    { name: "[VN] After Class", tag: "VN", img: "images/afterclass.jpg" },
+    { name: "[VN] Flaming Flagon", tag: "VN", img: "images/flagon.jpg" }
   ];
 
   const GAME_ENTRY_ID = "entry.1291974658";
-
   const grid = document.getElementById('gameGrid');
+
   games.forEach((game, index) => {
+    const cleanTitle = game.name.replace(/^\[.*?\]\s*/, '');
+    const delay = index * 0.05;
     grid.innerHTML += `
       <label class="game-option">
         <input type="radio" name="${GAME_ENTRY_ID}" value="${game.name}" ${index === 0 ? 'required' : ''}>
-        <div class="game-card">
-          <img src="${game.img}" alt="${game.name}" onerror="this.src='https://placehold.co/400x300/29b6f6/ffffff?text=${encodeURIComponent(game.name)}'">
+        <div class="game-card" style="animation-delay: ${delay}s;">
+          <div class="img-container">
+            <span class="genre-tag">${game.tag}</span>
+            <span class="check-badge">✓</span>
+            <img src="${game.img}" alt="${game.name}" onerror="this.src='https://placehold.co/400x300/0ea5e9/ffffff?text=${encodeURIComponent(cleanTitle)}'">
+          </div>
           <div class="game-title">${game.name}</div>
         </div>
       </label>
     `;
   });
+
+  // 3. แสดงข้อความกำกับคะแนนเวลากดเลือก 1-5
+  const ratingLabels = {
+    "1": "ควรปรับปรุงอย่างยิ่ง 😢",
+    "2": "พอใช้ได้ ยังมีจุดติดขัด 🤔",
+    "3": "ปานกลาง อ่านเข้าใจ 🙂",
+    "4": "ดีมาก ลื่นไหลน่าติดตาม 😊",
+    "5": "ยอดเยี่ยมระดับมือโปร! ✨"
+  };
+
+  document.querySelectorAll('.rating-group').forEach(group => {
+    const targetId = group.getAttribute('data-target');
+    const feedbackEl = document.getElementById(targetId);
+    group.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        feedbackEl.textContent = ratingLabels[radio.value];
+        feedbackEl.classList.add('visible');
+      });
+    });
+  });
+
+  // 4. จัดการการส่งฟอร์มและเปิดป๊อปอัปขอบคุณ
+  function handleSubmit() {
+    submitted = true;
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = "กำลังส่งข้อมูล... ⏳";
+    btn.style.opacity = "0.8";
+  }
+
+  function onIframeLoad() {
+    if (submitted) {
+      submitted = false;
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🚀";
+      btn.style.opacity = "1";
+      document.getElementById('thankYouModal').style.display = 'flex';
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('thankYouModal').style.display = 'none';
+    document.getElementById('customForm').reset();
+    document.querySelectorAll('.rating-feedback').forEach(el => el.classList.remove('visible'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 </script>
 
 </body>
