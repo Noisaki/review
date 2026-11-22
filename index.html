@@ -2612,7 +2612,7 @@
         <div class="lb-list" id="lbDonateList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
       </div>
       <div class="lb-column">
-        <h3 class="lb-col-title">💖 Top 5 นักส่งหัวใจสูงสุด</h3>
+        <h3 class="lb-col-title">💖 Top 20 นักส่งหัวใจสูงสุด</h3>
         <div class="lb-list" id="lbHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
       </div>
     </div>
@@ -3537,7 +3537,7 @@
       empty.textContent = "ยังไม่มีผู้สนับสนุนบนกระดาน — เป็นคนแรกเลยสิ! 🎁";
       donateList.appendChild(empty);
     } else {
-      const top5Donors = donors.slice(0, 5);
+      const top5Donors = donors.slice(0, 20);
       const formatDonor = (u) => "฿" + formatNum(u.donateAmount);
       top5Donors.forEach((e, i) => {
         donateList.appendChild(buildLbRow(i + 1, e.id, e.u, formatDonor(e.u)));
@@ -3555,7 +3555,7 @@
       empty.textContent = "ยังไม่มีใครส่งหัวใจ — กดปุ่มหัวใจด้านบนได้เลย! ❤️";
       heartsList.appendChild(empty);
     } else {
-      const top5Hearters = hearters.slice(0, 5);
+      const top5Hearters = hearters.slice(0, 20);
       const formatHearter = (u) => "❤️ " + formatCompact(u.heartsClicked);
       top5Hearters.forEach((e, i) => {
         heartsList.appendChild(buildLbRow(i + 1, e.id, e.u, formatHearter(e.u)));
