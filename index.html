@@ -4887,60 +4887,6 @@
   function switchMainTab(tab) {
     switchPage(tab);
   }
-    // กรณีติดคำสาป Horror Mode ให้แสดงหน้าหลัก + ปุ่มส่งใจ + ฟอร์ม + โซนขอโทษด้านล่างครบพร้อมกัน จะได้กดขอโทษแก้คำสาปได้ไม่หลงทาง
-    const headerCard = document.querySelector('.header-card');
-    const quickGrid = document.getElementById('homeQuickGrid');
-    const profileCard = document.getElementById('profileCard');
-    const cheerCard = document.getElementById('cheerSpotlightSection');
-    const lbCard = document.getElementById('leaderboardSection');
-    const voteCard = document.getElementById('gameVoteSection');
-    const evalForm = document.getElementById('customForm');
-    const donateCard = document.getElementById('donateSection');
-
-    if (isHorrorTriggered) {
-      if (headerCard) headerCard.style.display = 'block';
-      if (quickGrid) quickGrid.style.display = 'none';
-      if (profileCard) profileCard.style.display = 'none';
-      if (cheerCard) cheerCard.style.display = 'block';
-      if (lbCard) lbCard.style.display = 'none';
-      if (voteCard) voteCard.style.display = 'none';
-      if (evalForm) evalForm.style.display = 'block';
-      if (donateCard) donateCard.style.display = 'block';
-      return;
-    }
-
-    const pageMap = {
-      home:   [headerCard, quickGrid, profileCard, cheerCard],
-      rank:   [lbCard],
-      vote:   [voteCard],
-      eval:   [evalForm],
-      donate: [donateCard]
-    };
-
-    const allSections = [headerCard, quickGrid, profileCard, cheerCard, lbCard, voteCard, evalForm, donateCard];
-    allSections.forEach(el => {
-      if (!el) return;
-      el.style.display = 'none';
-      el.classList.remove('page-animate');
-    });
-
-    (pageMap[page] || pageMap.home).forEach(el => {
-      if (!el) return;
-      el.style.display = 'block';
-      void el.offsetWidth; // รีสตาร์ทแอนิเมชัน
-      el.classList.add('page-animate');
-    });
-
-    // อัปเดตปุ่ม Active บน Navbar
-    document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.getElementById('nav-' + page);
-    if (activeBtn) activeBtn.classList.add('active');
-
-    if (!silent) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
 
   // วาดการ์ด 6 เกม + รายชื่อคนกดของแต่ละเกม
   function renderVoteGames() {
