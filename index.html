@@ -10,10 +10,10 @@
       --primary: #0ea5e9;
       --primary-dark: #0369a1;
       --accent: #38bdf8;
-      --gold: #f59e0b;
-      --pink: #ec4899;
+      --discord: #5865F2;
+      --itch: #fa5c5c;
       --glow: rgba(14, 165, 233, 0.35);
-      --card-bg: rgba(255, 255, 255, 0.91);
+      --card-bg: rgba(255, 255, 255, 0.92);
       --text-main: #1e293b;
       --text-muted: #64748b;
     }
@@ -46,7 +46,7 @@
     }
 
     .pill-control-btn {
-      background: rgba(15, 23, 42, 0.82);
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(10px);
       color: #e0f2fe;
       border: 1px solid rgba(56, 189, 248, 0.5);
@@ -156,9 +156,9 @@
     }
 
     @keyframes scanLine {
-      0% { top: 8%; opacity: 0.2; }
-      50% { top: 88%; opacity: 1; }
-      100% { top: 8%; opacity: 0.2; }
+      0% { top: 6%; opacity: 0.25; }
+      50% { top: 90%; opacity: 1; }
+      100% { top: 6%; opacity: 0.25; }
     }
 
     @keyframes floatUpFade {
@@ -166,7 +166,9 @@
       100% { transform: translateY(-130px) scale(1.4); opacity: 0; }
     }
 
-    /* ส่วนหัวและแท่นโชว์โลโก้ BGT */
+    /* =========================================
+       ส่วนหัวและแท่นโชว์โลโก้ BGT ด้านบนสุด
+       ========================================= */
     .header-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
@@ -183,7 +185,7 @@
     .logo-showcase {
       position: relative;
       width: 100%;
-      padding: 36px 20px 28px;
+      padding: 40px 20px 30px;
       background: radial-gradient(circle at center, #0284c7 0%, #0f172a 85%);
       border-bottom: 3px solid #38bdf8;
       overflow: hidden;
@@ -195,16 +197,16 @@
       inset: 0;
       background-image: radial-gradient(rgba(56, 189, 248, 0.25) 1px, transparent 1px);
       background-size: 20px 20px;
-      opacity: 0.6;
+      opacity: 0.65;
     }
 
     .studio-logo {
       position: relative;
       z-index: 2;
-      max-width: 340px;
-      width: 80%;
+      max-width: 350px;
+      width: 82%;
       height: auto;
-      filter: drop-shadow(0 6px 18px rgba(56, 189, 248, 0.55));
+      filter: drop-shadow(0 6px 20px rgba(56, 189, 248, 0.6));
       animation: floatLogo 3.5s ease-in-out infinite;
       transition: transform 0.3s ease;
     }
@@ -214,7 +216,7 @@
     }
 
     .header-text {
-      padding: 26px 24px 32px;
+      padding: 26px 24px 30px;
       position: relative;
     }
 
@@ -269,6 +271,7 @@
       border-radius: 14px;
       padding: 10px 18px;
       margin-top: 6px;
+      margin-bottom: 18px;
       color: #334155;
       font-size: 0.95rem;
       min-height: 44px;
@@ -287,6 +290,46 @@
     @keyframes blink {
       0%, 49% { opacity: 1; }
       50%, 100% { opacity: 0; }
+    }
+
+    /* แถบปุ่มโซเชียลมีเดีย & ลิงก์รวมเกม */
+    .social-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .social-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    .btn-itch {
+      background: linear-gradient(135deg, #fa5c5c, #e11d48);
+    }
+
+    .btn-x {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+    }
+
+    .btn-discord {
+      background: linear-gradient(135deg, #5865F2, #4338ca);
     }
 
     /* การ์ดแต่ละส่วน */
@@ -562,7 +605,7 @@
     }
 
     /* =========================================
-       โซน DONATE & QR CODE สนับสนุนทีมแปล
+       โซน DONATE & QR CODE + ระบบยศ DISCORD BGT
        ========================================= */
     .donate-card {
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 249, 255, 0.95));
@@ -591,12 +634,12 @@
 
     .donate-layout {
       display: grid;
-      grid-template-columns: 1.2fr 0.9fr;
+      grid-template-columns: 1.25fr 0.85fr;
       gap: 24px;
       align-items: center;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 740px) {
       .donate-layout {
         grid-template-columns: 1fr;
       }
@@ -617,16 +660,22 @@
     .donate-desc {
       color: #475569;
       font-size: 0.92rem;
-      margin: 0 0 18px 0;
+      margin: 0 0 16px 0;
       line-height: 1.55;
     }
 
-    /* ปุ่มเลือกแพ็กเกจโดเนท */
+    /* ปุ่มเลือกยศผู้สนับสนุนตาม Discord BGT */
     .tip-tiers {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin-bottom: 14px;
+    }
+
+    @media (max-width: 480px) {
+      .tip-tiers {
+        grid-template-columns: 1fr;
+      }
     }
 
     .tip-btn {
@@ -658,17 +707,17 @@
     }
 
     .tip-emoji {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
     }
 
     .tip-info strong {
       display: block;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     .tip-info small {
       font-size: 0.76rem;
-      opacity: 0.85;
+      opacity: 0.88;
     }
 
     .wolf-reaction-box {
@@ -676,14 +725,24 @@
       border-left: 4px solid #0ea5e9;
       padding: 10px 14px;
       border-radius: 0 12px 12px 0;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: #0369a1;
       font-weight: 500;
-      margin-bottom: 16px;
-      transition: all 0.2s;
+      margin-bottom: 14px;
+      line-height: 1.5;
     }
 
-    /* ปุ่มส่งหัวใจฟรี & ปุ่มคัดลอกเลขบัญชี */
+    .discord-ticket-note {
+      background: rgba(88, 101, 242, 0.1);
+      border: 1px dashed #5865F2;
+      color: #3730a3;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
     .action-row {
       display: flex;
       gap: 10px;
@@ -692,7 +751,7 @@
 
     .heart-cheer-btn {
       flex: 1;
-      min-width: 170px;
+      min-width: 180px;
       background: linear-gradient(90deg, #ec4899, #f43f5e);
       color: white;
       border: none;
@@ -708,35 +767,41 @@
       gap: 8px;
       box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
       transition: transform 0.15s ease;
-      position: relative;
     }
 
     .heart-cheer-btn:active {
       transform: scale(0.94);
     }
 
-    .copy-acc-btn {
-      background: #ffffff;
-      color: #0369a1;
-      border: 2px solid #7dd3fc;
-      padding: 12px 16px;
+    .discord-ticket-btn {
+      background: #5865F2;
+      color: white;
+      border: none;
+      padding: 12px 18px;
       border-radius: 14px;
       font-family: 'Prompt', sans-serif;
       font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 16px rgba(88, 101, 242, 0.3);
       transition: all 0.2s;
     }
 
-    .copy-acc-btn:hover {
-      background: #e0f2fe;
+    .discord-ticket-btn:hover {
+      background: #4752c4;
+      transform: translateY(-2px);
     }
 
-    /* กรอบ QR Code พร้อมเส้นเลเซอร์สแกน */
+    /* กรอบ QR Code สแกนพร้อมเพย์จริง */
     .qr-box-wrapper {
       background: linear-gradient(145deg, #0f172a, #0369a1);
       border-radius: 22px;
-      padding: 20px;
+      padding: 20px 18px;
       text-align: center;
       color: white;
       box-shadow: 0 12px 28px rgba(3, 105, 161, 0.3);
@@ -745,14 +810,14 @@
 
     .qr-frame {
       position: relative;
-      width: 190px;
-      height: 190px;
+      width: 210px;
+      height: 240px;
       margin: 0 auto 12px;
       background: white;
-      padding: 10px;
+      padding: 8px;
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.55);
     }
 
     .qr-frame img {
@@ -762,7 +827,6 @@
       display: block;
     }
 
-    /* เส้นเลเซอร์สแกน QR */
     .qr-laser {
       position: absolute;
       left: 6%;
@@ -784,13 +848,24 @@
       font-size: 0.78rem;
       font-weight: 600;
       color: #bae6fd;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .qr-subtext {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: #e0f2fe;
       margin: 0;
+      line-height: 1.5;
+    }
+
+    .account-verify-tag {
+      display: inline-block;
+      margin-top: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      color: #ffffff;
     }
 
     /* หัวใจลอยตอนกดปุ่ม Cheer */
@@ -898,10 +973,10 @@
 </head>
 <body>
 
-<!-- ปุ่มลอยมุมขวาบน: เปิด/ปิดเสียง + วาร์ปไปโดเนท -->
+<!-- ปุ่มลอยมุมขวาบน -->
 <div class="floating-controls">
   <a href="#donateSection" class="pill-control-btn pill-donate-jump" onmouseenter="playHoverSound()" onclick="playCoinSound()">
-    ☕ เลี้ยงขนมหมาป่า
+    💖 สนับสนุนผลงาน
   </a>
   <button type="button" class="pill-control-btn" id="soundToggle" onclick="toggleSound()">
     <span id="soundIcon">🔊</span> <span id="soundLabel">เสียง UI: เปิด</span>
@@ -917,10 +992,11 @@
 <canvas id="particleCanvas"></canvas>
 
 <div class="container">
-  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT -->
+  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT ด้านบนสุด -->
   <div class="header-card">
     <div class="logo-showcase">
-      <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="this.style.display='none'">
+      <!-- เช็กทั้ง logo.png นอกสุด และ images/logo.png อัตโนมัติ -->
+      <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}else{this.style.display='none';}">
     </div>
     <div class="header-text">
       <div class="brand-badge">🐾 BEN THE GAME TRANSLATOR • THAI LOCALIZATION</div>
@@ -929,6 +1005,20 @@
       </h1>
       <div class="vn-dialogue-box">
         <span id="typewriterText"></span><span class="cursor-blink"></span>
+      </div>
+
+      <!-- ปุ่มลิงก์รวมเกม itch.io / X / Discord -->
+      <div class="social-bar">
+        <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="social-btn btn-itch" onmouseenter="playHoverSound()" onclick="playClickSound()">
+          🎮 รวมเกมแปลไทยทั้งหมด (itch.io)
+        </a>
+        <a href="https://x.com/Benzielovely" target="_blank" rel="noopener" class="social-btn btn-x" onmouseenter="playHoverSound()" onclick="playClickSound()">
+          𝕏 ติดตามอัปเดต (@Benzielovely)
+        </a>
+        <!-- เปลี่ยนลิงก์ Discord ของเจ้านายตรง href ด้านล่างนี้ได้เลยฮะ -->
+        <a href="https://discord.gg/ใส่รหัสเชิญDiscordของเจ้านายตรงนี้" target="_blank" rel="noopener" class="social-btn btn-discord" onmouseenter="playHoverSound()" onclick="playClickSound()">
+          💬 เข้าดิสคอร์ดพูดคุย & รับยศ
+        </a>
       </div>
     </div>
   </div>
@@ -1031,76 +1121,83 @@
   </form>
 
   <!-- =========================================
-       โซน DONATE & QR CODE สนับสนุนทีมแปล
+       โซน DONATE & QR CODE สแกนสนับสนุน + ระบบยศ DISCORD
        ========================================= -->
   <div class="donate-card" id="donateSection">
     <div class="donate-ribbon">SUPPORT BGT</div>
     <div class="donate-layout">
-      <!-- ฝั่งซ้าย: เลือกแพ็กเกจ + รีแอคชัน + ส่งหัวใจ -->
+      <!-- ฝั่งซ้าย: ระบบยศ Discord + รีแอคชัน + ส่งหัวใจ -->
       <div>
-        <h2 class="donate-title">💖 สนับสนุนค่าขนมหมาป่า & ค่ากาแฟทีมแปล</h2>
+        <h2 class="donate-title">💖 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
         <p class="donate-desc">
-          ทุกแพตช์ภาษาไทยเปิดให้โหลดเล่นฟรีเสมอฮะ! แต่ถ้าเจ้านายชอบผลงานและอยากช่วยเติมพลังให้มีแรงแปลเกมดีๆ ต่อไป สามารถสแกน QR Code ด้านข้าง หรือกดส่งหัวใจให้กำลังใจฟรีได้เลยนะฮะ UwU
+          ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานและอยากร่วมสนับสนุน (ไม่มีขั้นต่ำ และสะสมยอดเลื่อนยศได้เรื่อยๆ) คลิกดูรายละเอียดยศด้านล่างได้เลยฮะ:
         </p>
 
         <div class="tip-tiers">
-          <button type="button" class="tip-btn active" onmouseenter="playHoverSound()" onclick="selectTip(this, '20฿', 'งั่มๆ! ขอบคุณสำหรับขนมหมาป่านะฮะ อร่อยมากๆ เลย! 🦴🐾')">
+          <button type="button" class="tip-btn active" onmouseenter="playHoverSound()" onclick="selectTip(this, 'ไม่มีขั้นต่ำ', '『 ผู้สนับสนุนทั่วไป 』: โดเนทเท่าไหร่ก็ได้ตามใจชอบ (เริ่มต้นหลักสิบก็รับยศถาวรในดิสคอร์ดได้เลยฮะ!) 🐾')">
             <span class="tip-emoji">🦴</span>
             <div class="tip-info">
-              <strong>20 บาท</strong>
-              <small>ค่าขนมหมาป่า</small>
+              <strong>『 ผู้สนับสนุนทั่วไป 』</strong>
+              <small>โดเนทเท่าไหร่ก็ได้ตามใจชอบ</small>
             </div>
           </button>
 
-          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, '50฿', 'ซู้ดด~ กาแฟแก้วนี้ช่วยให้แปลได้อีก 500 บรรทัดเลยฮะ! ☕✨')">
-            <span class="tip-emoji">☕</span>
+          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'สะสม 300฿', '『 ผู้ร่วมจารึก 』: สะสมครบ 300 บาท รับยศประดับโปรไฟล์และสียศโดดเด่นถาวรไม่มีวันหมดอายุ! 📜✨')">
+            <span class="tip-emoji">📜</span>
             <div class="tip-info">
-              <strong>50 บาท</strong>
-              <small>ค่ากาแฟปั่นซับ</small>
+              <strong>『 ผู้ร่วมจารึก 』</strong>
+              <small>สะสมครบ 300 บาท</small>
             </div>
           </button>
 
-          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, '100฿', 'ว้าวว! ข้าวหน้าเนื้อชุดใหญ่ เติมพลังเต็มหลอด 100% เลยฮะ! 🍱🔥')">
-            <span class="tip-emoji">🍱</span>
+          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'สะสม 500฿', '『 ผู้พิทักษ์หัวใจ 』: สะสมครบ 500 บาท ขอบคุณที่คอยซัพพอร์ตและเป็นพลังใจให้ทีมแปลเสมอครับ! 💖🛡️')">
+            <span class="tip-emoji">💖</span>
             <div class="tip-info">
-              <strong>100 บาท</strong>
-              <small>มื้อใหญ่ทีมแปล</small>
+              <strong>『 ผู้พิทักษ์หัวใจ 』</strong>
+              <small>สะสมครบ 500 บาท</small>
             </div>
           </button>
 
-          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'ตามศรัทธา', 'กรี๊ดดด! ป๋าเปย์ระดับตำนาน หมาป่าขอคารวะ 3 จอกเลยฮะ! 👑💎')">
+          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'สะสม 1,000฿', '『 ภาคีผู้พิทักษ์นิรันดร์ 』: สะสมครบ 1,000 บาท ยศสูงสุดระดับตำนาน หมาป่าขอคารวะเลยครับ! 👑💎')">
             <span class="tip-emoji">👑</span>
             <div class="tip-info">
-              <strong>ตามศรัทธา</strong>
-              <small>ป๋าเปย์ระดับ VIP</small>
+              <strong>『 ภาคีผู้พิทักษ์นิรันดร์ 』</strong>
+              <small>สะสมครบ 1,000 บาท</small>
             </div>
           </button>
         </div>
 
         <div class="wolf-reaction-box" id="wolfReaction">
-          🐾 <strong>น้องหมาป่า BGT:</strong> งั่มๆ! ขอบคุณสำหรับขนมหมาป่านะฮะ อร่อยมากๆ เลย! 🦴🐾
+          🐾 <strong>รายละเอียดยศ:</strong> 『 ผู้สนับสนุนทั่วไป 』: โดเนทเท่าไหร่ก็ได้ตามใจชอบ (เริ่มต้นหลักสิบก็รับยศถาวรในดิสคอร์ดได้เลยฮะ!) 🐾
+        </div>
+
+        <div class="discord-ticket-note">
+          📌 <strong>ขั้นตอนการแจ้งรับยศ:</strong> 1. เช็กชื่อบัญชีปลายทาง <strong>นาย เบญจพล</strong> • 2. เก็บภาพสลิปไว้ (ห้ามส่งในแชทส่วนรวมเด็ดขาด) • 3. กดปุ่ม <strong>"เปิดตั๋วส่งหลักฐาน"</strong> ใน Discord เพื่อส่งสลิปและรับยศถาวรได้เลยครับ!
         </div>
 
         <div class="action-row">
           <button type="button" class="heart-cheer-btn" onmouseenter="playHoverSound()" onclick="sendHeartCheer(event)">
             ❤️ ส่งหัวใจให้กำลังใจ (<span id="heartCount">58</span>)
           </button>
-          <!-- เปลี่ยนเลขพร้อมเพย์/วอลเล็ทของเจ้านายตรงฟังก์ชัน copyDonateInfo ด้านล่างได้เลยฮะ -->
-          <button type="button" class="copy-acc-btn" id="copyBtn" onmouseenter="playHoverSound()" onclick="copyDonateInfo()">
-            📋 คัดลอกเบอร์ PromptPay
-          </button>
+          <!-- เปลี่ยนลิงก์ Discord ของเจ้านายตรง href ด้านล่างนี้ได้เลยฮะ -->
+          <a href="https://discord.gg/ใส่รหัสเชิญDiscordของเจ้านายตรงนี้" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
+            💬 ติดต่อ & แจ้งสลิปใน Discord
+          </a>
         </div>
       </div>
 
-      <!-- ฝั่งขวา: กรอบ QR Code พร้อมเลเซอร์สแกน -->
+      <!-- ฝั่งขวา: กรอบ QR Code สแกนพร้อมเพย์ของเจ้านาย -->
       <div class="qr-box-wrapper">
-        <div class="qr-badge-label">⚡ SCAN TO DONATE • <span id="selectedTipBadge">20฿</span></div>
+        <div class="qr-badge-label">⚡ SCAN PROMPTPAY • <span id="selectedTipBadge">ไม่มีขั้นต่ำ</span></div>
         <div class="qr-frame">
           <div class="qr-laser"></div>
-          <!-- อัปโหลดรูป QR Code ของเจ้านายชื่อ qr.png ไว้ข้างๆ index.html บน GitHub ได้เลยฮะ -->
-          <img src="qr.png" alt="QR Code สนับสนุน Ben the Game Translator" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BenTheGameTranslator-Support'">
+          <!-- เช็กทั้ง qr.png นอกสุด และ images/qr.png อัตโนมัติ -->
+          <img src="qr.png" alt="QR Code สแกนจ่ายพร้อมเพย์ นาย เบญจพล" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/qr.png';}">
         </div>
-        <p class="qr-subtext">รองรับทุกแอปธนาคาร & TrueMoney Wallet<br><strong>ชื่อบัญชี: Ben the Game Translator</strong></p>
+        <p class="qr-subtext">
+          สแกนจ่ายพร้อมเพย์ได้ทุกแอปธนาคาร<br>
+          <span class="account-verify-tag">ชื่อบัญชี: นาย เบญจพล</span>
+        </p>
       </div>
     </div>
   </div>
@@ -1118,7 +1215,7 @@
     <p>ขอบคุณมากๆ เลยฮะ! ทุกคะแนนและความคิดเห็นของเจ้านายมีค่ามาก เพื่อนำไปพัฒนาผลงานแปลไทยเกมต่อๆ ไปให้ดียิ่งขึ้นครับ 💕</p>
     <div class="modal-btns">
       <button class="modal-close-btn" onclick="playClickSound(); closeModal();">ตกลง / ประเมินเกมอื่นต่อ</button>
-      <button class="modal-donate-btn" onclick="playCoinSound(); closeModal(); document.getElementById('donateSection').scrollIntoView({behavior:'smooth'});">☕ เลี้ยงขนมทีมแปล</button>
+      <button class="modal-donate-btn" onclick="playCoinSound(); closeModal(); document.getElementById('donateSection').scrollIntoView({behavior:'smooth'});">💖 ดูช่องทางสนับสนุน</button>
     </div>
   </div>
 </div>
@@ -1192,7 +1289,6 @@
     } catch (e) {}
   }
 
-  // เสียงเหรียญทองตอนกดแพ็กเกจโดเนท (Coin Sound)
   function playCoinSound() {
     if (!soundEnabled) return;
     try {
@@ -1200,8 +1296,8 @@
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); // B5
-      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.07); // E6
+      osc.frequency.setValueAtTime(987.77, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.07);
 
       gain.gain.setValueAtTime(0.11, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
@@ -1244,7 +1340,7 @@
     document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('selectedTipBadge').textContent = amountText;
-    document.getElementById('wolfReaction').innerHTML = `🐾 <strong>น้องหมาป่า BGT:</strong> ${reactionMsg}`;
+    document.getElementById('wolfReaction').innerHTML = `🐾 <strong>รายละเอียดยศ:</strong> ${reactionMsg}`;
   }
 
   let heartTotal = 58;
@@ -1254,7 +1350,6 @@
     heartTotal++;
     document.getElementById('heartCount').textContent = heartTotal;
 
-    // สร้างหัวใจและอุ้งเท้าลอยพุ่งขึ้นจากจุดที่กด
     for (let i = 0; i < 3; i++) {
       const el = document.createElement('div');
       el.className = 'floating-heart';
@@ -1265,18 +1360,6 @@
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 1200);
     }
-  }
-
-  function copyDonateInfo() {
-    playClickSound();
-    // เปลี่ยนเลขพร้อมเพย์/เบอร์วอลเล็ทของเจ้านายตรงเครื่องหมายคำพูดด้านล่างนี้ได้เลยฮะ
-    const promptPayNumber = "08X-XXX-XXXX"; 
-    navigator.clipboard.writeText(promptPayNumber).then(() => {
-      const btn = document.getElementById('copyBtn');
-      const oldText = btn.textContent;
-      btn.textContent = "✅ คัดลอกแล้วฮะ!";
-      setTimeout(() => btn.textContent = oldText, 2000);
-    });
   }
 
   // =========================================
