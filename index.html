@@ -94,7 +94,9 @@
     body.horror-mode .header-card,
     body.horror-mode .cheer-spotlight-card,
     body.horror-mode .section-card,
-    body.horror-mode .donate-card {
+    body.horror-mode .donate-card,
+    body.horror-mode .profile-card,
+    body.horror-mode .lb-card {
       background: rgba(18, 2, 2, 0.94) !important;
       border-color: #991b1b !important;
       box-shadow: 0 20px 50px rgba(185, 28, 28, 0.35), inset 0 0 30px rgba(127, 29, 29, 0.4) !important;
@@ -131,7 +133,12 @@
     body.horror-mode .game-title,
     body.horror-mode .total-score-label,
     body.horror-mode .total-score-subtext,
-    body.horror-mode .cheer-subtext {
+    body.horror-mode .cheer-subtext,
+    body.horror-mode .profile-name,
+    body.horror-mode .profile-desc,
+    body.horror-mode .lb-name,
+    body.horror-mode .lb-col-title,
+    body.horror-mode .lb-empty {
       color: #fca5a5 !important;
     }
 
@@ -144,7 +151,9 @@
     body.horror-mode .game-card,
     body.horror-mode textarea,
     body.horror-mode .total-score-card,
-    body.horror-mode .cheer-progress-box {
+    body.horror-mode .cheer-progress-box,
+    body.horror-mode .lb-row,
+    body.horror-mode .lb-column {
       background: rgba(30, 4, 4, 0.92) !important;
       border-color: #7f1d1d !important;
       color: #fecaca !important;
@@ -152,11 +161,18 @@
 
     body.horror-mode .social-btn,
     body.horror-mode .pill-control-btn,
-    body.horror-mode .music-toggle-btn {
+    body.horror-mode .music-toggle-btn,
+    body.horror-mode .profile-btn {
       background: linear-gradient(135deg, #450a0a, #1f0202) !important;
       border-color: #dc2626 !important;
       color: #fca5a5 !important;
       box-shadow: 0 0 12px rgba(220, 38, 38, 0.35) !important;
+    }
+
+    body.horror-mode .discord-login-btn {
+      background: linear-gradient(135deg, #450a0a, #1f0202) !important;
+      border-color: #dc2626 !important;
+      color: #fca5a5 !important;
     }
 
     body.horror-mode .mega-cheer-btn {
@@ -614,6 +630,182 @@
     .btn-discord { background: linear-gradient(135deg, #5865F2, #4338ca); }
 
     /* =========================================
+       การ์ดโปรไฟล์ Discord (ล็อกอิน + แสดงยศ)
+       ========================================= */
+    .profile-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(238, 242, 255, 0.96));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 2px solid #a5b4fc;
+      border-radius: 24px;
+      padding: 22px 24px;
+      box-shadow: 0 16px 38px rgba(88, 101, 242, 0.22);
+      margin-bottom: 24px;
+      animation: fadeSlideUp 0.62s ease-out;
+    }
+
+    .profile-logged-out {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .profile-out-text h3 {
+      font-family: 'Kanit', sans-serif;
+      margin: 0 0 4px 0;
+      font-size: 1.2rem;
+      color: #3730a3;
+    }
+
+    .profile-out-text p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #475569;
+      line-height: 1.5;
+      max-width: 520px;
+    }
+
+    .discord-login-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #5865F2, #4338ca);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+      padding: 13px 24px;
+      border-radius: 14px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+      transition: all 0.2s;
+    }
+
+    .discord-login-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.08);
+    }
+
+    .profile-logged-in {
+      display: none;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .avatar-frame {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      padding: 4px;
+      background: #cbd5e1;
+      flex-shrink: 0;
+    }
+
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e2e8f0;
+      display: block;
+    }
+
+    .avatar-frame.tier-1 { background: linear-gradient(135deg, #86efac, #15803d); box-shadow: 0 0 14px rgba(34, 197, 94, 0.55); }
+    .avatar-frame.tier-2 { background: linear-gradient(135deg, #93c5fd, #7c3aed); box-shadow: 0 0 16px rgba(124, 58, 237, 0.55); }
+    .avatar-frame.tier-3 { background: linear-gradient(135deg, #f9a8d4, #e11d48); box-shadow: 0 0 18px rgba(225, 29, 72, 0.6); }
+    .avatar-frame.tier-4 {
+      background: conic-gradient(#fde047, #f59e0b, #dc2626, #f59e0b, #fde047);
+      box-shadow: 0 0 22px rgba(251, 191, 36, 0.85);
+      animation: spinFrame 6s linear infinite;
+    }
+
+    @keyframes spinFrame {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(25deg); }
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .profile-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 6px 0;
+      word-break: break-word;
+    }
+
+    .role-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 1.5px solid #cbd5e1;
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .role-pill.tier-1 { background: #dcfce7; color: #14532d; border-color: #86efac; }
+    .role-pill.tier-2 { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+    .role-pill.tier-3 { background: #ffe4e6; color: #9f1239; border-color: #fda4af; }
+    .role-pill.tier-4 { background: linear-gradient(90deg, #fef3c7, #fde68a); color: #92400e; border-color: #f59e0b; box-shadow: 0 2px 10px rgba(245, 158, 11, 0.35); }
+
+    .profile-desc {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin: 8px 0 0 0;
+      line-height: 1.5;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .profile-btn {
+      background: #ffffff;
+      border: 1.5px solid #c7d2fe;
+      color: #3730a3;
+      padding: 9px 16px;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .profile-btn:hover:not(:disabled) {
+      background: #5865F2;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .profile-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .profile-btn.logout:hover:not(:disabled) {
+      background: #dc2626;
+      border-color: #dc2626;
+    }
+
+    /* =========================================
        โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
        ========================================= */
     .cheer-spotlight-card {
@@ -770,6 +962,18 @@
       transform: scale(1) rotate(8deg);
     }
 
+    .my-hearts-line {
+      font-size: 0.85rem;
+      color: #9f1239;
+      font-weight: 600;
+      margin: -6px 0 14px 0;
+      min-height: 1.2em;
+    }
+
+    body.horror-mode .my-hearts-line {
+      color: #fca5a5;
+    }
+
     .cheer-progress-box {
       max-width: 660px;
       margin: 0 auto;
@@ -817,6 +1021,133 @@
       padding: 8px 16px;
       border-radius: 12px;
       animation: popIn 0.4s ease-out;
+    }
+
+    /* =========================================
+       กระดานจัดอันดับ (Leaderboards)
+       ========================================= */
+    .lb-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(253, 230, 138, 0.75);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+      margin-bottom: 24px;
+      animation: fadeSlideUp 0.68s ease-out;
+    }
+
+    .lb-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .lb-grid { grid-template-columns: 1fr; }
+    }
+
+    .lb-column {
+      background: rgba(254, 252, 248, 0.95);
+      border: 1px solid #fde68a;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .lb-col-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: var(--xmas-red-dark);
+      margin: 0 0 12px 0;
+    }
+
+    .lb-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .lb-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 1.5px solid #fee2e2;
+      border-radius: 14px;
+      padding: 8px 10px;
+      transition: all 0.2s;
+    }
+
+    .lb-row:hover {
+      border-color: #f59e0b;
+      transform: translateX(3px);
+    }
+
+    .lb-row.me {
+      border-color: #5865F2;
+      background: #eef2ff;
+      box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+    }
+
+    .lb-rank {
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      min-width: 32px;
+      text-align: center;
+      color: #92400e;
+    }
+
+    .lb-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e2e8f0;
+      flex-shrink: 0;
+      border: 2px solid #cbd5e1;
+    }
+
+    .lb-avatar.tier-1 { border-color: #22c55e; }
+    .lb-avatar.tier-2 { border-color: #7c3aed; }
+    .lb-avatar.tier-3 { border-color: #e11d48; }
+    .lb-avatar.tier-4 { border-color: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.7); }
+
+    .lb-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .lb-name {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lb-meta .role-pill {
+      font-size: 0.72rem;
+      padding: 1px 9px;
+      margin-top: 2px;
+    }
+
+    .lb-score {
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #be123c;
+      white-space: nowrap;
+    }
+
+    .lb-empty {
+      text-align: center;
+      color: #64748b;
+      font-size: 0.88rem;
+      padding: 18px 8px;
     }
 
     /* การ์ดแต่ละส่วน */
@@ -1550,7 +1881,7 @@
       color: #ffffff;
     }
 
-    /* หน้าต่างขอบคุณปกติ / หน้าต่างให้อภัย */
+    /* หน้าต่างขอบคุณปกติ / หน้าต่างให้อภัย / หน้าต่างล็อกอิน */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -1573,6 +1904,8 @@
       text-align: center;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
       animation: popIn 0.35s ease-out;
+      max-height: 92vh;
+      overflow-y: auto;
     }
 
     .modal-icon {
@@ -1626,6 +1959,82 @@
       font-weight: 600;
       cursor: pointer;
       transition: 0.2s;
+    }
+
+    .modal-discord-btn {
+      background: linear-gradient(135deg, #5865F2, #4338ca);
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .modal-cancel-btn {
+      background: #e2e8f0;
+      color: #334155;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .login-safety-list {
+      text-align: left;
+      background: #eef2ff;
+      border: 1.5px solid #c7d2fe;
+      border-radius: 14px;
+      padding: 12px 16px 12px 34px;
+      margin: 0 0 14px 0;
+      font-size: 0.86rem;
+      color: #312e81;
+      line-height: 1.6;
+    }
+
+    .login-reason-note {
+      display: none;
+      background: #fff1f2;
+      border: 1.5px solid #fecdd3;
+      color: #9f1239;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0 0 14px 0;
+    }
+
+    /* ป้ายแจ้งเตือนเล็ก */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      background: rgba(10, 35, 24, 0.95);
+      color: #fef3c7;
+      border: 1.5px solid #fbbf24;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
@@ -1709,6 +2118,38 @@
   </div>
 
   <!-- =========================================
+       การ์ดโปรไฟล์ Discord (ล็อกอิน + ยศ)
+       ========================================= -->
+  <div class="profile-card" id="profileCard">
+    <!-- สถานะยังไม่ล็อกอิน -->
+    <div class="profile-logged-out" id="profileLoggedOut">
+      <div class="profile-out-text">
+        <h3 class="corruptible" data-cursed="🩸 ล็อกอินไปก็ไม่มีใครสนผมหรอก...">🔐 เข้าสู่ระบบด้วย Discord เพื่อกดส่งหัวใจ & แสดงยศ</h3>
+        <p class="corruptible" data-cursed="ผมทำอะไรผิดทุกอย่างเลย...">ล็อกอินผ่าน Discord ทางการเท่านั้น (ไม่ใช้ Gmail) เพื่อกดส่งหัวใจ ขึ้นกระดานจัดอันดับ และโชว์ยศของคุณในเซิร์ฟเวอร์ BGT</p>
+      </div>
+      <button type="button" class="discord-login-btn" id="discordLoginBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); openLoginInfo('');">
+        💬 <span>Login with Discord</span>
+      </button>
+    </div>
+
+    <!-- สถานะล็อกอินแล้ว -->
+    <div class="profile-logged-in" id="profileLoggedIn">
+      <div class="avatar-frame" id="profileAvatarFrame">
+        <img id="profileAvatar" src="" alt="Discord Avatar" referrerpolicy="no-referrer">
+      </div>
+      <div class="profile-info">
+        <h3 class="profile-name" id="profileName">-</h3>
+        <span class="role-pill" id="profileRolePill">-</span>
+        <p class="profile-desc" id="profileDesc"></p>
+      </div>
+      <div class="profile-actions">
+        <button type="button" class="profile-btn" id="refreshRoleBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); refreshDiscordRole();">🔄 รีเฟรชยศ</button>
+        <button type="button" class="profile-btn logout" id="logoutBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); discordLogout();">🚪 ออกจากระบบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
        โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
        ========================================= -->
   <div class="cheer-spotlight-card" id="cheerSpotlightSection">
@@ -1727,6 +2168,8 @@
       <span class="combo-pill" id="comboPill">COMBO x2!</span>
     </div>
 
+    <div class="my-hearts-line" id="myHeartsLine"></div>
+
     <div class="cheer-progress-box">
       <div class="cheer-progress-labels">
         <span id="cheerNextGoalText">เป้าหมายถัดไป: 10 หัวใจ (อุ้งเท้าให้กำลังใจ 🐾)</span>
@@ -1736,6 +2179,26 @@
         <div class="cheer-bar-fill" id="cheerBarFill"></div>
       </div>
       <div class="cheer-celebration-banner" id="cheerCelebrationBanner"></div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       กระดานจัดอันดับ Real-time
+       ========================================= -->
+  <div class="lb-card" id="leaderboardSection">
+    <div class="section-header">
+      <h2 class="section-title corruptible" data-cursed="🥀 ไม่มีใครเหลืออยู่บนกระดานแล้ว...">🏆 กระดานจัดอันดับ</h2>
+      <span class="live-sync-badge"><span class="live-dot"></span> REAL-TIME</span>
+    </div>
+    <div class="lb-grid">
+      <div class="lb-column">
+        <h3 class="lb-col-title">🎁 ทำเนียบผู้สนับสนุน (Top Donate)</h3>
+        <div class="lb-list" id="lbDonateList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
+      </div>
+      <div class="lb-column">
+        <h3 class="lb-col-title">💖 Top 10 นักส่งหัวใจสูงสุด</h3>
+        <div class="lb-list" id="lbHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
+      </div>
     </div>
   </div>
 
@@ -1953,6 +2416,29 @@
   </div>
 </div>
 
+<!-- ป้ายแจ้งเตือนเล็ก -->
+<div class="toast-msg" id="toastMsg"></div>
+
+<!-- หน้าต่างป๊อปอัปชี้แจงความปลอดภัยก่อนล็อกอิน Discord -->
+<div class="modal-overlay" id="loginInfoModal">
+  <div class="modal-box">
+    <div class="modal-icon">🔐</div>
+    <h2>เข้าสู่ระบบด้วย Discord</h2>
+    <div class="login-reason-note" id="loginReasonNote"></div>
+    <ul class="login-safety-list">
+      <li>คุณจะถูกพาไปหน้า <strong>discord.com</strong> (เว็บทางการของ Discord) เพื่อล็อกอินโดยตรง</li>
+      <li><strong>เว็บนี้ไม่มีการพิมพ์หรือเก็บรหัสผ่าน</strong> ของคุณเด็ดขาด</li>
+      <li>ขอสิทธิ์ดูเฉพาะ <strong>ชื่อ รูปโปรไฟล์ และยศในเซิร์ฟเวอร์ BGT</strong> เท่านั้น</li>
+      <li>ไม่มีสิทธิ์ส่งข้อความหรือแก้ไขอะไรในบัญชีของคุณ</li>
+    </ul>
+    <p style="margin-bottom:18px;">กดปุ่มด้านล่างเพื่อไปยืนยันตัวตนกับ Discord ได้เลยครับ</p>
+    <div class="modal-btns">
+      <button class="modal-discord-btn" onclick="playClickSound(); startDiscordLogin();">💬 ไปล็อกอินที่ Discord</button>
+      <button class="modal-cancel-btn" onclick="playClickSound(); closeLoginInfo();">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
 <!-- หน้าต่างป๊อปอัปขอบคุณปกติ -->
 <div class="modal-overlay" id="thankYouModal">
   <div class="modal-box">
@@ -1982,14 +2468,29 @@
 
 <script>
   // =========================================================================
-  // 🔑 วางลิงก์ Firebase Realtime Database URL ของเจ้านายตรงบรรทัดด้านล่างนี้ครับ!
-  // ตัวอย่าง: "https://bgt-review-default-rtdb.asia-southeast1.firebasedatabase.app"
+  // ⚙️ ค่าตั้งต้นระบบทั้งหมด (Firebase + Discord OAuth2)
   // =========================================================================
   const FIREBASE_DATABASE_URL = "https://benzie-e1cee-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+  const DISCORD_CLIENT_ID = "1333105049286606950";
+  const DISCORD_REDIRECT_URI = "https://noisaki.github.io/review/";
+  const DISCORD_SCOPE = "identify guilds.members.read";
+  const DISCORD_GUILD_ID = "561512623116386304";
+  const DISCORD_API = "https://discord.com/api/v10";
+
+  // ยศทั้ง 4 ระดับ (เรียงจากสูงสุดไปต่ำสุด)
+  const ROLE_TIERS = [
+    { tier: 4, id: "1548678245992628315", name: "👑 『 ภาคีผู้พิทักษ์นิรันดร์ 』", short: "ภาคีผู้พิทักษ์นิรันดร์", need: "1,000 บาท" },
+    { tier: 3, id: "1418677630202286253", name: "💖 『 ผู้พิทักษ์หัวใจ 』",           short: "ผู้พิทักษ์หัวใจ",           need: "500 บาท" },
+    { tier: 2, id: "1484865657467043941", name: "📜 『 ผู้ร่วมจารึก 』",              short: "ผู้ร่วมจารึก",              need: "300 บาท" },
+    { tier: 1, id: "1388418421959561220", name: "🦴 『 ผู้สนับสนุนทั่วไป 』",        short: "ผู้สนับสนุนทั่วไป",        need: "ไม่มีขั้นต่ำ" }
+  ];
 
   const CURSE_STATE_KEY = "bgt_horror_cursed_v4";
   const CURSE_COUNT_KEY = "bgt_horror_count_v4";
   const CHEER_COUNT_KEY = "bgt_cheer_hearts_v2";
+  const DISCORD_TOKEN_KEY = "bgt_discord_token_v1";
+  const DISCORD_STATE_KEY = "bgt_discord_oauth_state";
 
   let submitted = false;
   let isHorrorTriggered = false;
@@ -2003,14 +2504,31 @@
   let soundEnabled = true;
   let audioCtx = null;
 
+  // ---------- ตัวช่วยทั่วไป ----------
+  function showToast(msg) {
+    const el = document.getElementById('toastMsg');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => el.classList.remove('show'), 3200);
+  }
+
+  function formatNum(n) {
+    return (Number(n) || 0).toLocaleString();
+  }
+
   // =========================================
-  // 0. เชื่อมต่อ Firebase Realtime Database (ระบบซิงก์ยอดหัวใจเรียลไทม์ทั้งเว็บ)
+  // 0. เชื่อมต่อ Firebase Realtime Database
   // =========================================
+  let db = null;
   let heartsRef = null;
   let serverHearts = 0;
   let pendingClicks = 0;
   let flushTimer = null;
   let isFirebaseConnected = false;
+  let myServerHearts = 0;     // ยอดหัวใจส่วนตัวที่ยืนยันบน Firebase แล้ว
+  let usersCache = {};        // ข้อมูลผู้ใช้ทั้งหมดสำหรับกระดานจัดอันดับ
 
   try {
     const savedLocal = parseInt(localStorage.getItem(CHEER_COUNT_KEY) || "0", 10);
@@ -2021,15 +2539,16 @@
     const syncTextEl = document.getElementById('liveSyncText');
     if (!FIREBASE_DATABASE_URL || !FIREBASE_DATABASE_URL.startsWith("https://") || typeof firebase === "undefined") {
       if (syncTextEl) syncTextEl.textContent = "LOCAL MODE • ยังไม่ใส่ลิงก์ Firebase";
+      renderLeaderboards();
       return;
     }
 
     try {
       firebase.initializeApp({ databaseURL: FIREBASE_DATABASE_URL });
-      const db = firebase.database();
+      db = firebase.database();
       heartsRef = db.ref("bgt_hearts");
 
-      // ฟังการเปลี่ยนแปลงแบบเรียลไทม์จากทุกคนบนเว็บ
+      // ฟังการเปลี่ยนแปลงยอดรวมแบบเรียลไทม์จากทุกคนบนเว็บ
       heartsRef.on("value", (snapshot) => {
         isFirebaseConnected = true;
         if (syncTextEl) syncTextEl.textContent = "LIVE • ช่วยกันกดทั้งเว็บ";
@@ -2051,18 +2570,38 @@
       }, (err) => {
         if (syncTextEl) syncTextEl.textContent = "OFFLINE • บันทึกในเครื่อง";
       });
+
+      // ฟังข้อมูลผู้ใช้ทั้งหมดสำหรับกระดานจัดอันดับ (/users)
+      db.ref("users").on("value", (snap) => {
+        usersCache = snap.val() || {};
+        renderLeaderboards();
+        if (currentUser && usersCache[currentUser.id]) {
+          const mine = usersCache[currentUser.id];
+          const v = Number(mine.heartsClicked) || 0;
+          myServerHearts = v;
+          updateMyHeartsLine();
+        }
+      }, () => {
+        renderLeaderboards();
+      });
     } catch (e) {
       if (syncTextEl) syncTextEl.textContent = "LOCAL MODE";
     }
   }
 
-  // ส่งยอดกดที่สะสมไว้ขึ้น Firebase แบบรวมก้อน (ประหยัดโควต้าและแม่นยำ 100%)
+  // ส่งยอดกดที่สะสมไว้ขึ้น Firebase แบบรวมก้อน (ยอดรวมทั้งเว็บ + ยอดส่วนตัวใน path เดียวกัน)
   function flushPendingHearts() {
-    if (!heartsRef || pendingClicks <= 0) return;
+    if (!db || pendingClicks <= 0) return;
     const batch = pendingClicks;
     pendingClicks = 0;
 
-    heartsRef.set(firebase.database.ServerValue.increment(batch)).catch(() => {
+    const updates = {};
+    updates["bgt_hearts"] = firebase.database.ServerValue.increment(batch);
+    if (currentUser) {
+      updates["users/" + currentUser.id + "/heartsClicked"] = firebase.database.ServerValue.increment(batch);
+    }
+
+    db.ref().update(updates).catch(() => {
       // ถ้าเน็ตหลุดชั่วคราว ให้คืนค่ากลับเข้าคิวรอส่งรอบถัดไป
       pendingClicks += batch;
     });
@@ -2098,6 +2637,409 @@
       <text x="200" y="214" font-family="monospace, sans-serif" font-size="13" fill="#991b1b" text-anchor="middle">ผมทำอะไรผิดทุกอย่างเลย...</text>
     </svg>
   `);
+
+  // =========================================
+  // 0.5 ระบบ Login with Discord (OAuth2 Implicit Grant) + ตรวจยศ
+  // =========================================
+  let currentUser = null; // { id, name, username, avatarUrl, roleTier, roleName }
+
+  function getRoleInfoByTier(tier) {
+    return ROLE_TIERS.find(r => r.tier === tier) || null;
+  }
+
+  function openLoginInfo(reason) {
+    const note = document.getElementById('loginReasonNote');
+    if (reason) {
+      note.textContent = reason;
+      note.style.display = 'block';
+    } else {
+      note.style.display = 'none';
+    }
+    document.getElementById('loginInfoModal').style.display = 'flex';
+  }
+
+  function closeLoginInfo() {
+    document.getElementById('loginInfoModal').style.display = 'none';
+  }
+
+  function generateRandomState() {
+    const arr = new Uint8Array(16);
+    (window.crypto || window.msCrypto).getRandomValues(arr);
+    return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function startDiscordLogin() {
+    const state = generateRandomState();
+    try { sessionStorage.setItem(DISCORD_STATE_KEY, state); } catch (e) {}
+    const params = new URLSearchParams({
+      client_id: DISCORD_CLIENT_ID,
+      redirect_uri: DISCORD_REDIRECT_URI,
+      response_type: "token",
+      scope: DISCORD_SCOPE,
+      state: state,
+      prompt: "none"
+    });
+    window.location.href = "https://discord.com/oauth2/authorize?" + params.toString();
+  }
+
+  // อ่าน access_token ที่ Discord ส่งกลับมาใน # (hash) ของ URL
+  function readTokenFromHash() {
+    const h = window.location.hash || "";
+    if (h.indexOf("access_token=") === -1 && h.indexOf("error=") === -1) return null;
+
+    const p = new URLSearchParams(h.replace(/^#/, ""));
+    // ล้าง token ออกจาก URL ทันทีเพื่อความปลอดภัย
+    try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch (e) {}
+
+    if (p.get("error")) {
+      return { error: p.get("error_description") || p.get("error") };
+    }
+
+    let expected = null;
+    try {
+      expected = sessionStorage.getItem(DISCORD_STATE_KEY);
+      sessionStorage.removeItem(DISCORD_STATE_KEY);
+    } catch (e) {}
+
+    if (!expected || p.get("state") !== expected) {
+      return { error: "state ไม่ตรงกัน (ลองล็อกอินใหม่อีกครั้ง)" };
+    }
+
+    const expiresIn = parseInt(p.get("expires_in") || "604800", 10);
+    return {
+      token: p.get("access_token"),
+      expiresAt: Date.now() + (isNaN(expiresIn) ? 604800 : expiresIn) * 1000
+    };
+  }
+
+  function saveToken(tokenObj) {
+    try {
+      localStorage.setItem(DISCORD_TOKEN_KEY, JSON.stringify(tokenObj));
+    } catch (e) {}
+  }
+
+  function loadToken() {
+    try {
+      const raw = localStorage.getItem(DISCORD_TOKEN_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (!obj || !obj.token || !obj.expiresAt || Date.now() >= obj.expiresAt) {
+        localStorage.removeItem(DISCORD_TOKEN_KEY);
+        return null;
+      }
+      return obj;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function clearToken() {
+    try { localStorage.removeItem(DISCORD_TOKEN_KEY); } catch (e) {}
+  }
+
+  function buildAvatarUrl(user) {
+    if (user.avatar) {
+      const ext = String(user.avatar).startsWith("a_") ? "gif" : "png";
+      return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
+    }
+    let idx = 0;
+    try {
+      idx = Number((BigInt(user.id) >> 22n) % 6n);
+    } catch (e) {
+      idx = 0;
+    }
+    return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+  }
+
+  async function fetchDiscordJson(path, token) {
+    const res = await fetch(DISCORD_API + path, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    return res;
+  }
+
+  // ดึงข้อมูลผู้ใช้ + ยศในเซิร์ฟเวอร์ BGT
+  async function fetchDiscordProfile(token) {
+    const userRes = await fetchDiscordJson("/users/@me", token);
+    if (userRes.status === 401) throw new Error("TOKEN_INVALID");
+    if (!userRes.ok) throw new Error("USER_FETCH_FAILED");
+    const user = await userRes.json();
+
+    let roleTier = 0;
+    let inGuild = false;
+    let nick = null;
+    let guildAvatar = null;
+
+    try {
+      const memRes = await fetchDiscordJson(`/users/@me/guilds/${DISCORD_GUILD_ID}/member`, token);
+      if (memRes.ok) {
+        const member = await memRes.json();
+        inGuild = true;
+        nick = member.nick || null;
+        const roles = Array.isArray(member.roles) ? member.roles : [];
+        for (const r of ROLE_TIERS) {
+          if (roles.indexOf(r.id) !== -1) {
+            roleTier = r.tier;
+            break; // ROLE_TIERS เรียงจากสูงไปต่ำ เจอตัวแรกคือยศสูงสุด
+          }
+        }
+      }
+    } catch (e) {}
+
+    const displayName = nick || user.global_name || user.username || "Discord User";
+    return {
+      id: String(user.id),
+      name: displayName,
+      username: user.username || "",
+      avatarUrl: buildAvatarUrl(user),
+      roleTier: roleTier,
+      inGuild: inGuild
+    };
+  }
+
+  function applyProfileToUI(profile) {
+    currentUser = profile;
+    const info = getRoleInfoByTier(profile.roleTier);
+
+    document.getElementById('profileLoggedOut').style.display = 'none';
+    document.getElementById('profileLoggedIn').style.display = 'flex';
+
+    const avatarImg = document.getElementById('profileAvatar');
+    avatarImg.src = profile.avatarUrl;
+
+    const frame = document.getElementById('profileAvatarFrame');
+    frame.className = "avatar-frame" + (profile.roleTier > 0 ? " tier-" + profile.roleTier : "");
+
+    document.getElementById('profileName').textContent = profile.name;
+
+    const pill = document.getElementById('profileRolePill');
+    pill.className = "role-pill" + (profile.roleTier > 0 ? " tier-" + profile.roleTier : "");
+    pill.textContent = info ? info.name : (profile.inGuild ? "🌱 สมาชิกเซิร์ฟเวอร์ (ยังไม่มียศผู้สนับสนุน)" : "👤 ยังไม่ได้เข้าเซิร์ฟเวอร์ BGT");
+
+    const desc = document.getElementById('profileDesc');
+    if (info) {
+      desc.textContent = `ยศสูงสุดของคุณ: ${info.short} • ขอบคุณที่สนับสนุนทีมแปลนะครับ 💖`;
+    } else if (profile.inGuild) {
+      desc.textContent = "ยังไม่มียศผู้สนับสนุน — สนับสนุนผลงานแล้วแจ้งสลิปใน Discord เพื่อรับยศ จากนั้นกด 🔄 รีเฟรชยศ ได้เลย";
+    } else {
+      desc.textContent = "บัญชีนี้ยังไม่ได้อยู่ในเซิร์ฟเวอร์ BGT — เข้าดิสคอร์ดผ่านปุ่มด้านบนแล้วกด 🔄 รีเฟรชยศ ได้เลย";
+    }
+
+    updateMyHeartsLine();
+    updateCheerUI();
+    renderLeaderboards();
+  }
+
+  function applyLoggedOutUI() {
+    currentUser = null;
+    myServerHearts = 0;
+    document.getElementById('profileLoggedOut').style.display = 'flex';
+    document.getElementById('profileLoggedIn').style.display = 'none';
+    updateMyHeartsLine();
+    renderLeaderboards();
+  }
+
+  // บันทึกโปรไฟล์ลง Firebase ที่ /users/{discordUserId} (ไม่ทับยอด heartsClicked / donateAmount เดิม)
+  function saveUserToFirebase(profile) {
+    if (!db) return;
+    const info = getRoleInfoByTier(profile.roleTier);
+    db.ref("users/" + profile.id).update({
+      name: profile.name,
+      username: profile.username,
+      avatarUrl: profile.avatarUrl,
+      roleTier: profile.roleTier,
+      roleName: info ? info.name : "",
+      lastSeen: firebase.database.ServerValue.TIMESTAMP
+    }).catch(() => {});
+  }
+
+  function updateMyHeartsLine() {
+    const el = document.getElementById('myHeartsLine');
+    if (!el) return;
+    if (isHorrorTriggered) {
+      el.textContent = "";
+      return;
+    }
+    if (!currentUser) {
+      el.textContent = "🔐 ล็อกอินด้วย Discord ก่อน จึงจะกดส่งหัวใจได้";
+    } else {
+      el.textContent = `💝 หัวใจที่คุณส่งทั้งหมด: ${formatNum(myServerHearts + pendingClicks)} ดวง`;
+    }
+  }
+
+  async function loadProfileFromToken(tokenObj, isFreshLogin) {
+    try {
+      const profile = await fetchDiscordProfile(tokenObj.token);
+      applyProfileToUI(profile);
+      saveUserToFirebase(profile);
+      await syncCurseWithFirebase();
+      if (isFreshLogin) {
+        showToast(`ล็อกอินสำเร็จ! ยินดีต้อนรับ ${profile.name} 🎄`);
+        const card = document.getElementById('profileCard');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return true;
+    } catch (e) {
+      if (e && e.message === "TOKEN_INVALID") {
+        clearToken();
+        applyLoggedOutUI();
+        showToast("เซสชัน Discord หมดอายุ กรุณาล็อกอินใหม่อีกครั้ง");
+      } else {
+        showToast("ดึงข้อมูล Discord ไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
+      }
+      return false;
+    }
+  }
+
+  let refreshCooldown = false;
+  async function refreshDiscordRole() {
+    if (refreshCooldown) return;
+    const tokenObj = loadToken();
+    if (!tokenObj) {
+      applyLoggedOutUI();
+      openLoginInfo("เซสชันหมดอายุแล้ว กรุณาล็อกอิน Discord ใหม่อีกครั้ง");
+      return;
+    }
+    const btn = document.getElementById('refreshRoleBtn');
+    refreshCooldown = true;
+    btn.disabled = true;
+    btn.textContent = "⏳ กำลังตรวจสอบ...";
+
+    const ok = await loadProfileFromToken(tokenObj, false);
+    if (ok) showToast("รีเฟรชยศเรียบร้อยแล้ว ✨");
+
+    setTimeout(() => {
+      refreshCooldown = false;
+      btn.disabled = false;
+      btn.textContent = "🔄 รีเฟรชยศ";
+    }, 4000);
+  }
+
+  function discordLogout() {
+    flushPendingHearts();
+    clearToken();
+    applyLoggedOutUI();
+    showToast("ออกจากระบบเรียบร้อยแล้ว");
+  }
+
+  async function initDiscordAuth() {
+    const fromHash = readTokenFromHash();
+    if (fromHash) {
+      if (fromHash.error) {
+        showToast("ล็อกอิน Discord ไม่สำเร็จ: " + fromHash.error);
+      } else if (fromHash.token) {
+        saveToken({ token: fromHash.token, expiresAt: fromHash.expiresAt });
+        await loadProfileFromToken({ token: fromHash.token }, true);
+        return;
+      }
+    }
+
+    const saved = loadToken();
+    if (saved) {
+      await loadProfileFromToken(saved, false);
+    } else {
+      applyLoggedOutUI();
+    }
+  }
+
+  // =========================================
+  // 0.6 กระดานจัดอันดับ (Top Donate + Top 10 ส่งหัวใจ)
+  // =========================================
+  function buildLbRow(rank, id, u, scoreText) {
+    const row = document.createElement('div');
+    row.className = "lb-row" + (currentUser && currentUser.id === id ? " me" : "");
+
+    const rankEl = document.createElement('div');
+    rankEl.className = "lb-rank";
+    rankEl.textContent = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : "#" + rank;
+    row.appendChild(rankEl);
+
+    const tier = Number(u.roleTier) || 0;
+
+    const img = document.createElement('img');
+    img.className = "lb-avatar" + (tier > 0 ? " tier-" + tier : "");
+    img.referrerPolicy = "no-referrer";
+    img.alt = "";
+    img.src = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://cdn.discordapp.com/") === 0)
+      ? u.avatarUrl
+      : "https://cdn.discordapp.com/embed/avatars/0.png";
+    row.appendChild(img);
+
+    const meta = document.createElement('div');
+    meta.className = "lb-meta";
+
+    const nameEl = document.createElement('div');
+    nameEl.className = "lb-name";
+    nameEl.textContent = u.name || "Discord User";
+    meta.appendChild(nameEl);
+
+    const info = getRoleInfoByTier(tier);
+    if (info) {
+      const pill = document.createElement('span');
+      pill.className = "role-pill tier-" + tier;
+      pill.textContent = info.name;
+      meta.appendChild(pill);
+    }
+    row.appendChild(meta);
+
+    const score = document.createElement('div');
+    score.className = "lb-score";
+    score.textContent = scoreText;
+    row.appendChild(score);
+
+    return row;
+  }
+
+  function renderLeaderboards() {
+    const donateList = document.getElementById('lbDonateList');
+    const heartsList = document.getElementById('lbHeartsList');
+    if (!donateList || !heartsList) return;
+
+    const entries = Object.keys(usersCache || {}).map(id => ({ id: id, u: usersCache[id] || {} }));
+
+    // --- Top Donate: เรียงตาม donateAmount แล้วตามระดับยศ (4 → 1) ---
+    const donors = entries.filter(e => (Number(e.u.donateAmount) || 0) > 0 || (Number(e.u.roleTier) || 0) > 0);
+    donors.sort((a, b) => {
+      const da = Number(a.u.donateAmount) || 0;
+      const dbb = Number(b.u.donateAmount) || 0;
+      if (dbb !== da) return dbb - da;
+      const ta = Number(a.u.roleTier) || 0;
+      const tb = Number(b.u.roleTier) || 0;
+      if (tb !== ta) return tb - ta;
+      return (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0);
+    });
+
+    donateList.textContent = "";
+    if (donors.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = "lb-empty";
+      empty.textContent = "ยังไม่มีผู้สนับสนุนบนกระดาน — เป็นคนแรกเลยสิ! 🎁";
+      donateList.appendChild(empty);
+    } else {
+      donors.slice(0, 20).forEach((e, i) => {
+        const amt = Number(e.u.donateAmount) || 0;
+        const info = getRoleInfoByTier(Number(e.u.roleTier) || 0);
+        const scoreText = amt > 0 ? "฿" + formatNum(amt) : (info ? "Tier " + info.tier : "");
+        donateList.appendChild(buildLbRow(i + 1, e.id, e.u, scoreText));
+      });
+    }
+
+    // --- Top 10 นักส่งหัวใจ ---
+    const hearters = entries.filter(e => (Number(e.u.heartsClicked) || 0) > 0);
+    hearters.sort((a, b) => (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0));
+
+    heartsList.textContent = "";
+    if (hearters.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = "lb-empty";
+      empty.textContent = "ยังไม่มีใครส่งหัวใจ — กดปุ่มหัวใจด้านบนได้เลย! ❤️";
+      heartsList.appendChild(empty);
+    } else {
+      hearters.slice(0, 10).forEach((e, i) => {
+        heartsList.appendChild(buildLbRow(i + 1, e.id, e.u, "❤️ " + formatNum(e.u.heartsClicked)));
+      });
+    }
+  }
 
   // =========================================
   // 1. ระบบปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000 คะแนนขั้นบันได + ฉลองเลื่อนขั้น!)
@@ -2167,6 +3109,7 @@
         : `ความคืบหน้าการขอโทษด้านบน: ${topApologyClicks} / ${topApologyTarget} ครั้ง`;
       percentEl.textContent = `${pct}%`;
       fillEl.style.width = `${pct}%`;
+      updateMyHeartsLine();
       return;
     }
 
@@ -2192,6 +3135,8 @@
       percentEl.textContent = `${progress}%`;
       fillEl.style.width = `${progress}%`;
     }
+
+    updateMyHeartsLine();
 
     if (justLeveledUp && newTierObj && newTierObj.celebrate) {
       triggerMilestoneCelebration(newTierObj.celebrate);
@@ -2250,7 +3195,13 @@
       return;
     }
 
-    // โหมดปกติ: กดส่งหัวใจสะสมขึ้น Firebase Realtime Database + Combo
+    // โหมดปกติ: ต้องล็อกอิน Discord ก่อนจึงจะกดส่งหัวใจได้
+    if (!currentUser) {
+      openLoginInfo("🔐 ต้องล็อกอินด้วย Discord ก่อน จึงจะกดส่งหัวใจให้กำลังใจได้นะครับ");
+      return;
+    }
+
+    // กดส่งหัวใจสะสมขึ้น Firebase Realtime Database + Combo
     const now = Date.now();
     if (now - lastClickTime < 380) {
       comboCount++;
@@ -3129,7 +4080,49 @@
 
   // =========================================
   // 7. ตรวจสอบเงื่อนไขส่งฟอร์ม & ปลุกคำสาป / ลบล้างคำสาป
+  //    (บันทึกสถานะคำสาปลง localStorage + Firebase /users/{id}/curse)
   // =========================================
+  function writeCurseToFirebase(active) {
+    if (!db || !currentUser) return;
+    db.ref("users/" + currentUser.id + "/curse").set({
+      active: !!active,
+      count: curseCount,
+      updatedAt: firebase.database.ServerValue.TIMESTAMP
+    }).catch(() => {});
+  }
+
+  // ซิงก์สถานะคำสาปกับ Firebase หลังล็อกอิน (ถ้าติดคำสาปไว้บนบัญชีนี้ รีเฟรชหรือเปลี่ยนเครื่องก็ไม่หาย)
+  async function syncCurseWithFirebase() {
+    if (!db || !currentUser) return;
+    try {
+      const snap = await db.ref("users/" + currentUser.id + "/curse").once("value");
+      const remote = snap.val();
+
+      let localCount = 0;
+      let localActive = false;
+      try {
+        localCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0;
+        localActive = localStorage.getItem(CURSE_STATE_KEY) === "1";
+      } catch (e) {}
+
+      if (remote && remote.active && !isHorrorTriggered) {
+        const remoteCount = parseInt(remote.count, 10) || 1;
+        try {
+          localStorage.setItem(CURSE_COUNT_KEY, String(Math.max(localCount, remoteCount)));
+        } catch (e) {}
+        triggerHorrorEasterEgg(true);
+      } else if (!remote || !remote.active) {
+        if (isHorrorTriggered || localActive) {
+          // เครื่องนี้ติดคำสาปอยู่ -> บันทึกขึ้นบัญชีด้วย
+          curseCount = Math.max(curseCount, localCount, 1);
+          writeCurseToFirebase(true);
+        } else if (remote && typeof remote.count === "number" && remote.count > localCount) {
+          try { localStorage.setItem(CURSE_COUNT_KEY, String(remote.count)); } catch (e) {}
+        }
+      }
+    } catch (e) {}
+  }
+
   function checkHorrorEasterEggCondition() {
     let allOneStar = true;
     ratingNames.forEach(name => {
@@ -3146,6 +4139,8 @@
   }
 
   function triggerHorrorEasterEgg(isFromReload = false) {
+    if (isHorrorTriggered && isFromReload) return;
+
     isHorrorTriggered = true;
     topApologyClicks = 0;
     bottomApologyClicks = 0;
@@ -3176,6 +4171,7 @@
     }
 
     topApologyTarget = getTopApologyRequirement(curseCount);
+    writeCurseToFirebase(true);
 
     stopChristmasMusic();
     document.getElementById('musicStateIcon').textContent = '😭';
@@ -3223,6 +4219,7 @@
     try {
       localStorage.removeItem(CURSE_STATE_KEY);
     } catch (e) {}
+    writeCurseToFirebase(false);
 
     stopHorrorAmbience();
     playForgivenessSound();
@@ -3318,6 +4315,9 @@
     } else {
       typeWriter();
     }
+
+    // เริ่มระบบ Discord (อ่าน token จาก URL หลังล็อกอิน / โหลดเซสชันเดิม)
+    initDiscordAuth();
   });
 </script>
 
