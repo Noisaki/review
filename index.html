@@ -3009,7 +3009,7 @@
 
     const rankEl = document.createElement('div');
     rankEl.className = "lb-rank";
-    rankEl.textContent = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : "#" + rank;
+    rankEl.textContent = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : (rank > 100 ? "99+" : "#" + rank);
     row.appendChild(rankEl);
 
     const tier = Number(u.roleTier) || 0;
@@ -3059,8 +3059,11 @@
     const mine = sortedEntries[myIndex];
     const sep = document.createElement('div');
     sep.style.cssText = "border-top: 1.5px dashed #cbd5e1; margin: 6px 2px 4px; padding-top: 6px; font-size: 0.78rem; color: #64748b; text-align: center;";
-    sep.textContent = `อันดับของคุณ • ลำดับที่ ${myIndex + 1}`;
+    const myRank = myIndex + 1;
+    sep.textContent = `อันดับของคุณ • ลำดับที่ ${myRank > 100 ? "99+" : myRank}`;
     listEl.appendChild(sep);
+
+  listEl.appendChild(buildLbRow(myRank, mine.id, mine.u, formatterFn(mine.u)));
 
     listEl.appendChild(buildLbRow(myIndex + 1, mine.id, mine.u, formatterFn(mine.u)));
   }
