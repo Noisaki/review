@@ -11,7 +11,7 @@
       --primary-dark: #0369a1;
       --accent: #38bdf8;
       --glow: rgba(14, 165, 233, 0.35);
-      --card-bg: rgba(255, 255, 255, 0.88);
+      --card-bg: rgba(255, 255, 255, 0.9);
       --text-main: #1e293b;
       --text-muted: #64748b;
     }
@@ -29,6 +29,35 @@
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
+    }
+
+    /* ปุ่มเปิด-ปิดเสียงลอยมุมขวาบน */
+    .sound-toggle-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      color: #e0f2fe;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .sound-toggle-btn:hover {
+      background: #0284c7;
+      color: #ffffff;
+      transform: translateY(-2px);
     }
 
     /* พื้นหลังเอฟเฟกต์แสงออโรร่าและ Canvas */
@@ -117,6 +146,11 @@
       100% { transform: translateX(100%); }
     }
 
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
     @keyframes floatIcon {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-4px) rotate(6deg); }
@@ -128,7 +162,7 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
-    /* ส่วนหัวและแบรนด์ */
+    /* ส่วนหัวและแท่นโชว์โลโก้ BGT */
     .header-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
@@ -136,29 +170,48 @@
       border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
       margin-bottom: 28px;
       text-align: center;
       animation: fadeSlideUp 0.6s ease-out;
     }
 
-    .banner-wrapper {
+    /* แท่นโชว์โลโก้สีเข้มไล่เฉด เพื่อให้โลโก้สีขาวเด่นชัด */
+    .logo-showcase {
       position: relative;
       width: 100%;
-      background: linear-gradient(120deg, #0284c7, #38bdf8, #0ea5e9);
-      background-size: 200% 200%;
-      animation: gradientFlow 6s ease infinite;
+      padding: 36px 20px 28px;
+      background: radial-gradient(circle at center, #0284c7 0%, #0f172a 85%);
+      border-bottom: 3px solid #38bdf8;
+      overflow: hidden;
     }
 
-    .banner-img {
-      width: 100%;
-      max-height: 230px;
-      object-fit: cover;
-      display: block;
+    .logo-showcase::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(56, 189, 248, 0.25) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.6;
+    }
+
+    .studio-logo {
+      position: relative;
+      z-index: 2;
+      max-width: 340px;
+      width: 80%;
+      height: auto;
+      filter: drop-shadow(0 6px 18px rgba(56, 189, 248, 0.55));
+      animation: floatLogo 3.5s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+
+    .studio-logo:hover {
+      transform: scale(1.04);
     }
 
     .header-text {
-      padding: 28px 24px 32px;
+      padding: 26px 24px 32px;
       position: relative;
     }
 
@@ -580,6 +633,11 @@
 </head>
 <body>
 
+<!-- ปุ่มควบคุมเสียงเอฟเฟกต์ UI -->
+<button type="button" class="sound-toggle-btn" id="soundToggle" onclick="toggleSound()">
+  <span id="soundIcon">🔊</span> <span id="soundLabel">เสียง UI: เปิด</span>
+</button>
+
 <!-- เลเยอร์เอฟเฟกต์พื้นหลังออโรร่า & อนุภาคเคลื่อนไหว -->
 <div class="bg-effects">
   <div class="orb orb-1"></div>
@@ -589,10 +647,11 @@
 <canvas id="particleCanvas"></canvas>
 
 <div class="container">
-  <!-- ส่วนหัวและแบนเนอร์ -->
+  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT -->
   <div class="header-card">
-    <div class="banner-wrapper">
-      <img src="banner.png" alt="Ben the Game Translator" class="banner-img" onerror="this.style.display='none'">
+    <div class="logo-showcase">
+      <!-- อัปโหลดไฟล์โลโก้ชื่อ logo.png ไว้ข้างๆ index.html บน GitHub ได้เลยฮะ -->
+      <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="this.style.display='none'">
     </div>
     <div class="header-text">
       <div class="brand-badge">🐾 BEN THE GAME TRANSLATOR • THAI LOCALIZATION</div>
@@ -713,7 +772,7 @@
     <div class="modal-icon">🎉🐾</div>
     <h2>ส่งแบบประเมินสำเร็จแล้ว!</h2>
     <p>ขอบคุณมากๆ เลยฮะ! ทุกคะแนนและความคิดเห็นของเจ้านายมีค่ามาก เพื่อนำไปพัฒนาผลงานแปลไทยเกมต่อๆ ไปให้ดียิ่งขึ้นครับ 💕</p>
-    <button class="modal-close-btn" onclick="closeModal()">ตกลง / ประเมินเกมอื่นต่อ</button>
+    <button class="modal-close-btn" onclick="playClickSound(); closeModal();">ตกลง / ประเมินเกมอื่นต่อ</button>
   </div>
 </div>
 
@@ -721,6 +780,94 @@
 
 <script>
   let submitted = false;
+  let soundEnabled = true;
+  let audioCtx = null;
+
+  // ระบบสังเคราะห์เสียงเอฟเฟกต์ UI เกม (Web Audio API)
+  function initAudio() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    document.getElementById('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
+    document.getElementById('soundLabel').textContent = soundEnabled ? 'เสียง UI: เปิด' : 'เสียง UI: ปิด';
+    if (soundEnabled) {
+      initAudio();
+      playClickSound();
+    }
+  }
+
+  // เสียงตอนเอาเมาส์ชี้ปุ่ม (Hover - นุ่มๆ ใสๆ)
+  function playHoverSound() {
+    if (!soundEnabled) return;
+    try {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(760, audioCtx.currentTime + 0.045);
+
+      gain.gain.setValueAtTime(0.045, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.05);
+    } catch (e) {}
+  }
+
+  // เสียงตอนกดเลือก (Click - ปิ๊ง! สไตล์เกม VN)
+  function playClickSound() {
+    if (!soundEnabled) return;
+    try {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(660, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1050, audioCtx.currentTime + 0.09);
+
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.11);
+    } catch (e) {}
+  }
+
+  // เสียงทำนองตอนส่งสำเร็จ (Success Fanfare)
+  function playSuccessSound() {
+    if (!soundEnabled) return;
+    try {
+      initAudio();
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5 - E5 - G5 - C6
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        const startTime = audioCtx.currentTime + idx * 0.08;
+        osc.frequency.setValueAtTime(freq, startTime);
+
+        gain.gain.setValueAtTime(0.1, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.26);
+      });
+    } catch (e) {}
+  }
 
   // 1. เอฟเฟกต์พื้นหลังอนุภาค & เส้นเชื่อมโยงตามเมาส์
   const canvas = document.getElementById("particleCanvas");
@@ -777,7 +924,6 @@
       particles[i].update();
       particles[i].draw();
 
-      // เส้นเชื่อมระหว่างจุด
       for (let j = i; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
         const dy = particles[i].y - particles[j].y;
@@ -792,7 +938,6 @@
         }
       }
 
-      // เส้นเชื่อมกับเมาส์
       if (mouse.x !== null) {
         const dx = particles[i].x - mouse.x;
         const dy = particles[i].y - mouse.y;
@@ -848,8 +993,8 @@
     const cleanTitle = game.name.replace(/^\[.*?\]\s*/, '');
     const delay = index * 0.05;
     grid.innerHTML += `
-      <label class="game-option">
-        <input type="radio" name="${GAME_ENTRY_ID}" value="${game.name}" ${index === 0 ? 'required' : ''}>
+      <label class="game-option" onmouseenter="playHoverSound()">
+        <input type="radio" name="${GAME_ENTRY_ID}" value="${game.name}" ${index === 0 ? 'required' : ''} onchange="playClickSound()">
         <div class="game-card" style="animation-delay: ${delay}s;">
           <div class="img-container">
             <span class="genre-tag">${game.tag}</span>
@@ -862,7 +1007,7 @@
     `;
   });
 
-  // 4. แสดงข้อความกำกับคะแนน
+  // 4. แสดงข้อความกำกับคะแนน + ผูกเสียง Hover / Click ให้ปุ่มให้คะแนนและปุ่มส่ง
   const ratingLabels = {
     "1": "ควรปรับปรุงอย่างยิ่ง 😢",
     "2": "พอใช้ได้ ยังมีจุดติดขัด 🤔",
@@ -874,16 +1019,22 @@
   document.querySelectorAll('.rating-group').forEach(group => {
     const targetId = group.getAttribute('data-target');
     const feedbackEl = document.getElementById(targetId);
-    group.querySelectorAll('input[type="radio"]').forEach(radio => {
+    group.querySelectorAll('.rating-btn').forEach(label => {
+      label.addEventListener('mouseenter', playHoverSound);
+      const radio = label.querySelector('input[type="radio"]');
       radio.addEventListener('change', () => {
+        playClickSound();
         feedbackEl.textContent = ratingLabels[radio.value];
         feedbackEl.classList.add('visible');
       });
     });
   });
 
+  document.getElementById('submitBtn').addEventListener('mouseenter', playHoverSound);
+
   // 5. จัดการการส่งฟอร์มและป๊อปอัปขอบคุณ
   function handleSubmit() {
+    playClickSound();
     submitted = true;
     const btn = document.getElementById('submitBtn');
     btn.textContent = "กำลังส่งข้อมูล... ⏳";
@@ -893,6 +1044,7 @@
   function onIframeLoad() {
     if (submitted) {
       submitted = false;
+      playSuccessSound();
       const btn = document.getElementById('submitBtn');
       btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🚀";
       btn.style.opacity = "1";
