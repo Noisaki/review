@@ -33,7 +33,7 @@
       background: linear-gradient(135deg, #052e16 0%, #0f3d2e 45%, #450a0a 100%);
       color: var(--text-main);
       margin: 0;
-      padding: 68px 16px 70px;
+      padding: 120px 16px 70px;
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
@@ -230,7 +230,7 @@
        ========================================= */
     .floating-controls {
       position: fixed;
-      top: 14px;
+      top: 72px;
       right: 14px;
       left: 14px;
       z-index: 100;
@@ -2109,7 +2109,7 @@
 
 <!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
 <audio id="realCryAudio" src="cry.mp3" loop preload="auto" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/cry.mp3';}"></audio>
-
+<audio id="bgmAudio" preload="auto"></audio>
 <!-- ม่านเลือดไหลหยดจากขอบจอด้านบน -->
 <svg class="blood-curtain" viewBox="0 0 1440 320" preserveAspectRatio="none">
   <defs>
@@ -2124,13 +2124,15 @@
 <div class="blood-vignette"></div>
 
 <!-- แถบควบคุมลอยมุมขวาบน -->
-<div class="floating-controls">
-  <div class="music-player-pill">
-    <button type="button" class="music-toggle-btn" id="musicToggleBtn" onclick="toggleChristmasMusic()">
-      <span id="musicStateIcon">▶️</span> <span id="musicStateText" class="corruptible" data-cursed="😭 เสียงร้องไห้...">เพลงคริสต์มาส</span>
+<div class="music-player-pill">
+    <button type="button" class="music-toggle-btn" id="musicToggleBtn" onclick="toggleChristmasMusic()" title="เปิด/ปิดเพลง">
+      <span id="musicStateIcon">▶️</span> <span id="musicStateText" class="corruptible" data-cursed="😭 เสียงร้องไห้...">ปิดเพลงอยู่</span>
+    </button>
+    <button type="button" class="music-toggle-btn" style="background:#15803d; padding:5px 10px;" onclick="nextBgmTrack()" title="เปลี่ยนเพลงถัดไป">
+      ⏭️ <span id="bgmTrackName" style="max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">เพลงที่ 1</span>
     </button>
     <div class="volume-control" title="ปรับระดับเสียงเพลง">
-      <span id="musicSpeakerIcon">🎄🔊</span>
+      <span id="musicSpeakerIcon">🔊</span>
       <input type="range" id="musicVolumeSlider" class="volume-slider" min="0" max="100" value="45" oninput="changeMusicVolume(this.value)">
       <span class="volume-percent" id="volumePercentText">45%</span>
     </div>
@@ -3424,118 +3426,83 @@
   // =========================================
   // 2. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง cry.mp3
   // =========================================
+  // รายชื่อเพลง MP3 (เพิ่ม-แก้ชื่อไฟล์และชื่อเพลงตรงนี้ได้เลย)
+  const bgmPlaylist = [
+    { title: "เพลงที่ 1", src: "music/song1.mp3" },
+    { title: "เพลงที่ 2", src: "music/song2.mp3" },
+    { title: "เพลงที่ 3", src: "music/song3.mp3" }
+  ];
+
+  let currentTrackIndex = 0;
   let isMusicPlaying = false;
   let userPausedMusic = false;
   let musicVolume = 0.45;
-  let masterMusicGain = null;
-  let musicTimeout = null;
-  let noteIndex = 0;
-
   let horrorInterval = null;
   let horrorDroneOsc1 = null;
   let horrorDroneOsc2 = null;
 
-  const N = {
-    D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.00, A4: 440.00, B4: 493.88,
-    C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, REST: 0
-  };
-
-  const xmasMedley = [
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
-    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
-    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
-    [N.E5, 1], [N.D5, 1], [N.D5, 1], [N.E5, 1], [N.D5, 2], [N.G5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
-    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
-    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
-    [N.G5, 1], [N.G5, 1], [N.F5, 1], [N.D5, 1], [N.C5, 3.5], [N.REST, 1.5],
-
-    [N.D4, 1], [N.G4, 1], [N.G4, 0.5], [N.A4, 0.5], [N.G4, 0.5], [N.Fs4, 0.5],
-    [N.E4, 1], [N.E4, 1], [N.E4, 1],
-    [N.A4, 1], [N.A4, 0.5], [N.B4, 0.5], [N.A4, 0.5], [N.G4, 0.5],
-    [N.Fs4, 1], [N.D4, 1], [N.D4, 1],
-    [N.B4, 1], [N.B4, 0.5], [N.C5, 0.5], [N.B4, 0.5], [N.A4, 0.5],
-    [N.G4, 1], [N.E4, 1], [N.D4, 0.5], [N.D4, 0.5],
-    [N.E4, 1], [N.A4, 1], [N.Fs4, 1], [N.G4, 3], [N.REST, 1.5]
-  ];
-
   function initAudio() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      masterMusicGain = audioCtx.createGain();
-      masterMusicGain.gain.value = musicVolume * 0.25;
-      masterMusicGain.connect(audioCtx.destination);
     }
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
     }
   }
 
-  function playMusicBoxNote(freq, durationSec) {
-    if (!audioCtx || !masterMusicGain || freq === 0 || isHorrorTriggered) return;
-    const now = audioCtx.currentTime;
+  function loadBgmTrack(index, autoPlay = false) {
+    const bgm = document.getElementById('bgmAudio');
+    if (!bgm || bgmPlaylist.length === 0) return;
 
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const noteGain = audioCtx.createGain();
+    currentTrackIndex = (index + bgmPlaylist.length) % bgmPlaylist.length;
+    const track = bgmPlaylist[currentTrackIndex];
+    bgm.src = track.src;
+    bgm.volume = musicVolume;
 
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(freq, now);
+    const nameEl = document.getElementById('bgmTrackName');
+    if (nameEl) nameEl.textContent = track.title;
 
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(freq * 2, now);
+    bgm.onended = () => nextBgmTrack();
 
-    const osc2Gain = audioCtx.createGain();
-    osc2Gain.gain.value = 0.15;
-
-    noteGain.gain.setValueAtTime(0.001, now);
-    noteGain.gain.linearRampToValueAtTime(0.7, now + 0.02);
-    noteGain.gain.exponentialRampToValueAtTime(0.001, now + Math.max(durationSec * 1.35, 0.35));
-
-    osc1.connect(noteGain);
-    osc2.connect(osc2Gain);
-    osc2Gain.connect(noteGain);
-    noteGain.connect(masterMusicGain);
-
-    osc1.start(now);
-    osc2.start(now);
-    const stopTime = now + Math.max(durationSec * 1.4, 0.4);
-    osc1.stop(stopTime);
-    osc2.stop(stopTime);
+    if (autoPlay && !isHorrorTriggered) {
+      bgm.play().then(() => {
+        isMusicPlaying = true;
+        document.getElementById('musicStateIcon').textContent = '⏸️';
+        document.getElementById('musicStateText').textContent = 'กำลังเล่น';
+      }).catch(() => {});
+    }
   }
 
-  function scheduleNextNote() {
-    if (!isMusicPlaying || isHorrorTriggered) return;
-    const [freq, beats] = xmasMedley[noteIndex];
-    const beatDuration = 0.34;
-    const durationSec = beats * beatDuration;
-
-    playMusicBoxNote(freq, durationSec);
-
-    noteIndex = (noteIndex + 1) % xmasMedley.length;
-    musicTimeout = setTimeout(scheduleNextNote, durationSec * 1000);
+  function nextBgmTrack() {
+    if (isHorrorTriggered) return;
+    playClickSound();
+    userPausedMusic = false;
+    loadBgmTrack(currentTrackIndex + 1, true);
   }
 
   function startChristmasMusic() {
     if (isHorrorTriggered) return;
-    initAudio();
-    if (isMusicPlaying) return;
-    isMusicPlaying = true;
-    document.getElementById('musicStateIcon').textContent = '⏸️';
-    document.getElementById('musicStateText').textContent = 'กำลังเล่น';
-    scheduleNextNote();
+    const bgm = document.getElementById('bgmAudio');
+    if (!bgm) return;
+    if (!bgm.src) {
+      loadBgmTrack(currentTrackIndex, true);
+      return;
+    }
+    bgm.volume = musicVolume;
+    bgm.play().then(() => {
+      isMusicPlaying = true;
+      document.getElementById('musicStateIcon').textContent = '⏸️';
+      document.getElementById('musicStateText').textContent = 'กำลังเล่น';
+    }).catch(() => {});
   }
 
   function stopChristmasMusic() {
+    const bgm = document.getElementById('bgmAudio');
+    if (bgm) bgm.pause();
     isMusicPlaying = false;
-    clearTimeout(musicTimeout);
     if (!isHorrorTriggered) {
       document.getElementById('musicStateIcon').textContent = '▶️';
-      document.getElementById('musicStateText').textContent = 'เพลงคริสต์มาส';
+      document.getElementById('musicStateText').textContent = 'ปิดเพลงอยู่';
     }
   }
 
@@ -3553,6 +3520,20 @@
     }
   }
 
+  function changeMusicVolume(val) {
+    musicVolume = val / 100;
+    document.getElementById('volumePercentText').textContent = val + '%';
+
+    const bgm = document.getElementById('bgmAudio');
+    if (bgm) bgm.volume = musicVolume;
+
+    const cryEl = document.getElementById('realCryAudio');
+    if (cryEl) cryEl.volume = Math.max(0.15, musicVolume);
+
+    if (!isMusicPlaying && val > 0 && !userPausedMusic && !isHorrorTriggered) {
+      startChristmasMusic();
+    }
+  }
   function changeMusicVolume(val) {
     musicVolume = val / 100;
     document.getElementById('volumePercentText').textContent = val + '%';
