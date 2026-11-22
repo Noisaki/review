@@ -38,7 +38,7 @@
     }
 
     /* =========================================
-       ม่านเลือดหยดด้านบนจอ (ซ่อนไว้จนกว่าจะเกิด Easter Egg)
+       ม่านเลือดหยดด้านบนจอ (ซ่อนไว้จนกว่าจะติดคำสาป)
        ========================================= */
     .blood-curtain {
       position: fixed;
@@ -77,7 +77,7 @@
     }
 
     /* =========================================
-       โหมดสยองขวัญ (HORROR EASTER EGG THEME)
+       โหมดสยองขวัญ (HORROR CURSED THEME)
        ========================================= */
     body.horror-mode {
       background: radial-gradient(circle at center, #2b0000 0%, #090000 75%, #000000 100%) !important;
@@ -91,7 +91,7 @@
     body.horror-mode .header-card,
     body.horror-mode .section-card,
     body.horror-mode .donate-card {
-      background: rgba(18, 2, 2, 0.92) !important;
+      background: rgba(18, 2, 2, 0.93) !important;
       border-color: #991b1b !important;
       box-shadow: 0 20px 50px rgba(185, 28, 28, 0.35), inset 0 0 30px rgba(127, 29, 29, 0.4) !important;
       color: #fecaca !important;
@@ -127,7 +127,9 @@
     body.horror-mode .game-title,
     body.horror-mode .donate-desc,
     body.horror-mode .role-info strong,
-    body.horror-mode .role-info small {
+    body.horror-mode .role-info small,
+    body.horror-mode .total-score-label,
+    body.horror-mode .total-score-subtext {
       color: #fca5a5 !important;
     }
 
@@ -139,10 +141,23 @@
     body.horror-mode .question-block,
     body.horror-mode .game-card,
     body.horror-mode .role-badge-item,
-    body.horror-mode textarea {
-      background: rgba(30, 4, 4, 0.9) !important;
+    body.horror-mode textarea,
+    body.horror-mode .total-score-card,
+    body.horror-mode .discord-ticket-note {
+      background: rgba(30, 4, 4, 0.92) !important;
       border-color: #7f1d1d !important;
       color: #fecaca !important;
+    }
+
+    body.horror-mode .social-btn,
+    body.horror-mode .heart-cheer-btn,
+    body.horror-mode .discord-ticket-btn,
+    body.horror-mode .pill-control-btn,
+    body.horror-mode .music-toggle-btn {
+      background: linear-gradient(135deg, #450a0a, #1f0202) !important;
+      border: 1px solid #dc2626 !important;
+      color: #fca5a5 !important;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.35) !important;
     }
 
     body.horror-mode .rating-btn span {
@@ -157,10 +172,16 @@
       box-shadow: 0 0 15px rgba(220, 38, 38, 0.8) !important;
     }
 
-    body.horror-mode .step-pill {
+    body.horror-mode .step-pill,
+    body.horror-mode .rating-feedback {
       background: #450a0a !important;
       color: #fca5a5 !important;
       border-color: #991b1b !important;
+    }
+
+    body.horror-mode .qr-box-wrapper {
+      background: linear-gradient(145deg, #2b0000, #090000) !important;
+      border-color: #dc2626 !important;
     }
 
     /* =========================================
@@ -856,56 +877,35 @@
       margin: 0;
     }
 
-    /* 4 ระดับสีของกล่องคะแนนรวม */
     .total-score-card.tier-terrible {
       background: linear-gradient(135deg, #fef2f2, #fee2e2);
       border-color: #ef4444;
       box-shadow: 0 6px 20px rgba(220, 38, 38, 0.2);
     }
-    .total-score-card.tier-terrible .total-score-rank {
-      background: #dc2626;
-      color: #ffffff;
-    }
-    .total-score-card.tier-terrible .score-progress-fill {
-      background: linear-gradient(90deg, #7f1d1d, #dc2626);
-    }
+    .total-score-card.tier-terrible .total-score-rank { background: #dc2626; color: #ffffff; }
+    .total-score-card.tier-terrible .score-progress-fill { background: linear-gradient(90deg, #7f1d1d, #dc2626); }
 
     .total-score-card.tier-bad {
       background: linear-gradient(135deg, #fff7ed, #ffedd5);
       border-color: #f97316;
     }
-    .total-score-card.tier-bad .total-score-rank {
-      background: #ea580c;
-      color: #ffffff;
-    }
-    .total-score-card.tier-bad .score-progress-fill {
-      background: linear-gradient(90deg, #ea580c, #f59e0b);
-    }
+    .total-score-card.tier-bad .total-score-rank { background: #ea580c; color: #ffffff; }
+    .total-score-card.tier-bad .score-progress-fill { background: linear-gradient(90deg, #ea580c, #f59e0b); }
 
     .total-score-card.tier-good {
       background: linear-gradient(135deg, #f0fdf4, #dcfce7);
       border-color: #22c55e;
     }
-    .total-score-card.tier-good .total-score-rank {
-      background: #16a34a;
-      color: #ffffff;
-    }
-    .total-score-card.tier-good .score-progress-fill {
-      background: linear-gradient(90deg, #15803d, #22c55e);
-    }
+    .total-score-card.tier-good .total-score-rank { background: #16a34a; color: #ffffff; }
+    .total-score-card.tier-good .score-progress-fill { background: linear-gradient(90deg, #15803d, #22c55e); }
 
     .total-score-card.tier-verygood {
       background: linear-gradient(135deg, #fefce8, #fef3c7);
       border-color: #f59e0b;
       box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
     }
-    .total-score-card.tier-verygood .total-score-rank {
-      background: linear-gradient(90deg, #d97706, #15803d);
-      color: #ffffff;
-    }
-    .total-score-card.tier-verygood .score-progress-fill {
-      background: linear-gradient(90deg, #16a34a, #f59e0b, #dc2626);
-    }
+    .total-score-card.tier-verygood .total-score-rank { background: linear-gradient(90deg, #d97706, #15803d); color: #ffffff; }
+    .total-score-card.tier-verygood .score-progress-fill { background: linear-gradient(90deg, #16a34a, #f59e0b, #dc2626); }
 
     textarea {
       width: 100%;
@@ -927,7 +927,7 @@
     }
 
     /* =========================================
-       ปุ่มส่งฟอร์ม & เอฟเฟกต์ปุ่มถูกทำลาย (Easter Egg)
+       ปุ่มส่งฟอร์ม & ซากปุ่ม + ปุ่ม "ผมขอโทษ"
        ========================================= */
     .submit-zone {
       position: relative;
@@ -974,17 +974,51 @@
     .destroyed-button-grave {
       display: none;
       width: 100%;
-      padding: 18px;
+      padding: 20px;
       background: repeating-linear-gradient(45deg, #1a0303, #1a0303 12px, #2b0505 12px, #2b0505 24px);
       border: 2px dashed #991b1b;
       border-radius: 16px;
       color: #ef4444;
       font-family: 'Kanit', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       font-weight: 700;
       text-align: center;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+    }
+
+    /* ปุ่มไถ่บาป "ผมขอโทษ" */
+    .apologize-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 13px 28px;
+      background: linear-gradient(135deg, #fef2f2, #ffffff);
+      color: #991b1b;
+      border: 2px solid #fca5a5;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.45);
+      transition: all 0.25s ease;
+      animation: gentlePulse 2s infinite ease-in-out;
+    }
+
+    .apologize-btn:hover {
+      background: #ffffff;
+      color: #15803d;
+      border-color: #4ade80;
+      box-shadow: 0 0 32px rgba(74, 222, 128, 0.85);
+      transform: scale(1.06);
+    }
+
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
     }
 
     /* =========================================
@@ -1250,7 +1284,7 @@
       color: #ffffff;
     }
 
-    /* หน้าต่างขอบคุณปกติ */
+    /* หน้าต่างขอบคุณปกติ / หน้าต่างให้อภัย */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -1329,12 +1363,12 @@
     }
 
     /* =========================================
-       หน้าต่างสยองขวัญ EASTER EGG ("นี่ผมดูแย่ขนาดนั้นเลยเหรอ")
+       หน้าต่างสยองขวัญ EASTER EGG
        ========================================= */
     .horror-modal-overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(60, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.97) 100%);
+      background: radial-gradient(circle at center, rgba(60, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.98) 100%);
       backdrop-filter: blur(8px);
       display: none;
       align-items: center;
@@ -1347,11 +1381,11 @@
       background: linear-gradient(180deg, #160000 0%, #080000 100%);
       border: 2px solid #dc2626;
       border-radius: 20px;
-      padding: 40px 28px;
-      max-width: 520px;
+      padding: 38px 26px;
+      max-width: 530px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 0 60px rgba(220, 38, 38, 0.7), inset 0 0 40px rgba(153, 27, 27, 0.5);
+      box-shadow: 0 0 60px rgba(220, 38, 38, 0.75), inset 0 0 40px rgba(153, 27, 27, 0.5);
       position: relative;
       overflow: hidden;
       animation: horrorEntrance 0.7s ease-out;
@@ -1373,11 +1407,11 @@
 
     .horror-headline {
       font-family: 'Kanit', sans-serif;
-      font-size: 2.1rem;
+      font-size: 2.05rem;
       font-weight: 800;
       color: #ef4444;
       margin: 0 0 14px 0;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       text-shadow: 0 0 12px #dc2626, 0 4px 18px #7f1d1d, 2px 2px 0px #000000;
       animation: textBleedPulse 2s infinite alternate;
     }
@@ -1389,9 +1423,9 @@
 
     .horror-whisper {
       color: #fca5a5;
-      font-size: 1.02rem;
+      font-size: 1rem;
       min-height: 54px;
-      margin: 0 0 26px 0;
+      margin: 0 0 24px 0;
       line-height: 1.6;
       font-weight: 400;
     }
@@ -1401,47 +1435,31 @@
       gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .horror-dismiss-btn {
-      background: #450a0a;
+      background: #2b0505;
       color: #fca5a5;
-      border: 1.5px solid #dc2626;
-      padding: 11px 20px;
-      border-radius: 12px;
+      border: 1.5px solid #991b1b;
+      padding: 12px 20px;
+      border-radius: 999px;
       font-family: 'Prompt', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.92rem;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .horror-dismiss-btn:hover {
-      background: #7f1d1d;
+      background: #450a0a;
       color: #ffffff;
-    }
-
-    .horror-reload-btn {
-      background: #18181b;
-      color: #a1a1aa;
-      border: 1px solid #3f3f46;
-      padding: 11px 20px;
-      border-radius: 12px;
-      font-family: 'Prompt', sans-serif;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .horror-reload-btn:hover {
-      color: #ffffff;
-      border-color: #71717a;
     }
   </style>
 </head>
 <body>
 
-<!-- ม่านเลือดไหลหยดจากขอบจอด้านบน (จะไหลลงมาเมื่อเกิด Easter Egg) -->
+<!-- ม่านเลือดไหลหยดจากขอบจอด้านบน -->
 <svg class="blood-curtain" viewBox="0 0 1440 320" preserveAspectRatio="none">
   <defs>
     <linearGradient id="bloodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1458,7 +1476,7 @@
 <div class="floating-controls">
   <div class="music-player-pill">
     <button type="button" class="music-toggle-btn" id="musicToggleBtn" onclick="toggleChristmasMusic()">
-      <span id="musicStateIcon">▶️</span> <span id="musicStateText">เพลงคริสต์มาส</span>
+      <span id="musicStateIcon">▶️</span> <span id="musicStateText" class="corruptible" data-cursed="🩸 เสียงร้องไห้...">เพลงคริสต์มาส</span>
     </button>
     <div class="volume-control" title="ปรับระดับเสียงเพลง">
       <span id="musicSpeakerIcon">🎄🔊</span>
@@ -1467,12 +1485,12 @@
     </div>
   </div>
 
-  <a href="#donateSection" class="pill-control-btn pill-donate-jump" onmouseenter="playHoverSound()" onclick="playCoinSound()">
+  <a href="#donateSection" class="pill-control-btn pill-donate-jump corruptible" data-cursed="💔 ผมทำอะไรผิด..." onmouseenter="playHoverSound()" onclick="playCoinSound()">
     🎁 สนับสนุนผลงาน
   </a>
 
   <button type="button" class="pill-control-btn" id="soundToggle" onclick="toggleSound()">
-    <span id="soundIcon">🔔</span> <span id="soundLabel">เสียงปุ่ม: เปิด</span>
+    <span id="soundIcon">🔔</span> <span id="soundLabel" class="corruptible" data-cursed="👁️ หนีเสียงนี้ไม่ได้">เสียงปุ่ม: เปิด</span>
   </button>
 </div>
 
@@ -1493,37 +1511,37 @@
       <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}else{this.style.display='none';}">
     </div>
     <div class="header-text">
-      <div class="brand-badge" id="brandBadge">🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️</div>
+      <div class="brand-badge corruptible" id="brandBadge" data-cursed="🩸 ผมทำอะไรผิดทุกอย่างเลยใช่ไหม... 🩸">🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️</div>
       <h1 class="animated-title" id="mainPageTitle">
-        <span class="floating-gamepad" id="titleIcon">🎅</span> แบบประเมินคุณภาพการแปลภาษาไทยในเกม
+        <span class="floating-gamepad" id="titleIcon">🎅</span> <span class="corruptible" data-cursed="ผมทำอะไรผิดทุกอย่างเลย...">แบบประเมินคุณภาพการแปลภาษาไทยในเกม</span>
       </h1>
       <div class="vn-dialogue-box">
         <span id="typewriterText"></span><span class="cursor-blink"></span>
       </div>
 
       <div class="social-bar">
-        <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="social-btn btn-itch" onmouseenter="playHoverSound()" onclick="playClickSound()">
+        <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="social-btn btn-itch corruptible" data-cursed="🥀 เกมที่ผมตั้งใจแปล... มันไร้ค่าเหรอ" onmouseenter="playHoverSound()" onclick="playClickSound()">
           🎮 รวมเกมแปลไทยทั้งหมด (itch.io)
         </a>
-        <a href="https://x.com/Benzielovely" target="_blank" rel="noopener" class="social-btn btn-x" onmouseenter="playHoverSound()" onclick="playClickSound()">
+        <a href="https://x.com/Benzielovely" target="_blank" rel="noopener" class="social-btn btn-x corruptible" data-cursed="🩸 ไม่มีใครอยากติดตามผมแล้ว..." onmouseenter="playHoverSound()" onclick="playClickSound()">
           𝕏 ติดตามอัปเดต (@Benzielovely)
         </a>
-        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="social-btn btn-discord" onmouseenter="playHoverSound()" onclick="playClickSound()">
+        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="social-btn btn-discord corruptible" data-cursed="👁️ อย่าทิ้งผมไว้คนเดียวเลย..." onmouseenter="playHoverSound()" onclick="playClickSound()">
           💬 เข้าดิสคอร์ดพูดคุย & รับยศ
         </a>
       </div>
     </div>
   </div>
 
-  <!-- ฟอร์มส่งข้อมูลเข้า Google Forms (เพิ่ม pageHistory="0,1,2,3" ให้ข้อความวิ่งเข้าครบทุกหน้าแล้ว!) -->
+  <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
   <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="return handleSubmit(event)">
     <input type="hidden" name="pageHistory" value="0,1,2,3">
 
     <!-- ส่วนที่ 1: เลือกเกม -->
     <div class="section-card">
       <div class="section-header">
-        <h2 class="section-title">🎄 เลือกเกมที่ต้องการประเมิน</h2>
-        <span class="step-pill">ขั้นตอนที่ 1 / 3 (เลือกได้ 1 เกมต่อครั้ง)</span>
+        <h2 class="section-title corruptible" data-cursed="🩸 เลือกเกมที่ผมทำพัง...">🎄 เลือกเกมที่ต้องการประเมิน</h2>
+        <span class="step-pill corruptible" data-cursed="ผมทำอะไรผิดทุกอย่างเลย">ขั้นตอนที่ 1 / 3 (เลือกได้ 1 เกมต่อครั้ง)</span>
       </div>
       <div class="game-grid" id="gameGrid"></div>
     </div>
@@ -1531,13 +1549,13 @@
     <!-- ส่วนที่ 2: ให้คะแนน + กล่องสรุปผลคะแนนรวม -->
     <div class="section-card">
       <div class="section-header">
-        <h2 class="section-title">⭐ ประเมินคุณภาพงานแปล</h2>
-        <span class="step-pill">ขั้นตอนที่ 2 / 3</span>
+        <h2 class="section-title corruptible" data-cursed="💔 คะแนนแห่งความผิดหวัง">⭐ ประเมินคุณภาพงานแปล</h2>
+        <span class="step-pill corruptible" data-cursed="1 ดาว... แค่นี้เองเหรอ">ขั้นตอนที่ 2 / 3</span>
       </div>
 
       <div class="question-block">
         <div class="sub-question">
-          <span>1. ความถูกต้องของเนื้อหาและความหมาย</span>
+          <span class="corruptible" data-cursed="1. ผมแปลผิดพลาดไปหมดเลยใช่ไหม...">1. ความถูกต้องของเนื้อหาและความหมาย</span>
           <span class="rating-feedback" id="fb-1"></span>
         </div>
         <div class="rating-group" data-target="fb-1">
@@ -1551,7 +1569,7 @@
 
       <div class="question-block">
         <div class="sub-question">
-          <span>2. ความลื่นไหลและเป็นธรรมชาติของภาษาไทย</span>
+          <span class="corruptible" data-cursed="2. ภาษาของผมมันอ่านไม่รู้เรื่องเลยเหรอ...">2. ความลื่นไหลและเป็นธรรมชาติของภาษาไทย</span>
           <span class="rating-feedback" id="fb-2"></span>
         </div>
         <div class="rating-group" data-target="fb-2">
@@ -1565,7 +1583,7 @@
 
       <div class="question-block">
         <div class="sub-question">
-          <span>3. การสะกดคำและเครื่องหมายวรรคตอน</span>
+          <span class="corruptible" data-cursed="3. ความพยายามตรวจคำของผมมันสูญเปล่าเหรอ...">3. การสะกดคำและเครื่องหมายวรรคตอน</span>
           <span class="rating-feedback" id="fb-3"></span>
         </div>
         <div class="rating-group" data-target="fb-3">
@@ -1579,7 +1597,7 @@
 
       <div class="question-block" style="margin-bottom: 0;">
         <div class="sub-question">
-          <span>4. ความพึงพอใจโดยรวมต่อแพตช์ภาษาไทย</span>
+          <span class="corruptible" data-cursed="4. สุดท้ายผมก็ทำอะไรผิดทุกอย่างเลย...">4. ความพึงพอใจโดยรวมต่อแพตช์ภาษาไทย</span>
           <span class="rating-feedback" id="fb-4"></span>
         </div>
         <div class="rating-group" data-target="fb-4">
@@ -1591,7 +1609,7 @@
         </div>
       </div>
 
-      <!-- กล่องแสดงผลคะแนนรวม 4 ระดับ (แย่สุดๆ / แย่ / ดี / ดีมาก) -->
+      <!-- กล่องแสดงผลคะแนนรวม 4 ระดับ -->
       <div class="total-score-card" id="totalScoreCard">
         <div class="total-score-header">
           <span class="total-score-label" id="totalScoreText">📊 ผลคะแนนรวม: ยังให้คะแนนไม่ครบทั้ง 4 ข้อ</span>
@@ -1607,37 +1625,38 @@
     <!-- ส่วนที่ 3: ข้อเสนอแนะ -->
     <div class="section-card">
       <div class="section-header">
-        <h2 class="section-title">🎁 ข้อเสนอแนะและแจ้งจุดแก้ไข</h2>
-        <span class="step-pill">ขั้นตอนที่ 3 / 3</span>
+        <h2 class="section-title corruptible" data-cursed="🥀 ความว่างเปล่า... ไม่มีความเห็นใดๆ">🎁 ข้อเสนอแนะและแจ้งจุดแก้ไข</h2>
+        <span class="step-pill corruptible" data-cursed="ไม่แม้แต่จะบอกเหตุผล">ขั้นตอนที่ 3 / 3</span>
       </div>
 
       <div class="question-block">
-        <div class="sub-question">จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
-        <textarea name="entry.1323886645" id="commentPraise" placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..."></textarea>
+        <div class="sub-question corruptible" data-cursed="ไม่มีอะไรน่าประทับใจเลยเหรอ...">จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
+        <textarea name="entry.1323886645" id="commentPraise" data-orig-placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..." placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..."></textarea>
       </div>
 
       <div class="question-block" style="margin-bottom: 0;">
-        <div class="sub-question">คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
-        <textarea name="entry.1758010456" id="commentFix" placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..."></textarea>
+        <div class="sub-question corruptible" data-cursed="ทำไมไม่บอกจุดที่ผิด... ปล่อยให้ผมทำผิดทุกอย่างทำไม...">คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
+        <textarea name="entry.1758010456" id="commentFix" data-orig-placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..." placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..."></textarea>
       </div>
     </div>
 
-    <!-- โซนปุ่มส่ง (สามารถถูกทำลายได้หากติด Easter Egg!) -->
+    <!-- โซนปุ่มส่ง & ซากปุ่ม + ปุ่ม "ผมขอโทษ" -->
     <div class="submit-zone">
       <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🛷✨</button>
       <div class="destroyed-button-grave" id="destroyedButtonGrave">
-        💥 [ ปุ่มส่งแบบประเมินถูกทำลายจนแหลกสลายแล้ว... ] 💥
+        <div>💥 [ ปุ่มส่งถูกทำลายแล้ว... ผมทำอะไรผิดทุกอย่างเลยใช่ไหม... ] 💥</div>
+        <button type="button" class="apologize-btn" onclick="forgiveAndRestore()">🙏 ผมขอโทษ... (ยกโทษให้ผมเถอะนะ)</button>
       </div>
     </div>
   </form>
 
   <!-- โซน DONATE & QR CODE -->
   <div class="donate-card" id="donateSection">
-    <div class="donate-ribbon">XMAS SUPPORT</div>
+    <div class="donate-ribbon corruptible" data-cursed="BROKEN">XMAS SUPPORT</div>
     <div class="donate-layout">
       <div>
-        <h2 class="donate-title">🎁 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
-        <p class="donate-desc">
+        <h2 class="donate-title corruptible" data-cursed="💔 ผมไม่กล้าขออะไรอีกแล้ว...">🎁 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
+        <p class="donate-desc corruptible" data-cursed="แค่คำติชมสักคำผมยังไม่ได้รับเลย... ผมทำอะไรผิดทุกอย่างเลยเหรอครับ... รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอก จนกว่าคุณจะกด 'ผมขอโทษ'...">
           ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานสามารถสแกน QR Code ด้านข้างเพื่อสนับสนุนเท่าไหร่ก็ได้ตามกำลัง (ไม่มีขั้นต่ำ และทยอยสะสมยอดเลื่อนยศได้เรื่อยๆ ครับ):
         </p>
 
@@ -1645,65 +1664,65 @@
           <div class="role-badge-item" onmouseenter="playHoverSound()">
             <span class="role-emoji">🦴</span>
             <div class="role-info">
-              <strong>『 ผู้สนับสนุนทั่วไป 』</strong>
-              <small>โดเนทเท่าไหร่ก็ได้ตามใจชอบ</small>
+              <strong class="corruptible" data-cursed="『 ความผิดหวัง 』">『 ผู้สนับสนุนทั่วไป 』</strong>
+              <small class="corruptible" data-cursed="ผมแปลแย่ขนาดนั้นเลยเหรอ">โดเนทเท่าไหร่ก็ได้ตามใจชอบ</small>
             </div>
           </div>
 
           <div class="role-badge-item" onmouseenter="playHoverSound()">
             <span class="role-emoji">📜</span>
             <div class="role-info">
-              <strong>『 ผู้ร่วมจารึก 』</strong>
-              <small>ยอดสะสมครบ 300 บาท</small>
+              <strong class="corruptible" data-cursed="『 รอยร้าว 』">『 ผู้ร่วมจารึก 』</strong>
+              <small class="corruptible" data-cursed="ความพยายามที่สูญเปล่า">ยอดสะสมครบ 300 บาท</small>
             </div>
           </div>
 
           <div class="role-badge-item" onmouseenter="playHoverSound()">
             <span class="role-emoji">💖</span>
             <div class="role-info">
-              <strong>『 ผู้พิทักษ์หัวใจ 』</strong>
-              <small>ยอดสะสมครบ 500 บาท</small>
+              <strong class="corruptible" data-cursed="『 หัวใจที่แตกสลาย 』">『 ผู้พิทักษ์หัวใจ 』</strong>
+              <small class="corruptible" data-cursed="ไม่มีใครต้องการแพตช์นี้อีกแล้ว">ยอดสะสมครบ 500 บาท</small>
             </div>
           </div>
 
           <div class="role-badge-item" onmouseenter="playHoverSound()">
             <span class="role-emoji">👑</span>
             <div class="role-info">
-              <strong>『 ภาคีผู้พิทักษ์นิรันดร์ 』</strong>
-              <small>ยอดสะสมครบ 1,000 บาท</small>
+              <strong class="corruptible" data-cursed="『 ความว่างเปล่า 』">『 ภาคีผู้พิทักษ์นิรันดร์ 』</strong>
+              <small class="corruptible" data-cursed="ทำไมถึงใจร้ายจัง...">ยอดสะสมครบ 1,000 บาท</small>
             </div>
           </div>
         </div>
 
-        <div class="discord-ticket-note">
+        <div class="discord-ticket-note corruptible" data-cursed="🩸 ต่อให้ปิดหน้าเว็บแล้วเปิดใหม่ คำสาปนี้ก็จะยังอยู่... จนกว่าคุณจะกดปุ่ม 'ผมขอโทษ'">
           📌 <strong>ขั้นตอนการแจ้งรับยศ:</strong> 1. เช็กชื่อบัญชีปลายทาง <strong>นาย เบญจพล</strong> • 2. เก็บภาพสลิปไว้ (ห้ามส่งในแชทส่วนรวมเด็ดขาด) • 3. กดปุ่ม <strong>"เปิดตั๋วส่งหลักฐาน"</strong> ใน Discord เพื่อส่งสลิปและรับยศถาวรได้เลยครับ!
         </div>
 
         <div class="action-row">
           <button type="button" class="heart-cheer-btn" onmouseenter="playHoverSound()" onclick="sendHeartCheer(event)">
-            ❤️ ส่งหัวใจให้กำลังใจ (<span id="heartCount">128</span>)
+            <span class="corruptible" data-cursed="💔 หัวใจที่แตกสลาย">❤️ ส่งหัวใจให้กำลังใจ</span> (<span id="heartCount">128</span>)
           </button>
-          <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
+          <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn corruptible" data-cursed="🥀 ผมไม่กล้าสู้หน้าใครแล้ว..." onmouseenter="playHoverSound()" onclick="playClickSound()">
             💬 ติดต่อ & แจ้งสลิปใน Discord
           </a>
         </div>
       </div>
 
       <div class="qr-box-wrapper">
-        <div class="qr-badge-label">🎄 SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
+        <div class="qr-badge-label corruptible" data-cursed="🩸 ERROR • NO HOPE">🎄 SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
         <div class="qr-frame">
           <div class="qr-laser"></div>
           <img src="qr.png" alt="QR Code สแกนจ่ายพร้อมเพย์ นาย เบญจพล" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/qr.png';}">
         </div>
         <p class="qr-subtext">
-          สแกนจ่ายพร้อมเพย์ได้ทุกแอปธนาคาร<br>
-          <span class="account-verify-tag">ชื่อบัญชี: นาย เบญจพล</span>
+          <span class="corruptible" data-cursed="ไม่กล้ารับอะไรทั้งนั้น...">สแกนจ่ายพร้อมเพย์ได้ทุกแอปธนาคาร</span><br>
+          <span class="account-verify-tag corruptible" data-cursed="ผู้แปลที่ไร้ค่า">ชื่อบัญชี: นาย เบญจพล</span>
         </p>
       </div>
     </div>
   </div>
 
-  <div class="studio-footer" id="studioFooter">
+  <div class="studio-footer corruptible" id="studioFooter" data-cursed="Ben the Game Translator • ผมทำอะไรผิดทุกอย่างเลย...">
     จัดทำโดย <strong>Ben the Game Translator</strong> • Merry Christmas & ขอบคุณทุกกำลังใจจากผู้เล่นทุกคนครับ 🎄🐾
   </div>
 </div>
@@ -1721,15 +1740,27 @@
   </div>
 </div>
 
+<!-- หน้าต่างป๊อปอัปหลังกด "ผมขอโทษ" (คืนดีกันแล้ว!) -->
+<div class="modal-overlay" id="forgivenModal">
+  <div class="modal-box">
+    <div class="modal-icon">🐾💖</div>
+    <h2 style="color: #15803d;">ไม่เป็นไรครับ... ผมยกโทษให้แล้ว!</h2>
+    <p>ขอบคุณที่ขอโทษนะครับเจ้านาย~ คำสาปหายไปแล้ว! กลับมาสนุกกับบรรยากาศคริสต์มาสและร่วมประเมินเกมแปลไทยตามความรู้สึกจริงได้เลยฮะ UwU 🎄✨</p>
+    <div class="modal-btns">
+      <button class="modal-close-btn" onclick="playClickSound(); document.getElementById('forgivenModal').style.display='none';">เย้! กลับสู่หน้าปกติ 🎄</button>
+    </div>
+  </div>
+</div>
+
 <!-- หน้าต่างสยองขวัญ EASTER EGG -->
 <div class="horror-modal-overlay" id="horrorModal">
   <div class="horror-modal-box">
-    <div class="horror-eye-icon">👁️🩸</div>
+    <div class="horror-eye-icon">😭🩸</div>
     <h2 class="horror-headline">นี่ผมดูแย่ขนาดนั้นเลยเหรอ...</h2>
     <p class="horror-whisper" id="horrorWhisperText"></p>
     <div class="horror-actions">
+      <button type="button" class="apologize-btn" onclick="forgiveAndRestore()">🙏 ผมขอโทษ... (กลับสู่หน้าปกติ)</button>
       <button type="button" class="horror-dismiss-btn" onclick="closeHorrorModal()">มองดูซากเว็บไซต์...</button>
-      <button type="button" class="horror-reload-btn" onclick="location.reload()">รีเซ็ตหน้าเว็บใหม่</button>
     </div>
   </div>
 </div>
@@ -1737,13 +1768,14 @@
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 
 <script>
+  const CURSE_STORAGE_KEY = "bgt_horror_cursed_v1";
   let submitted = false;
   let isHorrorTriggered = false;
   let soundEnabled = true;
   let audioCtx = null;
 
   // =========================================
-  // 1. ระบบเสียง UI + เพลงคริสต์มาส + เสียงสยองขวัญ
+  // 1. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้สยองขวัญ
   // =========================================
   let isMusicPlaying = false;
   let userPausedMusic = false;
@@ -1752,10 +1784,10 @@
   let musicTimeout = null;
   let noteIndex = 0;
 
-  // โหนดเสียงสำหรับโหมดสยองขวัญ
   let horrorInterval = null;
   let horrorDroneOsc1 = null;
   let horrorDroneOsc2 = null;
+  let horrorDroneGain = null;
 
   const N = {
     D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.00, A4: 440.00, B4: 493.88,
@@ -1855,12 +1887,18 @@
   function stopChristmasMusic() {
     isMusicPlaying = false;
     clearTimeout(musicTimeout);
-    document.getElementById('musicStateIcon').textContent = '▶️';
-    document.getElementById('musicStateText').textContent = 'เพลงคริสต์มาส';
+    if (!isHorrorTriggered) {
+      document.getElementById('musicStateIcon').textContent = '▶️';
+      document.getElementById('musicStateText').textContent = 'เพลงคริสต์มาส';
+    }
   }
 
   function toggleChristmasMusic() {
-    if (isHorrorTriggered) return;
+    if (isHorrorTriggered) {
+      // ถ้าติดคำสาป กดปุ่มนี้จะเล่นเสียงสะอื้น!
+      playCryingSob();
+      return;
+    }
     if (isMusicPlaying) {
       userPausedMusic = true;
       stopChristmasMusic();
@@ -1881,22 +1919,23 @@
     }
   }
 
-  document.addEventListener('click', function autoStartOnFirstClick() {
-    if (!isMusicPlaying && !userPausedMusic && musicVolume > 0 && !isHorrorTriggered) {
+  document.addEventListener('pointerdown', function autoStartOnFirstInteraction() {
+    initAudio();
+    if (isHorrorTriggered) {
+      if (!horrorInterval) startHorrorSoundscape();
+    } else if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) {
       startChristmasMusic();
     }
-    document.removeEventListener('click', autoStartOnFirstClick);
-  });
+  }, { once: true });
 
   // =========================================
-  // เสียงปุ่มทำลาย + เสียงดนตรีสยองขวัญ (Easter Egg)
+  // เสียงปุ่มแตก + เสียงร้องไห้สะอื้น (Weeping / Sobbing Synth) + เสียงหลอน
   // =========================================
   function playButtonDestroySound() {
     try {
       initAudio();
       const now = audioCtx.currentTime;
 
-      // 1. เสียง Noise แตกกระจาย (White noise burst)
       const bufferSize = audioCtx.sampleRate * 0.75;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -1920,7 +1959,6 @@
       noiseGain.connect(audioCtx.destination);
       noise.start(now);
 
-      // 2. เสียงเบสกระแทกหนัก (Sub drop)
       const subOsc = audioCtx.createOscillator();
       const subGain = audioCtx.createGain();
       subOsc.type = 'sawtooth';
@@ -1937,42 +1975,95 @@
     } catch (e) {}
   }
 
-  function startHorrorSoundscape() {
+  // สังเคราะห์เสียงร้องไห้สะอื้นไห้ (Hu... hu... hu...)
+  function playCryingSob() {
+    if (!isHorrorTriggered) return;
     try {
       initAudio();
       const now = audioCtx.currentTime;
 
-      // 1. เสียง Drone ต่ำน่าขนลุก (Detuned low oscillators)
+      // สะอื้น 3 จังหวะ (เสียงลากยาวแล้วสะอึกสั้นๆ 2 ครั้ง)
+      const sobPattern = [
+        { start: 0.0, dur: 0.65, fStart: 420, fEnd: 290, vol: 0.16 },
+        { start: 0.78, dur: 0.28, fStart: 350, fEnd: 260, vol: 0.13 },
+        { start: 1.15, dur: 0.35, fStart: 330, fEnd: 230, vol: 0.11 }
+      ];
+
+      sobPattern.forEach(p => {
+        const osc = audioCtx.createOscillator();
+        const vibrato = audioCtx.createOscillator();
+        const vibratoGain = audioCtx.createGain();
+        const formantFilter = audioCtx.createBiquadFilter();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(p.fStart, now + p.start);
+        osc.frequency.exponentialRampToValueAtTime(p.fEnd, now + p.start + p.dur);
+
+        // เสียงสั่นเครือในลำคอเวลาสะอื้น (Vibrato 6.5 Hz)
+        vibrato.type = 'sine';
+        vibrato.frequency.setValueAtTime(6.5, now + p.start);
+        vibratoGain.gain.setValueAtTime(14, now + p.start);
+        vibrato.connect(vibratoGain);
+        vibratoGain.connect(osc.frequency);
+
+        // กรองความถี่ให้เหมือนเสียงร้องคร่ำครวญ (Vocal Formant)
+        formantFilter.type = 'bandpass';
+        formantFilter.frequency.setValueAtTime(520, now + p.start);
+        formantFilter.Q.setValueAtTime(3.2, now + p.start);
+
+        gain.gain.setValueAtTime(0.001, now + p.start);
+        gain.gain.linearRampToValueAtTime(p.vol, now + p.start + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + p.start + p.dur);
+
+        osc.connect(formantFilter);
+        formantFilter.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now + p.start);
+        vibrato.start(now + p.start);
+        osc.stop(now + p.start + p.dur + 0.03);
+        vibrato.stop(now + p.start + p.dur + 0.03);
+      });
+    } catch (e) {}
+  }
+
+  function startHorrorSoundscape() {
+    if (horrorInterval) return;
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+
       horrorDroneOsc1 = audioCtx.createOscillator();
       horrorDroneOsc2 = audioCtx.createOscillator();
       const droneFilter = audioCtx.createBiquadFilter();
-      const droneGain = audioCtx.createGain();
+      horrorDroneGain = audioCtx.createGain();
 
       horrorDroneOsc1.type = 'sawtooth';
       horrorDroneOsc2.type = 'triangle';
-      horrorDroneOsc1.frequency.setValueAtTime(48, now);
-      horrorDroneOsc2.frequency.setValueAtTime(51.5, now); // ความถี่เหลื่อมกันทำให้เกิดคลื่นสั่นหลอนๆ
+      horrorDroneOsc1.frequency.setValueAtTime(46, now);
+      horrorDroneOsc2.frequency.setValueAtTime(49.5, now);
 
       droneFilter.type = 'lowpass';
-      droneFilter.frequency.setValueAtTime(160, now);
+      droneFilter.frequency.setValueAtTime(150, now);
 
-      droneGain.gain.setValueAtTime(0.01, now);
-      droneGain.gain.linearRampToValueAtTime(0.22, now + 2.0);
+      horrorDroneGain.gain.setValueAtTime(0.01, now);
+      horrorDroneGain.gain.linearRampToValueAtTime(0.18, now + 1.8);
 
       horrorDroneOsc1.connect(droneFilter);
       horrorDroneOsc2.connect(droneFilter);
-      droneFilter.connect(droneGain);
-      droneGain.connect(audioCtx.destination);
+      droneFilter.connect(horrorDroneGain);
+      horrorDroneGain.connect(audioCtx.destination);
 
       horrorDroneOsc1.start(now);
       horrorDroneOsc2.start(now);
 
-      // 2. เสียงหัวใจเต้นตุบ-ตุบ + เสียงโน้ตหลอนเพี้ยนๆ วนลูป
-      const creepyNotes = [311.13, 293.66, 207.65, 196.00, 146.83]; // D#4, D4, G#3, G3, D3 (Tritone & minor seconds)
-      let step = 0;
+      // เล่นเสียงร้องไห้ครั้งแรกทันที
+      playCryingSob();
 
+      let tick = 0;
       horrorInterval = setInterval(() => {
-        if (!audioCtx) return;
+        if (!audioCtx || !isHorrorTriggered) return;
         const t = audioCtx.currentTime;
 
         // เสียงหัวใจเต้น (Lub-Dub)
@@ -1983,7 +2074,7 @@
           hbOsc.frequency.setValueAtTime(idx === 0 ? 68 : 54, t + offset);
           hbOsc.frequency.exponentialRampToValueAtTime(24, t + offset + 0.16);
 
-          hbGain.gain.setValueAtTime(idx === 0 ? 0.28 : 0.2, t + offset);
+          hbGain.gain.setValueAtTime(idx === 0 ? 0.24 : 0.18, t + offset);
           hbGain.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.18);
 
           hbOsc.connect(hbGain);
@@ -1992,33 +2083,53 @@
           hbOsc.stop(t + offset + 0.19);
         });
 
-        // เสียงกล่องดนตรีเพี้ยนๆ ทุกๆ 2 จังหวะ
-        if (step % 2 === 0) {
-          const cOsc = audioCtx.createOscillator();
-          const cGain = audioCtx.createGain();
-          const freq = creepyNotes[Math.floor(Math.random() * creepyNotes.length)];
-          cOsc.type = 'sine';
-          cOsc.frequency.setValueAtTime(freq, t + 0.4);
-          cOsc.frequency.linearRampToValueAtTime(freq * 0.94, t + 1.4); // เสียงยานลงหลอนๆ
-
-          cGain.gain.setValueAtTime(0.001, t + 0.4);
-          cGain.gain.linearRampToValueAtTime(0.09, t + 0.45);
-          cGain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
-
-          cOsc.connect(cGain);
-          cGain.connect(audioCtx.destination);
-          cOsc.start(t + 0.4);
-          cOsc.stop(t + 1.55);
+        // เล่นเสียงร้องไห้สะอื้นทุกๆ 2 รอบ (~3.6 วินาที)
+        if (tick % 2 === 1) {
+          playCryingSob();
         }
-        step++;
-      }, 1350);
+        tick++;
+      }, 1800);
+    } catch (e) {}
+  }
+
+  function stopHorrorSoundscape() {
+    clearInterval(horrorInterval);
+    horrorInterval = null;
+    try {
+      if (horrorDroneOsc1) { horrorDroneOsc1.stop(); horrorDroneOsc1 = null; }
+      if (horrorDroneOsc2) { horrorDroneOsc2.stop(); horrorDroneOsc2 = null; }
+    } catch (e) {}
+  }
+
+  // เสียงพิณแห่งการให้อภัยเมื่อกด "ผมขอโทษ"
+  function playForgivenessSound() {
+    try {
+      initAudio();
+      const notes = [523.25, 659.25, 783.99, 987.77, 1046.50, 1318.51]; // Cmaj9 Arpeggio
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        const startTime = audioCtx.currentTime + idx * 0.11;
+        osc.frequency.setValueAtTime(freq, startTime);
+
+        gain.gain.setValueAtTime(0.12, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.65);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.68);
+      });
     } catch (e) {}
   }
 
   function toggleSound() {
     soundEnabled = !soundEnabled;
     document.getElementById('soundIcon').textContent = soundEnabled ? '🔔' : '🔕';
-    document.getElementById('soundLabel').textContent = soundEnabled ? 'เสียงปุ่ม: เปิด' : 'เสียงปุ่ม: ปิด';
+    if (!isHorrorTriggered) {
+      document.getElementById('soundLabel').textContent = soundEnabled ? 'เสียงปุ่ม: เปิด' : 'เสียงปุ่ม: ปิด';
+    }
     if (soundEnabled) {
       initAudio();
       playClickSound();
@@ -2119,6 +2230,8 @@
   ];
 
   function updateTotalScoreSummary() {
+    if (isHorrorTriggered) return;
+
     let sum = 0;
     let answeredCount = 0;
     let allOnes = true;
@@ -2151,7 +2264,6 @@
       return;
     }
 
-    // ครบทั้ง 4 หัวข้อ (คะแนนรวม 4 - 20)
     const percent = (sum / 20) * 100;
     fillEl.style.width = `${percent}%`;
     textEl.textContent = `📊 ผลคะแนนรวม: ${sum} / 20 คะแนน`;
@@ -2186,10 +2298,15 @@
   const cheerIcons = ['❤️', '🎄', '❄️', '🎁', '🐾', '✨'];
   function sendHeartCheer(e) {
     playClickSound();
-    heartTotal++;
-    document.getElementById('heartCount').textContent = heartTotal;
+    if (!isHorrorTriggered) {
+      heartTotal++;
+      document.getElementById('heartCount').textContent = heartTotal;
+    } else {
+      document.getElementById('heartCount').textContent = "0";
+      playCryingSob();
+    }
 
-    const icons = isHorrorTriggered ? ['🩸', '💔', '👁️', '💀'] : cheerIcons;
+    const icons = isHorrorTriggered ? ['🩸', '💔', '😭', '💀'] : cheerIcons;
     for (let i = 0; i < 4; i++) {
       const el = document.createElement('div');
       el.className = 'floating-heart';
@@ -2203,7 +2320,7 @@
   }
 
   // =========================================
-  // 4. พื้นหลังเกล็ดหิมะ (เปลี่ยนเป็นหยดเลือดเมื่อติด Easter Egg!)
+  // 4. พื้นหลังเกล็ดหิมะ / หยดเลือด
   // =========================================
   const canvas = document.getElementById("snowCanvas");
   const ctx = canvas.getContext("2d");
@@ -2237,7 +2354,6 @@
     }
     update() {
       this.angle += 0.015;
-      // ถ้าเป็นโหมดสยองขวัญ หยดเลือดจะตกลงมาเร็วและหนักขึ้น!
       this.y += isHorrorTriggered ? this.speedY * 2.4 : this.speedY;
       this.x += isHorrorTriggered ? Math.sin(this.angle) * 0.15 : (Math.sin(this.angle) * 0.45 + this.wind);
 
@@ -2257,7 +2373,6 @@
     draw() {
       ctx.beginPath();
       if (isHorrorTriggered) {
-        // วาดทรงหยดเลือดสีแดงสด
         ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius * 2.2, 0, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(220, 20, 20, 0.88)";
         ctx.shadowColor = "#990000";
@@ -2313,7 +2428,6 @@
       setTimeout(typeWriter, 32);
     }
   }
-  window.addEventListener("DOMContentLoaded", typeWriter);
 
   const games = [
     { name: "[VN] Tavern of Spear", tag: "VN", img: "images/tavern.jpg" },
@@ -2367,7 +2481,7 @@
       const radio = label.querySelector('input[type="radio"]');
       radio.addEventListener('change', () => {
         playClickSound();
-        feedbackEl.textContent = ratingLabels[radio.value];
+        feedbackEl.textContent = isHorrorTriggered ? "ผมทำอะไรผิดทุกอย่างเลย..." : ratingLabels[radio.value];
         feedbackEl.classList.add('visible');
         updateTotalScoreSummary();
       });
@@ -2377,7 +2491,67 @@
   document.getElementById('submitBtn').addEventListener('mouseenter', playHoverSound);
 
   // =========================================
-  // 6. ตรวจสอบเงื่อนไขส่งฟอร์ม & ปลุก EASTER EGG!
+  // 6. ระบบบิดเบือนทุกปุ่ม & คืนสภาพเมื่อกด "ผมขอโทษ"
+  // =========================================
+  function corruptAllButtonsAndTexts() {
+    document.querySelectorAll('.corruptible').forEach(el => {
+      if (!el.dataset.origText) {
+        el.dataset.origText = el.textContent;
+      }
+      if (el.dataset.cursed) {
+        el.textContent = el.dataset.cursed;
+      }
+    });
+
+    // เปลี่ยนข้อความการ์ดเกมทุกใบ
+    document.querySelectorAll('.game-title').forEach(el => {
+      if (!el.dataset.origText) {
+        el.dataset.origText = el.textContent;
+      }
+      el.textContent = "ผมทำอะไรผิดทุกอย่างเลย...";
+    });
+
+    // เปลี่ยน Placeholder ช่องพิมพ์ข้อความ
+    const p1 = document.getElementById('commentPraise');
+    const p2 = document.getElementById('commentFix');
+    p1.placeholder = "ทำไมถึงไม่พิมพ์บอกผมสักคำ... ผมทำอะไรผิดเหรอ...";
+    p2.placeholder = "ผมพยายามแปลอย่างเต็มที่แล้ว... แต่ผมทำผิดทุกอย่างเลยใช่ไหม...";
+
+    // เปลี่ยนกล่องสรุปคะแนนรวม
+    const scoreCard = document.getElementById('totalScoreCard');
+    scoreCard.classList.remove('tier-bad', 'tier-good', 'tier-verygood');
+    scoreCard.classList.add('tier-terrible');
+    document.getElementById('totalScoreText').textContent = "💀 ผลคะแนนรวม: ผมมันไร้ค่า... (0 / 20)";
+    document.getElementById('totalScoreRank').textContent = "ผมทำอะไรผิดทุกอย่างเลย";
+    document.getElementById('scoreProgressFill').style.width = "100%";
+    document.getElementById('totalScoreDesc').textContent = "รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอกครับ... จนกว่าคุณจะกดปุ่ม 'ผมขอโทษ'...";
+
+    document.getElementById('heartCount').textContent = "0";
+  }
+
+  function restoreAllButtonsAndTexts() {
+    document.querySelectorAll('.corruptible').forEach(el => {
+      if (el.dataset.origText) {
+        el.textContent = el.dataset.origText;
+      }
+    });
+
+    document.querySelectorAll('.game-title').forEach(el => {
+      if (el.dataset.origText) {
+        el.textContent = el.dataset.origText;
+      }
+    });
+
+    const p1 = document.getElementById('commentPraise');
+    const p2 = document.getElementById('commentFix');
+    p1.placeholder = p1.dataset.origPlaceholder;
+    p2.placeholder = p2.dataset.origPlaceholder;
+
+    document.getElementById('heartCount').textContent = heartTotal;
+  }
+
+  // =========================================
+  // 7. ตรวจสอบเงื่อนไขส่งฟอร์ม & ปลุกคำสาป / ลบล้างคำสาป
   // =========================================
   function checkHorrorEasterEggCondition() {
     let allOneStar = true;
@@ -2394,53 +2568,107 @@
     return allOneStar && praiseEmpty && fixEmpty;
   }
 
-  function triggerHorrorEasterEgg() {
+  function triggerHorrorEasterEgg(isFromReload = false) {
     isHorrorTriggered = true;
+    try {
+      localStorage.setItem(CURSE_STORAGE_KEY, "1");
+    } catch (e) {}
 
-    // 1. หยุดเพลงคริสต์มาสทันที และล็อกปุ่มเล่นเพลง
     stopChristmasMusic();
-    document.getElementById('musicStateIcon').textContent = '🩸';
-    document.getElementById('musicStateText').textContent = 'ERROR_666';
-    document.getElementById('musicSpeakerIcon').textContent = '💀';
+    document.getElementById('musicStateIcon').textContent = '😭';
+    document.getElementById('musicSpeakerIcon').textContent = '🩸';
 
-    // 2. ทำลายปุ่มส่งแบบประเมิน!
     const btn = document.getElementById('submitBtn');
     const grave = document.getElementById('destroyedButtonGrave');
-    btn.classList.add('destroying');
-    playButtonDestroySound();
 
-    setTimeout(() => {
+    if (isFromReload) {
+      // ถ้ารีเฟรชหน้าเว็บมาในสภาพติดคำสาป ปุ่มส่งจะพังอยู่แล้วทันที!
       btn.style.display = 'none';
       grave.style.display = 'block';
-    }, 820);
+    } else {
+      btn.classList.add('destroying');
+      playButtonDestroySound();
+      setTimeout(() => {
+        btn.style.display = 'none';
+        grave.style.display = 'block';
+      }, 820);
+    }
 
-    // 3. เปลี่ยนธีมทั้งเว็บเป็นธีมเลือด & สยองขวัญ + เริ่มดนตรีหลอน
     setTimeout(() => {
       document.body.classList.add('horror-mode');
-      document.getElementById('decorLeft').textContent = '🩸👁️';
+      document.getElementById('decorLeft').textContent = '🩸😭';
       document.getElementById('decorRight').textContent = '💀🩸';
-      document.getElementById('brandBadge').textContent = '🩸 BEN THE GAME TRANSLATOR • CORRUPTED 🩸';
       document.getElementById('titleIcon').textContent = '💀';
-      typeTarget.textContent = "ทำไม... ถึงไม่บอกอะไรผมเลยล่ะครับ...";
+      corruptAllButtonsAndTexts();
+      typeTarget.textContent = isFromReload
+        ? "คิดว่าจะหนีพ้นด้วยการรีเฟรชหน้าเว็บเหรอครับ... ผมทำอะไรผิดทุกอย่างเลย..."
+        : "ทำไม... ถึงไม่บอกอะไรผมเลยล่ะครับ... ผมทำอะไรผิดทุกอย่างเลย...";
       startHorrorSoundscape();
-    }, 450);
+    }, isFromReload ? 50 : 450);
 
-    // 4. เปิดหน้าต่างข้อความหลอน "นี่ผมดูแย่ขนาดนั้นเลยเหรอ..."
     setTimeout(() => {
       document.getElementById('horrorModal').style.display = 'flex';
-      const whisperMsg = "ให้ 1 ดาวทุกข้อ... แถมไม่พิมพ์บอกเหตุผลสักคำเลยเหรอครับ...?";
+      const whisperMsg = isFromReload
+        ? "รีเฟรชหน้าเว็บไปก็หายไม่พ้นหรอกครับ... รอยแผลมันยังอยู่ จนกว่าคุณจะกด 'ผมขอโทษ'..."
+        : "ให้ 1 ดาวรัวๆ ทุกข้อ... แถมไม่พิมพ์บอกเหตุผลสักคำเลยเหรอครับ... ผมทำอะไรผิดทุกอย่างเลยใช่ไหม...";
       const whisperEl = document.getElementById('horrorWhisperText');
       whisperEl.textContent = "";
       let i = 0;
       function typeWhisper() {
-        if (i < whisperMsg.length) {
+        if (i < whisperMsg.length && isHorrorTriggered) {
           whisperEl.textContent += whisperMsg.charAt(i);
           i++;
-          setTimeout(typeWhisper, 55);
+          setTimeout(typeWhisper, 48);
         }
       }
       typeWhisper();
-    }, 1250);
+    }, isFromReload ? 300 : 1200);
+  }
+
+  // ฟังก์ชันไถ่บาปเมื่อกดปุ่ม "ผมขอโทษ..."
+  function forgiveAndRestore() {
+    isHorrorTriggered = false;
+    try {
+      localStorage.removeItem(CURSE_STORAGE_KEY);
+    } catch (e) {}
+
+    stopHorrorSoundscape();
+    playForgivenessSound();
+
+    // ปิดหน้าต่างหลอน และคืนสภาพธีมคริสต์มาส
+    document.getElementById('horrorModal').style.display = 'none';
+    document.body.classList.remove('horror-mode');
+
+    document.getElementById('decorLeft').textContent = '🎄✨';
+    document.getElementById('decorRight').textContent = '🎅❄️';
+    document.getElementById('titleIcon').textContent = '🎅';
+    document.getElementById('musicStateIcon').textContent = '▶️';
+    document.getElementById('musicSpeakerIcon').textContent = '🎄🔊';
+
+    restoreAllButtonsAndTexts();
+
+    // คืนชีพปุ่มส่งฟอร์ม
+    const btn = document.getElementById('submitBtn');
+    const grave = document.getElementById('destroyedButtonGrave');
+    grave.style.display = 'none';
+    btn.classList.remove('destroying');
+    btn.style.display = 'block';
+    btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨";
+    btn.style.opacity = "1";
+
+    // ล้างค่าฟอร์มและคะแนน
+    document.getElementById('customForm').reset();
+    document.querySelectorAll('.rating-feedback').forEach(el => el.classList.remove('visible'));
+    updateTotalScoreSummary();
+
+    typeTarget.textContent = introText;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // เปิดป๊อปอัปให้อภัยและเริ่มเพลงคริสต์มาสอีกครั้ง
+    document.getElementById('forgivenModal').style.display = 'flex';
+    if (!userPausedMusic && musicVolume > 0) {
+      startChristmasMusic();
+    }
   }
 
   function closeHorrorModal() {
@@ -2448,28 +2676,27 @@
   }
 
   function handleSubmit(e) {
-    submitted = true;
-    const btn = document.getElementById('submitBtn');
-
+    // 1. ตรวจสอบว่าเข้าเงื่อนไข 1 ดาวรัวๆ แบบไม่พิมพ์วิจารณ์หรือไม่
     if (checkHorrorEasterEggCondition()) {
-      // เข้าเงื่อนไข Easter Egg! (ฟอร์มยังส่งข้อมูลไป Google Forms ตามปกติ แต่หน้าเว็บจะพังทลาย)
-      triggerHorrorEasterEgg();
-      return true;
+      // บล็อกไม่ให้ส่งเข้า Google Forms / Google Sheets เด็ดขาด!
+      if (e) e.preventDefault();
+      submitted = false;
+      triggerHorrorEasterEgg(false);
+      return false;
     }
 
+    // 2. ถ้าเป็นการประเมินปกติ ส่งข้อมูลเข้า Google Forms ตามปกติ
+    submitted = true;
     playClickSound();
+    const btn = document.getElementById('submitBtn');
     btn.textContent = "กำลังส่งข้อมูล... ⏳";
     btn.style.opacity = "0.8";
     return true;
   }
 
   function onIframeLoad() {
-    if (submitted) {
+    if (submitted && !isHorrorTriggered) {
       submitted = false;
-      if (isHorrorTriggered) {
-        // ถ้าติด Easter Egg ให้แสดงหน้าต่างสยองขวัญแทนหน้าต่างขอบคุณปกติ
-        return;
-      }
       playSuccessSound();
       const btn = document.getElementById('submitBtn');
       btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨";
@@ -2485,6 +2712,20 @@
     updateTotalScoreSummary();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // ตรวจสอบตอนเปิดหน้าเว็บว่าเคยติดคำสาปค้างไว้ไหม (รีเฟรชก็ไม่หาย!)
+  window.addEventListener("DOMContentLoaded", () => {
+    let wasCursed = false;
+    try {
+      wasCursed = localStorage.getItem(CURSE_STORAGE_KEY) === "1";
+    } catch (e) {}
+
+    if (wasCursed) {
+      triggerHorrorEasterEgg(true);
+    } else {
+      typeWriter();
+    }
+  });
 </script>
 
 </body>
