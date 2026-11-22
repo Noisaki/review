@@ -3149,14 +3149,6 @@
   // 0.6 กระดานจัดอันดับ (Top Donate + Top 10 ส่งหัวใจ)
   // =========================================
   function buildLbRow(rank, id, u, scoreText) {
-    const userClicks = Number(u.heartsClicked) || 0;
-    if (userClicks > 0) {
-      const userTier = cheerTiers[getCurrentTierIndex(userClicks)];
-      const titlePill = document.createElement('span');
-      titlePill.className = "title-pill";
-      titlePill.textContent = userTier.badge;
-      meta.appendChild(titlePill);
-    }
     const row = document.createElement('div');
     row.className = "lb-row" + (rank <= 3 ? " rank-" + rank : "") + (currentUser && currentUser.id === id ? " me" : "");
 
