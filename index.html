@@ -3030,59 +3030,7 @@
       });
     }
 
-  function appendMyRankRow(listEl, sortedEntries, top5Entries, formatterFn) {
-    if (!currentUser) return;
-    if (top5Entries.some(entry => entry.id === currentUser.id)) return;
-
-    const myIndex = sortedEntries.findIndex(entry => entry.id === currentUser.id);
-    if (myIndex === -1) return;
-
-    const mine = sortedEntries[myIndex];
-    const sep = document.createElement('div');
-    sep.style.cssText = "border-top: 1.5px dashed #cbd5e1; margin: 6px 2px 4px; padding-top: 6px; font-size: 0.78rem; color: #64748b; text-align: center;";
-    sep.textContent = `อันดับของคุณ • ลำดับที่ ${myIndex + 1}`;
-    listEl.appendChild(sep);
-
-    listEl.appendChild(buildLbRow(myIndex + 1, mine.id, mine.u, formatterFn(mine.u)));
-  }
-
-  function renderLeaderboards() {
-    const donateList = document.getElementById('lbDonateList');
-    const heartsList = document.getElementById('lbHeartsList');
-    if (!donateList || !heartsList) return;
-
-    const entries = Object.keys(usersCache || {}).map(id => ({ id: id, u: usersCache[id] || {} }));
-
-    const donors = entries.filter(e => (Number(e.u.donateAmount) || 0) > 0 || (Number(e.u.roleTier) || 0) > 0);
-    donors.sort((a, b) => {
-      const da = Number(a.u.donateAmount) || 0;
-      const dbb = Number(b.u.donateAmount) || 0;
-      if (dbb !== da) return dbb - da;
-      const ta = Number(a.u.roleTier) || 0;
-      const tb = Number(b.u.roleTier) || 0;
-      if (tb !== ta) return tb - ta;
-      return (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0);
-    });
-
-    donateList.textContent = "";
-    if (donors.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = "lb-empty";
-      empty.textContent = "ยังไม่มีผู้สนับสนุนบนกระดาน — เป็นคนแรกเลยสิ! 🎁";
-      donateList.appendChild(empty);
-    } else {
-      const top5Donors = donors.slice(0, 5);
-      const formatDonor = (u) => {
-        const amt = Number(u.donateAmount) || 0;
-        const info = getRoleInfoByTier(Number(u.roleTier) || 0);
-        return amt > 0 ? "฿" + formatNum(amt) : (info ? "Tier " + info.tier : "");
-      };
-      top5Donors.forEach((e, i) => {
-        donateList.appendChild(buildLbRow(i + 1, e.id, e.u, formatDonor(e.u)));
-      });
-      appendMyRankRow(donateList, donors, top5Donors, formatDonor);
-    }
-
+    // --- Top 10 นักส่งหัวใจ ---
     const hearters = entries.filter(e => (Number(e.u.heartsClicked) || 0) > 0);
     hearters.sort((a, b) => (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0));
 
@@ -3093,12 +3041,9 @@
       empty.textContent = "ยังไม่มีใครส่งหัวใจ — กดปุ่มหัวใจด้านบนได้เลย! ❤️";
       heartsList.appendChild(empty);
     } else {
-      const top5Hearters = hearters.slice(0, 5);
-      const formatHearter = (u) => "❤️ " + formatNum(u.heartsClicked);
-      top5Hearters.forEach((e, i) => {
-        heartsList.appendChild(buildLbRow(i + 1, e.id, e.u, formatHearter(e.u)));
+      hearters.slice(0, 10).forEach((e, i) => {
+        heartsList.appendChild(buildLbRow(i + 1, e.id, e.u, "❤️ " + formatNum(e.u.heartsClicked)));
       });
-      appendMyRankRow(heartsList, hearters, top5Hearters, formatHearter);
     }
   }
 
@@ -3962,7 +3907,7 @@
           <div class="img-container">
             <span class="genre-tag" data-orig-tag="${game.tag}">${game.tag}</span>
             <span class="check-badge">✓</span>
-            <img class="game-cover-img" data-orig-src="${game.img}" src="${game.img}" alt="${game.name}" onerror="if(!isHorrorTriggered){this.src='https://placehold.co/400x300/15803d/ffffff?text=${encodeURIComponent(cleanTitle).replace(/'/g, '%27').replace(/%20/g, '+')}';}">
+            <img class="game-cover-img" data-orig-src="${game.img}" src="${game.img}" alt="${game.name}" onerror="if(!isHorrorTriggered){this.src='https://placehold.co/400x300/15803d/ffffff?text=${encodeURIComponent(cleanTitle).replace(/'/g, '%27')}';}">
           </div>
           <div class="game-title">${game.name}</div>
         </div>
