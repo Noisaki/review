@@ -167,7 +167,7 @@
     }
 
     /* =========================================
-       ส่วนหัวและแท่นโชว์โลโก้ BGT ด้านบนสุด
+       ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่เต็มตา
        ========================================= */
     .header-card {
       background: var(--card-bg);
@@ -185,10 +185,13 @@
     .logo-showcase {
       position: relative;
       width: 100%;
-      padding: 40px 20px 30px;
+      padding: 12px 20px;
       background: radial-gradient(circle at center, #0284c7 0%, #0f172a 85%);
       border-bottom: 3px solid #38bdf8;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .logo-showcase::before {
@@ -200,19 +203,28 @@
       opacity: 0.65;
     }
 
+    /* ขยายโลโก้ให้ใหญ่ขึ้นและบีบขอบใสบน-ล่างออกให้พอดีกรอบ */
     .studio-logo {
       position: relative;
       z-index: 2;
-      max-width: 350px;
-      width: 82%;
+      max-width: 660px;
+      width: 96%;
       height: auto;
-      filter: drop-shadow(0 6px 20px rgba(56, 189, 248, 0.6));
+      margin: -48px auto -42px;
+      filter: drop-shadow(0 8px 24px rgba(56, 189, 248, 0.65));
       animation: floatLogo 3.5s ease-in-out infinite;
       transition: transform 0.3s ease;
     }
 
+    @media (max-width: 600px) {
+      .studio-logo {
+        max-width: 440px;
+        margin: -28px auto -24px;
+      }
+    }
+
     .studio-logo:hover {
-      transform: scale(1.05) rotate(-1deg);
+      transform: scale(1.04) rotate(-1deg);
     }
 
     .header-text {
@@ -605,7 +617,7 @@
     }
 
     /* =========================================
-       โซน DONATE & QR CODE + ระบบยศ DISCORD BGT
+       โซน DONATE & QR CODE + ตารางยศถาวร DISCORD
        ========================================= */
     .donate-card {
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(240, 249, 255, 0.95));
@@ -664,8 +676,8 @@
       line-height: 1.55;
     }
 
-    /* ปุ่มเลือกยศผู้สนับสนุนตาม Discord BGT */
-    .tip-tiers {
+    /* ป้ายแสดงรายการยศถาวร (อ่านอย่างเดียว ไม่สับสนว่าเป็นปุ่มโอนเงิน) */
+    .role-showcase-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
@@ -673,74 +685,53 @@
     }
 
     @media (max-width: 480px) {
-      .tip-tiers {
+      .role-showcase-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    .tip-btn {
+    .role-badge-item {
       background: #ffffff;
-      border: 2px solid #bae6fd;
+      border: 1.5px solid #bae6fd;
       border-radius: 14px;
       padding: 10px 12px;
-      cursor: pointer;
-      text-align: left;
-      font-family: 'Prompt', sans-serif;
-      transition: all 0.22s ease;
       display: flex;
       align-items: center;
       gap: 10px;
+      transition: all 0.22s ease;
     }
 
-    .tip-btn:hover {
+    .role-badge-item:hover {
       border-color: #38bdf8;
+      background: #f0f9ff;
       transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(14, 165, 233, 0.18);
+      box-shadow: 0 6px 14px rgba(14, 165, 233, 0.14);
     }
 
-    .tip-btn.active {
-      background: linear-gradient(135deg, #0284c7, #0ea5e9);
-      border-color: transparent;
-      color: white;
-      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
-      transform: scale(1.02);
-    }
-
-    .tip-emoji {
+    .role-emoji {
       font-size: 1.45rem;
     }
 
-    .tip-info strong {
+    .role-info strong {
       display: block;
-      font-size: 0.9rem;
-    }
-
-    .tip-info small {
-      font-size: 0.76rem;
-      opacity: 0.88;
-    }
-
-    .wolf-reaction-box {
-      background: #f0f9ff;
-      border-left: 4px solid #0ea5e9;
-      padding: 10px 14px;
-      border-radius: 0 12px 12px 0;
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       color: #0369a1;
-      font-weight: 500;
-      margin-bottom: 14px;
-      line-height: 1.5;
+    }
+
+    .role-info small {
+      font-size: 0.76rem;
+      color: #475569;
     }
 
     .discord-ticket-note {
       background: rgba(88, 101, 242, 0.1);
       border: 1px dashed #5865F2;
       color: #3730a3;
-      padding: 10px 14px;
+      padding: 11px 14px;
       border-radius: 12px;
       font-size: 0.84rem;
       margin-bottom: 16px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .action-row {
@@ -810,8 +801,8 @@
 
     .qr-frame {
       position: relative;
-      width: 210px;
-      height: 240px;
+      width: 215px;
+      height: 245px;
       margin: 0 auto 12px;
       background: white;
       padding: 8px;
@@ -992,10 +983,9 @@
 <canvas id="particleCanvas"></canvas>
 
 <div class="container">
-  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT ด้านบนสุด -->
+  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่เต็มตา -->
   <div class="header-card">
     <div class="logo-showcase">
-      <!-- เช็กทั้ง logo.png นอกสุด และ images/logo.png อัตโนมัติ -->
       <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}else{this.style.display='none';}">
     </div>
     <div class="header-text">
@@ -1015,8 +1005,7 @@
         <a href="https://x.com/Benzielovely" target="_blank" rel="noopener" class="social-btn btn-x" onmouseenter="playHoverSound()" onclick="playClickSound()">
           𝕏 ติดตามอัปเดต (@Benzielovely)
         </a>
-        <!-- เปลี่ยนลิงก์ Discord ของเจ้านายตรง href ด้านล่างนี้ได้เลยฮะ -->
-        <a href="https://discord.gg/ใส่รหัสเชิญDiscordของเจ้านายตรงนี้" target="_blank" rel="noopener" class="social-btn btn-discord" onmouseenter="playHoverSound()" onclick="playClickSound()">
+        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="social-btn btn-discord" onmouseenter="playHoverSound()" onclick="playClickSound()">
           💬 เข้าดิสคอร์ดพูดคุย & รับยศ
         </a>
       </div>
@@ -1121,54 +1110,51 @@
   </form>
 
   <!-- =========================================
-       โซน DONATE & QR CODE สแกนสนับสนุน + ระบบยศ DISCORD
+       โซน DONATE & QR CODE + ตารางยศถาวร DISCORD
        ========================================= -->
   <div class="donate-card" id="donateSection">
     <div class="donate-ribbon">SUPPORT BGT</div>
     <div class="donate-layout">
-      <!-- ฝั่งซ้าย: ระบบยศ Discord + รีแอคชัน + ส่งหัวใจ -->
+      <!-- ฝั่งซ้าย: รายละเอียดยศถาวร Discord + ขั้นตอนแจ้งรับยศ + ส่งหัวใจ -->
       <div>
         <h2 class="donate-title">💖 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
         <p class="donate-desc">
-          ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานและอยากร่วมสนับสนุน (ไม่มีขั้นต่ำ และสะสมยอดเลื่อนยศได้เรื่อยๆ) คลิกดูรายละเอียดยศด้านล่างได้เลยฮะ:
+          ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานสามารถสแกน QR Code ด้านข้างเพื่อสนับสนุนเท่าไหร่ก็ได้ตามกำลัง (ไม่มีขั้นต่ำ และทยอยสะสมยอดเลื่อนยศได้เรื่อยๆ ครับ):
         </p>
 
-        <div class="tip-tiers">
-          <button type="button" class="tip-btn active" onmouseenter="playHoverSound()" onclick="selectTip(this, 'ไม่มีขั้นต่ำ', '『 ผู้สนับสนุนทั่วไป 』: โดเนทเท่าไหร่ก็ได้ตามใจชอบ (เริ่มต้นหลักสิบก็รับยศถาวรในดิสคอร์ดได้เลยฮะ!) 🐾')">
-            <span class="tip-emoji">🦴</span>
-            <div class="tip-info">
+        <!-- ป้ายแสดงระดับยศถาวร (อ่านอย่างเดียว ไม่สับสน) -->
+        <div class="role-showcase-grid">
+          <div class="role-badge-item" onmouseenter="playHoverSound()">
+            <span class="role-emoji">🦴</span>
+            <div class="role-info">
               <strong>『 ผู้สนับสนุนทั่วไป 』</strong>
               <small>โดเนทเท่าไหร่ก็ได้ตามใจชอบ</small>
             </div>
-          </button>
+          </div>
 
-          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'สะสม 300฿', '『 ผู้ร่วมจารึก 』: สะสมครบ 300 บาท รับยศประดับโปรไฟล์และสียศโดดเด่นถาวรไม่มีวันหมดอายุ! 📜✨')">
-            <span class="tip-emoji">📜</span>
-            <div class="tip-info">
+          <div class="role-badge-item" onmouseenter="playHoverSound()">
+            <span class="role-emoji">📜</span>
+            <div class="role-info">
               <strong>『 ผู้ร่วมจารึก 』</strong>
-              <small>สะสมครบ 300 บาท</small>
+              <small>ยอดสะสมครบ 300 บาท</small>
             </div>
-          </button>
+          </div>
 
-          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'สะสม 500฿', '『 ผู้พิทักษ์หัวใจ 』: สะสมครบ 500 บาท ขอบคุณที่คอยซัพพอร์ตและเป็นพลังใจให้ทีมแปลเสมอครับ! 💖🛡️')">
-            <span class="tip-emoji">💖</span>
-            <div class="tip-info">
+          <div class="role-badge-item" onmouseenter="playHoverSound()">
+            <span class="role-emoji">💖</span>
+            <div class="role-info">
               <strong>『 ผู้พิทักษ์หัวใจ 』</strong>
-              <small>สะสมครบ 500 บาท</small>
+              <small>ยอดสะสมครบ 500 บาท</small>
             </div>
-          </button>
+          </div>
 
-          <button type="button" class="tip-btn" onmouseenter="playHoverSound()" onclick="selectTip(this, 'สะสม 1,000฿', '『 ภาคีผู้พิทักษ์นิรันดร์ 』: สะสมครบ 1,000 บาท ยศสูงสุดระดับตำนาน หมาป่าขอคารวะเลยครับ! 👑💎')">
-            <span class="tip-emoji">👑</span>
-            <div class="tip-info">
+          <div class="role-badge-item" onmouseenter="playHoverSound()">
+            <span class="role-emoji">👑</span>
+            <div class="role-info">
               <strong>『 ภาคีผู้พิทักษ์นิรันดร์ 』</strong>
-              <small>สะสมครบ 1,000 บาท</small>
+              <small>ยอดสะสมครบ 1,000 บาท</small>
             </div>
-          </button>
-        </div>
-
-        <div class="wolf-reaction-box" id="wolfReaction">
-          🐾 <strong>รายละเอียดยศ:</strong> 『 ผู้สนับสนุนทั่วไป 』: โดเนทเท่าไหร่ก็ได้ตามใจชอบ (เริ่มต้นหลักสิบก็รับยศถาวรในดิสคอร์ดได้เลยฮะ!) 🐾
+          </div>
         </div>
 
         <div class="discord-ticket-note">
@@ -1177,21 +1163,19 @@
 
         <div class="action-row">
           <button type="button" class="heart-cheer-btn" onmouseenter="playHoverSound()" onclick="sendHeartCheer(event)">
-            ❤️ ส่งหัวใจให้กำลังใจ (<span id="heartCount">58</span>)
+            ❤️ ส่งหัวใจให้กำลังใจ (<span id="heartCount">128</span>)
           </button>
-          <!-- เปลี่ยนลิงก์ Discord ของเจ้านายตรง href ด้านล่างนี้ได้เลยฮะ -->
-          <a href="https://discord.gg/ใส่รหัสเชิญDiscordของเจ้านายตรงนี้" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
+          <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
             💬 ติดต่อ & แจ้งสลิปใน Discord
           </a>
         </div>
       </div>
 
-      <!-- ฝั่งขวา: กรอบ QR Code สแกนพร้อมเพย์ของเจ้านาย -->
+      <!-- ฝั่งขวา: กรอบ QR Code สแกนพร้อมเพย์จริง -->
       <div class="qr-box-wrapper">
-        <div class="qr-badge-label">⚡ SCAN PROMPTPAY • <span id="selectedTipBadge">ไม่มีขั้นต่ำ</span></div>
+        <div class="qr-badge-label">⚡ SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
         <div class="qr-frame">
           <div class="qr-laser"></div>
-          <!-- เช็กทั้ง qr.png นอกสุด และ images/qr.png อัตโนมัติ -->
           <img src="qr.png" alt="QR Code สแกนจ่ายพร้อมเพย์ นาย เบญจพล" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/qr.png';}">
         </div>
         <p class="qr-subtext">
@@ -1333,17 +1317,9 @@
   }
 
   // =========================================
-  // 2. ลูกเล่นโซน Donate & ส่งหัวใจ
+  // 2. ลูกเล่นปุ่มส่งหัวใจให้กำลังใจ
   // =========================================
-  function selectTip(btn, amountText, reactionMsg) {
-    playCoinSound();
-    document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('selectedTipBadge').textContent = amountText;
-    document.getElementById('wolfReaction').innerHTML = `🐾 <strong>รายละเอียดยศ:</strong> ${reactionMsg}`;
-  }
-
-  let heartTotal = 58;
+  let heartTotal = 128;
   const cheerIcons = ['❤️', '🐾', '💙', '✨', '🐺'];
   function sendHeartCheer(e) {
     playClickSound();
@@ -1479,7 +1455,7 @@
     { name: "[VN] Do Not Kill Me Jacob Extra", tag: "VN", img: "images/jacob.jpg" },
     { name: "[VN] After Class", tag: "VN", img: "images/afterclass.jpg" },
     { name: "[VN] Flaming Flagon", tag: "VN", img: "images/flagon.jpg" },
-    { name: "[VN] The Smoke Room", tag: "VN", img: "images/smoke.jpg" }
+    { name: "[VN] The Smoke Room", tag: "VN", img: "images/smokeroom.jpg" }
   ];
 
   const GAME_ENTRY_ID = "entry.1291974658";
