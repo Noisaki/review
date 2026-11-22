@@ -2478,6 +2478,7 @@
   const DISCORD_SCOPE = "identify guilds.members.read";
   const DISCORD_GUILD_ID = "561512623116386304";
   const DISCORD_API = "https://discord.com/api/v10";
+  const VOTE_ADMIN_ROLE_ID = "1388417035842748506";
 
   // ยศทั้ง 4 ระดับ (เรียงจากสูงสุดไปต่ำสุด)
   const ROLE_TIERS = [
@@ -2762,15 +2763,15 @@
   }
 
   // ดึงข้อมูลผู้ใช้ + ยศในเซิร์ฟเวอร์ BGT
-  async function fetchDiscordProfile(token) {
+  async function fetchDiscordProfile(token) {  
     const userRes = await fetchDiscordJson("/users/@me", token);
     if (userRes.status === 401) throw new Error("TOKEN_INVALID");
     if (!userRes.ok) throw new Error("USER_FETCH_FAILED");
     const user = await userRes.json();
-
     let roleTier = 0;
     let inGuild = false;
     let nick = null;
+    let isVoteAdmin = false;
     let guildAvatar = null;
 
     try {
@@ -2780,6 +2781,7 @@
         inGuild = true;
         nick = member.nick || null;
         const roles = Array.isArray(member.roles) ? member.roles : [];
+        isVoteAdmin = roles.indexOf(VOTE_ADMIN_ROLE_ID) !== -1;
         for (const r of ROLE_TIERS) {
           if (roles.indexOf(r.id) !== -1) {
             roleTier = r.tier;
@@ -2796,7 +2798,8 @@
       username: user.username || "",
       avatarUrl: buildAvatarUrl(user),
       roleTier: roleTier,
-      inGuild: inGuild
+      inGuild: inGuild,
+      isVoteAdmin: isVoteAdmin
     };
   }
 
@@ -4355,6 +4358,104 @@
     // เริ่มระบบ Discord (อ่าน token จาก URL หลังล็อกอิน / โหลดเซสชันเดิม)
     initDiscordAuth();
   });
+
+  // =========================================
+  // 8. ระบบโหวตเกมแข่งกดใจ (6 เกม + จับเวลา 24 ชม.)
+  // =========================================
+  let voteData = null;
+  let voteTimerInterval = null;
+  let hasAnnouncedWinner = false;
+
+  // 1) แอดมินกดบันทึกชื่อเกม + เริ่มจับเวลา (ค่าเริ่มต้น 24 ชม.)
+  function adminStartVoteEvent() {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+
+    const hours = parseFloat(document.getElementById('adminVoteHours').value) || 24;
+    const endTime = Date.now() + (hours * 60 * 60 * 1000);
+    const gamesObj = {};
+
+    for (let i = 1; i <= 6; i++) {
+      const nameInput = document.getElementById(`adminGameName${i}`);
+      const imgInput = document.getElementById(`adminGameImg${i}`);
+      const gameName = nameInput ? nameInput.value.trim() : `เกมที่ ${i}`;
+      const gameImg = imgInput ? imgInput.value.trim() : `เกม${i}.png`;
+
+      if (gameName) {
+        gamesObj[`g${i}`] = {
+          name: gameName,
+          img: gameImg || `เกม${i}.png`,
+          hearts: 0
+        };
+      }
+    }
+
+    hasAnnouncedWinner = false;
+    db.ref("game_vote").set({
+      status: "running",
+      durationHours: hours,
+      endTime: endTime,
+      games: gamesObj
+    }).then(() => {
+      showToast(`🚀 เริ่มการแข่งโหวตแล้ว! (จับเวลา ${hours} ชม.)`);
+    });
+  }
+
+  // 2) ฟังข้อมูลจาก Firebase แบบเรียลไทม์ + นับถอยหลัง
+  function initGameVoteSystem() {
+    if (!db) return;
+    db.ref("game_vote").on("value", (snap) => {
+      voteData = snap.val();
+      updateVoteCountdown();
+      if (!voteTimerInterval) {
+        voteTimerInterval = setInterval(updateVoteCountdown, 1000);
+      }
+    });
+  }
+
+  // 3) เช็กเวลาหมด -> เด้งประกาศเกมที่ชนะ
+  function updateVoteCountdown() {
+    const timerEl = document.getElementById('voteCountdownText');
+    if (!voteData || !voteData.endTime) {
+      if (timerEl) timerEl.textContent = "⏳ รอแอดมินเปิดรอบโหวต...";
+      return;
+    }
+
+    const diff = voteData.endTime - Date.now();
+    if (diff <= 0) {
+      if (timerEl) timerEl.textContent = "🏁 หมดเวลาโหวตแล้ว!";
+      if (!hasAnnouncedWinner) {
+        hasAnnouncedWinner = true;
+        announceVoteWinner();
+      }
+      return;
+    }
+
+    const hrs = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    if (timerEl) {
+      timerEl.textContent = `⏱️ เหลือเวลา: ${hrs} ชม. ${mins} นาที ${secs} วิ`;
+    }
+  }
+
+  // 4) หาเกมที่คะแนนสูงสุดแล้วเด้งป๊อปอัปประกาศผู้ชนะ
+  function announceVoteWinner() {
+    if (!voteData || !voteData.games) return;
+    const list = Object.values(voteData.games);
+    if (list.length === 0) return;
+
+    list.sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
+    const winner = list[0];
+
+    playMilestoneFanfare();
+    const modal = document.getElementById('voteWinnerModal');
+    if (modal) {
+      document.getElementById('winnerGameImg').src = winner.img;
+      document.getElementById('winnerGameName').textContent = winner.name;
+      document.getElementById('winnerGameScore').textContent = `❤️ ${formatNum(winner.hearts)} ดวง`;
+      modal.style.display = 'flex';
+    }
+  }
 </script>
 
 </body>
