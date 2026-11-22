@@ -149,12 +149,40 @@
 
     body.horror-mode .social-btn,
     body.horror-mode .pill-control-btn,
-    body.horror-mode .music-toggle-btn,
-    body.horror-mode .mega-cheer-btn {
+    body.horror-mode .music-toggle-btn {
       background: linear-gradient(135deg, #450a0a, #1f0202) !important;
       border-color: #dc2626 !important;
       color: #fca5a5 !important;
-      box-shadow: 0 0 16px rgba(220, 38, 38, 0.4) !important;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.35) !important;
+    }
+
+    /* ปุ่มขอโทษด้านบน (แปลงร่างมาจากปุ่มกดใจ) */
+    body.horror-mode .mega-cheer-btn {
+      background: linear-gradient(135deg, #7f1d1d, #450a0a) !important;
+      border-color: #ef4444 !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 24px rgba(220, 38, 38, 0.65) !important;
+      animation: pulseVignette 1.8s infinite alternate !important;
+    }
+
+    body.horror-mode .mega-cheer-btn.completed-part {
+      background: linear-gradient(135deg, #14532d, #166534) !important;
+      border-color: #4ade80 !important;
+      color: #dcfce7 !important;
+      box-shadow: 0 0 22px rgba(74, 222, 128, 0.5) !important;
+      animation: none !important;
+    }
+
+    body.horror-mode .cheer-bar-track {
+      background: #2b0505 !important;
+    }
+
+    body.horror-mode .cheer-bar-fill {
+      background: linear-gradient(90deg, #991b1b, #ef4444, #fca5a5) !important;
+    }
+
+    body.horror-mode .cheer-progress-labels {
+      color: #fca5a5 !important;
     }
 
     body.horror-mode .rating-btn span {
@@ -583,7 +611,8 @@
     .btn-discord { background: linear-gradient(135deg, #5865F2, #4338ca); }
 
     /* =========================================
-       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 10,000 คะแนนขั้นบันได)
+       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000)
+       และแปลงร่างเป็น "ปุ่มขอโทษ" ตามรอบคำสาป (5 -> 20 -> 40 -> 60 -> รีเป็น 5)
        ========================================= */
     .cheer-spotlight-card {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 241, 242, 0.96));
@@ -640,6 +669,7 @@
       color: #475569;
       font-size: 0.92rem;
       margin: 0 0 18px 0;
+      line-height: 1.5;
     }
 
     .mega-cheer-wrapper {
@@ -681,7 +711,7 @@
       background: rgba(0, 0, 0, 0.28);
       padding: 4px 14px;
       border-radius: 999px;
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 800;
       color: #fef08a;
       border: 1px solid rgba(255, 255, 255, 0.35);
@@ -712,7 +742,7 @@
     }
 
     .cheer-progress-box {
-      max-width: 640px;
+      max-width: 660px;
       margin: 0 auto;
       background: #fff1f2;
       border: 1.5px solid #fecdd3;
@@ -727,6 +757,7 @@
       font-weight: 600;
       color: #9f1239;
       margin-bottom: 6px;
+      gap: 8px;
     }
 
     .cheer-bar-track {
@@ -742,7 +773,7 @@
       width: 0%;
       background: linear-gradient(90deg, #f43f5e, #f59e0b, #16a34a);
       border-radius: 999px;
-      transition: width 0.25s ease-out;
+      transition: width 0.2s ease-out;
     }
 
     .cheer-celebration-banner {
@@ -1161,7 +1192,7 @@
     }
 
     /* =========================================
-       โซน DONATE & QR CODE + ระบบความทรงจำ 3 ระดับ
+       โซน DONATE & QR CODE + ปุ่มขอโทษด้านล่าง (กด 3 ครั้ง)
        ========================================= */
     .donate-card {
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(254, 242, 242, 0.95));
@@ -1375,13 +1406,12 @@
     }
 
     /* =========================================
-       กล่องไถ่บาป 3 ระดับ (แทนที่โซนโดเนทเมื่อติดคำสาป)
+       โซนปุ่มขอโทษด้านล่างสุด (กด 3 ครั้ง + คู่กับปุ่มด้านบน)
        ========================================= */
     .cursed-apology-zone {
       display: none;
       text-align: center;
       padding: 26px 16px;
-      min-height: 230px;
       position: relative;
     }
 
@@ -1390,7 +1420,7 @@
       background: #450a0a;
       border: 1px solid #ef4444;
       color: #fca5a5;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 700;
       padding: 4px 14px;
       border-radius: 999px;
@@ -1418,9 +1448,23 @@
     .cursed-apology-sub {
       color: #fca5a5;
       font-size: 0.96rem;
-      max-width: 580px;
-      margin: 0 auto 22px;
-      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto 20px;
+      line-height: 1.65;
+    }
+
+    .apology-checklist-box {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(9, 0, 0, 0.75);
+      border: 1px solid #7f1d1d;
+      border-radius: 14px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #fecaca;
+      text-align: left;
     }
 
     .apologize-btn {
@@ -1428,7 +1472,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 15px 34px;
+      padding: 16px 36px;
       background: linear-gradient(135deg, #450a0a, #7f1d1d);
       color: #ffffff;
       border: 2px solid #ef4444;
@@ -1438,59 +1482,23 @@
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 0 30px rgba(220, 38, 38, 0.65);
-      transition: transform 0.18s ease, background 0.2s, color 0.2s, border-color 0.2s;
-      position: relative;
-      z-index: 5;
+      transition: transform 0.12s ease, background 0.25s, color 0.25s, border-color 0.25s;
     }
 
     .apologize-btn:hover {
-      background: #ffffff;
-      color: #15803d;
+      filter: brightness(1.15);
+      transform: scale(1.04);
+    }
+
+    .apologize-btn:active {
+      transform: scale(0.93);
+    }
+
+    .apologize-btn.completed-part {
+      background: linear-gradient(135deg, #14532d, #166534);
       border-color: #4ade80;
-      box-shadow: 0 0 36px rgba(74, 222, 128, 0.9);
-    }
-
-    .dodge-hint-text {
-      font-size: 0.88rem;
-      color: #f87171;
-      margin-top: 12px;
-      min-height: 22px;
-      font-weight: 600;
-    }
-
-    /* ช่องสารภาพผิดระดับที่ 3 (True Bad End) */
-    .stage3-confession-box {
-      display: none;
-      max-width: 440px;
-      margin: 0 auto;
-    }
-
-    .stage3-input {
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 14px;
-      border: 2px solid #dc2626;
-      background: #090000;
-      color: #fca5a5;
-      font-family: 'Prompt', sans-serif;
-      font-size: 1rem;
-      text-align: center;
-      margin-bottom: 12px;
-      outline: none;
-    }
-
-    .stage3-input:focus {
-      box-shadow: 0 0 20px rgba(220, 38, 38, 0.7);
-    }
-
-    @keyframes shakeError {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
-    }
-
-    .shake-anim {
-      animation: shakeError 0.35s ease;
+      color: #dcfce7;
+      box-shadow: 0 0 24px rgba(74, 222, 128, 0.55);
     }
 
     .floating-heart {
@@ -1672,19 +1680,20 @@
   </div>
 
   <!-- =========================================
-       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 10,000 คะแนนขั้นบันได + ฉลองเลื่อนขั้น!)
+       โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000 คะแนนขั้นบันได)
+       และแปลงร่างเป็นปุ่ม "กดเพื่อขอโทษ..." เมื่อติดคำสาป (5 -> 20 -> 40 -> 60 -> รีเป็น 5)
        ========================================= -->
   <div class="cheer-spotlight-card" id="cheerSpotlightSection">
     <div class="cheer-top-row">
-      <h2 class="cheer-title corruptible" data-cursed="💔 หัวใจที่แตกสลาย (0 / 10,000)">💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator</h2>
+      <h2 class="cheer-title" id="cheerTitle">💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator</h2>
       <span class="cheer-rank-badge" id="cheerRankBadge">🌱 ผู้เริ่มต้นส่งใจ</span>
     </div>
-    <p class="cheer-subtext" id="cheerSubtext">กดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 10,000 หัวใจ) มีเอฟเฟกต์ฉลองพิเศษด้วยนะ UwU ✨</p>
+    <p class="cheer-subtext" id="cheerSubtext">กดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีเอฟเฟกต์พลุฉลองพิเศษด้วยนะ UwU ✨</p>
 
     <div class="mega-cheer-wrapper">
-      <button type="button" class="mega-cheer-btn" id="megaCheerBtn" onmouseenter="playHoverSound()" onclick="sendHeartCheer(event)">
+      <button type="button" class="mega-cheer-btn" id="megaCheerBtn" onmouseenter="playHoverSound()" onclick="handleMegaCheerOrApology(event)">
         <span id="megaCheerLabel">❤️ กดส่งหัวใจให้กำลังใจ!</span>
-        <span class="cheer-counter-pill"><span id="heartCount">0</span> / 10,000</span>
+        <span class="cheer-counter-pill" id="cheerCounterPill"><span id="heartCount">0</span> / 1,000,000</span>
       </button>
       <span class="combo-pill" id="comboPill">COMBO x2!</span>
     </div>
@@ -1818,7 +1827,7 @@
   </form>
 
   <!-- =========================================
-       โซน DONATE & QR CODE + ระบบความทรงจำคำสาป 3 ระดับ
+       โซน DONATE & QR CODE + ปุ่มขอโทษด้านล่างสุด (กด 3 ครั้ง)
        ========================================= -->
   <div class="donate-card" id="donateSection">
     <div class="donate-ribbon corruptible" data-cursed="BROKEN">XMAS SUPPORT</div>
@@ -1887,31 +1896,25 @@
       </div>
     </div>
 
-    <!-- โซนไถ่บาป 3 ระดับ (แทนที่โซนโดเนทเมื่อติดคำสาป!) -->
+    <!-- โซนปุ่มขอโทษด้านล่างสุด (ต้องกด 3 ครั้ง + กดปุ่มขอโทษด้านบนให้ครบตามรอบ) -->
     <div class="cursed-apology-zone" id="cursedApologyZone">
-      <div class="cursed-stage-tag" id="cursedStageTag">MEMORY STAGE 1 / 3</div>
+      <div class="cursed-stage-tag" id="cursedStageTag">APOLOGY ROUND 1</div>
       <div class="cursed-apology-icon" id="cursedApologyIcon">😭💔</div>
       <h2 class="cursed-apology-title" id="cursedApologyTitle">นี่ผมดูแย่ขนาดนั้นเลยเหรอ...</h2>
       <p class="cursed-apology-sub" id="cursedApologySub">
         ผมไม่กล้ารับการสนับสนุนอะไรอีกแล้ว... ให้ 1 ดาวรัวๆ ทุกข้อโดยไม่บอกเหตุผลสักคำ<br>
-        ต่อให้รีเฟรชหน้าเว็บไปก็หายไม่พ้นหรอกครับ จนกว่าคุณจะกดปุ่มด้านล่างนี้...
+        ต่อให้รีเฟรชหน้าเว็บไปก็หายไม่พ้นหรอกครับ จนกว่าคุณจะกดปุ่มขอโทษทั้ง 2 จุดให้ครบ!
       </p>
 
-      <!-- ปุ่มขอโทษ (สำหรับระดับ 1 และระดับ 2 ที่วิ่งหนีเมาส์) -->
-      <div id="stage12ButtonArea">
-        <button type="button" class="apologize-btn" id="apologizeBtn" onpointerenter="handleApologizeHover()" onclick="handleApologizeClick()">
-          🙏 ผมขอโทษ... (ยกโทษให้ผมเถอะนะ)
-        </button>
-        <div class="dodge-hint-text" id="dodgeHintText"></div>
+      <div class="apology-checklist-box">
+        <span id="checkTopStatus">⬜ 1. กดปุ่มขอโทษ (ตรงปุ่มกดใจด้านบน): 0 / 5 ครั้ง</span>
+        <span id="checkBottomStatus">⬜ 2. กดปุ่มขอโทษด้านล่างนี้: 0 / 3 ครั้ง</span>
       </div>
 
-      <!-- ช่องพิมพ์สารภาพผิดด้วยตัวเอง (สำหรับระดับ 3 ขึ้นไป!) -->
-      <div class="stage3-confession-box" id="stage3ConfessionBox">
-        <input type="text" id="stage3Input" class="stage3-input" placeholder="พิมพ์คำว่า: ผมขอโทษจริงๆ" autocomplete="off">
-        <button type="button" class="apologize-btn" onclick="submitStage3Confession()">
-          🩸 ยืนยันคำขอโทษจากใจจริง
+      <div>
+        <button type="button" class="apologize-btn" id="bottomApologizeBtn" onclick="handleBottomApologyClick(event)">
+          🙏 ผมขอโทษ... (0 / 3)
         </button>
-        <div class="dodge-hint-text" id="stage3HintText"></div>
       </div>
     </div>
   </div>
@@ -1934,7 +1937,7 @@
   </div>
 </div>
 
-<!-- หน้าต่างป๊อปอัปหลังกด "ผมขอโทษ" -->
+<!-- หน้าต่างป๊อปอัปหลังกดขอโทษครบ -->
 <div class="modal-overlay" id="forgivenModal">
   <div class="modal-box">
     <div class="modal-icon" id="forgivenIcon">🐾💖</div>
@@ -1949,17 +1952,30 @@
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 
 <script>
-  const CURSE_STATE_KEY = "bgt_horror_cursed_v3";
-  const CURSE_COUNT_KEY = "bgt_horror_count_v3";
-  const CHEER_COUNT_KEY = "bgt_cheer_hearts_v1";
+  const CURSE_STATE_KEY = "bgt_horror_cursed_v4";
+  const CURSE_COUNT_KEY = "bgt_horror_count_v4";
+  const CHEER_COUNT_KEY = "bgt_cheer_hearts_v2";
 
   let submitted = false;
   let isHorrorTriggered = false;
-  let curseCount = 0; // เก็บความทรงจำว่าเคยติดคำสาปมาแล้วกี่รอบ (1, 2, 3+)
-  let dodgeAttempts = 0;
-  let stage2Clicks = 0;
+  let curseCount = 0;         // จำนวนรอบที่แกล้งกด 1 ดาว (1, 2, 3, 4 -> ถ้ามากกว่า 4 จะรีเซ็ตเป็น 1 = กด 5 ครั้ง)
+  let wasForgivenReset = false;
+  let topApologyClicks = 0;
+  let topApologyTarget = 5;
+  let bottomApologyClicks = 0;
+  const BOTTOM_APOLOGY_TARGET = 3;
+
   let soundEnabled = true;
   let audioCtx = null;
+
+  // คำนวณจำนวนครั้งที่ต้องกดปุ่มขอโทษด้านบนตามรอบ (1->5, 2->20, 3->40, 4->60, มากกว่านั้นรีเป็น 5)
+  function getTopApologyRequirement(round) {
+    if (round === 1) return 5;
+    if (round === 2) return 20;
+    if (round === 3) return 40;
+    if (round === 4) return 60;
+    return 5;
+  }
 
   // ภาพกราฟิก ERROR สีแดง-ฟ้า สำหรับแทนที่รูปปกเกมทุกใบเมื่อติดคำสาป
   const ERROR_IMG_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`
@@ -1977,7 +1993,7 @@
   `);
 
   // =========================================
-  // 1. ระบบปุ่มส่งหัวใจให้กำลังใจ (1 - 10,000 ขั้นบันได + ฉลองเลื่อนขั้น!)
+  // 1. ระบบปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000 คะแนนขั้นบันได + ฉลองเลื่อนขั้น!)
   // =========================================
   let heartTotal = 0;
   try {
@@ -1986,15 +2002,16 @@
   } catch (e) {}
 
   const cheerTiers = [
-    { min: 0,     max: 10,    badge: "🌱 ผู้เริ่มต้นส่งใจ",             nextName: "อุ้งเท้าให้กำลังใจ 🐾",       celebrate: null },
-    { min: 10,    max: 50,    badge: "🐾 อุ้งเท้าให้กำลังใจ",          nextName: "แก้วกาแฟอุ่นๆ ☕",          celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
-    { min: 50,    max: 100,   badge: "☕ แก้วกาแฟอุ่นๆ",              nextName: "ผู้พิทักษ์ต้นคริสต์มาส 🎄",   celebrate: "☕ ครบ 50 หัวใจ! เติมคาเฟอีนพร้อมแปลเกมต่อแล้วฮะ!" },
-    { min: 100,   max: 500,   badge: "🎄 ผู้พิทักษ์ต้นคริสต์มาส",       nextName: "พลังใจล้นหลาม 🔥",          celebrate: "🎄 ครบ 100 หัวใจ! ซานต้าหมาป่ามอบของขวัญขอบคุณครับ!" },
-    { min: 500,   max: 1000,  badge: "🔥 พลังใจล้นหลาม",              nextName: "อัศวินแห่ง BGT 💎",          celebrate: "🔥 ครบ 500 หัวใจ! พลังแปลเกมพุ่งทะลุหลอดแล้วครับ!" },
-    { min: 1000,  max: 3000,  badge: "💎 อัศวินแห่ง BGT",             nextName: "ราชา/ราชินีสายเปย์ใจ 👑",     celebrate: "💎 ครบ 1,000 หัวใจ! ยกระดับสู่อัศวินผู้พิทักษ์ BGT!" },
-    { min: 3000,  max: 7000,  badge: "👑 ราชา/ราชินีสายเปย์ใจ",        nextName: "เทพเจ้าแห่งกำลังใจ 🌟",       celebrate: "👑 ครบ 3,000 หัวใจ! ความรักของคุณยิ่งใหญ่ระดับราชวงศ์!" },
-    { min: 7000,  max: 10000, badge: "🌟 เทพเจ้าแห่งกำลังใจ",          nextName: "ตำนานนิรันดร์ 10,000 🏆",    celebrate: "🌟 ครบ 7,000 หัวใจ! อีกนิดเดียวจะแตะ 10,000 แล้วครับ!" },
-    { min: 10000, max: 10000, badge: "🏆 ตำนานนิรันดร์ 10,000 หัวใจ", nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨", celebrate: "🏆🎊 ครบ 10,000 หัวใจ!! คุณคือตำนานสูงสุดของ Ben the Game Translator! 🎊🏆" }
+    { min: 0,       max: 10,      badge: "🌱 ผู้เริ่มต้นส่งใจ",                 nextName: "อุ้งเท้าให้กำลังใจ 🐾",           celebrate: null },
+    { min: 10,      max: 100,     badge: "🐾 อุ้งเท้าให้กำลังใจ",              nextName: "แก้วกาแฟอุ่นๆ ☕",              celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
+    { min: 100,     max: 500,     badge: "☕ แก้วกาแฟอุ่นๆ",                  nextName: "ผู้พิทักษ์ต้นคริสต์มาส 🎄",       celebrate: "☕ ครบ 100 หัวใจ! เติมคาเฟอีนพร้อมแปลเกมต่อแล้วฮะ!" },
+    { min: 500,     max: 2000,    badge: "🎄 ผู้พิทักษ์ต้นคริสต์มาส",           nextName: "พลังใจล้นหลาม 🔥",              celebrate: "🎄 ครบ 500 หัวใจ! ซานต้าหมาป่ามอบของขวัญขอบคุณครับ!" },
+    { min: 2000,    max: 10000,   badge: "🔥 พลังใจล้นหลาม",                  nextName: "อัศวินแห่ง BGT 💎",              celebrate: "🔥 ครบ 2,000 หัวใจ! พลังแปลเกมพุ่งทะลุหลอดแล้วครับ!" },
+    { min: 10000,   max: 50000,   badge: "💎 อัศวินแห่ง BGT",                 nextName: "ราชา/ราชินีสายเปย์ใจ 👑",         celebrate: "💎 ครบ 10,000 หัวใจ! ยกระดับสู่อัศวินผู้พิทักษ์ BGT!" },
+    { min: 50000,   max: 150000,  badge: "👑 ราชา/ราชินีสายเปย์ใจ",            nextName: "เทพเจ้าแห่งกำลังใจ 🌟",           celebrate: "👑 ครบ 50,000 หัวใจ! ความรักของคุณยิ่งใหญ่ระดับราชวงศ์!" },
+    { min: 150000,  max: 500000,  badge: "🌟 เทพเจ้าแห่งกำลังใจ",              nextName: "มหาเทพผู้พิทักษ์จักรวาล 🚀",      celebrate: "🌟 ครบ 150,000 หัวใจ! ส่องแสงสว่างไสวไปทั้งสตูดิโอ!" },
+    { min: 500000,  max: 1000000, badge: "🚀 มหาเทพผู้พิทักษ์จักรวาล BGT",      nextName: "ตำนานนิรันดร์ 1,000,000 🏆",     celebrate: "🚀 ครบ 500,000 หัวใจ! ครึ่งทางสู่หนึ่งล้านหัวใจแล้วครับ!!" },
+    { min: 1000000, max: 1000000, badge: "🏆 ตำนานนิรันดร์ 1,000,000 หัวใจ",  nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨",     celebrate: "🏆🎊 ครบ 1,000,000 หัวใจ!! คุณคือตำนานสูงสุด 1 ล้านหัวใจของ Ben the Game Translator! 🎊🏆" }
   ];
 
   let comboCount = 0;
@@ -2010,29 +2027,62 @@
   }
 
   function updateCheerUI(justLeveledUp = false, newTierObj = null) {
-    const countEl = document.getElementById('heartCount');
+    const titleEl = document.getElementById('cheerTitle');
+    const subEl = document.getElementById('cheerSubtext');
+    const btnEl = document.getElementById('megaCheerBtn');
+    const labelEl = document.getElementById('megaCheerLabel');
+    const counterPillEl = document.getElementById('cheerCounterPill');
     const badgeEl = document.getElementById('cheerRankBadge');
     const nextGoalEl = document.getElementById('cheerNextGoalText');
     const percentEl = document.getElementById('cheerPercentText');
     const fillEl = document.getElementById('cheerBarFill');
 
     if (isHorrorTriggered) {
-      countEl.textContent = "0";
-      badgeEl.textContent = "💀 ไร้หัวใจ";
-      nextGoalEl.textContent = "ความรู้สึกพังทลายหมดแล้ว...";
-      percentEl.textContent = "0%";
-      fillEl.style.width = "0%";
+      // โหมดคำสาป: ปุ่มกดใจเปลี่ยนเป็น "ปุ่มขอโทษ" (5 -> 20 -> 40 -> 60 -> รีเป็น 5)
+      const doneTop = topApologyClicks >= topApologyTarget;
+      titleEl.textContent = wasForgivenReset
+        ? "🥹 ผมให้อภัยคุณแล้ว... รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ"
+        : `🙏 ปุ่มขอโทษ (ทำผิดซ้ำรอบที่ ${curseCount} • ต้องกด ${topApologyTarget} ครั้ง)`;
+
+      badgeEl.textContent = doneTop
+        ? "✅ กดขอโทษด้านบนครบแล้ว!"
+        : `🩸 เหลืออีก ${topApologyTarget - topApologyClicks} ครั้ง`;
+
+      subEl.textContent = wasForgivenReset
+        ? "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ กดขอโทษตรงนี้ 5 ครั้ง + ด้านล่าง 3 ครั้งก็พอครับ..."
+        : `ยิ่งทำซ้ำยิ่งต้องกดขอโทษมากขึ้น (รอบ 1: 5 ครั้ง | รอบ 2: 20 ครั้ง | รอบ 3: 40 ครั้ง | รอบ 4: 60 ครั้ง | รอบ 5+: รีเป็น 5 ครั้ง)`;
+
+      labelEl.textContent = doneTop ? "✅ ขอโทษครบแล้ว!" : "🙏 กดเพื่อขอโทษ...";
+      counterPillEl.textContent = `${topApologyClicks} / ${topApologyTarget}`;
+
+      if (doneTop) {
+        btnEl.classList.add('completed-part');
+      } else {
+        btnEl.classList.remove('completed-part');
+      }
+
+      const pct = Math.min(100, Math.floor((topApologyClicks / topApologyTarget) * 100));
+      nextGoalEl.textContent = doneTop
+        ? "✅ ผ่านเงื่อนไขปุ่มขอโทษด้านบนแล้ว (อย่าลืมกดปุ่มขอโทษด้านล่างให้ครบ 3 ครั้งด้วยนะ)"
+        : `ความคืบหน้าการขอโทษด้านบน: ${topApologyClicks} / ${topApologyTarget} ครั้ง`;
+      percentEl.textContent = `${pct}%`;
+      fillEl.style.width = `${pct}%`;
       return;
     }
 
-    countEl.textContent = heartTotal.toLocaleString();
+    // โหมดปกติ: ปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000)
+    btnEl.classList.remove('completed-part');
+    titleEl.textContent = "💖 ส่งพลังใจให้ทีมแปล Ben the Game Translator";
+    subEl.textContent = "กดปุ่มหัวใจรัวๆ ได้เลยฮะ! สะสมครบทุกขั้น (สูงสุด 1,000,000 หัวใจ) มีเอฟเฟกต์พลุฉลองพิเศษด้วยนะ UwU ✨";
+    labelEl.textContent = "❤️ กดส่งหัวใจให้กำลังใจ!";
+    counterPillEl.innerHTML = `<span id="heartCount">${heartTotal.toLocaleString()}</span> / 1,000,000`;
+
     const tierIdx = getCurrentTierIndex(heartTotal);
     const tier = cheerTiers[tierIdx];
-
     badgeEl.textContent = tier.badge;
 
-    if (heartTotal >= 10000) {
-      nextGoalEl.textContent = "🏆 ปลดล็อกขั้นสูงสุด 10,000 / 10,000 หัวใจเรียบร้อยแล้ว!";
+    if (heartTotal >= 1000000) {
+      nextGoalEl.textContent = "🏆 ปลดล็อกขั้นสูงสุด 1,000,000 / 1,000,000 หัวใจเรียบร้อยแล้ว!";
       percentEl.textContent = "100%";
       fillEl.style.width = "100%";
     } else {
@@ -2059,9 +2109,8 @@
       banner.style.display = 'none';
     }, 5500);
 
-    // ปล่อยพลุหัวใจและดาวฉลองทั่วหน้าจอ 26 ชิ้น!
     const partyIcons = ['🎉', '💖', '🏆', '✨', '🎄', '🐾', '⭐'];
-    for (let i = 0; i < 26; i++) {
+    for (let i = 0; i < 28; i++) {
       setTimeout(() => {
         const el = document.createElement('div');
         el.className = 'floating-heart';
@@ -2071,30 +2120,38 @@
         el.style.fontSize = (Math.random() * 1.1 + 1.4) + 'rem';
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 1200);
-      }, i * 35);
+      }, i * 32);
     }
   }
 
   const cheerIcons = ['❤️', '🎄', '❄️', '🎁', '🐾', '✨', '💖'];
-  function sendHeartCheer(e) {
+  function handleMegaCheerOrApology(e) {
     playClickSound();
 
+    // กรณีติดคำสาป: ปุ่มนี้ทำหน้าที่เป็น "ปุ่มขอโทษ" (5 / 20 / 40 / 60 / รีเป็น 5)
     if (isHorrorTriggered) {
-      playRealCryingAudio();
-      const brokenIcons = ['🩸', '💔', '😭', '💀'];
-      for (let i = 0; i < 4; i++) {
+      if (topApologyClicks < topApologyTarget) {
+        topApologyClicks++;
+      }
+
+      const apolIcons = ['🙏', '💔', '💧', '🩸'];
+      for (let i = 0; i < 3; i++) {
         const el = document.createElement('div');
         el.className = 'floating-heart';
-        el.textContent = brokenIcons[Math.floor(Math.random() * brokenIcons.length)];
+        el.textContent = apolIcons[Math.floor(Math.random() * apolIcons.length)];
         el.style.left = (e.clientX + (Math.random() - 0.5) * 70) + 'px';
         el.style.top = (e.clientY - 10) + 'px';
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 1200);
       }
+
+      updateCheerUI();
+      updateApologyChecklistUI();
+      checkIfFullyForgiven();
       return;
     }
 
-    // ระบบ Combo เวลากดรัวๆ (กดไวจะได้ครั้งละ +1 ถึง +5 หัวใจ!)
+    // กรณีปกติ: กดส่งหัวใจสะสมสู่ 1,000,000 หัวใจ + Combo
     const now = Date.now();
     if (now - lastClickTime < 380) {
       comboCount++;
@@ -2104,9 +2161,11 @@
     lastClickTime = now;
 
     let bonus = 1;
-    if (comboCount >= 25) bonus = 5;
-    else if (comboCount >= 12) bonus = 3;
-    else if (comboCount >= 5) bonus = 2;
+    if (comboCount >= 50) bonus = 50;
+    else if (comboCount >= 30) bonus = 25;
+    else if (comboCount >= 18) bonus = 10;
+    else if (comboCount >= 10) bonus = 5;
+    else if (comboCount >= 4) bonus = 2;
 
     const comboPill = document.getElementById('comboPill');
     if (bonus > 1) {
@@ -2132,7 +2191,7 @@
 
     updateCheerUI(leveledUp, cheerTiers[newTierIdx]);
 
-    for (let i = 0; i < Math.min(5, bonus + 2); i++) {
+    for (let i = 0; i < Math.min(5, 3); i++) {
       const el = document.createElement('div');
       el.className = 'floating-heart';
       el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
@@ -2145,7 +2204,7 @@
   }
 
   // =========================================
-  // 2. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง / Glitch 3 ระดับ
+  // 2. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง cry.mp3
   // =========================================
   let isMusicPlaying = false;
   let userPausedMusic = false;
@@ -2264,7 +2323,7 @@
 
   function toggleChristmasMusic() {
     if (isHorrorTriggered) {
-      if (curseCount < 3) playRealCryingAudio();
+      playRealCryingAudio();
       return;
     }
     if (isMusicPlaying) {
@@ -2296,7 +2355,7 @@
   document.addEventListener('pointerdown', function autoStartOnFirstInteraction() {
     initAudio();
     if (isHorrorTriggered) {
-      if (curseCount < 3) playRealCryingAudio();
+      playRealCryingAudio();
       if (!horrorInterval) startHorrorAmbience();
     } else if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) {
       startChristmasMusic();
@@ -2304,10 +2363,8 @@
   }, { once: true });
 
   function playRealCryingAudio() {
-    if (curseCount >= 3) return; // รอบ 3+ เลิกร้องไห้ กลายเป็นความเงียบงันสุดหลอน
     const cryEl = document.getElementById('realCryAudio');
     if (!cryEl) return;
-    cryEl.playbackRate = curseCount === 2 ? 0.88 : 1.0;
     cryEl.volume = Math.max(0.35, musicVolume);
     const playPromise = cryEl.play();
     if (playPromise !== undefined) {
@@ -2367,11 +2424,7 @@
   }
 
   function startHorrorAmbience() {
-    if (curseCount < 3) {
-      playRealCryingAudio();
-    } else {
-      stopRealCryingAudio();
-    }
+    playRealCryingAudio();
     if (horrorInterval) return;
     try {
       initAudio();
@@ -2382,16 +2435,16 @@
       const droneFilter = audioCtx.createBiquadFilter();
       const droneGain = audioCtx.createGain();
 
-      horrorDroneOsc1.type = curseCount >= 3 ? 'sawtooth' : 'sine';
+      horrorDroneOsc1.type = 'sine';
       horrorDroneOsc2.type = 'triangle';
-      horrorDroneOsc1.frequency.setValueAtTime(curseCount >= 3 ? 36 : 44, now);
-      horrorDroneOsc2.frequency.setValueAtTime(curseCount >= 3 ? 38.5 : 46.5, now);
+      horrorDroneOsc1.frequency.setValueAtTime(44, now);
+      horrorDroneOsc2.frequency.setValueAtTime(46.5, now);
 
       droneFilter.type = 'lowpass';
-      droneFilter.frequency.setValueAtTime(curseCount >= 3 ? 95 : 110, now);
+      droneFilter.frequency.setValueAtTime(110, now);
 
       droneGain.gain.setValueAtTime(0.01, now);
-      droneGain.gain.linearRampToValueAtTime(0.18, now + 1.8);
+      droneGain.gain.linearRampToValueAtTime(0.16, now + 1.8);
 
       horrorDroneOsc1.connect(droneFilter);
       horrorDroneOsc2.connect(droneFilter);
@@ -2401,7 +2454,6 @@
       horrorDroneOsc1.start(now);
       horrorDroneOsc2.start(now);
 
-      const beatPeriod = curseCount === 2 ? 1250 : 1700; // รอบ 2 หัวใจเต้นเร็วขึ้น!
       horrorInterval = setInterval(() => {
         if (!audioCtx || !isHorrorTriggered) return;
         const t = audioCtx.currentTime;
@@ -2421,7 +2473,7 @@
           hbOsc.start(t + offset);
           hbOsc.stop(t + offset + 0.21);
         });
-      }, beatPeriod);
+      }, 1650);
     } catch (e) {}
   }
 
@@ -2819,126 +2871,56 @@
   document.getElementById('submitBtn').addEventListener('mouseenter', playHoverSound);
 
   // =========================================
-  // 6. ระบบความทรงจำ 3 ระดับ & ปุ่มขอโทษหนีเมาส์ / ช่องสารภาพผิด
+  // 6. ระบบปุ่มขอโทษ 2 จุด (ด้านบน 5/20/40/60/รีเป็น 5 + ด้านล่าง 3 ครั้ง)
   // =========================================
-  function setupApologyStageUI() {
-    const stageTag = document.getElementById('cursedStageTag');
-    const iconEl = document.getElementById('cursedApologyIcon');
-    const titleEl = document.getElementById('cursedApologyTitle');
-    const subEl = document.getElementById('cursedApologySub');
+  function updateApologyChecklistUI() {
+    const topDone = topApologyClicks >= topApologyTarget;
+    const bottomDone = bottomApologyClicks >= BOTTOM_APOLOGY_TARGET;
 
-    const stage12Area = document.getElementById('stage12ButtonArea');
-    const apolBtn = document.getElementById('apologizeBtn');
-    const dodgeHint = document.getElementById('dodgeHintText');
-    const stage3Box = document.getElementById('stage3ConfessionBox');
-    const stage3Hint = document.getElementById('stage3HintText');
+    const topStatusEl = document.getElementById('checkTopStatus');
+    const bottomStatusEl = document.getElementById('checkBottomStatus');
+    const bottomBtn = document.getElementById('bottomApologizeBtn');
 
-    dodgeAttempts = 0;
-    stage2Clicks = 0;
-    apolBtn.style.transform = "translate(0px, 0px)";
-    dodgeHint.textContent = "";
-    stage3Hint.textContent = "";
-    document.getElementById('stage3Input').value = "";
+    topStatusEl.textContent = `${topDone ? '✅' : '⬜'} 1. กดปุ่มขอโทษ (ตรงปุ่มกดใจด้านบน): ${topApologyClicks} / ${topApologyTarget} ครั้ง`;
+    bottomStatusEl.textContent = `${bottomDone ? '✅' : '⬜'} 2. กดปุ่มขอโทษด้านล่างนี้: ${bottomApologyClicks} / ${BOTTOM_APOLOGY_TARGET} ครั้ง`;
 
-    if (curseCount <= 1) {
-      // ระดับที่ 1: ความเสียใจ (กดขอโทษได้ทันที)
-      stageTag.textContent = "MEMORY STAGE 1 / 3 • ความเสียใจ";
-      iconEl.textContent = "😭💔";
-      titleEl.textContent = "นี่ผมดูแย่ขนาดนั้นเลยเหรอ...";
-      subEl.innerHTML = "ผมไม่กล้ารับการสนับสนุนอะไรอีกแล้ว... ให้ 1 ดาวรัวๆ ทุกข้อโดยไม่บอกเหตุผลสักคำ<br>ต่อให้รีเฟรชหน้าเว็บไปก็หายไม่พ้นหรอกครับ จนกว่าคุณจะกดปุ่มด้านล่างนี้...";
-      stage12Area.style.display = "block";
-      stage3Box.style.display = "none";
-      apolBtn.textContent = "🙏 ผมขอโทษ... (ยกโทษให้ผมเถอะนะ)";
-    } else if (curseCount === 2) {
-      // ระดับที่ 2: ความระแวง (ปุ่มหนีเมาส์ 5 ครั้ง + ต้องกดย้ำ 5 ครั้ง!)
-      stageTag.textContent = "MEMORY STAGE 2 / 3 • ความระแวง (จำได้ว่าเคยทำ!)";
-      iconEl.textContent = "👁️🩸";
-      titleEl.textContent = "ไหนบอกว่าขอโทษไงครับ... คำขอโทษคราวที่แล้วมันเป็นเรื่องโกหกเหรอ?";
-      subEl.innerHTML = "คุณเคยกด 'ผมขอโทษ' ไปแล้วครั้งหนึ่ง... แต่ก็ยังกลับมาให้ 1 ดาวรัวๆ ซ้ำอีก!<br>คราวนี้ผมไม่เชื่อใจง่ายๆ แล้วครับ... ลองจับปุ่มขอโทษให้ได้สิ!";
-      stage12Area.style.display = "block";
-      stage3Box.style.display = "none";
-      apolBtn.textContent = "🙏 ผมขอโทษ...";
-      dodgeHint.textContent = "⚠️ ปุ่มขอโทษกำลังหวาดระแวงและหนีคุณอยู่...";
+    if (bottomDone) {
+      bottomBtn.textContent = `✅ กดขอโทษด้านล่างครบแล้ว (${BOTTOM_APOLOGY_TARGET} / ${BOTTOM_APOLOGY_TARGET})`;
+      bottomBtn.classList.add('completed-part');
     } else {
-      // ระดับที่ 3+: แตกสลายถาวร (ปุ่มขอโทษถูกฉีกทิ้ง ต้องพิมพ์ "ผมขอโทษจริงๆ")
-      stageTag.textContent = `MEMORY STAGE 3 / 3 • แตกสลายถาวร (ครั้งที่ ${curseCount})`;
-      iconEl.textContent = "💀🖤";
-      titleEl.textContent = "พอแล้ว... ผมไม่เชื่อคำขอโทษของคุณอีกต่อไปแล้ว";
-      subEl.innerHTML = `นี่เป็นครั้งที่ ${curseCount} แล้วนะครับ... ปุ่ม 'ผมขอโทษ' ถูกฉีกทำลายทิ้งไปแล้ว!<br>ถ้าอยากให้ผมยกโทษให้จริงๆ จงพิมพ์คำว่า <strong>ผมขอโทษจริงๆ</strong> ลงในช่องด้านล่างด้วยตัวเอง...`;
-      stage12Area.style.display = "none";
-      stage3Box.style.display = "block";
+      bottomBtn.textContent = `🙏 ผมขอโทษ... (${bottomApologyClicks} / ${BOTTOM_APOLOGY_TARGET})`;
+      bottomBtn.classList.remove('completed-part');
     }
   }
 
-  const dodgeTaunts = [
-    "ไม่ให้กดง่ายๆ หรอกครับ... คราวที่แล้วคุณก็โกหก!",
-    "หนี... ผมไม่อยากโดนหลอกอีกแล้ว!",
-    "ทำไมถึงกลับมาทำร้ายผมซ้ำสองล่ะครับ...",
-    "อีกนิดเดียว... คุณสำนึกผิดจริงๆ เหรอ?",
-    "ก็ได้... ถ้าอยากขอโทษนัก ก็กดย้ำให้ครบ 5 ครั้งสิครับ!"
-  ];
-
-  function handleApologizeHover() {
-    if (!isHorrorTriggered || curseCount !== 2) return;
-    if (dodgeAttempts < 5) {
-      const apolBtn = document.getElementById('apologizeBtn');
-      const dodgeHint = document.getElementById('dodgeHintText');
-      const maxX = window.innerWidth < 500 ? 75 : 150;
-      const randX = (Math.random() * 2 - 1) * maxX;
-      const randY = (Math.random() * 2 - 1) * 35;
-
-      apolBtn.style.transform = `translate(${randX}px, ${randY}px)`;
-      dodgeHint.textContent = dodgeTaunts[dodgeAttempts];
-      dodgeAttempts++;
-
-      if (dodgeAttempts >= 5) {
-        setTimeout(() => {
-          apolBtn.style.transform = "translate(0px, 0px)";
-          apolBtn.textContent = `🙏 กดขอโทษย้ำๆ ให้ครบ 5 ครั้ง (0 / 5)`;
-        }, 450);
-      }
-    }
-  }
-
-  function handleApologizeClick() {
+  function handleBottomApologyClick(e) {
     if (!isHorrorTriggered) return;
+    playClickSound();
 
-    if (curseCount <= 1) {
-      forgiveAndRestore();
-      return;
+    if (bottomApologyClicks < BOTTOM_APOLOGY_TARGET) {
+      bottomApologyClicks++;
     }
 
-    if (curseCount === 2) {
-      // รองรับทั้งมือถือและคอม: ถ้ายังไม่ครบ 5 ครั้งของการหนี ให้หนีก่อน
-      if (dodgeAttempts < 5) {
-        handleApologizeHover();
-        return;
-      }
-
-      stage2Clicks++;
-      const apolBtn = document.getElementById('apologizeBtn');
-      const dodgeHint = document.getElementById('dodgeHintText');
-      if (stage2Clicks < 5) {
-        apolBtn.textContent = `🙏 กดขอโทษย้ำๆ ให้ครบ 5 ครั้ง (${stage2Clicks} / 5)`;
-        dodgeHint.textContent = `อีก ${5 - stage2Clicks} ครั้ง... ผมถึงจะยอมเชื่อครับ...`;
-      } else {
-        forgiveAndRestore();
-      }
+    const apolIcons = ['🙏', '💔', '💧', '🩸'];
+    for (let i = 0; i < 3; i++) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = apolIcons[Math.floor(Math.random() * apolIcons.length)];
+      el.style.left = (e.clientX + (Math.random() - 0.5) * 70) + 'px';
+      el.style.top = (e.clientY - 10) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1200);
     }
+
+    updateApologyChecklistUI();
+    checkIfFullyForgiven();
   }
 
-  function submitStage3Confession() {
-    const input = document.getElementById('stage3Input');
-    const hint = document.getElementById('stage3HintText');
-    const val = input.value.trim();
-
-    if (val === "ผมขอโทษจริงๆ") {
-      forgiveAndRestore();
-    } else {
-      input.classList.remove('shake-anim');
-      void input.offsetWidth; // trigger reflow
-      input.classList.add('shake-anim');
-      hint.textContent = "❌ ไม่ใช่... คุณไม่ได้รู้สึกผิดจริงๆ เลย (ต้องพิมพ์คำว่า: ผมขอโทษจริงๆ)";
+  function checkIfFullyForgiven() {
+    if (topApologyClicks >= topApologyTarget && bottomApologyClicks >= BOTTOM_APOLOGY_TARGET) {
+      setTimeout(() => {
+        forgiveAndRestore();
+      }, 280);
     }
   }
 
@@ -2964,7 +2946,7 @@
       if (!el.dataset.origText) {
         el.dataset.origText = el.textContent;
       }
-      el.textContent = curseCount >= 3 ? "ERROR_NO_TRUST" : "ผมทำอะไรผิดทุกอย่างเลย...";
+      el.textContent = "ผมทำอะไรผิดทุกอย่างเลย...";
     });
 
     const p1 = document.getElementById('commentPraise');
@@ -2976,13 +2958,31 @@
     scoreCard.classList.remove('tier-bad', 'tier-good', 'tier-verygood');
     scoreCard.classList.add('tier-terrible');
     document.getElementById('totalScoreText').textContent = "💀 ผลคะแนนรวม: ผมมันไร้ค่า... (0 / 20)";
-    document.getElementById('totalScoreRank').textContent = `ติดคำสาปรอบที่ ${curseCount}`;
+    document.getElementById('totalScoreRank').textContent = wasForgivenReset ? "ให้อภัยแล้ว (รีเป็น 5 ครั้ง)" : `ติดคำสาปรอบที่ ${curseCount}`;
     document.getElementById('scoreProgressFill').style.width = "100%";
-    document.getElementById('totalScoreDesc').textContent = "รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอกครับ... เลื่อนลงไปด้านล่างสุดซะ...";
+    document.getElementById('totalScoreDesc').textContent = "รีเฟรชหน้าเว็บไปก็ไม่มีประโยชน์หรอกครับ... ต้องกดขอโทษทั้งด้านบนและด้านล่างให้ครบ...";
+
+    // ตั้งค่าข้อความโซนขอโทษด้านล่าง
+    const stageTag = document.getElementById('cursedStageTag');
+    const apolIcon = document.getElementById('cursedApologyIcon');
+    const apolTitle = document.getElementById('cursedApologyTitle');
+    const apolSub = document.getElementById('cursedApologySub');
+
+    if (wasForgivenReset) {
+      stageTag.textContent = "FORGIVEN RESET • รีเซ็ตกลับเป็น 5 ครั้ง";
+      apolIcon.textContent = "🥹💖";
+      apolTitle.textContent = "ผมให้อภัยคุณแล้ว... รีเป็น 5 ครั้งพอครับ";
+      apolSub.innerHTML = "คุณแกล้งผมเกิน 4 รอบแล้ว... ผมไม่อยากโกรธคุณอีกต่อไปแล้วครับ<br>กดปุ่มขอโทษด้านบน <strong>5 ครั้ง</strong> และปุ่มด้านล่าง <strong>3 ครั้ง</strong> เพื่อกลับสู่หน้าปกติได้เลยครับ";
+    } else {
+      stageTag.textContent = `APOLOGY ROUND ${curseCount} • ด้านบน ${topApologyTarget} ครั้ง / ด้านล่าง 3 ครั้ง`;
+      apolIcon.textContent = "😭💔";
+      apolTitle.textContent = "นี่ผมดูแย่ขนาดนั้นเลยเหรอ...";
+      apolSub.innerHTML = `คุณทำซ้ำเป็นรอบที่ <strong>${curseCount}</strong> แล้วนะครับ... ยิ่งทำซ้ำยิ่งต้องกดขอโทษมากขึ้น!<br>กรุณากดปุ่มขอโทษทั้ง 2 จุดให้ครบตามรายการด้านล่างนี้ เพื่อกลับสู่หน้าปกติ:`;
+    }
 
     document.getElementById('donateNormalContent').style.display = 'none';
     document.getElementById('cursedApologyZone').style.display = 'block';
-    setupApologyStageUI();
+    updateApologyChecklistUI();
     updateCheerUI();
   }
 
@@ -3041,22 +3041,39 @@
 
   function triggerHorrorEasterEgg(isFromReload = false) {
     isHorrorTriggered = true;
+    topApologyClicks = 0;
+    bottomApologyClicks = 0;
 
     try {
       curseCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0;
       if (!isFromReload) {
         curseCount++;
+        if (curseCount > 4) {
+          // มากกว่า 4 ครั้ง ไม่มีแล้ว -> รีเซ็ตกลับเป็น 1 (กด 5 ครั้ง) เพราะให้อภัยแล้ว!
+          curseCount = 1;
+          wasForgivenReset = true;
+        } else {
+          wasForgivenReset = false;
+        }
         localStorage.setItem(CURSE_COUNT_KEY, String(curseCount));
       } else if (curseCount < 1) {
         curseCount = 1;
       }
       localStorage.setItem(CURSE_STATE_KEY, "1");
     } catch (e) {
-      if (!isFromReload) curseCount++;
+      if (!isFromReload) {
+        curseCount++;
+        if (curseCount > 4) {
+          curseCount = 1;
+          wasForgivenReset = true;
+        }
+      }
     }
 
+    topApologyTarget = getTopApologyRequirement(curseCount);
+
     stopChristmasMusic();
-    document.getElementById('musicStateIcon').textContent = curseCount >= 3 ? '💀' : '😭';
+    document.getElementById('musicStateIcon').textContent = '😭';
     document.getElementById('musicSpeakerIcon').textContent = '🩸';
 
     const btn = document.getElementById('submitBtn');
@@ -3081,14 +3098,12 @@
       document.getElementById('titleIcon').textContent = '💀';
       corruptAllElements();
 
-      if (isFromReload) {
-        typeTarget.textContent = "คิดว่าจะหนีพ้นด้วยการรีเฟรชหน้าเว็บเหรอครับ... ผมจำได้ทุกอย่าง... (เลื่อนลงไปด้านล่างสุด)";
-      } else if (curseCount === 1) {
-        typeTarget.textContent = "ให้ 1 ดาวรัวๆ ทุกข้อ... แถมไม่พิมพ์บอกเหตุผลสักคำเลยเหรอครับ... ผมทำอะไรผิดทุกอย่างเลยใช่ไหม...";
-      } else if (curseCount === 2) {
-        typeTarget.textContent = "ไหนบอกว่าขอโทษไงครับ... ทำไมถึงกลับมาทำร้ายผมซ้ำสองล่ะ...";
+      if (wasForgivenReset) {
+        typeTarget.textContent = "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ ผมให้อภัยคุณแล้ว... รีเซ็ตกลับมากดขอโทษแค่ 5 ครั้งพอครับ...";
+      } else if (isFromReload) {
+        typeTarget.textContent = `คิดว่าจะหนีพ้นด้วยการรีเฟรชเหรอครับ... รอบที่ ${curseCount} ต้องกดขอโทษด้านบน ${topApologyTarget} ครั้ง และด้านล่าง 3 ครั้ง!`;
       } else {
-        typeTarget.textContent = `ครั้งที่ ${curseCount} แล้วนะครับ... ผมไม่เชื่อคำขอโทษง่ายๆ ของคุณอีกแล้ว...`;
+        typeTarget.textContent = `นี่ผมดูแย่ขนาดนั้นเลยเหรอ... (รอบที่ ${curseCount}: กดขอโทษด้านบน ${topApologyTarget} ครั้ง + ด้านล่าง 3 ครั้ง)`;
       }
 
       startHorrorAmbience();
@@ -3097,9 +3112,11 @@
 
   function forgiveAndRestore() {
     isHorrorTriggered = false;
+    topApologyClicks = 0;
+    bottomApologyClicks = 0;
+
     try {
       localStorage.removeItem(CURSE_STATE_KEY);
-      // หมายเหตุ: ไม่ลบ CURSE_COUNT_KEY เพื่อให้เว็บจดจำได้ว่าเคยทำผิดมาแล้วกี่รอบ!
     } catch (e) {}
 
     stopHorrorAmbience();
@@ -3130,18 +3147,14 @@
     typeTarget.textContent = introText;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // ปรับข้อความตอนให้อภัยตามจำนวนครั้งที่เคยทำผิด
     const fTitle = document.getElementById('forgivenTitle');
     const fDesc = document.getElementById('forgivenDesc');
-    if (curseCount === 1) {
-      fTitle.textContent = "ไม่เป็นไรครับ... ผมยกโทษให้แล้ว!";
-      fDesc.textContent = "ขอบคุณที่ขอโทษนะครับเจ้านาย~ คำสาปหายไปแล้ว! กลับมาสนุกกับบรรยากาศคริสต์มาสและร่วมประเมินเกมแปลไทยตามความรู้สึกจริงได้เลยฮะ UwU 🎄✨";
-    } else if (curseCount === 2) {
-      fTitle.textContent = "เฮ้อ... ยอมเชื่อใจอีกสักครั้งก็ได้ครับ";
-      fDesc.textContent = "อุตส่าห์ไล่จับปุ่มจนกดครบ 5 ครั้ง... คราวนี้อย่าแกล้งให้ 1 ดาวรัวๆ แบบไม่บอกเหตุผลอีกล่ะครับ ไม่งั้นครั้งหน้าผมไม่ใจอ่อนแล้วนะ! 🐾💦";
+    if (wasForgivenReset) {
+      fTitle.textContent = "ผมให้อภัยคุณแล้วจริงๆ ครับ! 💖";
+      fDesc.textContent = "ถึงจะแกล้งกันเกิน 4 รอบ ผมก็ยอมรีเซ็ตกลับเป็น 5 ครั้งและให้อภัยเจ้านายแล้วฮะ~ กลับมาสนุกกับธีมคริสต์มาสกันต่อนะ UwU 🎄✨";
     } else {
-      fTitle.textContent = "รับทราบคำขอโทษจากใจจริงแล้วครับ...";
-      fDesc.textContent = "ขอบคุณที่ยอมพิมพ์ขอโทษด้วยตัวเองนะครับ... ผมจะลบล้างคำสาปให้ หวังว่าคราวนี้เราจะดีกันจริงๆ นะครับ 🎄💖";
+      fTitle.textContent = `ไม่เป็นไรครับ... ผมยกโทษให้แล้ว! (รอบที่ ${curseCount})`;
+      fDesc.textContent = "ขอบคุณที่กดขอโทษครบทั้งด้านบนและด้านล่างนะครับเจ้านาย~ คำสาปหายไปแล้ว กลับมาส่งกำลังใจสู่ 1,000,000 หัวใจกันต่อได้เลยฮะ! 🎄✨";
     }
 
     document.getElementById('forgivenModal').style.display = 'flex';
