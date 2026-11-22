@@ -2081,7 +2081,52 @@
     .nav-purple-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
     body.horror-mode .top-navbar { background: rgba(20, 0, 0, 0.96); border-bottom-color: #991b1b; }
     @media (max-width: 720px) { .nav-links { display: none; } }
-    
+    .lb-row {
+  position: relative;
+  overflow: hidden;
+}
+.lb-row.rank-1 {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef08a 45%, #fde047 100%);
+      border: 2px solid #f59e0b;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.8);
+      transform: scale(1.015);
+    }
+    .lb-row.rank-1::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+      transform: skewX(-25deg);
+      animation: rankShimmer 3.2s infinite;
+      pointer-events: none;
+    }
+    .lb-row.rank-1 .lb-rank { font-size: 1.35rem; filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.8)); }
+    .lb-row.rank-1 .lb-score { color: #b45309; font-size: 1.05rem; text-shadow: 0 1px 0 rgba(255,255,255,0.8); }
+
+    .lb-row.rank-2 {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 55%, #cbd5e1 100%);
+      border: 2px solid #94a3b8;
+      box-shadow: 0 4px 14px rgba(100, 116, 139, 0.28), inset 0 0 10px rgba(255, 255, 255, 0.85);
+    }
+    .lb-row.rank-2 .lb-rank { font-size: 1.25rem; filter: drop-shadow(0 0 5px rgba(148, 163, 184, 0.8)); }
+    .lb-row.rank-2 .lb-score { color: #334155; font-size: 1rem; }
+
+    .lb-row.rank-3 {
+      background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 55%, #fdba74 100%);
+      border: 2px solid #ea580c;
+      box-shadow: 0 4px 12px rgba(234, 88, 12, 0.24), inset 0 0 10px rgba(255, 255, 255, 0.7);
+    }
+    .lb-row.rank-3 .lb-rank { font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(234, 88, 12, 0.6)); }
+    .lb-row.rank-3 .lb-score { color: #9a3412; font-size: 0.98rem; }
+
+    .lb-row.rank-1.me, .lb-row.rank-2.me, .lb-row.rank-3.me {
+      box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.65), 0 6px 18px rgba(88, 101, 242, 0.35);
+    }
+@keyframes rankShimmer {
+  0% { left: -100%; }
+  45%, 100% { left: 160%; }
+}
   </style>
 </head>
 <body>
@@ -3088,7 +3133,7 @@
   // =========================================
   function buildLbRow(rank, id, u, scoreText) {
     const row = document.createElement('div');
-    row.className = "lb-row" + (currentUser && currentUser.id === id ? " me" : "");
+    row.className = "lb-row" + (rank <= 3 ? " rank-" + rank : "") + (currentUser && currentUser.id === id ? " me" : "");
 
     const rankEl = document.createElement('div');
     rankEl.className = "lb-rank";
@@ -4736,6 +4781,8 @@
       showToast("⚠️ บันทึกยอดโดเนทไม่สำเร็จ");
     });
   }
+    
+
 </script>
 
 </body>
