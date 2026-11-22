@@ -762,7 +762,8 @@
     .role-pill.tier-2 { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
     .role-pill.tier-3 { background: #ffe4e6; color: #9f1239; border-color: #fda4af; }
     .role-pill.tier-4 { background: linear-gradient(90deg, #fef3c7, #fde68a); color: #92400e; border-color: #f59e0b; box-shadow: 0 2px 10px rgba(245, 158, 11, 0.35); }
-
+    .avatar-frame.tier--1 { background: linear-gradient(135deg, #fdba74, #ea580c); box-shadow: 0 0 12px rgba(234, 88, 12, 0.45); }
+    .role-pill.tier--1 { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
     .profile-desc {
       font-size: 0.82rem;
       color: #64748b;
@@ -2163,7 +2164,7 @@
     <div class="mega-cheer-wrapper">
       <button type="button" class="mega-cheer-btn" id="megaCheerBtn" onmouseenter="playHoverSound()" onclick="handleMegaCheerOrApology(event)">
         <span id="megaCheerLabel">❤️ กดส่งหัวใจให้กำลังใจ!</span>
-        <span class="cheer-counter-pill" id="cheerCounterPill"><span id="heartCount">0</span> / 1,000,000</span>
+        <span class="cheer-counter-pill" id="cheerCounterPill"><span id="heartCount">0</span> / 1,000,000,000</span>
       </button>
       <span class="combo-pill" id="comboPill">COMBO x2!</span>
     </div>
@@ -2196,7 +2197,7 @@
         <div class="lb-list" id="lbDonateList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
       </div>
       <div class="lb-column">
-        <h3 class="lb-col-title">💖 Top 10 นักส่งหัวใจสูงสุด</h3>
+        <h3 class="lb-col-title">💖 Top 5 นักส่งหัวใจสูงสุด</h3>
         <div class="lb-list" id="lbHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
       </div>
     </div>
@@ -2810,25 +2811,26 @@
     avatarImg.src = profile.avatarUrl;
 
     const frame = document.getElementById('profileAvatarFrame');
-    frame.className = "avatar-frame" + (profile.roleTier > 0 ? " tier-" + profile.roleTier : "");
+    // แก้จาก > 0 เป็น !== 0
+    frame.className = "avatar-frame" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
 
     document.getElementById('profileName').textContent = profile.name;
 
     const pill = document.getElementById('profileRolePill');
-    pill.className = "role-pill" + (profile.roleTier > 0 ? " tier-" + profile.roleTier : "");
-    pill.textContent = info ? info.name : (profile.inGuild ? "🌱 สมาชิกเซิร์ฟเวอร์ (ยังไม่มียศผู้สนับสนุน)" : "👤 ยังไม่ได้เข้าเซิร์ฟเวอร์ BGT");
+    // แก้จาก > 0 เป็น !== 0
+    pill.className = "role-pill" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
+    pill.textContent = info ? info.name : (profile.inGuild ? "『🦊』 สมาชิก" : "👤 ยังไม่ได้เข้าเซิร์ฟเวอร์ BGT");
 
     const desc = document.getElementById('profileDesc');
-    if (info) {
+    // แก้จาก if (info) เป็น if (info && profile.roleTier > 0) เพื่อแยกข้อความคนโดเนทกับสมาชิกทั่วไป
+    if (info && profile.roleTier > 0) {
       desc.textContent = `ยศสูงสุดของคุณ: ${info.short} • ขอบคุณที่สนับสนุนทีมแปลนะครับ 💖`;
     } else if (profile.inGuild) {
-      desc.textContent = "ยังไม่มียศผู้สนับสนุน — สนับสนุนผลงานแล้วแจ้งสลิปใน Discord เพื่อรับยศ จากนั้นกด 🔄 รีเฟรชยศ ได้เลย";
+      desc.textContent = "สถานะ: สมาชิกเซิร์ฟเวอร์ BGT • ขอบคุณที่แวะมาร่วมสนุกและส่งกำลังใจนะครับ 🦊✨";
     } else {
       desc.textContent = "บัญชีนี้ยังไม่ได้อยู่ในเซิร์ฟเวอร์ BGT — เข้าดิสคอร์ดผ่านปุ่มด้านบนแล้วกด 🔄 รีเฟรชยศ ได้เลย";
     }
-    if (usersCache && usersCache[profile.id]) {
-      myServerHearts = Number(usersCache[profile.id].heartsClicked) || 0;
-    }
+
     updateMyHeartsLine();
     updateCheerUI();
     renderLeaderboards();
@@ -3028,7 +3030,59 @@
       });
     }
 
-    // --- Top 10 นักส่งหัวใจ ---
+  function appendMyRankRow(listEl, sortedEntries, top5Entries, formatterFn) {
+    if (!currentUser) return;
+    if (top5Entries.some(entry => entry.id === currentUser.id)) return;
+
+    const myIndex = sortedEntries.findIndex(entry => entry.id === currentUser.id);
+    if (myIndex === -1) return;
+
+    const mine = sortedEntries[myIndex];
+    const sep = document.createElement('div');
+    sep.style.cssText = "border-top: 1.5px dashed #cbd5e1; margin: 6px 2px 4px; padding-top: 6px; font-size: 0.78rem; color: #64748b; text-align: center;";
+    sep.textContent = `อันดับของคุณ • ลำดับที่ ${myIndex + 1}`;
+    listEl.appendChild(sep);
+
+    listEl.appendChild(buildLbRow(myIndex + 1, mine.id, mine.u, formatterFn(mine.u)));
+  }
+
+  function renderLeaderboards() {
+    const donateList = document.getElementById('lbDonateList');
+    const heartsList = document.getElementById('lbHeartsList');
+    if (!donateList || !heartsList) return;
+
+    const entries = Object.keys(usersCache || {}).map(id => ({ id: id, u: usersCache[id] || {} }));
+
+    const donors = entries.filter(e => (Number(e.u.donateAmount) || 0) > 0 || (Number(e.u.roleTier) || 0) > 0);
+    donors.sort((a, b) => {
+      const da = Number(a.u.donateAmount) || 0;
+      const dbb = Number(b.u.donateAmount) || 0;
+      if (dbb !== da) return dbb - da;
+      const ta = Number(a.u.roleTier) || 0;
+      const tb = Number(b.u.roleTier) || 0;
+      if (tb !== ta) return tb - ta;
+      return (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0);
+    });
+
+    donateList.textContent = "";
+    if (donors.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = "lb-empty";
+      empty.textContent = "ยังไม่มีผู้สนับสนุนบนกระดาน — เป็นคนแรกเลยสิ! 🎁";
+      donateList.appendChild(empty);
+    } else {
+      const top5Donors = donors.slice(0, 5);
+      const formatDonor = (u) => {
+        const amt = Number(u.donateAmount) || 0;
+        const info = getRoleInfoByTier(Number(u.roleTier) || 0);
+        return amt > 0 ? "฿" + formatNum(amt) : (info ? "Tier " + info.tier : "");
+      };
+      top5Donors.forEach((e, i) => {
+        donateList.appendChild(buildLbRow(i + 1, e.id, e.u, formatDonor(e.u)));
+      });
+      appendMyRankRow(donateList, donors, top5Donors, formatDonor);
+    }
+
     const hearters = entries.filter(e => (Number(e.u.heartsClicked) || 0) > 0);
     hearters.sort((a, b) => (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0));
 
@@ -3039,9 +3093,12 @@
       empty.textContent = "ยังไม่มีใครส่งหัวใจ — กดปุ่มหัวใจด้านบนได้เลย! ❤️";
       heartsList.appendChild(empty);
     } else {
-      hearters.slice(0, 10).forEach((e, i) => {
-        heartsList.appendChild(buildLbRow(i + 1, e.id, e.u, "❤️ " + formatNum(e.u.heartsClicked)));
+      const top5Hearters = hearters.slice(0, 5);
+      const formatHearter = (u) => "❤️ " + formatNum(u.heartsClicked);
+      top5Hearters.forEach((e, i) => {
+        heartsList.appendChild(buildLbRow(i + 1, e.id, e.u, formatHearter(e.u)));
       });
+      appendMyRankRow(heartsList, hearters, top5Hearters, formatHearter);
     }
   }
 
@@ -3049,16 +3106,22 @@
   // 1. ระบบปุ่มส่งหัวใจให้กำลังใจ (1 - 1,000,000 คะแนนขั้นบันได + ฉลองเลื่อนขั้น!)
   // =========================================
   const cheerTiers = [
-    { min: 0,       max: 10,      badge: "🌱 ผู้เริ่มต้นส่งใจ",                 nextName: "อุ้งเท้าให้กำลังใจ 🐾",           celebrate: null },
-    { min: 10,      max: 100,     badge: "🐾 อุ้งเท้าให้กำลังใจ",              nextName: "แก้วกาแฟอุ่นๆ ☕",              celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
-    { min: 100,     max: 500,     badge: "☕ แก้วกาแฟอุ่นๆ",                  nextName: "ผู้พิทักษ์ต้นคริสต์มาส 🎄",       celebrate: "☕ ครบ 100 หัวใจ! เติมคาเฟอีนพร้อมแปลเกมต่อแล้วฮะ!" },
-    { min: 500,     max: 2000,    badge: "🎄 ผู้พิทักษ์ต้นคริสต์มาส",           nextName: "พลังใจล้นหลาม 🔥",              celebrate: "🎄 ครบ 500 หัวใจ! ซานต้าหมาป่ามอบของขวัญขอบคุณครับ!" },
-    { min: 2000,    max: 10000,   badge: "🔥 พลังใจล้นหลาม",                  nextName: "อัศวินแห่ง BGT 💎",              celebrate: "🔥 ครบ 2,000 หัวใจ! พลังแปลเกมพุ่งทะลุหลอดแล้วครับ!" },
-    { min: 10000,   max: 50000,   badge: "💎 อัศวินแห่ง BGT",                 nextName: "ราชา/ราชินีสายเปย์ใจ 👑",         celebrate: "💎 ครบ 10,000 หัวใจ! ยกระดับสู่อัศวินผู้พิทักษ์ BGT!" },
-    { min: 50000,   max: 150000,  badge: "👑 ราชา/ราชินีสายเปย์ใจ",            nextName: "เทพเจ้าแห่งกำลังใจ 🌟",           celebrate: "👑 ครบ 50,000 หัวใจ! ความรักของคุณยิ่งใหญ่ระดับราชวงศ์!" },
-    { min: 150000,  max: 500000,  badge: "🌟 เทพเจ้าแห่งกำลังใจ",              nextName: "มหาเทพผู้พิทักษ์จักรวาล 🚀",      celebrate: "🌟 ครบ 150,000 หัวใจ! ส่องแสงสว่างไสวไปทั้งสตูดิโอ!" },
-    { min: 500000,  max: 1000000, badge: "🚀 มหาเทพผู้พิทักษ์จักรวาล BGT",      nextName: "ตำนานนิรันดร์ 1,000,000 🏆",     celebrate: "🚀 ครบ 500,000 หัวใจ! ครึ่งทางสู่หนึ่งล้านหัวใจแล้วครับ!!" },
-    { min: 1000000, max: 1000000, badge: "🏆 ตำนานนิรันดร์ 1,000,000 หัวใจ",  nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨",     celebrate: "🏆🎊 ครบ 1,000,000 หัวใจ!! คุณคือตำนานสูงสุด 1 ล้านหัวใจของ Ben the Game Translator! 🎊🏆" }
+    { min: 0,          max: 10,         badge: "🌱 ผู้เริ่มต้นส่งใจ",                  nextName: "อุ้งเท้าให้กำลังใจ 🐾",             celebrate: null },
+    { min: 10,         max: 100,        badge: "🐾 อุ้งเท้าให้กำลังใจ",               nextName: "แก้วกาแฟอุ่นๆ ☕",                celebrate: "🎉 ครบ 10 หัวใจ! น้องหมาป่ากระดิกหางดีใจแล้วฮะ! 🐾" },
+    { min: 100,        max: 500,        badge: "☕ แก้วกาแฟอุ่นๆ",                   nextName: "ผู้พิทักษ์ต้นคริสต์มาส 🎄",         celebrate: "☕ ครบ 100 หัวใจ! เติมคาเฟอีนพร้อมแปลเกมต่อแล้วฮะ!" },
+    { min: 500,        max: 2000,       badge: "🎄 ผู้พิทักษ์ต้นคริสต์มาส",            nextName: "พลังใจล้นหลาม 🔥",                celebrate: "🎄 ครบ 500 หัวใจ! ซานต้าหมาป่ามอบของขวัญขอบคุณครับ!" },
+    { min: 2000,       max: 10000,      badge: "🔥 พลังใจล้นหลาม",                   nextName: "อัศวินแห่ง BGT 💎",                celebrate: "🔥 ครบ 2,000 หัวใจ! พลังแปลเกมพุ่งทะลุหลอดแล้วครับ!" },
+    { min: 10000,      max: 50000,      badge: "💎 อัศวินแห่ง BGT",                  nextName: "ราชา/ราชินีสายเปย์ใจ 👑",           celebrate: "💎 ครบ 10,000 หัวใจ! ยกระดับสู่อัศวินผู้พิทักษ์ BGT!" },
+    { min: 50000,      max: 150000,     badge: "👑 ราชา/ราชินีสายเปย์ใจ",              nextName: "เทพเจ้าแห่งกำลังใจ 🌟",             celebrate: "👑 ครบ 50,000 หัวใจ! ความรักของคุณยิ่งใหญ่ระดับราชวงศ์!" },
+    { min: 150000,     max: 500000,     badge: "🌟 เทพเจ้าแห่งกำลังใจ",                nextName: "มหาเทพผู้พิทักษ์จักรวาล 🚀",        celebrate: "🌟 ครบ 150,000 หัวใจ! ส่องแสงสว่างไสวไปทั้งสตูดิโอ!" },
+    { min: 500000,     max: 1000000,    badge: "🚀 มหาเทพผู้พิทักษ์จักรวาล BGT",        nextName: "ผู้พิทักษ์ล้านดวง 💥",              celebrate: "🚀 ครบ 500,000 หัวใจ! ครึ่งทางสู่หนึ่งล้านหัวใจแล้วครับ!!" },
+    { min: 1000000,    max: 5000000,    badge: "💥 ผู้พิทักษ์ล้านดวง",                nextName: "จ้าวแห่งพลังใจสิบล้าน ⚡",          celebrate: "🎉 ครบ 1,000,000 หัวใจ! ทะลุหลักล้านแรกของ Ben the Game Translator แล้วฮะ!" },
+    { min: 5000000,    max: 10000000,   badge: "⚡ จ้าวแห่งพลังใจสิบล้าน",            nextName: "จักรพรรดิแห่งกำลังใจ 🌌",          celebrate: "⚡ ครบ 5,000,000 หัวใจ! พลังใจแรงเกินต้านทานแล้วครับ!" },
+    { min: 10000000,   max: 50000000,   badge: "🌌 จักรพรรดิแห่งกำลังใจ",            nextName: "เทพผู้สร้างจักรวาลแปล 🌠",        celebrate: "🌌 ครบ 10,000,000 หัวใจ! ยิ่งใหญ่ระดับจักรพรรดิแห่ง BGT!" },
+    { min: 50000000,   max: 100000000,  badge: "🌠 เทพผู้สร้างจักรวาลแปล",          nextName: "ราชันร้อยล้านหัวใจ 👑✨",          celebrate: "🌠 ครบ 50,000,000 หัวใจ! แสงสว่างแห่งกำลังใจส่องไปทั่วจักรวาล!" },
+    { min: 100000000,  max: 500000000,  badge: "👑✨ ราชันร้อยล้านหัวใจ",            nextName: "ตำนานพันล้านหัวใจ 🏆",             celebrate: "👑✨ ครบ 100,000,000 หัวใจ! ทะลุหลักร้อยล้านอย่างเกรียงไกร!" },
+    { min: 500000000,  max: 1000000000, badge: "🚀🔥 ครึ่งทางสู่พันล้านดวง",          nextName: "ตำนานนิรันดร์ 1,000,000,000 🏆",   celebrate: "🔥 ครบ 500,000,000 หัวใจ! ครึ่งทางสู่หนึ่งพันล้านหัวใจแล้วครับ!!" },
+    { min: 1000000000, max: 1000000000, badge: "🏆 ตำนานนิรันดร์ 1,000,000,000 หัวใจ", nextName: "ปลดล็อกขั้นสูงสุดแล้ว! ✨",       celebrate: "🏆🎊 ครบ 1,000,000,000 หัวใจ!! คุณคือตำนานสูงสุด 1 พันล้านหัวใจของ Ben the Game Translator! 🎊🏆" }
   ];
 
   let comboCount = 0;
@@ -3128,8 +3191,8 @@
     const tier = cheerTiers[tierIdx];
     badgeEl.textContent = tier.badge;
 
-    if (totalNow >= 1000000) {
-      nextGoalEl.textContent = "🏆 ปลดล็อกขั้นสูงสุด 1,000,000 / 1,000,000 หัวใจเรียบร้อยแล้ว!";
+    if (totalNow >= 1000000000) {
+      nextGoalEl.textContent = "🏆 ปลดล็อกขั้นสูงสุด 1,000,000,000 / 1,000,000,000 หัวใจเรียบร้อยแล้ว!";
       percentEl.textContent = "100%";
       fillEl.style.width = "100%";
     } else {
@@ -3899,7 +3962,7 @@
           <div class="img-container">
             <span class="genre-tag" data-orig-tag="${game.tag}">${game.tag}</span>
             <span class="check-badge">✓</span>
-            <img class="game-cover-img" data-orig-src="${game.img}" src="${game.img}" alt="${game.name}" onerror="if(!isHorrorTriggered){this.src='https://placehold.co/400x300/15803d/ffffff?text=${encodeURIComponent(cleanTitle).replace(/'/g, '%27')}';}">
+            <img class="game-cover-img" data-orig-src="${game.img}" src="${game.img}" alt="${game.name}" onerror="if(!isHorrorTriggered){this.src='https://placehold.co/400x300/15803d/ffffff?text=${encodeURIComponent(cleanTitle).replace(/'/g, '%27').replace(/%20/g, '+')}';}">
           </div>
           <div class="game-title">${game.name}</div>
         </div>
