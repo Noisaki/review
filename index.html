@@ -2266,6 +2266,7 @@
       </div>
       <div class="profile-info">
         <h3 class="profile-name" id="profileName">-</h3>
+        <span class="role-pill" id="profileRolePill">-</span>
         <span class="title-pill" id="profileTitlePill" style="display:none; font-size:0.85rem; padding:4px 12px;">-</span>
         <p class="profile-desc" id="profileDesc"></p>
       </div>
@@ -2763,6 +2764,7 @@
           const v = Number(mine.heartsClicked) || 0;
           myServerHearts = v;
           updateMyHeartsLine();
+          updateCheerUI();
         }
       }, () => {
         renderLeaderboards();
@@ -3189,6 +3191,17 @@
       pill.textContent = info.name;
       meta.appendChild(pill);
     }
+
+    // ✅ ย้าย 7 บรรทัดนี้มาวางตรงนี้แทนครับ
+    const userClicks = Number(u.heartsClicked) || 0;
+    if (userClicks > 0) {
+      const userTier = cheerTiers[getCurrentTierIndex(userClicks)];
+      const titlePill = document.createElement('span');
+      titlePill.className = "title-pill";
+      titlePill.textContent = userTier.badge;
+      meta.appendChild(titlePill);
+    }
+
     row.appendChild(meta);
 
     const score = document.createElement('div');
@@ -3241,26 +3254,7 @@
       });
       appendMyRankRow(donateList, donors, top5Donors, formatDonor);
     }
-
-    donateList.textContent = "";
-    if (donors.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = "lb-empty";
-      empty.textContent = "ยังไม่มีผู้สนับสนุนบนกระดาน — เป็นคนแรกเลยสิ! 🎁";
-      donateList.appendChild(empty);
-    } else {
-      const top5Donors = donors.slice(0, 5);
-      const formatDonor = (u) => {
-        const amt = Number(u.donateAmount) || 0;
-        const info = getRoleInfoByTier(Number(u.roleTier) || 0);
-        return amt > 0 ? "฿" + formatNum(amt) : (info ? "Tier " + info.tier : "");
-      };
-      top5Donors.forEach((e, i) => {
-        donateList.appendChild(buildLbRow(i + 1, e.id, e.u, formatDonor(e.u)));
-      });
-      appendMyRankRow(donateList, donors, top5Donors, formatDonor);
-    }
-
+    
     const hearters = entries.filter(e => (Number(e.u.heartsClicked) || 0) > 0);
     hearters.sort((a, b) => (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0));
 
