@@ -2639,15 +2639,21 @@
         <div><input type="text" id="adminGameName4" placeholder="ชื่อเกม 4" value="เกมที่ 4" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg4" value="เกม4.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
         <div><input type="text" id="adminGameName5" placeholder="ชื่อเกม 5" value="เกมที่ 5" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg5" value="เกม5.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
         <div><input type="text" id="adminGameName6" placeholder="ชื่อเกม 6" value="เกมที่ 6" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg6" value="เกม6.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" class="submit-btn" style="flex:2; padding:10px; font-size:1rem;" onclick="adminStartVoteEvent()">🚀 บันทึกเกม & เริ่มจับเวลาโหวต!</button>
+        <button type="button" class="submit-btn" style="flex:1; padding:10px; font-size:1rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="adminCancelVoteEvent()">🗑️ ยกเลิก / ล้างรอบโหวต</button>
       </div>
-      <button type="button" class="submit-btn" style="padding:10px; font-size:1rem;" onclick="adminStartVoteEvent()">🚀 บันทึกเกม & เริ่มจับเวลาโหวต!</button>
-    </div>
 
     <!-- ตารางการ์ด 6 เกมแข่งกดใจ -->
     <div class="game-grid" id="voteGamesGrid">
       <div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีรอบโหวตที่เปิดอยู่ครับ</div>
     </div>
-  </div>
+
+    <!-- กระดาน Top ผู้มีส่วนร่วมโหวตเกม (รวมยอดกดทุกเกม) -->
+    <div class="lb-column" id="voteTopVotersBox" style="margin-top:20px; display:none;">
+      <h3 class="lb-col-title">🏅 Top 10 ผู้มีส่วนร่วมโหวตเกมสูงสุด (รอบนี้)</h3>
+      <div class="lb-list" id="voteTopVotersList"></div>
+    </div>
   <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
   <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="return handleSubmit(event)">
     <input type="hidden" name="pageHistory" value="0,1,2,3">
@@ -4919,7 +4925,7 @@
   let voteTimerInterval = null;
   let hasAnnouncedWinner = false;
 
-  // 1) แอดมินกดบันทึกชื่อเกม + เริ่มจับเวลา (ค่าเริ่มต้น 24 ชม.)
+// 1) แอดมินกดบันทึกชื่อเกม + เริ่มจับเวลา (ค่าเริ่มต้น 24 ชม.)
   function adminStartVoteEvent() {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
 
@@ -4950,6 +4956,17 @@
       games: gamesObj
     }).then(() => {
       showToast(`🚀 เริ่มการแข่งโหวตแล้ว! (จับเวลา ${hours} ชม.)`);
+    });
+  }
+
+  // แอดมินกดยกเลิก/ล้างรอบโหวตทั้งหมด
+  function adminCancelVoteEvent() {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!confirm("ต้องการยกเลิกและล้างผลโหวตรอบนี้ทั้งหมดใช่ไหมครับ?")) return;
+
+    hasAnnouncedWinner = false;
+    db.ref("game_vote").remove().then(() => {
+      showToast("🗑️ ยกเลิกและล้างรอบโหวตเรียบร้อยแล้ว!");
     });
   }
 
@@ -5075,29 +5092,53 @@
     switchPage(tab);
   }
 
-  // วาดการ์ด 6 เกม + รายชื่อคนกดของแต่ละเกม
+// วาดการ์ด 6 เกม + รายชื่อคนกด + กระดาน Top ผู้มีส่วนร่วมโหวต
   function renderVoteGames() {
     const grid = document.getElementById('voteGamesGrid');
-    if (!grid || !voteData || !voteData.games) return;
+    const topBox = document.getElementById('voteTopVotersBox');
+    const topList = document.getElementById('voteTopVotersList');
+    if (!grid) return;
+
+    // ถ้าแอดมินกดยกเลิกโหวต ให้เคลียร์การ์ดและซ่อนกระดาน Top
+    if (!voteData || !voteData.games) {
+      grid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีรอบโหวตที่เปิดอยู่ครับ</div>`;
+      if (topBox) topBox.style.display = 'none';
+      return;
+    }
 
     const isEnded = !voteData.endTime || (Date.now() >= voteData.endTime);
     const list = Object.keys(voteData.games).map(k => ({ id: k, ...voteData.games[k] }));
     list.sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
 
+    // รวมยอดกดโหวตของแต่ละคนจากทุกเกม
+    const voterTotals = {};
+    list.forEach(g => {
+      if (!g.voters) return;
+      Object.keys(g.voters).forEach(uid => {
+        const v = g.voters[uid];
+        if (!voterTotals[uid]) {
+          voterTotals[uid] = { id: uid, name: v.name || "Discord User", count: 0 };
+        }
+        voterTotals[uid].count += (Number(v.count) || 0);
+      });
+    });
+
     grid.innerHTML = list.map((g, idx) => {
       const voters = g.voters ? Object.values(g.voters).sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, 3) : [];
       const voterHtml = voters.length
-        ? voters.map(v => `<div style="font-size:0.75rem; color:#475569;">• ${v.name}: ❤️${formatNum(v.count)}</div>`).join('')
+        ? voters.map(v => `<div style="font-size:0.75rem; color:#475569;">• ${v.name}: ❤️${formatCompact(v.count)}</div>`).join('')
         : `<div style="font-size:0.75rem; color:#94a3b8;">ยังไม่มีคนกด</div>`;
+
+      const fallbackUrl = `https://placehold.co/400x300/dc2626/ffffff?text=${encodeURIComponent(g.name)}`;
 
       return `
         <div class="game-card" style="opacity:1; padding-bottom:12px; cursor:default;">
           <div class="img-container">
             <span class="genre-tag">#${idx + 1}</span>
-            <img src="${g.img}" alt="${g.name}" onerror="this.src='https://placehold.co/400x300/dc2626/ffffff?text=${encodeURIComponent(g.name)}'">
+            <img src="${g.img}" alt="${g.name}" onerror="if(!this.dataset.tried && !this.src.includes('images/')){this.dataset.tried=1;this.src='images/${g.img}';}else{this.src='${fallbackUrl}';}">
           </div>
           <div class="game-title" style="padding:10px 8px 4px;">${g.name}</div>
-          <div style="text-align:center; font-weight:700; color:#e11d48; margin-bottom:8px;">❤️ ${formatNum(g.hearts)}</div>
+          <div style="text-align:center; font-weight:700; color:#e11d48; margin-bottom:8px;">❤️ ${formatCompact(g.hearts)}</div>
           <div style="padding:0 10px 8px;">
             <button type="button" class="music-toggle-btn" style="width:100%; justify-content:center; padding:8px; font-size:0.9rem;" ${isEnded ? 'disabled' : ''} onclick="voteHeartClick('${g.id}', event)">
               ${isEnded ? '🏁 หมดเวลาแล้ว' : '❤️ กดใจโหวต!'}
@@ -5110,6 +5151,21 @@
         </div>
       `;
     }).join('');
+
+    // แสดงกระดาน Top 10 ผู้มีส่วนร่วมโหวตเกม
+    if (topBox && topList) {
+      const sortedVoters = Object.values(voterTotals).sort((a, b) => b.count - a.count);
+      topBox.style.display = 'block';
+      topList.textContent = "";
+      if (sortedVoters.length === 0) {
+        topList.innerHTML = `<div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ — กดใจให้เกมที่ชอบได้เลย! ❤️</div>`;
+      } else {
+        sortedVoters.slice(0, 10).forEach((v, i) => {
+          const cachedUser = (usersCache && usersCache[v.id]) ? usersCache[v.id] : { name: v.name };
+          topList.appendChild(buildLbRow(i + 1, v.id, cachedUser, "🔥 " + formatCompact(v.count) + " โหวต"));
+        });
+      }
+    }
   }
 
   // กดรัวๆ เพิ่มหัวใจให้เกมนั้น + บันทึกรายชื่อคนกด
