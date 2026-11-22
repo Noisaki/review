@@ -2698,6 +2698,10 @@
     showToast._t = setTimeout(() => el.classList.remove('show'), 3200);
   }
 
+  function formatNum(n) {
+    return (Number(n) || 0).toLocaleString();
+  }
+
   function formatCompact(n) {
     const num = Number(n) || 0;
     if (num < 1000) return num.toLocaleString();
