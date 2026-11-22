@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎄 แบบประเมินคุณภาพการแปลภาษาไทยในเกม | Ben the Game Translator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --xmas-red: #dc2626;
@@ -34,10 +34,137 @@
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
+      transition: background 1.2s ease, filter 0.8s ease;
     }
 
     /* =========================================
-       แถบควบคุมลอยมุมขวาบน (เพลงคริสต์มาส + ปรับเสียง + โดเนท)
+       ม่านเลือดหยดด้านบนจอ (ซ่อนไว้จนกว่าจะเกิด Easter Egg)
+       ========================================= */
+    .blood-curtain {
+      position: fixed;
+      top: -320px;
+      left: 0;
+      width: 100%;
+      height: 320px;
+      z-index: 90;
+      pointer-events: none;
+      transition: top 2.2s cubic-bezier(0.22, 1, 0.36, 1);
+      filter: drop-shadow(0 10px 18px rgba(120, 0, 0, 0.85));
+    }
+
+    body.horror-mode .blood-curtain {
+      top: -10px;
+    }
+
+    .blood-vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 89;
+      opacity: 0;
+      box-shadow: inset 0 0 140px rgba(185, 0, 0, 0.95), inset 0 0 60px rgba(0, 0, 0, 0.95);
+      transition: opacity 1.5s ease;
+    }
+
+    body.horror-mode .blood-vignette {
+      opacity: 1;
+      animation: pulseVignette 2.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseVignette {
+      0% { box-shadow: inset 0 0 120px rgba(150, 0, 0, 0.85), inset 0 0 50px rgba(0, 0, 0, 0.95); }
+      100% { box-shadow: inset 0 0 190px rgba(220, 0, 0, 1), inset 0 0 80px rgba(0, 0, 0, 1); }
+    }
+
+    /* =========================================
+       โหมดสยองขวัญ (HORROR EASTER EGG THEME)
+       ========================================= */
+    body.horror-mode {
+      background: radial-gradient(circle at center, #2b0000 0%, #090000 75%, #000000 100%) !important;
+      color: #fca5a5;
+    }
+
+    body.horror-mode .orb-1 { background: #7f1d1d !important; opacity: 0.7; }
+    body.horror-mode .orb-2 { background: #450a0a !important; opacity: 0.8; }
+    body.horror-mode .orb-3 { background: #991b1b !important; opacity: 0.5; }
+
+    body.horror-mode .header-card,
+    body.horror-mode .section-card,
+    body.horror-mode .donate-card {
+      background: rgba(18, 2, 2, 0.92) !important;
+      border-color: #991b1b !important;
+      box-shadow: 0 20px 50px rgba(185, 28, 28, 0.35), inset 0 0 30px rgba(127, 29, 29, 0.4) !important;
+      color: #fecaca !important;
+    }
+
+    body.horror-mode .logo-showcase {
+      background: radial-gradient(circle at center, #450a0a 0%, #000000 90%) !important;
+      border-bottom-color: #dc2626 !important;
+    }
+
+    body.horror-mode .studio-logo {
+      filter: sepia(1) hue-rotate(-50deg) saturate(6) drop-shadow(0 0 22px rgba(220, 38, 38, 0.9)) !important;
+      animation: creepyJitter 0.25s infinite !important;
+    }
+
+    @keyframes creepyJitter {
+      0% { transform: translate(0, 0) skewX(0deg); }
+      25% { transform: translate(-2px, 1px) skewX(-1deg); }
+      50% { transform: translate(2px, -1px) skewX(1deg); }
+      75% { transform: translate(-1px, -2px) skewX(0deg); }
+      100% { transform: translate(0, 0) skewX(0deg); }
+    }
+
+    body.horror-mode .animated-title,
+    body.horror-mode .donate-title {
+      background: linear-gradient(90deg, #ef4444, #991b1b, #dc2626) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    body.horror-mode .section-title,
+    body.horror-mode .sub-question,
+    body.horror-mode .game-title,
+    body.horror-mode .donate-desc,
+    body.horror-mode .role-info strong,
+    body.horror-mode .role-info small {
+      color: #fca5a5 !important;
+    }
+
+    body.horror-mode .section-header {
+      border-bottom-color: #7f1d1d !important;
+    }
+
+    body.horror-mode .vn-dialogue-box,
+    body.horror-mode .question-block,
+    body.horror-mode .game-card,
+    body.horror-mode .role-badge-item,
+    body.horror-mode textarea {
+      background: rgba(30, 4, 4, 0.9) !important;
+      border-color: #7f1d1d !important;
+      color: #fecaca !important;
+    }
+
+    body.horror-mode .rating-btn span {
+      background: #1f0404 !important;
+      border-color: #7f1d1d !important;
+      color: #f87171 !important;
+    }
+
+    body.horror-mode .rating-btn input:checked + span {
+      background: #991b1b !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 15px rgba(220, 38, 38, 0.8) !important;
+    }
+
+    body.horror-mode .step-pill {
+      background: #450a0a !important;
+      color: #fca5a5 !important;
+      border-color: #991b1b !important;
+    }
+
+    /* =========================================
+       แถบควบคุมลอยมุมขวาบน
        ========================================= */
     .floating-controls {
       position: fixed;
@@ -185,6 +312,7 @@
       filter: blur(85px);
       opacity: 0.55;
       animation: floatOrb 14s infinite alternate ease-in-out;
+      transition: background 1.2s ease;
     }
 
     .orb-1 { width: 460px; height: 460px; background: #dc2626; top: -110px; left: -100px; }
@@ -255,9 +383,7 @@
       100% { transform: translateY(-130px) scale(1.4); opacity: 0; }
     }
 
-    /* =========================================
-       ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่พิเศษ (ธีมคริสต์มาส)
-       ========================================= */
+    /* ส่วนหัวและแท่นโชว์โลโก้ BGT */
     .header-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
@@ -304,7 +430,6 @@
     .decor-left { left: 16px; }
     .decor-right { right: 16px; animation-delay: -1.5s; }
 
-    /* ขยายโลโก้ให้ใหญ่ขึ้นอีกขั้นตามคำขอเจ้านาย */
     .studio-logo {
       position: relative;
       z-index: 2;
@@ -407,7 +532,6 @@
       50%, 100% { opacity: 0; }
     }
 
-    /* แถบปุ่มโซเชียลมีเดีย & ลิงก์รวมเกม */
     .social-bar {
       display: flex;
       justify-content: center;
@@ -670,6 +794,119 @@
       transform: scale(1.05);
     }
 
+    /* =========================================
+       กล่องสรุปผลคะแนนรวม (แย่สุดๆ / แย่ / ดี / ดีมาก)
+       ========================================= */
+    .total-score-card {
+      margin-top: 20px;
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      border: 2px solid #cbd5e1;
+      border-radius: 18px;
+      padding: 18px 22px;
+      transition: all 0.35s ease;
+    }
+
+    .total-score-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .total-score-label {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .total-score-rank {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 5px 16px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #475569;
+      transition: all 0.3s ease;
+    }
+
+    .score-progress-track {
+      width: 100%;
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .score-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #94a3b8;
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.3s ease;
+    }
+
+    .total-score-subtext {
+      font-size: 0.88rem;
+      color: #64748b;
+      margin: 0;
+    }
+
+    /* 4 ระดับสีของกล่องคะแนนรวม */
+    .total-score-card.tier-terrible {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+      border-color: #ef4444;
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.2);
+    }
+    .total-score-card.tier-terrible .total-score-rank {
+      background: #dc2626;
+      color: #ffffff;
+    }
+    .total-score-card.tier-terrible .score-progress-fill {
+      background: linear-gradient(90deg, #7f1d1d, #dc2626);
+    }
+
+    .total-score-card.tier-bad {
+      background: linear-gradient(135deg, #fff7ed, #ffedd5);
+      border-color: #f97316;
+    }
+    .total-score-card.tier-bad .total-score-rank {
+      background: #ea580c;
+      color: #ffffff;
+    }
+    .total-score-card.tier-bad .score-progress-fill {
+      background: linear-gradient(90deg, #ea580c, #f59e0b);
+    }
+
+    .total-score-card.tier-good {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border-color: #22c55e;
+    }
+    .total-score-card.tier-good .total-score-rank {
+      background: #16a34a;
+      color: #ffffff;
+    }
+    .total-score-card.tier-good .score-progress-fill {
+      background: linear-gradient(90deg, #15803d, #22c55e);
+    }
+
+    .total-score-card.tier-verygood {
+      background: linear-gradient(135deg, #fefce8, #fef3c7);
+      border-color: #f59e0b;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
+    }
+    .total-score-card.tier-verygood .total-score-rank {
+      background: linear-gradient(90deg, #d97706, #15803d);
+      color: #ffffff;
+    }
+    .total-score-card.tier-verygood .score-progress-fill {
+      background: linear-gradient(90deg, #16a34a, #f59e0b, #dc2626);
+    }
+
     textarea {
       width: 100%;
       border: 2px solid #cbd5e1;
@@ -689,6 +926,14 @@
       box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.15);
     }
 
+    /* =========================================
+       ปุ่มส่งฟอร์ม & เอฟเฟกต์ปุ่มถูกทำลาย (Easter Egg)
+       ========================================= */
+    .submit-zone {
+      position: relative;
+      margin-bottom: 28px;
+    }
+
     .submit-btn {
       width: 100%;
       padding: 18px;
@@ -705,7 +950,6 @@
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(185, 28, 28, 0.4);
       transition: all 0.25s ease;
-      margin-bottom: 28px;
     }
 
     .submit-btn:hover {
@@ -713,8 +957,38 @@
       box-shadow: 0 14px 30px rgba(245, 158, 11, 0.5);
     }
 
+    @keyframes buttonShatter {
+      0% { transform: scale(1) rotate(0deg); filter: brightness(1); opacity: 1; }
+      15% { transform: translate(-8px, 4px) rotate(-2deg); background: #7f1d1d; border-color: #ef4444; }
+      30% { transform: translate(8px, -4px) rotate(2deg); background: #450a0a; }
+      45% { transform: translate(-10px, -2px) rotate(-3deg) scale(1.04); filter: contrast(2); }
+      65% { transform: scale(0.92) rotate(4deg); opacity: 0.7; }
+      100% { transform: translateY(60px) scale(0.4) rotate(14deg); opacity: 0; }
+    }
+
+    .submit-btn.destroying {
+      animation: buttonShatter 0.85s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53) !important;
+      pointer-events: none;
+    }
+
+    .destroyed-button-grave {
+      display: none;
+      width: 100%;
+      padding: 18px;
+      background: repeating-linear-gradient(45deg, #1a0303, #1a0303 12px, #2b0505 12px, #2b0505 24px);
+      border: 2px dashed #991b1b;
+      border-radius: 16px;
+      color: #ef4444;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 1px;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+    }
+
     /* =========================================
-       โซน DONATE & QR CODE + ตารางยศถาวร (ธีมคริสต์มาส)
+       โซน DONATE & QR CODE + ตารางยศถาวร
        ========================================= */
     .donate-card {
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(254, 242, 242, 0.95));
@@ -884,7 +1158,6 @@
       transform: translateY(-2px);
     }
 
-    /* กรอบ QR Code สแกนพร้อมเพย์จริง */
     .qr-box-wrapper {
       background: linear-gradient(145deg, #14532d, #7f1d1d);
       border: 2px solid #fbbf24;
@@ -977,7 +1250,7 @@
       color: #ffffff;
     }
 
-    /* หน้าต่างขอบคุณ */
+    /* หน้าต่างขอบคุณปกติ */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -1042,10 +1315,6 @@
       transition: 0.2s;
     }
 
-    .modal-close-btn:hover {
-      background: var(--xmas-green-dark);
-    }
-
     .modal-donate-btn {
       background: linear-gradient(90deg, #dc2626, #f59e0b);
       color: white;
@@ -1058,18 +1327,141 @@
       cursor: pointer;
       transition: 0.2s;
     }
+
+    /* =========================================
+       หน้าต่างสยองขวัญ EASTER EGG ("นี่ผมดูแย่ขนาดนั้นเลยเหรอ")
+       ========================================= */
+    .horror-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(60, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.97) 100%);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .horror-modal-box {
+      background: linear-gradient(180deg, #160000 0%, #080000 100%);
+      border: 2px solid #dc2626;
+      border-radius: 20px;
+      padding: 40px 28px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(220, 38, 38, 0.7), inset 0 0 40px rgba(153, 27, 27, 0.5);
+      position: relative;
+      overflow: hidden;
+      animation: horrorEntrance 0.7s ease-out;
+    }
+
+    @keyframes horrorEntrance {
+      0% { transform: scale(1.25); opacity: 0; filter: blur(10px); }
+      60% { transform: scale(0.97); opacity: 1; filter: blur(0); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .horror-eye-icon {
+      font-size: 3.8rem;
+      margin-bottom: 12px;
+      display: inline-block;
+      filter: drop-shadow(0 0 18px #ef4444);
+      animation: creepyJitter 0.3s infinite;
+    }
+
+    .horror-headline {
+      font-family: 'Kanit', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #ef4444;
+      margin: 0 0 14px 0;
+      letter-spacing: 1px;
+      text-shadow: 0 0 12px #dc2626, 0 4px 18px #7f1d1d, 2px 2px 0px #000000;
+      animation: textBleedPulse 2s infinite alternate;
+    }
+
+    @keyframes textBleedPulse {
+      0% { text-shadow: 0 0 10px #dc2626, 0 4px 12px #7f1d1d; transform: scale(1); }
+      100% { text-shadow: 0 0 24px #ff0000, 0 8px 28px #991b1b; transform: scale(1.02); }
+    }
+
+    .horror-whisper {
+      color: #fca5a5;
+      font-size: 1.02rem;
+      min-height: 54px;
+      margin: 0 0 26px 0;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .horror-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .horror-dismiss-btn {
+      background: #450a0a;
+      color: #fca5a5;
+      border: 1.5px solid #dc2626;
+      padding: 11px 20px;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .horror-dismiss-btn:hover {
+      background: #7f1d1d;
+      color: #ffffff;
+    }
+
+    .horror-reload-btn {
+      background: #18181b;
+      color: #a1a1aa;
+      border: 1px solid #3f3f46;
+      padding: 11px 20px;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .horror-reload-btn:hover {
+      color: #ffffff;
+      border-color: #71717a;
+    }
   </style>
 </head>
 <body>
 
-<!-- แถบควบคุมลอยมุมขวาบน: เครื่องเล่นเพลงคริสต์มาส + ปรับเสียง + เสียงปุ่ม + โดเนท -->
+<!-- ม่านเลือดไหลหยดจากขอบจอด้านบน (จะไหลลงมาเมื่อเกิด Easter Egg) -->
+<svg class="blood-curtain" viewBox="0 0 1440 320" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="bloodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#450a0a" />
+      <stop offset="55%" stop-color="#991b1b" />
+      <stop offset="100%" stop-color="#dc2626" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#bloodGrad)" d="M0,0 L1440,0 L1440,95 C1410,95 1405,210 1385,210 C1365,210 1360,115 1320,115 C1280,115 1275,265 1250,265 C1225,265 1220,105 1170,105 C1120,105 1110,190 1085,190 C1060,190 1055,85 1000,85 C945,85 940,295 910,295 C880,295 875,120 820,120 C765,120 760,225 735,225 C710,225 705,95 650,95 C595,95 585,275 555,275 C525,275 520,110 465,110 C410,110 400,200 375,200 C350,200 345,90 290,90 C235,90 230,285 200,285 C170,285 165,115 115,115 C65,115 55,230 30,230 C10,230 5,100 0,100 Z"></path>
+</svg>
+<div class="blood-vignette"></div>
+
+<!-- แถบควบคุมลอยมุมขวาบน -->
 <div class="floating-controls">
   <div class="music-player-pill">
     <button type="button" class="music-toggle-btn" id="musicToggleBtn" onclick="toggleChristmasMusic()">
       <span id="musicStateIcon">▶️</span> <span id="musicStateText">เพลงคริสต์มาส</span>
     </button>
-    <div class="volume-control" title="ปรับระดับเสียงเพลงคริสต์มาส">
-      <span>🎄🔊</span>
+    <div class="volume-control" title="ปรับระดับเสียงเพลง">
+      <span id="musicSpeakerIcon">🎄🔊</span>
       <input type="range" id="musicVolumeSlider" class="volume-slider" min="0" max="100" value="45" oninput="changeMusicVolume(this.value)">
       <span class="volume-percent" id="volumePercentText">45%</span>
     </div>
@@ -1093,23 +1485,22 @@
 <canvas id="snowCanvas"></canvas>
 
 <div class="container">
-  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT ขนาดใหญ่ -->
+  <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT -->
   <div class="header-card">
     <div class="logo-showcase">
-      <span class="festive-corner-decor decor-left">🎄✨</span>
-      <span class="festive-corner-decor decor-right">🎅❄️</span>
+      <span class="festive-corner-decor decor-left" id="decorLeft">🎄✨</span>
+      <span class="festive-corner-decor decor-right" id="decorRight">🎅❄️</span>
       <img src="logo.png" alt="Ben the Game Translator Logo" class="studio-logo" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/logo.png';}else{this.style.display='none';}">
     </div>
     <div class="header-text">
-      <div class="brand-badge">🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️</div>
-      <h1 class="animated-title">
-        <span class="floating-gamepad">🎅</span> แบบประเมินคุณภาพการแปลภาษาไทยในเกม
+      <div class="brand-badge" id="brandBadge">🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️</div>
+      <h1 class="animated-title" id="mainPageTitle">
+        <span class="floating-gamepad" id="titleIcon">🎅</span> แบบประเมินคุณภาพการแปลภาษาไทยในเกม
       </h1>
       <div class="vn-dialogue-box">
         <span id="typewriterText"></span><span class="cursor-blink"></span>
       </div>
 
-      <!-- ปุ่มลิงก์รวมเกม itch.io / X / Discord -->
       <div class="social-bar">
         <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="social-btn btn-itch" onmouseenter="playHoverSound()" onclick="playClickSound()">
           🎮 รวมเกมแปลไทยทั้งหมด (itch.io)
@@ -1124,10 +1515,10 @@
     </div>
   </div>
 
-  <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
-  <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="handleSubmit()">
+  <!-- ฟอร์มส่งข้อมูลเข้า Google Forms (เพิ่ม pageHistory="0,1,2,3" ให้ข้อความวิ่งเข้าครบทุกหน้าแล้ว!) -->
+  <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="return handleSubmit(event)">
     <input type="hidden" name="pageHistory" value="0,1,2,3">
-    
+
     <!-- ส่วนที่ 1: เลือกเกม -->
     <div class="section-card">
       <div class="section-header">
@@ -1137,7 +1528,7 @@
       <div class="game-grid" id="gameGrid"></div>
     </div>
 
-    <!-- ส่วนที่ 2: ให้คะแนน -->
+    <!-- ส่วนที่ 2: ให้คะแนน + กล่องสรุปผลคะแนนรวม -->
     <div class="section-card">
       <div class="section-header">
         <h2 class="section-title">⭐ ประเมินคุณภาพงานแปล</h2>
@@ -1199,6 +1590,18 @@
           <label class="rating-btn"><input type="radio" name="entry.1917282137" value="5"><span>5 ⭐</span></label>
         </div>
       </div>
+
+      <!-- กล่องแสดงผลคะแนนรวม 4 ระดับ (แย่สุดๆ / แย่ / ดี / ดีมาก) -->
+      <div class="total-score-card" id="totalScoreCard">
+        <div class="total-score-header">
+          <span class="total-score-label" id="totalScoreText">📊 ผลคะแนนรวม: ยังให้คะแนนไม่ครบทั้ง 4 ข้อ</span>
+          <span class="total-score-rank" id="totalScoreRank">รอการประเมิน</span>
+        </div>
+        <div class="score-progress-track">
+          <div class="score-progress-fill" id="scoreProgressFill"></div>
+        </div>
+        <p class="total-score-subtext" id="totalScoreDesc">กรุณาเลือกให้คะแนนทั้ง 4 หัวข้อด้านบน เพื่อดูสรุประดับคุณภาพงานแปลครับ</p>
+      </div>
     </div>
 
     <!-- ส่วนที่ 3: ข้อเสนอแนะ -->
@@ -1210,21 +1613,25 @@
 
       <div class="question-block">
         <div class="sub-question">จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
-        <textarea name="entry.1323886645" placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..."></textarea>
+        <textarea name="entry.1323886645" id="commentPraise" placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..."></textarea>
       </div>
 
       <div class="question-block" style="margin-bottom: 0;">
         <div class="sub-question">คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
-        <textarea name="entry.1758010456" placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..."></textarea>
+        <textarea name="entry.1758010456" id="commentFix" placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..."></textarea>
       </div>
     </div>
 
-    <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🛷✨</button>
+    <!-- โซนปุ่มส่ง (สามารถถูกทำลายได้หากติด Easter Egg!) -->
+    <div class="submit-zone">
+      <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🛷✨</button>
+      <div class="destroyed-button-grave" id="destroyedButtonGrave">
+        💥 [ ปุ่มส่งแบบประเมินถูกทำลายจนแหลกสลายแล้ว... ] 💥
+      </div>
+    </div>
   </form>
 
-  <!-- =========================================
-       โซน DONATE & QR CODE + ตารางยศถาวร DISCORD
-       ========================================= -->
+  <!-- โซน DONATE & QR CODE -->
   <div class="donate-card" id="donateSection">
     <div class="donate-ribbon">XMAS SUPPORT</div>
     <div class="donate-layout">
@@ -1282,7 +1689,6 @@
         </div>
       </div>
 
-      <!-- ฝั่งขวา: กรอบ QR Code สแกนพร้อมเพย์จริง -->
       <div class="qr-box-wrapper">
         <div class="qr-badge-label">🎄 SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
         <div class="qr-frame">
@@ -1297,12 +1703,12 @@
     </div>
   </div>
 
-  <div class="studio-footer">
+  <div class="studio-footer" id="studioFooter">
     จัดทำโดย <strong>Ben the Game Translator</strong> • Merry Christmas & ขอบคุณทุกกำลังใจจากผู้เล่นทุกคนครับ 🎄🐾
   </div>
 </div>
 
-<!-- หน้าต่างป๊อปอัปขอบคุณ -->
+<!-- หน้าต่างป๊อปอัปขอบคุณปกติ -->
 <div class="modal-overlay" id="thankYouModal">
   <div class="modal-box">
     <div class="modal-icon">🎄🎁</div>
@@ -1315,15 +1721,29 @@
   </div>
 </div>
 
+<!-- หน้าต่างสยองขวัญ EASTER EGG -->
+<div class="horror-modal-overlay" id="horrorModal">
+  <div class="horror-modal-box">
+    <div class="horror-eye-icon">👁️🩸</div>
+    <h2 class="horror-headline">นี่ผมดูแย่ขนาดนั้นเลยเหรอ...</h2>
+    <p class="horror-whisper" id="horrorWhisperText"></p>
+    <div class="horror-actions">
+      <button type="button" class="horror-dismiss-btn" onclick="closeHorrorModal()">มองดูซากเว็บไซต์...</button>
+      <button type="button" class="horror-reload-btn" onclick="location.reload()">รีเซ็ตหน้าเว็บใหม่</button>
+    </div>
+  </div>
+</div>
+
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 
 <script>
   let submitted = false;
+  let isHorrorTriggered = false;
   let soundEnabled = true;
   let audioCtx = null;
 
   // =========================================
-  // 1. ระบบเสียง UI + เครื่องเล่นเพลงคริสต์มาส Music Box
+  // 1. ระบบเสียง UI + เพลงคริสต์มาส + เสียงสยองขวัญ
   // =========================================
   let isMusicPlaying = false;
   let userPausedMusic = false;
@@ -1332,14 +1752,17 @@
   let musicTimeout = null;
   let noteIndex = 0;
 
-  // โน้ตเพลงคริสต์มาส (Jingle Bells + We Wish You a Merry Christmas)
+  // โหนดเสียงสำหรับโหมดสยองขวัญ
+  let horrorInterval = null;
+  let horrorDroneOsc1 = null;
+  let horrorDroneOsc2 = null;
+
   const N = {
     D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.00, A4: 440.00, B4: 493.88,
     C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, REST: 0
   };
 
   const xmasMedley = [
-    // Jingle Bells
     [N.E5, 1], [N.E5, 1], [N.E5, 2],
     [N.E5, 1], [N.E5, 1], [N.E5, 2],
     [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
@@ -1353,7 +1776,6 @@
     [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
     [N.G5, 1], [N.G5, 1], [N.F5, 1], [N.D5, 1], [N.C5, 3.5], [N.REST, 1.5],
 
-    // We Wish You a Merry Christmas
     [N.D4, 1], [N.G4, 1], [N.G4, 0.5], [N.A4, 0.5], [N.G4, 0.5], [N.Fs4, 0.5],
     [N.E4, 1], [N.E4, 1], [N.E4, 1],
     [N.A4, 1], [N.A4, 0.5], [N.B4, 0.5], [N.A4, 0.5], [N.G4, 0.5],
@@ -1376,10 +1798,9 @@
   }
 
   function playMusicBoxNote(freq, durationSec) {
-    if (!audioCtx || !masterMusicGain || freq === 0) return;
+    if (!audioCtx || !masterMusicGain || freq === 0 || isHorrorTriggered) return;
     const now = audioCtx.currentTime;
 
-    // เสียงหลักนุ่มๆ สไตล์กล่องดนตรี (Sine + Harmonic Octave)
     const osc1 = audioCtx.createOscillator();
     const osc2 = audioCtx.createOscillator();
     const noteGain = audioCtx.createGain();
@@ -1410,9 +1831,9 @@
   }
 
   function scheduleNextNote() {
-    if (!isMusicPlaying) return;
+    if (!isMusicPlaying || isHorrorTriggered) return;
     const [freq, beats] = xmasMedley[noteIndex];
-    const beatDuration = 0.34; // จังหวะกำลังสบายๆ
+    const beatDuration = 0.34;
     const durationSec = beats * beatDuration;
 
     playMusicBoxNote(freq, durationSec);
@@ -1422,6 +1843,7 @@
   }
 
   function startChristmasMusic() {
+    if (isHorrorTriggered) return;
     initAudio();
     if (isMusicPlaying) return;
     isMusicPlaying = true;
@@ -1438,6 +1860,7 @@
   }
 
   function toggleChristmasMusic() {
+    if (isHorrorTriggered) return;
     if (isMusicPlaying) {
       userPausedMusic = true;
       stopChristmasMusic();
@@ -1453,18 +1876,144 @@
     if (masterMusicGain && audioCtx) {
       masterMusicGain.gain.setTargetAtTime(musicVolume * 0.25, audioCtx.currentTime, 0.03);
     }
-    if (!isMusicPlaying && val > 0 && !userPausedMusic) {
+    if (!isMusicPlaying && val > 0 && !userPausedMusic && !isHorrorTriggered) {
       startChristmasMusic();
     }
   }
 
-  // เริ่มเล่นเพลงคริสต์มาสอัตโนมัติเมื่อผู้ใช้คลิกครั้งแรกบนหน้าเว็บ (ตามนโยบายเบราว์เซอร์)
   document.addEventListener('click', function autoStartOnFirstClick() {
-    if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) {
+    if (!isMusicPlaying && !userPausedMusic && musicVolume > 0 && !isHorrorTriggered) {
       startChristmasMusic();
     }
     document.removeEventListener('click', autoStartOnFirstClick);
   });
+
+  // =========================================
+  // เสียงปุ่มทำลาย + เสียงดนตรีสยองขวัญ (Easter Egg)
+  // =========================================
+  function playButtonDestroySound() {
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+
+      // 1. เสียง Noise แตกกระจาย (White noise burst)
+      const bufferSize = audioCtx.sampleRate * 0.75;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.22));
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1200, now);
+      filter.frequency.exponentialRampToValueAtTime(180, now + 0.7);
+
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.setValueAtTime(0.45, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(audioCtx.destination);
+      noise.start(now);
+
+      // 2. เสียงเบสกระแทกหนัก (Sub drop)
+      const subOsc = audioCtx.createOscillator();
+      const subGain = audioCtx.createGain();
+      subOsc.type = 'sawtooth';
+      subOsc.frequency.setValueAtTime(140, now);
+      subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.8);
+
+      subGain.gain.setValueAtTime(0.35, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+
+      subOsc.connect(subGain);
+      subGain.connect(audioCtx.destination);
+      subOsc.start(now);
+      subOsc.stop(now + 0.86);
+    } catch (e) {}
+  }
+
+  function startHorrorSoundscape() {
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+
+      // 1. เสียง Drone ต่ำน่าขนลุก (Detuned low oscillators)
+      horrorDroneOsc1 = audioCtx.createOscillator();
+      horrorDroneOsc2 = audioCtx.createOscillator();
+      const droneFilter = audioCtx.createBiquadFilter();
+      const droneGain = audioCtx.createGain();
+
+      horrorDroneOsc1.type = 'sawtooth';
+      horrorDroneOsc2.type = 'triangle';
+      horrorDroneOsc1.frequency.setValueAtTime(48, now);
+      horrorDroneOsc2.frequency.setValueAtTime(51.5, now); // ความถี่เหลื่อมกันทำให้เกิดคลื่นสั่นหลอนๆ
+
+      droneFilter.type = 'lowpass';
+      droneFilter.frequency.setValueAtTime(160, now);
+
+      droneGain.gain.setValueAtTime(0.01, now);
+      droneGain.gain.linearRampToValueAtTime(0.22, now + 2.0);
+
+      horrorDroneOsc1.connect(droneFilter);
+      horrorDroneOsc2.connect(droneFilter);
+      droneFilter.connect(droneGain);
+      droneGain.connect(audioCtx.destination);
+
+      horrorDroneOsc1.start(now);
+      horrorDroneOsc2.start(now);
+
+      // 2. เสียงหัวใจเต้นตุบ-ตุบ + เสียงโน้ตหลอนเพี้ยนๆ วนลูป
+      const creepyNotes = [311.13, 293.66, 207.65, 196.00, 146.83]; // D#4, D4, G#3, G3, D3 (Tritone & minor seconds)
+      let step = 0;
+
+      horrorInterval = setInterval(() => {
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+
+        // เสียงหัวใจเต้น (Lub-Dub)
+        [0, 0.22].forEach((offset, idx) => {
+          const hbOsc = audioCtx.createOscillator();
+          const hbGain = audioCtx.createGain();
+          hbOsc.type = 'sine';
+          hbOsc.frequency.setValueAtTime(idx === 0 ? 68 : 54, t + offset);
+          hbOsc.frequency.exponentialRampToValueAtTime(24, t + offset + 0.16);
+
+          hbGain.gain.setValueAtTime(idx === 0 ? 0.28 : 0.2, t + offset);
+          hbGain.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.18);
+
+          hbOsc.connect(hbGain);
+          hbGain.connect(audioCtx.destination);
+          hbOsc.start(t + offset);
+          hbOsc.stop(t + offset + 0.19);
+        });
+
+        // เสียงกล่องดนตรีเพี้ยนๆ ทุกๆ 2 จังหวะ
+        if (step % 2 === 0) {
+          const cOsc = audioCtx.createOscillator();
+          const cGain = audioCtx.createGain();
+          const freq = creepyNotes[Math.floor(Math.random() * creepyNotes.length)];
+          cOsc.type = 'sine';
+          cOsc.frequency.setValueAtTime(freq, t + 0.4);
+          cOsc.frequency.linearRampToValueAtTime(freq * 0.94, t + 1.4); // เสียงยานลงหลอนๆ
+
+          cGain.gain.setValueAtTime(0.001, t + 0.4);
+          cGain.gain.linearRampToValueAtTime(0.09, t + 0.45);
+          cGain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
+
+          cOsc.connect(cGain);
+          cGain.connect(audioCtx.destination);
+          cOsc.start(t + 0.4);
+          cOsc.stop(t + 1.55);
+        }
+        step++;
+      }, 1350);
+    } catch (e) {}
+  }
 
   function toggleSound() {
     soundEnabled = !soundEnabled;
@@ -1477,7 +2026,7 @@
   }
 
   function playHoverSound() {
-    if (!soundEnabled) return;
+    if (!soundEnabled || isHorrorTriggered) return;
     try {
       initAudio();
       const osc = audioCtx.createOscillator();
@@ -1502,9 +2051,9 @@
       initAudio();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(784, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1175, audioCtx.currentTime + 0.09);
+      osc.type = isHorrorTriggered ? 'sawtooth' : 'triangle';
+      osc.frequency.setValueAtTime(isHorrorTriggered ? 180 : 784, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(isHorrorTriggered ? 90 : 1175, audioCtx.currentTime + 0.09);
 
       gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
@@ -1560,7 +2109,78 @@
   }
 
   // =========================================
-  // 2. ลูกเล่นปุ่มส่งหัวใจคริสต์มาส
+  // 2. ระบบคำนวณผลคะแนนรวม 4 ระดับ (แย่สุดๆ / แย่ / ดี / ดีมาก)
+  // =========================================
+  const ratingNames = [
+    "entry.1009499701",
+    "entry.1063055141",
+    "entry.1066530576",
+    "entry.1917282137"
+  ];
+
+  function updateTotalScoreSummary() {
+    let sum = 0;
+    let answeredCount = 0;
+    let allOnes = true;
+
+    ratingNames.forEach(name => {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      if (checked) {
+        const val = parseInt(checked.value, 10);
+        sum += val;
+        answeredCount++;
+        if (val !== 1) allOnes = false;
+      } else {
+        allOnes = false;
+      }
+    });
+
+    const card = document.getElementById('totalScoreCard');
+    const textEl = document.getElementById('totalScoreText');
+    const rankEl = document.getElementById('totalScoreRank');
+    const fillEl = document.getElementById('scoreProgressFill');
+    const descEl = document.getElementById('totalScoreDesc');
+
+    card.classList.remove('tier-terrible', 'tier-bad', 'tier-good', 'tier-verygood');
+
+    if (answeredCount < 4) {
+      textEl.textContent = `📊 ผลคะแนนรวม: ตอบแล้ว ${answeredCount} / 4 หัวข้อ (${sum} คะแนน)`;
+      rankEl.textContent = "รอให้คะแนนครบ";
+      fillEl.style.width = `${(sum / 20) * 100}%`;
+      descEl.textContent = "กรุณาเลือกให้คะแนนทั้ง 4 หัวข้อด้านบน เพื่อสรุประดับคุณภาพงานแปลครับ";
+      return;
+    }
+
+    // ครบทั้ง 4 หัวข้อ (คะแนนรวม 4 - 20)
+    const percent = (sum / 20) * 100;
+    fillEl.style.width = `${percent}%`;
+    textEl.textContent = `📊 ผลคะแนนรวม: ${sum} / 20 คะแนน`;
+
+    if (sum <= 7) {
+      card.classList.add('tier-terrible');
+      rankEl.textContent = "ระดับ: แย่สุดๆ 💀";
+      if (allOnes) {
+        descEl.textContent = "ให้ 1 ดาวครบทุกข้อเลยเหรอครับ... ถ้ามีจุดไหนไม่พอใจ พิมพ์บอกด้านล่างด้วยนะ...";
+      } else {
+        descEl.textContent = "คะแนนรวมอยู่ในระดับแย่สุดๆ ทีมแปลจะรีบนำไปตรวจสอบและแก้ไขอย่างเร่งด่วนครับ";
+      }
+    } else if (sum <= 11) {
+      card.classList.add('tier-bad');
+      rankEl.textContent = "ระดับ: แย่ 😢";
+      descEl.textContent = "คะแนนรวมอยู่ในระดับแย่ ยังมีจุดที่ต้องปรับปรุงอีกมาก รบกวนแจ้งจุดที่ติดขัดด้านล่างได้เลยครับ";
+    } else if (sum <= 16) {
+      card.classList.add('tier-good');
+      rankEl.textContent = "ระดับ: ดี 😊";
+      descEl.textContent = "คะแนนรวมอยู่ในระดับดี! งานแปลอ่านเข้าใจง่ายและน่าติดตาม ขอบคุณที่ร่วมประเมินครับ";
+    } else {
+      card.classList.add('tier-verygood');
+      rankEl.textContent = "ระดับ: ดีมาก 🎄✨";
+      descEl.textContent = "ยอดเยี่ยมระดับดีมาก! เป็นกำลังใจที่ยิ่งใหญ่ที่สุดสำหรับทีมแปล Ben the Game Translator เลยครับ!";
+    }
+  }
+
+  // =========================================
+  // 3. ลูกเล่นปุ่มส่งหัวใจ
   // =========================================
   let heartTotal = 128;
   const cheerIcons = ['❤️', '🎄', '❄️', '🎁', '🐾', '✨'];
@@ -1569,10 +2189,11 @@
     heartTotal++;
     document.getElementById('heartCount').textContent = heartTotal;
 
+    const icons = isHorrorTriggered ? ['🩸', '💔', '👁️', '💀'] : cheerIcons;
     for (let i = 0; i < 4; i++) {
       const el = document.createElement('div');
       el.className = 'floating-heart';
-      el.textContent = cheerIcons[Math.floor(Math.random() * cheerIcons.length)];
+      el.textContent = icons[Math.floor(Math.random() * icons.length)];
       const offsetX = (Math.random() - 0.5) * 70;
       el.style.left = (e.clientX + offsetX) + 'px';
       el.style.top = (e.clientY - 10) + 'px';
@@ -1582,7 +2203,7 @@
   }
 
   // =========================================
-  // 3. พื้นหลังเกล็ดหิมะโปรยปราย & ประกายดาวสีทอง
+  // 4. พื้นหลังเกล็ดหิมะ (เปลี่ยนเป็นหยดเลือดเมื่อติด Easter Egg!)
   // =========================================
   const canvas = document.getElementById("snowCanvas");
   const ctx = canvas.getContext("2d");
@@ -1607,19 +2228,20 @@
     }
     reset(initial = false) {
       this.x = Math.random() * canvas.width;
-      this.y = initial ? Math.random() * canvas.height : -10;
-      this.radius = Math.random() * 3.4 + 1.2;
-      this.speedY = Math.random() * 1.1 + 0.45;
+      this.y = initial ? Math.random() * canvas.height : -15;
+      this.radius = Math.random() * 3.4 + 1.4;
+      this.speedY = Math.random() * 1.1 + 0.5;
       this.wind = (Math.random() - 0.5) * 0.6;
       this.angle = Math.random() * Math.PI * 2;
-      this.isGoldSparkle = Math.random() < 0.22; // 22% เป็นประกายดาวสีทอง
+      this.isGoldSparkle = Math.random() < 0.22;
     }
     update() {
       this.angle += 0.015;
-      this.y += this.speedY;
-      this.x += Math.sin(this.angle) * 0.45 + this.wind;
+      // ถ้าเป็นโหมดสยองขวัญ หยดเลือดจะตกลงมาเร็วและหนักขึ้น!
+      this.y += isHorrorTriggered ? this.speedY * 2.4 : this.speedY;
+      this.x += isHorrorTriggered ? Math.sin(this.angle) * 0.15 : (Math.sin(this.angle) * 0.45 + this.wind);
 
-      if (mouse.x !== null) {
+      if (!isHorrorTriggered && mouse.x !== null) {
         const dx = this.x - mouse.x;
         const dy = this.y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -1628,21 +2250,29 @@
         }
       }
 
-      if (this.y > canvas.height + 10 || this.x > canvas.width + 20 || this.x < -20) {
+      if (this.y > canvas.height + 15 || this.x > canvas.width + 20 || this.x < -20) {
         this.reset(false);
       }
     }
     draw() {
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      if (this.isGoldSparkle) {
-        ctx.fillStyle = "rgba(253, 224, 71, 0.85)";
-        ctx.shadowColor = "#fbbf24";
+      if (isHorrorTriggered) {
+        // วาดทรงหยดเลือดสีแดงสด
+        ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius * 2.2, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220, 20, 20, 0.88)";
+        ctx.shadowColor = "#990000";
         ctx.shadowBlur = 8;
       } else {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-        ctx.shadowColor = "#ffffff";
-        ctx.shadowBlur = 4;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        if (this.isGoldSparkle) {
+          ctx.fillStyle = "rgba(253, 224, 71, 0.85)";
+          ctx.shadowColor = "#fbbf24";
+          ctx.shadowBlur = 8;
+        } else {
+          ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+          ctx.shadowColor = "#ffffff";
+          ctx.shadowBlur = 4;
+        }
       }
       ctx.fill();
       ctx.shadowBlur = 0;
@@ -1651,7 +2281,7 @@
 
   function initSnow() {
     snowflakes = [];
-    const count = Math.min(110, Math.floor((canvas.width * canvas.height) / 10000));
+    const count = Math.min(115, Math.floor((canvas.width * canvas.height) / 9500));
     for (let i = 0; i < count; i++) {
       snowflakes.push(new Snowflake());
     }
@@ -1669,13 +2299,14 @@
   animateSnow();
 
   // =========================================
-  // 4. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม (แก้ smoke.jpg แล้ว!)
+  // 5. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม
   // =========================================
   const introText = "Ho Ho Ho~ รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! 🎄✨";
   const typeTarget = document.getElementById("typewriterText");
   let charIndex = 0;
 
   function typeWriter() {
+    if (isHorrorTriggered) return;
     if (charIndex < introText.length) {
       typeTarget.textContent += introText.charAt(charIndex);
       charIndex++;
@@ -1738,23 +2369,107 @@
         playClickSound();
         feedbackEl.textContent = ratingLabels[radio.value];
         feedbackEl.classList.add('visible');
+        updateTotalScoreSummary();
       });
     });
   });
 
   document.getElementById('submitBtn').addEventListener('mouseenter', playHoverSound);
 
-  function handleSubmit() {
-    playClickSound();
+  // =========================================
+  // 6. ตรวจสอบเงื่อนไขส่งฟอร์ม & ปลุก EASTER EGG!
+  // =========================================
+  function checkHorrorEasterEggCondition() {
+    let allOneStar = true;
+    ratingNames.forEach(name => {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      if (!checked || checked.value !== "1") {
+        allOneStar = false;
+      }
+    });
+
+    const praiseEmpty = document.getElementById('commentPraise').value.trim() === "";
+    const fixEmpty = document.getElementById('commentFix').value.trim() === "";
+
+    return allOneStar && praiseEmpty && fixEmpty;
+  }
+
+  function triggerHorrorEasterEgg() {
+    isHorrorTriggered = true;
+
+    // 1. หยุดเพลงคริสต์มาสทันที และล็อกปุ่มเล่นเพลง
+    stopChristmasMusic();
+    document.getElementById('musicStateIcon').textContent = '🩸';
+    document.getElementById('musicStateText').textContent = 'ERROR_666';
+    document.getElementById('musicSpeakerIcon').textContent = '💀';
+
+    // 2. ทำลายปุ่มส่งแบบประเมิน!
+    const btn = document.getElementById('submitBtn');
+    const grave = document.getElementById('destroyedButtonGrave');
+    btn.classList.add('destroying');
+    playButtonDestroySound();
+
+    setTimeout(() => {
+      btn.style.display = 'none';
+      grave.style.display = 'block';
+    }, 820);
+
+    // 3. เปลี่ยนธีมทั้งเว็บเป็นธีมเลือด & สยองขวัญ + เริ่มดนตรีหลอน
+    setTimeout(() => {
+      document.body.classList.add('horror-mode');
+      document.getElementById('decorLeft').textContent = '🩸👁️';
+      document.getElementById('decorRight').textContent = '💀🩸';
+      document.getElementById('brandBadge').textContent = '🩸 BEN THE GAME TRANSLATOR • CORRUPTED 🩸';
+      document.getElementById('titleIcon').textContent = '💀';
+      typeTarget.textContent = "ทำไม... ถึงไม่บอกอะไรผมเลยล่ะครับ...";
+      startHorrorSoundscape();
+    }, 450);
+
+    // 4. เปิดหน้าต่างข้อความหลอน "นี่ผมดูแย่ขนาดนั้นเลยเหรอ..."
+    setTimeout(() => {
+      document.getElementById('horrorModal').style.display = 'flex';
+      const whisperMsg = "ให้ 1 ดาวทุกข้อ... แถมไม่พิมพ์บอกเหตุผลสักคำเลยเหรอครับ...?";
+      const whisperEl = document.getElementById('horrorWhisperText');
+      whisperEl.textContent = "";
+      let i = 0;
+      function typeWhisper() {
+        if (i < whisperMsg.length) {
+          whisperEl.textContent += whisperMsg.charAt(i);
+          i++;
+          setTimeout(typeWhisper, 55);
+        }
+      }
+      typeWhisper();
+    }, 1250);
+  }
+
+  function closeHorrorModal() {
+    document.getElementById('horrorModal').style.display = 'none';
+  }
+
+  function handleSubmit(e) {
     submitted = true;
     const btn = document.getElementById('submitBtn');
+
+    if (checkHorrorEasterEggCondition()) {
+      // เข้าเงื่อนไข Easter Egg! (ฟอร์มยังส่งข้อมูลไป Google Forms ตามปกติ แต่หน้าเว็บจะพังทลาย)
+      triggerHorrorEasterEgg();
+      return true;
+    }
+
+    playClickSound();
     btn.textContent = "กำลังส่งข้อมูล... ⏳";
     btn.style.opacity = "0.8";
+    return true;
   }
 
   function onIframeLoad() {
     if (submitted) {
       submitted = false;
+      if (isHorrorTriggered) {
+        // ถ้าติด Easter Egg ให้แสดงหน้าต่างสยองขวัญแทนหน้าต่างขอบคุณปกติ
+        return;
+      }
       playSuccessSound();
       const btn = document.getElementById('submitBtn');
       btn.textContent = "ส่งแบบประเมินให้ Ben the Game Translator 🛷✨";
@@ -1767,6 +2482,7 @@
     document.getElementById('thankYouModal').style.display = 'none';
     document.getElementById('customForm').reset();
     document.querySelectorAll('.rating-feedback').forEach(el => el.classList.remove('visible'));
+    updateTotalScoreSummary();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
