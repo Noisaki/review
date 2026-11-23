@@ -2560,6 +2560,17 @@
     @media (max-width: 520px) {
       .nav-profile-meta { max-width: 95px; }
     }
+   /* ล็อกความสูงชื่อเกมและรายชื่อคนกดในหน้าโหวต ไม่ให้ดันปุ่มขึ้นลง */
+    #voteGamesGrid .game-title {
+      flex-grow: 0;
+      min-height: 54px;
+      align-items: center;
+    }
+    .vote-voters-box {
+      height: 62px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
   </style>
 </head>
 <body>
@@ -2842,6 +2853,20 @@
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button type="button" class="submit-btn" style="flex:2; width:auto; min-width:200px; padding:12px 16px; font-size:1rem;" onclick="adminStartVoteEvent()">🚀 บันทึกเกม & เริ่มจับเวลาโหวต!</button>
         <button type="button" class="submit-btn" style="flex:1; width:auto; min-width:160px; padding:12px 16px; font-size:1rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="adminCancelVoteEvent()">🗑️ ยกเลิก / ล้างรอบโหวต</button>
+      </div>
+      <!-- แผงปรับเวลาปิดโหวตของรอบที่กำลังแข่งอยู่ (ไม่รีเซ็ตคะแนน) -->
+      <div style="margin-top:12px; padding-top:10px; border-top:1.5px dashed #fda4af;">
+        <div style="font-size:0.82rem; font-weight:700; color:#9f1239; margin-bottom:6px;">
+          ⏱️ ปรับเวลาปิดโหวตรอบนี้ (คะแนนเดิมอยู่ครบ ไม่หาย!):
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(-60)">➖ 1 ชม.</button>
+          <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(-10)">➖ 10 นาที</button>
+          <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(10)">➕ 10 นาที</button>
+          <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(60)">➕ 1 ชม.</button>
+          <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(1440)">➕ 24 ชม.</button>
+          <button type="button" class="profile-btn logout" style="padding:6px 10px; font-size:0.8rem;" onclick="adminEndVoteNow()">🏁 ปิดโหวตทันที</button>
+        </div>
       </div>
     </div>
     
@@ -3512,9 +3537,6 @@
     if (donateAdminPanel) donateAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
-    document.getElementById('navLoginBtn').style.display = 'none';
-    document.getElementById('navUserWrap').style.display = 'flex';
-    document.getElementById('navUserName').textContent = profile.name;
     document.getElementById('navLoginBtn').style.display = 'none';
     const navWrap = document.getElementById('navUserWrap');
     navWrap.style.display = 'inline-flex';
@@ -5158,8 +5180,9 @@
 
   // 1) แอดมินกดบันทึกหัวข้อ + ชื่อเกม + ชื่อไฟล์ภาพ + เริ่มจับเวลา
   function adminStartVoteEvent() {
+    if (voteData && voteData.games && !confirm("⚠️ ตอนนี้มีรอบโหวตเปิดอยู่ การกดเริ่มใหม่จะล้างคะแนนรอบเดิมทั้งหมด ยืนยันไหมครับ?")) return;
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
-
+    
     const titleInput = document.getElementById('adminVoteTitle');
     const voteTitle = (titleInput && titleInput.value.trim()) ? titleInput.value.trim() : "🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)";
     const hours = parseFloat(document.getElementById('adminVoteHours').value) || 24;
@@ -5206,6 +5229,40 @@
     hasAnnouncedWinner = false;
     db.ref("game_vote").remove().then(() => {
       showToast("🗑️ ยกเลิกและล้างรอบโหวตเรียบร้อยแล้ว!");
+    });
+  }
+  // แอดมินกดเพิ่ม/ลดเวลาปิดโหวต (แก้เฉพาะ endTime ไม่กระทบคะแนนเดิม)
+  function adminAdjustVoteTime(deltaMinutes) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!voteData || !voteData.endTime) {
+      showToast("⚠️ ยังไม่มีรอบโหวตที่เปิดอยู่ครับ");
+      return;
+    }
+
+    const baseTime = Math.max(Date.now(), Number(voteData.endTime) || Date.now());
+    const newEndTime = baseTime + (deltaMinutes * 60 * 1000);
+
+    if (newEndTime > Date.now()) {
+      hasAnnouncedWinner = false;
+    }
+
+    db.ref("game_vote/endTime").set(newEndTime).then(() => {
+      const label = deltaMinutes > 0 ? `เพิ่มเวลา +${deltaMinutes} นาที` : `ลดเวลา ${deltaMinutes} นาที`;
+      showToast(`⏱️ ${label} เรียบร้อยแล้ว! (คะแนนเดิมอยู่ครบ)`);
+      updateVoteCountdown();
+    });
+  }
+
+  // แอดมินกดปิดโหวตทันทีเพื่อสรุปผล
+  function adminEndVoteNow() {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!voteData || !voteData.endTime) return;
+    if (!confirm("ต้องการปิดโหวตและประกาศผู้ชนะทันทีใช่ไหมครับ?")) return;
+
+    hasAnnouncedWinner = false;
+    db.ref("game_vote/endTime").set(Date.now() - 1000).then(() => {
+      showToast("🏁 ปิดโหวตเรียบร้อยแล้ว!");
+      updateVoteCountdown();
     });
   }
 
@@ -5261,15 +5318,6 @@
     list.sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
     const winner = list[0];
 
-    // ✅ ย้ายมาวางตรงนี้หลังหาตัว winner เจอแล้ว
-    if (db && voteData.endTime) {
-      db.ref("game_vote_history/" + voteData.endTime).set({
-        name: winner.name,
-        img: winner.img || "",
-        hearts: Number(winner.hearts) || 0,
-        endedAt: voteData.endTime
-      }).catch(() => {});
-    }
     if (db && voteData.endTime) {
       db.ref("game_vote_history/" + voteData.endTime).set({
         topic: voteData.title || "",
@@ -5362,6 +5410,7 @@
     const topList = document.getElementById('voteTopVotersList');
     const titleEl = document.getElementById('voteMainTitle');
     const topicBanner = document.getElementById('voteTopicBanner');
+    
     if (!grid) return;
 
     const currentTitle = (voteData && voteData.title)
@@ -5396,7 +5445,7 @@
     ranked.forEach((g, idx) => { rankMap[g.id] = idx + 1; });
 
     // 3. วาดโครงสร้างการ์ด + รูปภาพแค่ "ครั้งเดียว" ต่อรอบโหวต (กันภาพกะพริบและกดต่อเนื่องได้ลื่นๆ)
-    const eventId = String(voteData.endTime || "") + "_" + list.map(g => g.id + ":" + g.img).join("|");
+    const eventId = list.map(g => g.id + ":" + g.name + ":" + g.img).join("|");
     if (grid.dataset.eventId !== eventId) {
       grid.dataset.eventId = eventId;
       grid.innerHTML = list.map((g) => {
@@ -5416,7 +5465,7 @@
             </div>
             <div style="padding:0 10px; border-top:1px dashed #e2e8f0; padding-top:6px;">
               <div style="font-size:0.72rem; font-weight:600; color:#991b1b; margin-bottom:2px;">ผู้ช่วยกดสูงสุด:</div>
-              <div id="vote-voters-${g.id}"></div>
+              <div id="vote-voters-${g.id}" class="vote-voters-box"></div>
             </div>
           </div>
         `;
