@@ -2571,6 +2571,200 @@
       overflow-y: auto;
       scrollbar-width: thin;
     }
+  /* แท่นยืนที่ 3 ให้กางเต็มแถวด้านล่างอย่างสมดุล */
+    .podium-box.full-span {
+      grid-column: 1 / -1;
+    }
+
+    /* =========================================
+       ป้ายโฆษณาแจ้งเตือนโหวตเกม (มุมขวาล่าง / รองรับมือถือ)
+       ========================================= */
+    .vote-promo-ad {
+      position: fixed;
+      right: 16px;
+      bottom: 18px;
+      width: 320px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(69, 10, 10, 0.96));
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 2px solid #fbbf24;
+      border-radius: 20px;
+      padding: 14px 14px 12px;
+      color: #ffffff;
+      z-index: 180;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5), 0 0 18px rgba(245, 158, 11, 0.35);
+      display: none;
+      animation: fadeSlideUp 0.4s ease-out;
+    }
+    .vote-ad-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(0, 0, 0, 0.45);
+      color: #f8fafc;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .vote-ad-close:hover {
+      background: #dc2626;
+      border-color: #fca5a5;
+      transform: scale(1.08);
+    }
+    .vote-ad-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(90deg, #dc2626, #f59e0b);
+      color: #ffffff;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+    .vote-ad-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fef3c7;
+      margin: 0 0 10px 0;
+      padding-right: 22px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vote-ad-vs-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .vote-ad-fighter {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(253, 230, 138, 0.28);
+      border-radius: 12px;
+      padding: 6px;
+    }
+    .vote-ad-fighter img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 5px;
+      background: #1e293b;
+    }
+    .vote-ad-fname {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vote-ad-fscore {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fda4af;
+    }
+    .vote-ad-vs-badge {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fef08a;
+      background: linear-gradient(135deg, #e11d48, #f59e0b);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid #fde68a;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.65);
+    }
+    .vote-ad-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .vote-ad-timer {
+      font-size: 0.72rem;
+      color: #fde68a;
+      font-weight: 600;
+    }
+    .vote-ad-cta {
+      background: linear-gradient(90deg, #f43f5e, #f59e0b);
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.45);
+      transition: transform 0.15s;
+    }
+    .vote-ad-cta:hover {
+      transform: scale(1.05);
+    }
+
+    /* รองรับหน้าจอมือถือ (จัดเป็นแถบกะทัดรัดด้านล่าง ไม่บังเนื้อหา) */
+    @media (max-width: 640px) {
+      .vote-promo-ad {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        width: auto;
+        padding: 10px 12px;
+        border-radius: 16px;
+      }
+      .vote-ad-fighter {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        text-align: left;
+        padding: 4px 6px;
+      }
+      .vote-ad-fighter img {
+        width: 38px;
+        height: 38px;
+        aspect-ratio: 1 / 1;
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+      .vote-ad-fmeta {
+        min-width: 0;
+        flex: 1;
+      }
+      .vote-ad-vs-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 0.78rem;
+      }
+      .vote-ad-title {
+        font-size: 0.84rem;
+        margin-bottom: 7px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2694,6 +2888,13 @@
         <h3 class="podium-box-title">💖 Top 3 นักส่งหัวใจสูงสุด</h3>
         <div class="podium-stage" id="podiumHeartsStage">
           <div class="lb-empty">กำลังโหลดแท่นรับเหรียญ...</div>
+        </div>
+      </div>
+      <!-- แท่นที่ 3: Top 3 ผู้ร่วมโหวตเกมสูงสุด -->
+      <div class="podium-box full-span">
+        <h3 class="podium-box-title">🔥 Top 3 ผู้ร่วมโหวตเกมสูงสุด (รอบล่าสุด)</h3>
+        <div class="podium-stage" id="podiumVoteStage">
+          <div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥</div>
         </div>
       </div>
     </div>
@@ -3110,6 +3311,37 @@
 
 <!-- ป้ายแจ้งเตือนเล็ก -->
 <div class="toast-msg" id="toastMsg"></div>
+<!-- ป้ายแจ้งเตือนโหวตเกมแบบลอยข้างจอ (รองรับมือถือ + กดปิดได้) -->
+<div class="vote-promo-ad" id="votePromoAd">
+  <button type="button" class="vote-ad-close" onclick="closeVotePromoAd(event)" title="ปิดแจ้งเตือนนี้">✕</button>
+  <div class="vote-ad-badge"><span class="live-dot"></span> กำลังเปิดโหวตเกม! <span id="adMoreGamesTag"></span></div>
+  <div class="vote-ad-title" id="adVoteTitle">🔥 แข่งกดใจโหวตเกม</div>
+
+  <div class="vote-ad-vs-row">
+    <div class="vote-ad-fighter">
+      <img id="adGame1Img" src="" alt="">
+      <div class="vote-ad-fmeta">
+        <div class="vote-ad-fname" id="adGame1Name">-</div>
+        <div class="vote-ad-fscore" id="adGame1Score">❤️ 0</div>
+      </div>
+    </div>
+
+    <div class="vote-ad-vs-badge">VS</div>
+
+    <div class="vote-ad-fighter" id="adGame2Box">
+      <img id="adGame2Img" src="" alt="">
+      <div class="vote-ad-fmeta">
+        <div class="vote-ad-fname" id="adGame2Name">-</div>
+        <div class="vote-ad-fscore" id="adGame2Score">❤️ 0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vote-ad-footer">
+    <span class="vote-ad-timer" id="adVoteTimer">⏱️ กำลังโหลด...</span>
+    <button type="button" class="vote-ad-cta" onclick="playClickSound(); switchPage('vote');">🔥 ไปโหวตเลย!</button>
+  </div>
+</div>
 
 <!-- หน้าต่างป๊อปอัปชี้แจงความปลอดภัยก่อนล็อกอิน Discord -->
 <div class="modal-overlay" id="loginInfoModal">
@@ -3823,6 +4055,7 @@
     }
     // อัปเดตแท่นรับเหรียญ Top 3 บนหน้าหลักแบบเรียลไทม์
     renderHomePodiums(donors, hearters);
+    renderVotePodium();
   }
 
   function renderHomePodiums(donors, hearters) {
@@ -5177,7 +5410,8 @@
   let voteData = null;
   let voteTimerInterval = null;
   let hasAnnouncedWinner = false;
-
+    isVoteAdClosed = false;
+  
   // 1) แอดมินกดบันทึกหัวข้อ + ชื่อเกม + ชื่อไฟล์ภาพ + เริ่มจับเวลา
   function adminStartVoteEvent() {
     if (voteData && voteData.games && !confirm("⚠️ ตอนนี้มีรอบโหวตเปิดอยู่ การกดเริ่มใหม่จะล้างคะแนนรอบเดิมทั้งหมด ยืนยันไหมครับ?")) return;
@@ -5272,11 +5506,13 @@
     db.ref("game_vote").on("value", (snap) => {
       voteData = snap.val();
       renderVoteGames();
+      renderVotePodium();
       updateVoteCountdown();
+      updateVotePromoAd();
       if (!voteTimerInterval) {
         voteTimerInterval = setInterval(updateVoteCountdown, 1000);
       }
-    }); // ✅ ต้องปิดตรงนี้ก่อนครับ
+    });
 
     db.ref("game_vote_history").on("value", (snap) => {
       renderVoteHistory(snap.val());
@@ -5298,6 +5534,7 @@
         hasAnnouncedWinner = true;
         announceVoteWinner();
       }
+      updateVotePromoAd();
       return;
     }
 
@@ -5307,6 +5544,7 @@
     if (timerEl) {
       timerEl.textContent = `⏱️ เหลือเวลา: ${hrs} ชม. ${mins} นาที ${secs} วิ`;
     }
+    updateVotePromoAd();
   }
 
   // 4) หาเกมที่คะแนนสูงสุดแล้วเด้งป๊อปอัปประกาศผู้ชนะ
@@ -5364,6 +5602,7 @@
       if (voteCard) voteCard.style.display = 'none';
       if (evalForm) evalForm.style.display = 'block';
       if (donateCard) donateCard.style.display = 'block';
+      updateVotePromoAd();
       return;
     }
 
@@ -5396,6 +5635,7 @@
     if (!silent) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    updateVotePromoAd();
   }
 
   function switchMainTab(tab) {
@@ -5661,6 +5901,150 @@
     db.ref("game_vote_history/" + key).remove().then(() => {
       showToast("🗑️ ลบประวัติเรียบร้อยแล้ว");
     });
+  }
+  // =========================================
+  // 10. แท่นเกียรติยศ Top 3 ผู้ร่วมโหวตเกม + ป้ายโฆษณา VS ลอยข้างจอ
+  // =========================================
+  let isVoteAdClosed = false;
+
+  function closeVotePromoAd(e) {
+    if (e) e.stopPropagation();
+    playClickSound();
+    isVoteAdClosed = true;
+    const ad = document.getElementById('votePromoAd');
+    if (ad) ad.style.display = 'none';
+  }
+
+  function renderVotePodium() {
+    const stage = document.getElementById('podiumVoteStage');
+    if (!stage) return;
+
+    if (!voteData || !voteData.games) {
+      stage.innerHTML = `<div class="lb-empty">ยังไม่มีรอบโหวตที่เปิดอยู่ 🔥</div>`;
+      return;
+    }
+
+    const voterTotals = {};
+    Object.values(voteData.games).forEach(g => {
+      if (!g || !g.voters) return;
+      Object.keys(g.voters).forEach(uid => {
+        const v = g.voters[uid];
+        if (!voterTotals[uid]) {
+          voterTotals[uid] = { id: uid, name: v.name || "Discord User", count: 0 };
+        }
+        voterTotals[uid].count += (Number(v.count) || 0);
+      });
+    });
+
+    const top3 = Object.values(voterTotals)
+      .filter(v => v.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+
+    if (top3.length === 0) {
+      stage.innerHTML = `<div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥</div>`;
+      return;
+    }
+
+    const order = [
+      { rank: 2, medal: "🥈", item: top3[1] },
+      { rank: 1, medal: "🥇", item: top3[0] },
+      { rank: 3, medal: "🥉", item: top3[2] }
+    ];
+
+    stage.innerHTML = "";
+    order.forEach(slot => {
+      if (!slot.item) return;
+      const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
+      const avatar = (typeof cached.avatarUrl === "string" && cached.avatarUrl.indexOf("https://cdn.discordapp.com/") === 0)
+        ? cached.avatarUrl
+        : "https://cdn.discordapp.com/embed/avatars/0.png";
+      const displayName = cached.name || slot.item.name || "Discord User";
+
+      const div = document.createElement('div');
+      div.className = `podium-slot p-${slot.rank}`;
+      div.innerHTML = `
+        <div class="podium-avatar-wrap">
+          ${slot.rank === 1 ? '<span class="podium-crown">👑</span>' : ''}
+          <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
+        </div>
+        <div class="podium-name"></div>
+        <div class="podium-score"></div>
+        <div class="podium-pillar">${slot.medal}</div>
+      `;
+      div.querySelector('.podium-name').textContent = displayName;
+      div.querySelector('.podium-score').textContent = "🔥 " + formatCompact(slot.item.count) + " โหวต";
+      stage.appendChild(div);
+    });
+  }
+
+  function updateVotePromoAd() {
+    const ad = document.getElementById('votePromoAd');
+    if (!ad) return;
+
+    // ซ่อนป้ายถ้า: ติดคำสาป / กดปิดไปแล้ว / กำลังอยู่หน้าโหวตอยู่แล้ว / ไม่มีรอบโหวต / หมดเวลาแล้ว
+    const isRunning = voteData && voteData.games && voteData.endTime && (Date.now() < voteData.endTime);
+    if (isHorrorTriggered || isVoteAdClosed || currentPage === 'vote' || !isRunning) {
+      ad.style.display = 'none';
+      return;
+    }
+
+    // ดึง 2 เกมที่คะแนนนำอยู่มาขึ้นป้าย VS
+    const list = Object.values(voteData.games)
+      .sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
+    if (list.length === 0) {
+      ad.style.display = 'none';
+      return;
+    }
+
+    const g1 = list[0];
+    const g2 = list[1] || null;
+
+    document.getElementById('adVoteTitle').textContent = voteData.title || "🔥 แข่งกดใจโหวตเกม";
+    document.getElementById('adMoreGamesTag').textContent = list.length > 2 ? `• รวม ${list.length} เกม` : "";
+
+    const setFighterImg = (elId, game) => {
+      const img = document.getElementById(elId);
+      if (!img || !game) return;
+      if (img.dataset.rawSrc !== game.img) {
+        img.dataset.rawSrc = game.img || "";
+        img.dataset.tried = "";
+        const fallback = `https://placehold.co/200x150/dc2626/ffffff?text=${encodeURIComponent(game.name || 'Game')}`;
+        img.onerror = function () {
+          if (!this.dataset.tried && this.dataset.rawSrc && !this.dataset.rawSrc.includes('images/')) {
+            this.dataset.tried = "1";
+            this.src = "images/" + this.dataset.rawSrc;
+          } else {
+            this.onerror = null;
+            this.src = fallback;
+          }
+        };
+        img.src = game.img || fallback;
+      }
+    };
+
+    setFighterImg('adGame1Img', g1);
+    document.getElementById('adGame1Name').textContent = g1.name || "เกม 1";
+    document.getElementById('adGame1Score').textContent = "❤️ " + formatCompact(g1.hearts);
+
+    const g2Box = document.getElementById('adGame2Box');
+    if (g2) {
+      if (g2Box) g2Box.style.display = '';
+      setFighterImg('adGame2Img', g2);
+      document.getElementById('adGame2Name').textContent = g2.name || "เกม 2";
+      document.getElementById('adGame2Score').textContent = "❤️ " + formatCompact(g2.hearts);
+    } else if (g2Box) {
+      g2Box.style.display = 'none';
+    }
+
+    // อัปเดตเวลานับถอยหลังบนป้าย
+    const diff = Math.max(0, voteData.endTime - Date.now());
+    const hrs = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    document.getElementById('adVoteTimer').textContent = `⏱️ ${hrs}ชม. ${mins}น. ${secs}วิ`;
+
+    ad.style.display = 'block';
   }
 </script>
 
