@@ -2227,6 +2227,11 @@
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
       }
+      /* กันการ์ดกระดานจัดอันดับล้นจอมือถือ */
+      .lb-card, .section-card, .podium-card { padding: 16px 12px !important; }
+      .lb-grid { grid-template-columns: minmax(0, 1fr) !important; }
+      .lb-column { min-width: 0; padding: 12px 10px !important; }
+      .lb-row { gap: 8px; padding: 8px; }
     }
 
     /* การ์ดเมนูลัด 4 ปุ่มบนหน้าหลัก */
@@ -2949,6 +2954,66 @@
       border-color: #7f1d1d !important;
       color: #fca5a5 !important;
     }
+    /* =========================================
+       🌌👑 ยศพิเศษสูงสุด: ADMIN (tier-99) 👑🌌
+       ========================================= */
+    @keyframes adminAuraPulse {
+      0%, 100% {
+        box-shadow: 0 0 12px #fbbf24, 0 0 24px #a855f7, 0 0 36px rgba(6, 182, 212, 0.75);
+      }
+      50% {
+        box-shadow: 0 0 18px #fef08a, 0 0 32px #ec4899, 0 0 46px rgba(251, 191, 36, 0.9);
+      }
+    }
+
+    /* กรอบรูปโปรไฟล์ใหญ่ + โปรไฟล์จิ๋วมุมขวาบน */
+    .avatar-frame.tier-99,
+    .nav-avatar-frame.tier-99 {
+      background: conic-gradient(#fde047, #f59e0b, #ec4899, #a855f7, #06b6d4, #fde047) !important;
+      animation: adminAuraPulse 2.4s infinite ease-in-out !important;
+    }
+
+    /* กรอบรูปบนกระดานจัดอันดับ */
+    .lb-avatar.tier-99 {
+      border: 2.5px solid #fde047 !important;
+      box-shadow: 0 0 10px #fbbf24, 0 0 16px #a855f7 !important;
+    }
+
+    /* ป้ายยศแอดมิน (กาแล็กซีสีรุ้ง-ทองคำ + แสงวิ่งพาดผ่าน) */
+    .role-pill.tier-99 {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, #1e1b4b, #7e22ce, #db2777, #f59e0b, #0891b2, #1e1b4b) !important;
+      background-size: 300% 300% !important;
+      animation: gradientFlow 3.5s linear infinite !important;
+      color: #ffffff !important;
+      border: 1.5px solid #fde047 !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75), 0 0 8px rgba(253, 224, 71, 0.8) !important;
+      box-shadow: 0 0 14px rgba(168, 85, 247, 0.65), 0 0 6px rgba(251, 191, 36, 0.8) !important;
+      font-weight: 700 !important;
+    }
+
+    .role-pill.tier-99::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+      transform: skewX(-25deg);
+      animation: rankShimmer 2.6s infinite;
+      pointer-events: none;
+    }
+
+    /* แถบโปรไฟล์จิ๋วมุมขวาบนสำหรับแอดมิน */
+    .nav-profile-pill.tier-99 {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.92), rgba(88, 28, 135, 0.85)) !important;
+      border: 1.5px solid #fde047 !important;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.55), 0 0 22px rgba(168, 85, 247, 0.45) !important;
+    }
+    .nav-profile-pill.tier-99 .nav-profile-role {
+      color: #fef08a !important;
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.85);
+    }
   </style>
 </head>
 <body>
@@ -3621,6 +3686,7 @@
 
   // ยศระดับต่างๆ (เรียงจากสูงสุดไปต่ำสุด)
   const ROLE_TIERS = [
+    { tier: 99, id: VOTE_ADMIN_ROLE_ID, name: "🌌👑 『 ผู้สร้างจักรวาล BGT 』 ✨", short: "ผู้สร้างจักรวาล BGT (Admin)", need: "ผู้ดูแลสูงสุด" },
     { tier: 4, id: "1548678245992628315", name: "👑 『 ภาคีผู้พิทักษ์นิรันดร์ 』", short: "ภาคีผู้พิทักษ์นิรันดร์", need: "1,000 บาท" },
     { tier: 3, id: "1418677630202286253", name: "💖 『 ผู้พิทักษ์หัวใจ 』",           short: "ผู้พิทักษ์หัวใจ",           need: "500 บาท" },
     { tier: 2, id: "1484865657467043941", name: "📜 『 ผู้ร่วมจารึก 』",              short: "ผู้ร่วมจารึก",              need: "300 บาท" },
