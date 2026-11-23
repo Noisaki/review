@@ -3045,6 +3045,7 @@
 </nav>
 
 <!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
+<audio id="realCryAudio" src="cry.mp3" loop preload="auto" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/cry.mp3';}"></audio>
 <audio id="bgmAudio" preload="auto"></audio>
 
 <!-- ม่านเลือดไหลหยดจากขอบจอด้านบน -->
@@ -4910,6 +4911,78 @@
     }
   }
 
+  function startChristmasMusic() {
+    if (isHorrorTriggered || BGM_PLAYLIST.length === 0) return;
+    const bgmEl = document.getElementById('bgmAudio');
+    if (!bgmEl) return;
+
+    loadCurrentBgmTrack();
+
+    // ถ้าหาไฟล์หน้าแรกไม่เจอ ให้ลองหาในโฟลเดอร์ music/ และ images/ ให้อัตโนมัติ
+    bgmEl.onerror = () => {
+      const baseName = BGM_PLAYLIST[currentTrackIndex].src.replace(/^(music|images)\//, '');
+      const step = Number(bgmEl.dataset.fallbackStep || 0);
+      if (step === 0) {
+        bgmEl.dataset.fallbackStep = "1";
+        bgmEl.src = "music/" + baseName;
+        bgmEl.play().catch(() => {});
+      } else if (step === 1) {
+        bgmEl.dataset.fallbackStep = "2";
+        bgmEl.src = "images/" + baseName;
+        bgmEl.play().catch(() => {});
+      } else {
+        isMusicPlaying = false;
+        showToast(`⚠️ หาไฟล์เพลง "${baseName}" ไม่เจอ! (เช็กว่าอัปขึ้น GitHub และไม่ได้ชื่อ .mp3.mp3 นะครับ)`);
+      }
+    };
+
+    bgmEl.dataset.fallbackStep = "0";
+    const playPromise = bgmEl.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        isMusicPlaying = true;
+        document.getElementById('musicStateIcon').textContent = '⏸️';
+        document.getElementById('musicStateText').textContent = BGM_PLAYLIST[currentTrackIndex].name;
+      }).catch((err) => {
+        if (err && err.name !== "NotAllowedError") {
+          showToast("⚠️ เล่นเพลงไม่ได้: " + err.name);
+        }
+      });
+    }
+  }
+
+  function stopChristmasMusic() {
+    isMusicPlaying = false;
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl) bgmEl.pause();
+    if (!isHorrorTriggered) {
+      document.getElementById('musicStateIcon').textContent = '▶️';
+      document.getElementById('musicStateText').textContent = 'เล่นเพลง';
+    }
+  }
+
+  function nextBgmTrack() {
+    if (isHorrorTriggered || BGM_PLAYLIST.length <= 1) return;
+    playClickSound();
+    currentTrackIndex = (currentTrackIndex + 1) % BGM_PLAYLIST.length;
+    userPausedMusic = false;
+    startChristmasMusic();
+  }
+
+  function toggleChristmasMusic() {
+    if (isHorrorTriggered) {
+      playRealCryingAudio();
+      return;
+    }
+    if (isMusicPlaying) {
+      userPausedMusic = true;
+      stopChristmasMusic();
+    } else {
+      userPausedMusic = false;
+      startChristmasMusic();
+    }
+  }
+
   function changeMusicVolume(val) {
     musicVolume = val / 100;
     document.getElementById('volumePercentText').textContent = val + '%';
@@ -4928,8 +5001,10 @@
     }
   }
 
-  document.addEventListener('pointerdown', function autoStartOnFirstInteraction() {
+  document.addEventListener('pointerdown', function autoStartOnFirstInteraction(e) {
     initAudio();
+    // กันไม่ให้คลิกแรกบนปุ่มเล่นเพลงไปชนกับ toggleChristmasMusic()
+    if (e.target && e.target.closest && e.target.closest('#musicToggleBtn, #nextSongBtn')) return;
     if (isHorrorTriggered) {
       playRealCryingAudio();
       if (!horrorInterval) startHorrorAmbience();
