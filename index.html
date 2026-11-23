@@ -3045,7 +3045,7 @@
 </nav>
 
 <!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
-<audio id="realCryAudio" src="cry.mp3" loop preload="auto" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/cry.mp3';}"></audio>
+<audio id="bgmAudio" preload="auto"></audio>
 
 <!-- ม่านเลือดไหลหยดจากขอบจอด้านบน -->
 <svg class="blood-curtain" viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -3064,8 +3064,9 @@
 <div class="floating-controls">
   <div class="music-player-pill">
     <button type="button" class="music-toggle-btn" id="musicToggleBtn" onclick="toggleChristmasMusic()">
-      <span id="musicStateIcon">▶️</span> <span id="musicStateText" class="corruptible" data-cursed="😭 เสียงร้องไห้...">เพลงคริสต์มาส</span>
+      <span id="musicStateIcon">▶️</span> <span id="musicStateText" class="corruptible" data-cursed="😭 เสียงร้องไห้...">เพลงพื้นหลัง</span>
     </button>
+    <button type="button" class="music-toggle-btn" id="nextSongBtn" onclick="nextBgmTrack()" title="เปลี่ยนเพลงถัดไป" style="padding:5px 9px;">⏭️</button>
     <div class="volume-control" title="ปรับระดับเสียงเพลง">
       <span id="musicSpeakerIcon">🎄🔊</span>
       <input type="range" id="musicVolumeSlider" class="volume-slider" min="0" max="100" value="45" oninput="changeMusicVolume(this.value)">
@@ -4811,47 +4812,24 @@
     }
   }
 
+// =========================================
+  // 2. ระบบเสียง UI + เพลง MP3 จริง (รองรับเพลย์ลิสต์) + เสียงร้องไห้ cry.mp3
   // =========================================
-  // 2. ระบบเสียง UI + เพลงคริสต์มาส + เสียงร้องไห้จริง cry.mp3
-  // =========================================
+  // 🎵 ใส่รายชื่อไฟล์เพลงของเจ้านายตรงนี้เลย! (มีเพลงเดียวก็ใส่แค่ 1 บรรทัดได้ครับ)
+  const BGM_PLAYLIST = [
+    { name: "เพลงที่ 1", src: "bgm1.mp3" },
+    { name: "เพลงที่ 2", src: "bgm2.mp3" }
+  ];
+
+  let currentTrackIndex = 0;
   let isMusicPlaying = false;
   let userPausedMusic = false;
   let musicVolume = 0.45;
   let masterMusicGain = null;
-  let musicTimeout = null;
-  let noteIndex = 0;
 
   let horrorInterval = null;
   let horrorDroneOsc1 = null;
   let horrorDroneOsc2 = null;
-
-  const N = {
-    D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.00, A4: 440.00, B4: 493.88,
-    C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, REST: 0
-  };
-
-  const xmasMedley = [
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
-    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
-    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
-    [N.E5, 1], [N.D5, 1], [N.D5, 1], [N.E5, 1], [N.D5, 2], [N.G5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.E5, 1], [N.E5, 2],
-    [N.E5, 1], [N.G5, 1], [N.C5, 1.5], [N.D5, 0.5], [N.E5, 3.5], [N.REST, 0.5],
-    [N.F5, 1], [N.F5, 1], [N.F5, 1.5], [N.F5, 0.5],
-    [N.F5, 1], [N.E5, 1], [N.E5, 1], [N.E5, 0.5], [N.E5, 0.5],
-    [N.G5, 1], [N.G5, 1], [N.F5, 1], [N.D5, 1], [N.C5, 3.5], [N.REST, 1.5],
-
-    [N.D4, 1], [N.G4, 1], [N.G4, 0.5], [N.A4, 0.5], [N.G4, 0.5], [N.Fs4, 0.5],
-    [N.E4, 1], [N.E4, 1], [N.E4, 1],
-    [N.A4, 1], [N.A4, 0.5], [N.B4, 0.5], [N.A4, 0.5], [N.G4, 0.5],
-    [N.Fs4, 1], [N.D4, 1], [N.D4, 1],
-    [N.B4, 1], [N.B4, 0.5], [N.C5, 0.5], [N.B4, 0.5], [N.A4, 0.5],
-    [N.G4, 1], [N.E4, 1], [N.D4, 0.5], [N.D4, 0.5],
-    [N.E4, 1], [N.A4, 1], [N.Fs4, 1], [N.G4, 3], [N.REST, 1.5]
-  ];
 
   function initAudio() {
     if (!audioCtx) {
@@ -4865,68 +4843,57 @@
     }
   }
 
-  function playMusicBoxNote(freq, durationSec) {
-    if (!audioCtx || !masterMusicGain || freq === 0 || isHorrorTriggered) return;
-    const now = audioCtx.currentTime;
-
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const noteGain = audioCtx.createGain();
-
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(freq, now);
-
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(freq * 2, now);
-
-    const osc2Gain = audioCtx.createGain();
-    osc2Gain.gain.value = 0.15;
-
-    noteGain.gain.setValueAtTime(0.001, now);
-    noteGain.gain.linearRampToValueAtTime(0.7, now + 0.02);
-    noteGain.gain.exponentialRampToValueAtTime(0.001, now + Math.max(durationSec * 1.35, 0.35));
-
-    osc1.connect(noteGain);
-    osc2.connect(osc2Gain);
-    osc2Gain.connect(noteGain);
-    noteGain.connect(masterMusicGain);
-
-    osc1.start(now);
-    osc2.start(now);
-    const stopTime = now + Math.max(durationSec * 1.4, 0.4);
-    osc1.stop(stopTime);
-    osc2.stop(stopTime);
-  }
-
-  function scheduleNextNote() {
-    if (!isMusicPlaying || isHorrorTriggered) return;
-    const [freq, beats] = xmasMedley[noteIndex];
-    const beatDuration = 0.34;
-    const durationSec = beats * beatDuration;
-
-    playMusicBoxNote(freq, durationSec);
-
-    noteIndex = (noteIndex + 1) % xmasMedley.length;
-    musicTimeout = setTimeout(scheduleNextNote, durationSec * 1000);
+  function loadCurrentBgmTrack() {
+    const bgmEl = document.getElementById('bgmAudio');
+    if (!bgmEl || BGM_PLAYLIST.length === 0) return;
+    const track = BGM_PLAYLIST[currentTrackIndex];
+    if (bgmEl.dataset.src !== track.src) {
+      bgmEl.dataset.src = track.src;
+      bgmEl.src = track.src;
+    }
+    bgmEl.volume = musicVolume;
+    bgmEl.loop = (BGM_PLAYLIST.length === 1); // ถ้ามีเพลงเดียวให้วนซ้ำเอง
+    bgmEl.onended = () => {
+      if (!isHorrorTriggered && BGM_PLAYLIST.length > 1) {
+        nextBgmTrack();
+      }
+    };
   }
 
   function startChristmasMusic() {
-    if (isHorrorTriggered) return;
-    initAudio();
-    if (isMusicPlaying) return;
-    isMusicPlaying = true;
-    document.getElementById('musicStateIcon').textContent = '⏸️';
-    document.getElementById('musicStateText').textContent = 'กำลังเล่น';
-    scheduleNextNote();
+    if (isHorrorTriggered || BGM_PLAYLIST.length === 0) return;
+    const bgmEl = document.getElementById('bgmAudio');
+    if (!bgmEl) return;
+
+    loadCurrentBgmTrack();
+    const playPromise = bgmEl.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        isMusicPlaying = true;
+        document.getElementById('musicStateIcon').textContent = '⏸️';
+        document.getElementById('musicStateText').textContent = BGM_PLAYLIST[currentTrackIndex].name;
+      }).catch(() => {
+        // กรณีเบราว์เซอร์บล็อก Autoplay ก่อนผู้ใช้แตะหน้าจอ
+      });
+    }
   }
 
   function stopChristmasMusic() {
     isMusicPlaying = false;
-    clearTimeout(musicTimeout);
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl) bgmEl.pause();
     if (!isHorrorTriggered) {
       document.getElementById('musicStateIcon').textContent = '▶️';
-      document.getElementById('musicStateText').textContent = 'เพลงคริสต์มาส';
+      document.getElementById('musicStateText').textContent = 'เล่นเพลง';
     }
+  }
+
+  function nextBgmTrack() {
+    if (isHorrorTriggered || BGM_PLAYLIST.length <= 1) return;
+    playClickSound();
+    currentTrackIndex = (currentTrackIndex + 1) % BGM_PLAYLIST.length;
+    userPausedMusic = false;
+    startChristmasMusic();
   }
 
   function toggleChristmasMusic() {
@@ -4947,10 +4914,11 @@
     musicVolume = val / 100;
     document.getElementById('volumePercentText').textContent = val + '%';
 
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl) bgmEl.volume = musicVolume;
+
     const cryEl = document.getElementById('realCryAudio');
-    if (cryEl) {
-      cryEl.volume = Math.max(0.15, musicVolume);
-    }
+    if (cryEl) cryEl.volume = Math.max(0.15, musicVolume);
 
     if (masterMusicGain && audioCtx) {
       masterMusicGain.gain.setTargetAtTime(musicVolume * 0.25, audioCtx.currentTime, 0.03);
