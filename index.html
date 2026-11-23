@@ -5410,7 +5410,6 @@
   let voteData = null;
   let voteTimerInterval = null;
   let hasAnnouncedWinner = false;
-    isVoteAdClosed = false;
   
   // 1) แอดมินกดบันทึกหัวข้อ + ชื่อเกม + ชื่อไฟล์ภาพ + เริ่มจับเวลา
   function adminStartVoteEvent() {
@@ -5444,6 +5443,7 @@
     }
 
     hasAnnouncedWinner = false;
+    isVoteAdClosed = false;
     db.ref("game_vote").set({
       title: voteTitle,
       status: "running",
