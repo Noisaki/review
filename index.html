@@ -2177,35 +2177,56 @@
       box-shadow: 0 4px 14px rgba(220, 38, 38, 0.45);
     }
 
-    /* รองรับมือถือ: ไม่ซ่อนเมนู แต่จัดเป็นแถบเลื่อนแนวนอนด้านล่างโลโก้ */
+  
+    /* รองรับมือถือ: จัดเมนูเป็น 2 แถวไม่ทับกัน + ปลดแถบเพลงไม่ให้บังจอ + ลดอาการกระตุก */
     @media (max-width: 780px) {
       .top-navbar {
         height: auto;
         flex-wrap: wrap;
-        padding: 10px 14px;
-        gap: 8px;
+        padding: 8px 12px;
+        gap: 6px;
       }
       .nav-left {
         width: 100%;
+        flex-wrap: wrap;
         justify-content: space-between;
-        order: 1;
+        gap: 8px;
       }
       .nav-right {
         position: absolute;
-        top: 10px;
-        right: 14px;
+        top: 6px;
+        right: 12px;
       }
       .nav-links {
         display: flex !important;
         width: 100%;
         overflow-x: auto;
-        padding-bottom: 2px;
+        padding: 6px 0 2px;
         gap: 6px;
         scrollbar-width: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
       }
       .nav-links::-webkit-scrollbar { display: none; }
-      .floating-controls { top: 112px; }
-      body { padding-top: 165px; }
+      .nav-tab-btn { padding: 5px 11px; font-size: 0.82rem; }
+
+      /* ปลดแถบเพลงไม่ให้ลอยทับโลโก้ และซ่อนปุ่มสนับสนุนที่ซ้ำกับเมนูบน */
+      .floating-controls {
+        position: relative;
+        top: 0; left: 0; right: 0;
+        justify-content: center;
+        margin-bottom: 14px;
+      }
+      .pill-donate-jump { display: none !important; }
+      body { padding: 108px 12px 115px; }
+
+      /* ปิดแสงเบลอ & กระจกเบลอบนมือถือ (ช่วยลดกระตุกได้มากที่สุด!) */
+      .bg-effects { display: none !important; }
+      .header-card, .profile-card, .cheer-spotlight-card,
+      .lb-card, .podium-card, .section-card, .donate-card,
+      .music-player-pill, .pill-control-btn, .top-navbar, .vote-promo-ad {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
     }
 
     /* การ์ดเมนูลัด 4 ปุ่มบนหน้าหลัก */
@@ -3238,8 +3259,8 @@
           <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(-10)">➖ 10 นาที</button>
           <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(10)">➕ 10 นาที</button>
           <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(60)">➕ 1 ชม.</button>
-          <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem;" onclick="adminAdjustVoteTime(1440)">➕ 24 ชม.</button>
           <button type="button" class="profile-btn logout" style="padding:6px 10px; font-size:0.8rem;" onclick="adminEndVoteNow()">🏁 ปิดโหวตทันที</button>
+          <button type="button" class="profile-btn" style="padding:6px 10px; font-size:0.8rem; border-color:#f59e0b; color:#b45309;" onclick="adminResetVoteScores()">🔄 รีเซ็ตคะแนนเป็น 0 (ทดสอบ)</button>
         </div>
       </div>
     </div>
@@ -5275,28 +5296,17 @@
       if (isHorrorTriggered) {
         ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius * 2.2, 0, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(220, 20, 20, 0.88)";
-        ctx.shadowColor = "#990000";
-        ctx.shadowBlur = 8;
       } else {
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        if (this.isGoldSparkle) {
-          ctx.fillStyle = "rgba(253, 224, 71, 0.85)";
-          ctx.shadowColor = "#fbbf24";
-          ctx.shadowBlur = 8;
-        } else {
-          ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-          ctx.shadowColor = "#ffffff";
-          ctx.shadowBlur = 4;
-        }
+        ctx.fillStyle = this.isGoldSparkle ? "rgba(253, 224, 71, 0.9)" : "rgba(255, 255, 255, 0.85)";
       }
       ctx.fill();
-      ctx.shadowBlur = 0;
     }
   }
-
   function initSnow() {
     snowflakes = [];
-    const count = Math.min(115, Math.floor((canvas.width * canvas.height) / 9500));
+    const maxSnow = window.innerWidth < 768 ? 25 : 80;
+    const count = Math.min(maxSnow, Math.floor((canvas.width * canvas.height) / 12000));
     for (let i = 0; i < count; i++) {
       snowflakes.push(new Snowflake());
     }
@@ -5879,7 +5889,27 @@
       updateVoteCountdown();
     });
   }
+  // แอดมินกดรีเซ็ตเฉพาะคะแนนโหวต + รายชื่อคนโหวตเป็น 0 (ชื่อเกม รูป และเวลายังอยู่ครบ)
+  function adminResetVoteScores() {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!voteData || !voteData.games) {
+      showToast("⚠️ ยังไม่มีรอบโหวตที่เปิดอยู่ครับ");
+      return;
+    }
+    if (!confirm("ต้องการรีเซ็ตคะแนนโหวตทุกเกมกลับเป็น 0 (เก็บชื่อเกมกับรูปเดิมไว้) ใช่ไหมครับ?")) return;
 
+    const updates = {};
+    Object.keys(voteData.games).forEach(gameId => {
+      updates[`game_vote/games/${gameId}/hearts`] = 0;
+      updates[`game_vote/games/${gameId}/voters`] = null;
+    });
+
+    db.ref().update(updates).then(() => {
+      showToast("🔄 รีเซ็ตคะแนนโหวตทุกเกมกลับเป็น 0 แล้ว!");
+    }).catch(() => {
+      showToast("⚠️ รีเซ็ตคะแนนไม่สำเร็จ");
+    });
+  }
   // 2) ฟังข้อมูลจาก Firebase แบบเรียลไทม์ + นับถอยหลัง
   function initGameVoteSystem() {
     if (!db) return;
@@ -6144,11 +6174,7 @@
   }
 
   // กดรัวๆ เพิ่มหัวใจให้เกมนั้น + บันทึกรายชื่อคนกด
-  let voteComboCount = 0;
-  let lastVoteClickTime = 0;
-  let voteComboResetTimer = null;
-
-  // กดรัวๆ เพิ่มหัวใจโหวตเกม + ได้คอมโบ + ได้ XP อัปเลเวล!
+  // กดโหวตเกม (ทีละ +1 แฟร์ๆ ไม่มีคอมโบ + ได้ XP อัปเลเวล!)
   function voteHeartClick(gameId, e) {
     if (!currentUser) {
       openLoginInfo("🔐 ล็อกอินด้วย Discord ก่อนจึงจะกดโหวตเกมได้นะครับ");
@@ -6158,53 +6184,34 @@
 
     playClickSound();
 
-    // คำนวณคอมโบตอนกดโหวตรัวๆ
-    const now = Date.now();
-    if (now - lastVoteClickTime < 420) {
-      voteComboCount++;
-    } else {
-      voteComboCount = 1;
-    }
-    lastVoteClickTime = now;
-
-    let bonus = 1;
-    if (voteComboCount >= 50) bonus = 50;
-    else if (voteComboCount >= 30) bonus = 25;
-    else if (voteComboCount >= 18) bonus = 10;
-    else if (voteComboCount >= 10) bonus = 5;
-    else if (voteComboCount >= 4) bonus = 2;
-
-    clearTimeout(voteComboResetTimer);
-    voteComboResetTimer = setTimeout(() => { voteComboCount = 0; }, 850);
-
-    // เช็กเลเวลอัปจาก XP ที่ได้จากการโหวต
+    // เช็กเลเวลอัปจาก +1 XP ที่ได้จากการโหวต
     const oldMyTotal = myServerHearts + pendingClicks;
     const oldLv = getLevelFromHearts(oldMyTotal);
-    const newMyTotal = oldMyTotal + bonus;
+    const newMyTotal = oldMyTotal + 1;
     const newLv = getLevelFromHearts(newMyTotal);
     if (newLv > oldLv) {
       const newLvData = getLevelData(newMyTotal);
       triggerMilestoneCelebration(`🎉 LEVEL UP! ยินดีด้วย คุณเลื่อนเป็น ${newLvData.badge} [${newLvData.rarityName}] จากการโหวตเกม! ✨`);
     }
 
-    // อัปเดตคะแนนโหวต + รายชื่อคนโหวต + เพิ่ม XP (heartsClicked) บน Firebase
+    // อัปเดตคะแนนโหวต +1 + รายชื่อคนโหวต + เพิ่ม XP บน Firebase
     const updates = {};
-    updates[`game_vote/games/${gameId}/hearts`] = firebase.database.ServerValue.increment(bonus);
+    updates[`game_vote/games/${gameId}/hearts`] = firebase.database.ServerValue.increment(1);
     updates[`game_vote/games/${gameId}/voters/${currentUser.id}/name`] = currentUser.name;
-    updates[`game_vote/games/${gameId}/voters/${currentUser.id}/count`] = firebase.database.ServerValue.increment(bonus);
-    updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(bonus);
+    updates[`game_vote/games/${gameId}/voters/${currentUser.id}/count`] = firebase.database.ServerValue.increment(1);
+    updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(1);
     db.ref().update(updates).catch(() => {});
 
-    // เอฟเฟกต์ลอยโชว์คอมโบ & XP
+    // เอฟเฟกต์ลอยโชว์ ❤️ +1
     if (e) {
       const el = document.createElement('div');
       el.className = 'floating-heart';
-      el.textContent = bonus > 1 ? `🔥 +${bonus} (x${bonus}!)` : '❤️ +1';
+      el.textContent = '❤️ +1';
       el.style.left = (e.clientX + (Math.random() - 0.5) * 40) + 'px';
       el.style.top = (e.clientY - 12) + 'px';
-      el.style.fontSize = bonus > 1 ? '1.15rem' : '1.1rem';
+      el.style.fontSize = '1.1rem';
       el.style.fontWeight = '800';
-      el.style.color = bonus > 1 ? '#f59e0b' : '#e11d48';
+      el.style.color = '#e11d48';
       el.style.textShadow = '0 2px 6px rgba(0,0,0,0.35)';
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 950);
