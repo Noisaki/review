@@ -2469,6 +2469,97 @@
     }
     body.horror-mode .history-card { background: #1f0404 !important; border-color: #7f1d1d !important; }
     body.horror-mode .history-name, body.horror-mode .history-meta { color: #fca5a5 !important; }
+    /* =========================================
+       โปรไฟล์จิ๋วมุมขวาบน (มีกรอบตามยศ + ป้ายยศ)
+       ========================================= */
+    .nav-profile-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      padding: 4px 14px 4px 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      font-family: 'Prompt', sans-serif;
+    }
+    .nav-profile-pill:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+    .nav-profile-pill.tier--1 { border-color: rgba(251, 146, 60, 0.75); box-shadow: 0 0 10px rgba(234, 88, 12, 0.25); }
+    .nav-profile-pill.tier-1  { border-color: rgba(74, 222, 128, 0.75); box-shadow: 0 0 10px rgba(34, 197, 94, 0.25); }
+    .nav-profile-pill.tier-2  { border-color: rgba(167, 139, 250, 0.8); box-shadow: 0 0 12px rgba(124, 58, 237, 0.35); }
+    .nav-profile-pill.tier-3  { border-color: rgba(251, 113, 133, 0.85); box-shadow: 0 0 12px rgba(225, 29, 72, 0.35); }
+    .nav-profile-pill.tier-4  { border-color: #fbbf24; box-shadow: 0 0 14px rgba(251, 191, 36, 0.55); }
+
+    .nav-avatar-frame {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      padding: 2.5px;
+      background: #94a3b8;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-avatar-frame img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #1e293b;
+    }
+    .nav-avatar-frame.tier--1 { background: linear-gradient(135deg, #fdba74, #ea580c); }
+    .nav-avatar-frame.tier-1  { background: linear-gradient(135deg, #86efac, #15803d); }
+    .nav-avatar-frame.tier-2  { background: linear-gradient(135deg, #93c5fd, #7c3aed); }
+    .nav-avatar-frame.tier-3  { background: linear-gradient(135deg, #f9a8d4, #e11d48); }
+    .nav-avatar-frame.tier-4  {
+      background: conic-gradient(#fde047, #f59e0b, #dc2626, #f59e0b, #fde047);
+      animation: spinFrame 6s linear infinite;
+    }
+
+    .nav-profile-meta {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+      max-width: 150px;
+    }
+    .nav-profile-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-profile-role {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #fde68a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-profile-pill.tier--1 .nav-profile-role { color: #fdba74; }
+    .nav-profile-pill.tier-1  .nav-profile-role { color: #86efac; }
+    .nav-profile-pill.tier-2  .nav-profile-role { color: #c4b5fd; }
+    .nav-profile-pill.tier-3  .nav-profile-role { color: #fda4af; }
+    .nav-profile-pill.tier-4  .nav-profile-role { color: #fde047; }
+
+    body.horror-mode .nav-profile-pill {
+      background: rgba(45, 5, 5, 0.9) !important;
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.5) !important;
+    }
+    @media (max-width: 520px) {
+      .nav-profile-meta { max-width: 95px; }
+    }
   </style>
 </head>
 <body>
@@ -2486,10 +2577,15 @@
   </div>
   <div class="nav-right">
     <button type="button" class="nav-purple-btn" id="navLoginBtn" onclick="playClickSound(); openLoginInfo('');">ล็อกอิน</button>
-    <div id="navUserWrap" style="display:none; align-items:center; gap:8px;">
-      <span class="nav-user-badge"><span class="nav-user-tag">BGT</span> <span id="navUserName">-</span></span>
-      <button type="button" class="nav-purple-btn" onclick="switchPage('home'); setTimeout(()=>document.getElementById('profileCard').scrollIntoView({behavior:'smooth', block:'center'}), 120);">โปรไฟล์</button>
-    </div>
+    <button type="button" class="nav-profile-pill" id="navUserWrap" style="display:none;" onmouseenter="playHoverSound()" onclick="switchPage('home'); setTimeout(()=>document.getElementById('profileCard').scrollIntoView({behavior:'smooth', block:'center'}), 120);" title="ไปที่โปรไฟล์ของคุณ">
+      <span class="nav-avatar-frame" id="navAvatarFrame">
+        <img id="navAvatarImg" src="" alt="Avatar" referrerpolicy="no-referrer">
+      </span>
+      <span class="nav-profile-meta">
+        <span class="nav-profile-name" id="navUserName">-</span>
+        <span class="nav-profile-role" id="navUserRole">-</span>
+      </span>
+    </button>
   </div>
 </nav>
 
@@ -3419,6 +3515,22 @@
     document.getElementById('navLoginBtn').style.display = 'none';
     document.getElementById('navUserWrap').style.display = 'flex';
     document.getElementById('navUserName').textContent = profile.name;
+    document.getElementById('navLoginBtn').style.display = 'none';
+    const navWrap = document.getElementById('navUserWrap');
+    navWrap.style.display = 'inline-flex';
+    navWrap.className = "nav-profile-pill" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
+
+    const navAvatarFrame = document.getElementById('navAvatarFrame');
+    if (navAvatarFrame) navAvatarFrame.className = "nav-avatar-frame" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
+
+    const navAvatarImg = document.getElementById('navAvatarImg');
+    if (navAvatarImg) navAvatarImg.src = profile.avatarUrl;
+
+    document.getElementById('navUserName').textContent = profile.name;
+    const navUserRole = document.getElementById('navUserRole');
+    if (navUserRole) {
+      navUserRole.textContent = info ? info.name : (profile.inGuild ? "『🦊』 สมาชิก" : "👤 ผู้เยี่ยมชม");
+    }
     const avatarImg = document.getElementById('profileAvatar');
     avatarImg.src = profile.avatarUrl;
 
