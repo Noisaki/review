@@ -4347,7 +4347,7 @@
   function changeLbPage(type, newPage) {
     playClickSound();
     lbPages[type] = newPage;
-    renderLeaderboards();
+    renderLeaderboards(true);
   }
 
   function renderPaginatedLb(type, listElId, pagerElId, sortedEntries, formatterFn, emptyMsg) {
@@ -4380,8 +4380,12 @@
     // บรรทัดที่ 6: โชว์อันดับของตัวเองถ้าไม่ได้อยู่ในหน้านี้
     appendMyRankRow(listEl, sortedEntries, pageItems, formatterFn);
 
-    // สร้างปุ่มตัวเลขเปลี่ยนหน้า (เพิ่มหน้าอัตโนมัติตามจำนวนคน)
+    // สร้างปุ่มตัวเลขเปลี่ยนหน้า (ไม่ลบสร้างใหม่พร่ำเพรื่อ ปุ่มจะได้กดติด 100%!)
     if (pagerEl) {
+      const pagerKey = `${currentPageNum}/${totalPages}`;
+      if (pagerEl.dataset.pagerKey === pagerKey) return;
+      pagerEl.dataset.pagerKey = pagerKey;
+
       if (totalPages <= 1) {
         pagerEl.style.display = 'none';
       } else {
@@ -4426,9 +4430,17 @@
     }
   }
 
-  function renderLeaderboards() {
+  let lbRenderTimer = null;
+  function renderLeaderboards(force = false) {
+    if (!force) {
+      if (lbRenderTimer) return;
+      lbRenderTimer = setTimeout(() => {
+        lbRenderTimer = null;
+        renderLeaderboards(true);
+      }, 600);
+      return;
+    }
     const entries = Object.keys(usersCache || {}).map(id => ({ id: id, u: usersCache[id] || {} }));
-
     // 1. อันดับผู้สนับสนุน (Top Donate)
     const donors = entries.filter(e => (Number(e.u.donateAmount) || 0) > 0);
     donors.sort((a, b) => (Number(b.u.donateAmount) || 0) - (Number(a.u.donateAmount) || 0));
