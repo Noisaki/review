@@ -2748,6 +2748,9 @@
         <button type="button" class="submit-btn" style="flex:1; width:auto; min-width:160px; padding:12px 16px; font-size:1rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="adminCancelVoteEvent()">🗑️ ยกเลิก / ล้างรอบโหวต</button>
       </div>
     </div>
+    
+    <!-- ป้ายโชว์หัวข้อโหวตเหนือการ์ดเกม -->
+    <div id="voteTopicBanner" style="display:none; text-align:center; font-family:'Kanit',sans-serif; font-size:1.25rem; font-weight:700; color:#b91c1c; background:#fff1f2; border:1.5px solid #fda4af; border-radius:14px; padding:10px 16px; margin-bottom:16px;"></div>
 
     <!-- ตารางการ์ด 6 เกมแข่งกดใจ -->
     <div class="game-grid" id="voteGamesGrid">
@@ -5239,71 +5242,108 @@
     switchPage(tab);
   }
 
-// วาดการ์ด 6 เกม + รายชื่อคนกด + กระดาน Top ผู้มีส่วนร่วมโหวต
+
+  // วาดการ์ด 6 เกม (ล็อกตำแหน่งไม่สลับที่ + กดรัวได้ไม่กะพริบ) + กระดาน Top ผู้มีส่วนร่วมโหวต
   function renderVoteGames() {
     const grid = document.getElementById('voteGamesGrid');
     const topBox = document.getElementById('voteTopVotersBox');
     const topList = document.getElementById('voteTopVotersList');
     const titleEl = document.getElementById('voteMainTitle');
-    if (titleEl) {
-      titleEl.textContent = (voteData && voteData.title)
-        ? voteData.title
-        : "🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)";
-    }
+    const topicBanner = document.getElementById('voteTopicBanner');
     if (!grid) return;
+
+    const currentTitle = (voteData && voteData.title)
+      ? voteData.title
+      : "🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)";
+    if (titleEl) titleEl.textContent = currentTitle;
 
     // ถ้าแอดมินกดยกเลิกโหวต ให้เคลียร์การ์ดและซ่อนกระดาน Top
     if (!voteData || !voteData.games) {
+      grid.dataset.eventId = "";
       grid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีรอบโหวตที่เปิดอยู่ครับ</div>`;
       if (topBox) topBox.style.display = 'none';
+      if (topicBanner) topicBanner.style.display = 'none';
       return;
     }
 
-    const isEnded = !voteData.endTime || (Date.now() >= voteData.endTime);
-    const list = Object.keys(voteData.games).map(k => ({ id: k, ...voteData.games[k] }));
-    list.sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
+    if (topicBanner) {
+      topicBanner.textContent = currentTitle;
+      topicBanner.style.display = 'block';
+    }
 
-    // รวมยอดกดโหวตของแต่ละคนจากทุกเกม
+    const isEnded = !voteData.endTime || (Date.now() >= voteData.endTime);
+
+    // 1. เรียงการ์ดตามลำดับคงที่ (g1, g2, g3...) เพื่อไม่ให้การ์ดสลับที่ตอนกดรัวๆ
+    const list = Object.keys(voteData.games)
+      .sort()
+      .map(k => ({ id: k, ...voteData.games[k] }));
+
+    // 2. คำนวณอันดับ #1, #2, #3 จากคะแนน (อัปเดตแค่ป้ายอันดับ ไม่ย้ายการ์ด)
+    const ranked = [...list].sort((a, b) => (Number(b.hearts) || 0) - (Number(a.hearts) || 0));
+    const rankMap = {};
+    ranked.forEach((g, idx) => { rankMap[g.id] = idx + 1; });
+
+    // 3. วาดโครงสร้างการ์ด + รูปภาพแค่ "ครั้งเดียว" ต่อรอบโหวต (กันภาพกะพริบและกดต่อเนื่องได้ลื่นๆ)
+    const eventId = String(voteData.endTime || "") + "_" + list.map(g => g.id + ":" + g.img).join("|");
+    if (grid.dataset.eventId !== eventId) {
+      grid.dataset.eventId = eventId;
+      grid.innerHTML = list.map((g) => {
+        const fallbackUrl = `https://placehold.co/400x300/dc2626/ffffff?text=${encodeURIComponent(g.name)}`;
+        return `
+          <div class="game-card" style="opacity:1; padding-bottom:12px; cursor:default;">
+            <div class="img-container">
+              <span class="genre-tag" id="vote-rank-${g.id}">#${rankMap[g.id]}</span>
+              <img src="${g.img}" alt="${g.name}" onerror="if(!this.dataset.tried && !this.src.includes('images/')){this.dataset.tried=1;this.src='images/${g.img}';}else{this.src='${fallbackUrl}';}">
+            </div>
+            <div class="game-title" style="padding:10px 8px 4px;">${g.name}</div>
+            <div id="vote-hearts-${g.id}" style="text-align:center; font-weight:700; color:#e11d48; margin-bottom:8px;">❤️ 0</div>
+            <div style="padding:0 10px 8px;">
+              <button type="button" id="vote-btn-${g.id}" class="music-toggle-btn" style="width:100%; justify-content:center; padding:8px; font-size:0.9rem;" onclick="voteHeartClick('${g.id}', event)">
+                ❤️ กดใจโหวต!
+              </button>
+            </div>
+            <div style="padding:0 10px; border-top:1px dashed #e2e8f0; padding-top:6px;">
+              <div style="font-size:0.72rem; font-weight:600; color:#991b1b; margin-bottom:2px;">ผู้ช่วยกดสูงสุด:</div>
+              <div id="vote-voters-${g.id}"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 4. อัปเดตเฉพาะตัวเลขคะแนน อันดับ และรายชื่อคนกด (ไม่แตะรูปภาพและปุ่ม)
     const voterTotals = {};
     list.forEach(g => {
-      if (!g.voters) return;
-      Object.keys(g.voters).forEach(uid => {
-        const v = g.voters[uid];
-        if (!voterTotals[uid]) {
-          voterTotals[uid] = { id: uid, name: v.name || "Discord User", count: 0 };
-        }
-        voterTotals[uid].count += (Number(v.count) || 0);
-      });
+      const rankEl = document.getElementById(`vote-rank-${g.id}`);
+      if (rankEl) rankEl.textContent = `#${rankMap[g.id]}`;
+
+      const heartsEl = document.getElementById(`vote-hearts-${g.id}`);
+      if (heartsEl) heartsEl.textContent = `❤️ ${formatCompact(g.hearts)}`;
+
+      const btnEl = document.getElementById(`vote-btn-${g.id}`);
+      if (btnEl) {
+        btnEl.disabled = isEnded;
+        btnEl.textContent = isEnded ? '🏁 หมดเวลาแล้ว' : '❤️ กดใจโหวต!';
+      }
+
+      const votersEl = document.getElementById(`vote-voters-${g.id}`);
+      if (votersEl) {
+        const voters = g.voters ? Object.values(g.voters).sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, 3) : [];
+        votersEl.innerHTML = voters.length
+          ? voters.map(v => `<div style="font-size:0.75rem; color:#475569;">• ${v.name}: ❤️${formatCompact(v.count)}</div>`).join('')
+          : `<div style="font-size:0.75rem; color:#94a3b8;">ยังไม่มีคนกด</div>`;
+      }
+
+      if (g.voters) {
+        Object.keys(g.voters).forEach(uid => {
+          const v = g.voters[uid];
+          if (!voterTotals[uid]) {
+            voterTotals[uid] = { id: uid, name: v.name || "Discord User", count: 0 };
+          }
+          voterTotals[uid].count += (Number(v.count) || 0);
+        });
+      }
     });
-
-    grid.innerHTML = list.map((g, idx) => {
-      const voters = g.voters ? Object.values(g.voters).sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, 3) : [];
-      const voterHtml = voters.length
-        ? voters.map(v => `<div style="font-size:0.75rem; color:#475569;">• ${v.name}: ❤️${formatCompact(v.count)}</div>`).join('')
-        : `<div style="font-size:0.75rem; color:#94a3b8;">ยังไม่มีคนกด</div>`;
-
-      const fallbackUrl = `https://placehold.co/400x300/dc2626/ffffff?text=${encodeURIComponent(g.name)}`;
-
-      return `
-        <div class="game-card" style="opacity:1; padding-bottom:12px; cursor:default;">
-          <div class="img-container">
-            <span class="genre-tag">#${idx + 1}</span>
-            <img src="${g.img}" alt="${g.name}" onerror="if(!this.dataset.tried && !this.src.includes('images/')){this.dataset.tried=1;this.src='images/${g.img}';}else{this.src='${fallbackUrl}';}">
-          </div>
-          <div class="game-title" style="padding:10px 8px 4px;">${g.name}</div>
-          <div style="text-align:center; font-weight:700; color:#e11d48; margin-bottom:8px;">❤️ ${formatCompact(g.hearts)}</div>
-          <div style="padding:0 10px 8px;">
-            <button type="button" class="music-toggle-btn" style="width:100%; justify-content:center; padding:8px; font-size:0.9rem;" ${isEnded ? 'disabled' : ''} onclick="voteHeartClick('${g.id}', event)">
-              ${isEnded ? '🏁 หมดเวลาแล้ว' : '❤️ กดใจโหวต!'}
-            </button>
-          </div>
-          <div style="padding:0 10px; border-top:1px dashed #e2e8f0; padding-top:6px;">
-            <div style="font-size:0.72rem; font-weight:600; color:#991b1b; margin-bottom:2px;">ผู้ช่วยกดสูงสุด:</div>
-            ${voterHtml}
-          </div>
-        </div>
-      `;
-    }).join('');
 
     // แสดงกระดาน Top 10 ผู้มีส่วนร่วมโหวตเกม
     if (topBox && topList) {
