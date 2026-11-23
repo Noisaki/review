@@ -4817,9 +4817,9 @@
   // 2. ระบบเสียง UI + เพลง MP3 จริง (รองรับเพลย์ลิสต์) + เสียงร้องไห้ cry.mp3
   // =========================================
   // 🎵 ใส่รายชื่อไฟล์เพลงของเจ้านายตรงนี้เลย! (มีเพลงเดียวก็ใส่แค่ 1 บรรทัดได้ครับ)
+  // 🎵 ใส่เฉพาะไฟล์เพลงที่มีจริง (ถ้ามีเพลงเดียวใส่แค่ 1 บรรทัดได้เลยครับ มันจะวนซ้ำให้เอง)
   const BGM_PLAYLIST = [
-    { name: "เพลงที่ 1", src: "bgm1.mp3" },
-    { name: "เพลงที่ 2", src: "bgm2.mp3" }
+    { name: "เพลงที่ 1", src: "bgm1.mp3" }
   ];
 
   let currentTrackIndex = 0;
@@ -4850,10 +4850,11 @@
     const track = BGM_PLAYLIST[currentTrackIndex];
     if (bgmEl.dataset.src !== track.src) {
       bgmEl.dataset.src = track.src;
+      bgmEl.dataset.fallbackStep = "0";
       bgmEl.src = track.src;
     }
     bgmEl.volume = musicVolume;
-    bgmEl.loop = (BGM_PLAYLIST.length === 1); // ถ้ามีเพลงเดียวให้วนซ้ำเอง
+    bgmEl.loop = (BGM_PLAYLIST.length === 1);
     bgmEl.onended = () => {
       if (!isHorrorTriggered && BGM_PLAYLIST.length > 1) {
         nextBgmTrack();
@@ -4867,6 +4868,29 @@
     if (!bgmEl) return;
 
     loadCurrentBgmTrack();
+
+    // ถ้าหาไฟล์ไม่เจอ ให้ลองหาใน music/ และ images/ แบบเงียบๆ (ไม่เด้งแจ้งเตือน)
+    bgmEl.onerror = () => {
+      const baseName = BGM_PLAYLIST[currentTrackIndex].src.replace(/^(music|images)\//, '');
+      const step = Number(bgmEl.dataset.fallbackStep || 0);
+      if (step === 0) {
+        bgmEl.dataset.fallbackStep = "1";
+        bgmEl.src = "music/" + baseName;
+        bgmEl.play().catch(() => {});
+      } else if (step === 1) {
+        bgmEl.dataset.fallbackStep = "2";
+        bgmEl.src = "images/" + baseName;
+        bgmEl.play().catch(() => {});
+      } else {
+        // หาไม่เจอจริงๆ -> รีเซ็ตปุ่มเงียบๆ ไม่เด้งเตือน
+        isMusicPlaying = false;
+        if (!isHorrorTriggered) {
+          document.getElementById('musicStateIcon').textContent = '▶️';
+          document.getElementById('musicStateText').textContent = 'เล่นเพลง';
+        }
+      }
+    };
+
     const playPromise = bgmEl.play();
     if (playPromise !== undefined) {
       playPromise.then(() => {
@@ -4874,7 +4898,8 @@
         document.getElementById('musicStateIcon').textContent = '⏸️';
         document.getElementById('musicStateText').textContent = BGM_PLAYLIST[currentTrackIndex].name;
       }).catch(() => {
-        // กรณีเบราว์เซอร์บล็อก Autoplay ก่อนผู้ใช้แตะหน้าจอ
+        // เงียบไว้ ไม่ต้องเด้งป้ายเตือน
+        isMusicPlaying = false;
       });
     }
   }
@@ -4895,6 +4920,22 @@
     currentTrackIndex = (currentTrackIndex + 1) % BGM_PLAYLIST.length;
     userPausedMusic = false;
     startChristmasMusic();
+  }
+
+  function toggleChristmasMusic() {
+    if (isHorrorTriggered) {
+      playRealCryingAudio();
+      return;
+    }
+    const bgmEl = document.getElementById('bgmAudio');
+    // เช็กจากสถานะจริงของตัวเล่นเพลง (แก้ปัญหากดติดบ้างไม่ติดบ้าง!)
+    if (bgmEl && !bgmEl.paused) {
+      userPausedMusic = true;
+      stopChristmasMusic();
+    } else {
+      userPausedMusic = false;
+      startChristmasMusic();
+    }
   }
 
   function toggleChristmasMusic() {
