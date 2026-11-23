@@ -3068,6 +3068,7 @@
       <span id="musicStateIcon">▶️</span> <span id="musicStateText" class="corruptible" data-cursed="😭 เสียงร้องไห้...">เพลงพื้นหลัง</span>
     </button>
     <button type="button" class="music-toggle-btn" id="nextSongBtn" onclick="nextBgmTrack()" title="เปลี่ยนเพลงถัดไป" style="padding:5px 9px;">⏭️</button>
+    <button type="button" class="music-toggle-btn" id="loopSongBtn" onclick="toggleBgmLoop()" title="เล่นวนตามคิว (กดเพื่อวนซ้ำเพลงนี้)" style="padding:5px 9px; opacity:0.6;">🔁</button>
     <div class="volume-control" title="ปรับระดับเสียงเพลง">
       <span id="musicSpeakerIcon">🎄🔊</span>
       <input type="range" id="musicVolumeSlider" class="volume-slider" min="0" max="100" value="45" oninput="changeMusicVolume(this.value)">
@@ -4823,6 +4824,7 @@
   ];
 
   let currentTrackIndex = 0;
+  let isLoopOne = false;
   let isMusicPlaying = false;
   let userPausedMusic = false;
   let musicVolume = 0.45;
@@ -4854,9 +4856,9 @@
       bgmEl.src = track.src;
     }
     bgmEl.volume = musicVolume;
-    bgmEl.loop = (BGM_PLAYLIST.length === 1);
+    bgmEl.loop = isLoopOne || (BGM_PLAYLIST.length === 1);
     bgmEl.onended = () => {
-      if (!isHorrorTriggered && BGM_PLAYLIST.length > 1) {
+      if (!isHorrorTriggered && !isLoopOne && BGM_PLAYLIST.length > 1) {
         nextBgmTrack();
       }
     };
@@ -4913,7 +4915,26 @@
       document.getElementById('musicStateText').textContent = 'เล่นเพลง';
     }
   }
+  function toggleBgmLoop() {
+    if (isHorrorTriggered) return;
+    playClickSound();
+    isLoopOne = !isLoopOne;
 
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl) {
+      bgmEl.loop = isLoopOne || (BGM_PLAYLIST.length === 1);
+    }
+
+    const btn = document.getElementById('loopSongBtn');
+    if (btn) {
+      btn.textContent = isLoopOne ? '🔂' : '🔁';
+      btn.style.opacity = isLoopOne ? '1' : '0.6';
+      btn.style.boxShadow = isLoopOne ? '0 0 10px rgba(251, 191, 36, 0.85)' : 'none';
+      btn.title = isLoopOne ? 'กำลังวนซ้ำเพลงนี้' : 'เล่นวนตามคิว';
+    }
+    showToast(isLoopOne ? '🔂 เปิดวนซ้ำเพลงนี้แล้ว!' : '🔁 เล่นวนตามคิวปกติแล้ว');
+  }
+  
   function nextBgmTrack() {
     if (isHorrorTriggered || BGM_PLAYLIST.length <= 1) return;
     playClickSound();
