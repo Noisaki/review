@@ -4378,41 +4378,57 @@
       if (!stage) return;
       const top3 = list.slice(0, 3);
       if (top3.length === 0) {
+        stage.dataset.podiumKey = "";
         stage.innerHTML = `<div class="lb-empty">${emptyMsg}</div>`;
         return;
       }
 
-      // จัดลำดับการยืนบนแท่น: ซ้าย = ที่ 2, กลาง = ที่ 1 (สูงสุด), ขวา = ที่ 3
       const order = [
         { rank: 2, medal: "🥈", item: top3[1] },
         { rank: 1, medal: "🥇", item: top3[0] },
         { rank: 3, medal: "🥉", item: top3[2] }
       ];
 
-      stage.innerHTML = "";
+      // เช็กว่าคนติด Top 3 เปลี่ยนหน้าไหม (ถ้าคนเดิมอยู่ครบ จะไม่ลบสร้างใหม่ กันกระตุก!)
+      const podiumKey = top3.map(x => x.id).join(",");
+      if (stage.dataset.podiumKey !== podiumKey) {
+        stage.dataset.podiumKey = podiumKey;
+        stage.innerHTML = "";
+        order.forEach(slot => {
+          if (!slot.item) return;
+          const u = slot.item.u || {};
+          const avatar = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://") === 0)
+            ? u.avatarUrl
+            : "https://cdn.discordapp.com/embed/avatars/0.png";
+
+          const div = document.createElement('div');
+          div.className = `podium-slot p-${slot.rank}`;
+          div.innerHTML = `
+            <div class="podium-avatar-wrap">
+              ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
+              <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
+            </div>
+            <div class="podium-name"></div>
+            <div class="podium-lv"></div>
+            <div class="podium-score"></div>
+            <div class="podium-pillar">${slot.medal}</div>
+          `;
+          stage.appendChild(div);
+        });
+      }
+
+      // อัปเดตเฉพาะชื่อ เลเวล และคะแนน (แอนิเมชันลอยกับไฟลุกจะลื่นต่อเนื่องเลย!)
       order.forEach(slot => {
         if (!slot.item) return;
+        const slotEl = stage.querySelector(`.podium-slot.p-${slot.rank}`);
+        if (!slotEl) return;
         const u = slot.item.u || {};
-        const avatar = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://cdn.discordapp.com/") === 0)
-          ? u.avatarUrl
-          : "https://cdn.discordapp.com/embed/avatars/0.png";
         const lvInfo = getLevelData(Number(u.heartsClicked) || 0);
-
-        const div = document.createElement('div');
-        div.className = `podium-slot p-${slot.rank}`;
-        div.innerHTML = `
-          <div class="podium-avatar-wrap">
-            ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
-            <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
-          </div>
-          <div class="podium-name"></div>
-          <div class="podium-lv ${lvInfo.rarityClass}">Lv.${formatNum(lvInfo.level)}</div>
-          <div class="podium-score"></div>
-          <div class="podium-pillar">${slot.medal}</div>
-        `;
-        div.querySelector('.podium-name').textContent = u.name || "Discord User";
-        div.querySelector('.podium-score').textContent = formatScoreFn(u);
-        stage.appendChild(div);
+        slotEl.querySelector('.podium-name').textContent = u.name || "Discord User";
+        const lvEl = slotEl.querySelector('.podium-lv');
+        lvEl.className = `podium-lv ${lvInfo.rarityClass}`;
+        lvEl.textContent = `Lv.${formatNum(lvInfo.level)}`;
+        slotEl.querySelector('.podium-score').textContent = formatScoreFn(u);
       });
     };
 
@@ -5870,7 +5886,7 @@
     db.ref("game_vote").on("value", (snap) => {
       voteData = snap.val();
       renderVoteGames();
-      renderVotePodium();
+      
       renderLeaderboards();
       updateVoteCountdown();
       updateVotePromoAd();
@@ -6327,6 +6343,7 @@
     if (!stage) return;
 
     if (!voteData || !voteData.games) {
+      stage.dataset.podiumKey = "";
       stage.innerHTML = `<div class="lb-empty">ยังไม่มีรอบโหวตที่เปิดอยู่ 🔥</div>`;
       return;
     }
@@ -6349,6 +6366,7 @@
       .slice(0, 3);
 
     if (top3.length === 0) {
+      stage.dataset.podiumKey = "";
       stage.innerHTML = `<div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥</div>`;
       return;
     }
@@ -6359,31 +6377,48 @@
       { rank: 3, medal: "🥉", item: top3[2] }
     ];
 
-    stage.innerHTML = "";
+    // เช็กว่าคนติด Top 3 เปลี่ยนหน้าไหม (กันกระตุก + รองรับรูป Gmail แล้ว!)
+    const podiumKey = top3.map(x => x.id).join(",");
+    if (stage.dataset.podiumKey !== podiumKey) {
+      stage.dataset.podiumKey = podiumKey;
+      stage.innerHTML = "";
+      order.forEach(slot => {
+        if (!slot.item) return;
+        const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
+        const avatar = (typeof cached.avatarUrl === "string" && cached.avatarUrl.indexOf("https://") === 0)
+          ? cached.avatarUrl
+          : "https://cdn.discordapp.com/embed/avatars/0.png";
+
+        const div = document.createElement('div');
+        div.className = `podium-slot p-${slot.rank}`;
+        div.innerHTML = `
+          <div class="podium-avatar-wrap">
+            ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
+            <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
+          </div>
+          <div class="podium-name"></div>
+          <div class="podium-lv"></div>
+          <div class="podium-score"></div>
+          <div class="podium-pillar">${slot.medal}</div>
+        `;
+        stage.appendChild(div);
+      });
+    }
+
+    // อัปเดตเฉพาะชื่อ เลเวล และยอดโหวต
     order.forEach(slot => {
       if (!slot.item) return;
+      const slotEl = stage.querySelector(`.podium-slot.p-${slot.rank}`);
+      if (!slotEl) return;
       const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
-      const avatar = (typeof cached.avatarUrl === "string" && cached.avatarUrl.indexOf("https://cdn.discordapp.com/") === 0)
-        ? cached.avatarUrl
-        : "https://cdn.discordapp.com/embed/avatars/0.png";
       const displayName = cached.name || slot.item.name || "Discord User";
       const lvInfo = getLevelData(Number(cached.heartsClicked) || 0);
 
-      const div = document.createElement('div');
-      div.className = `podium-slot p-${slot.rank}`;
-      div.innerHTML = `
-        <div class="podium-avatar-wrap">
-          ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
-          <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
-        </div>
-        <div class="podium-name"></div>
-        <div class="podium-lv ${lvInfo.rarityClass}">Lv.${formatNum(lvInfo.level)}</div>
-        <div class="podium-score"></div>
-        <div class="podium-pillar">${slot.medal}</div>
-      `;
-      div.querySelector('.podium-name').textContent = displayName;
-      div.querySelector('.podium-score').textContent = "🔥 " + formatCompact(slot.item.count) + " โหวต";
-      stage.appendChild(div);
+      slotEl.querySelector('.podium-name').textContent = displayName;
+      const lvEl = slotEl.querySelector('.podium-lv');
+      lvEl.className = `podium-lv ${lvInfo.rarityClass}`;
+      lvEl.textContent = `Lv.${formatNum(lvInfo.level)}`;
+      slotEl.querySelector('.podium-score').textContent = "🔥 " + formatCompact(slot.item.count) + " โหวต";
     });
   }
 
