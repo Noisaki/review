@@ -2686,25 +2686,63 @@
   <!-- หน้าแข่งกดใจโหวตเกม (ซ่อนไว้ก่อน กดแท็บแล้วจะโผล่) -->
   <div class="section-card" id="gameVoteSection" style="display:none;">
     <div class="section-header">
-      <h2 class="section-title">🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)</h2>
+      <h2 class="section-title" id="voteMainTitle">🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)</h2>
       <span class="step-pill" id="voteCountdownText">⏳ รอแอดมินเปิดรอบโหวต...</span>
     </div>
 
     <!-- แผงแอดมิน (โผล่เฉพาะคนมียศ 1388417035842748506) -->
     <div id="voteAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
       <h3 style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินตั้งค่าโหวตเกม</h3>
+
+      <!-- ช่องกำหนดหัวข้อโหวต/โพสต์ -->
+      <div style="margin-bottom:10px;">
+        <label style="font-weight:600; display:block; margin-bottom:4px; color:#881337;">📌 หัวข้อโหวต / หัวข้อโพสต์:</label>
+        <input type="text" id="adminVoteTitle" placeholder="เช่น 🔥 โหวตเกมแปลไทยโปรเจกต์ถัดไป (รอบเดือน ธ.ค.)" value="🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)" style="width:100%; padding:8px 10px; border-radius:8px; border:1.5px solid #fda4af; font-family:'Prompt',sans-serif;">
+      </div>
+
       <div style="margin-bottom:10px;">
         <label style="font-weight:600;">⏱️ เวลาแข่งขัน (ชั่วโมง): </label>
         <input type="number" id="adminVoteHours" value="24" min="0.01" step="any" style="width:90px; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
       </div>
-      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:8px; margin-bottom:12px;">
-        <div><input type="text" id="adminGameName1" placeholder="ชื่อเกม 1" value="เกมที่ 1" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg1" value="เกม1.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
-        <div><input type="text" id="adminGameName2" placeholder="ชื่อเกม 2" value="เกมที่ 2" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg2" value="เกม2.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
-        <div><input type="text" id="adminGameName3" placeholder="ชื่อเกม 3" value="เกมที่ 3" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg3" value="เกม3.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
-        <div><input type="text" id="adminGameName4" placeholder="ชื่อเกม 4" value="เกมที่ 4" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg4" value="เกม4.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
-        <div><input type="text" id="adminGameName5" placeholder="ชื่อเกม 5" value="เกมที่ 5" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg5" value="เกม5.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
-        <div><input type="text" id="adminGameName6" placeholder="ชื่อเกม 6" value="เกมที่ 6" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;"><input type="text" id="adminGameImg6" value="เกม6.png" style="width:100%; margin-top:4px; padding:4px; font-size:0.8rem;"></div>
+
+      <!-- ป้ายบอกวิธีตั้งชื่อไฟล์ภาพให้ขึ้นชัวร์ -->
+      <div style="background:#fffbeb; border:1px solid #fcd34d; border-radius:10px; padding:8px 12px; font-size:0.78rem; color:#92400e; margin-bottom:12px; line-height:1.55;">
+        🖼️ <strong>วิธีใส่ภาพให้ขึ้นชัวร์:</strong> นำไฟล์รูปไปวางในโฟลเดอร์ <code>images/</code> บน GitHub แล้วตั้งชื่อไฟล์เป็น <strong><code>vote1.png</code> ถึง <code>vote6.png</code></strong> (หรือจะตั้งชื่อเอง เช่น <code>images/ชื่อไฟล์.jpg</code> หรือวางลิงก์รูป <code>https://...</code> ก็ได้ — <em>ตัวพิมพ์เล็ก/ใหญ่ และนามสกุล .png/.jpg ต้องตรงกับไฟล์จริงเป๊ะๆ นะครับ</em>)
       </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:12px;">
+        <div style="background:#fff; padding:8px; border-radius:10px; border:1px solid #fecdd3;">
+          <div style="font-size:0.74rem; font-weight:700; color:#be123c; margin-bottom:4px;">เกมที่ 1</div>
+          <input type="text" id="adminGameName1" placeholder="ชื่อเกม 1 (เว้นว่างถ้าไม่ใช้)" value="เกมที่ 1" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
+          <input type="text" id="adminGameImg1" placeholder="ชื่อไฟล์ภาพ เช่น images/vote1.png" value="images/vote1.png" style="width:100%; margin-top:4px; padding:5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1;">
+        </div>
+        <div style="background:#fff; padding:8px; border-radius:10px; border:1px solid #fecdd3;">
+          <div style="font-size:0.74rem; font-weight:700; color:#be123c; margin-bottom:4px;">เกมที่ 2</div>
+          <input type="text" id="adminGameName2" placeholder="ชื่อเกม 2 (เว้นว่างถ้าไม่ใช้)" value="เกมที่ 2" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
+          <input type="text" id="adminGameImg2" placeholder="ชื่อไฟล์ภาพ เช่น images/vote2.png" value="images/vote2.png" style="width:100%; margin-top:4px; padding:5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1;">
+        </div>
+        <div style="background:#fff; padding:8px; border-radius:10px; border:1px solid #fecdd3;">
+          <div style="font-size:0.74rem; font-weight:700; color:#be123c; margin-bottom:4px;">เกมที่ 3</div>
+          <input type="text" id="adminGameName3" placeholder="ชื่อเกม 3 (เว้นว่างถ้าไม่ใช้)" value="เกมที่ 3" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
+          <input type="text" id="adminGameImg3" placeholder="ชื่อไฟล์ภาพ เช่น images/vote3.png" value="images/vote3.png" style="width:100%; margin-top:4px; padding:5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1;">
+        </div>
+        <div style="background:#fff; padding:8px; border-radius:10px; border:1px solid #fecdd3;">
+          <div style="font-size:0.74rem; font-weight:700; color:#be123c; margin-bottom:4px;">เกมที่ 4</div>
+          <input type="text" id="adminGameName4" placeholder="ชื่อเกม 4 (เว้นว่างถ้าไม่ใช้)" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
+          <input type="text" id="adminGameImg4" placeholder="ชื่อไฟล์ภาพ เช่น images/vote4.png" value="images/vote4.png" style="width:100%; margin-top:4px; padding:5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1;">
+        </div>
+        <div style="background:#fff; padding:8px; border-radius:10px; border:1px solid #fecdd3;">
+          <div style="font-size:0.74rem; font-weight:700; color:#be123c; margin-bottom:4px;">เกมที่ 5</div>
+          <input type="text" id="adminGameName5" placeholder="ชื่อเกม 5 (เว้นว่างถ้าไม่ใช้)" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
+          <input type="text" id="adminGameImg5" placeholder="ชื่อไฟล์ภาพ เช่น images/vote5.png" value="images/vote5.png" style="width:100%; margin-top:4px; padding:5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1;">
+        </div>
+        <div style="background:#fff; padding:8px; border-radius:10px; border:1px solid #fecdd3;">
+          <div style="font-size:0.74rem; font-weight:700; color:#be123c; margin-bottom:4px;">เกมที่ 6</div>
+          <input type="text" id="adminGameName6" placeholder="ชื่อเกม 6 (เว้นว่างถ้าไม่ใช้)" style="width:100%; padding:6px; border-radius:8px; border:1px solid #cbd5e1;">
+          <input type="text" id="adminGameImg6" placeholder="ชื่อไฟล์ภาพ เช่น images/vote6.png" value="images/vote6.png" style="width:100%; margin-top:4px; padding:5px; font-size:0.8rem; border-radius:6px; border:1px solid #cbd5e1;">
+        </div>
+      </div>
+
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button type="button" class="submit-btn" style="flex:2; width:auto; min-width:200px; padding:12px 16px; font-size:1rem;" onclick="adminStartVoteEvent()">🚀 บันทึกเกม & เริ่มจับเวลาโหวต!</button>
         <button type="button" class="submit-btn" style="flex:1; width:auto; min-width:160px; padding:12px 16px; font-size:1rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="adminCancelVoteEvent()">🗑️ ยกเลิก / ล้างรอบโหวต</button>
@@ -5003,10 +5041,12 @@
   let voteTimerInterval = null;
   let hasAnnouncedWinner = false;
 
-// 1) แอดมินกดบันทึกชื่อเกม + เริ่มจับเวลา (ค่าเริ่มต้น 24 ชม.)
+  // 1) แอดมินกดบันทึกหัวข้อ + ชื่อเกม + ชื่อไฟล์ภาพ + เริ่มจับเวลา
   function adminStartVoteEvent() {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
 
+    const titleInput = document.getElementById('adminVoteTitle');
+    const voteTitle = (titleInput && titleInput.value.trim()) ? titleInput.value.trim() : "🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)";
     const hours = parseFloat(document.getElementById('adminVoteHours').value) || 24;
     const endTime = Date.now() + (hours * 60 * 60 * 1000);
     const gamesObj = {};
@@ -5014,26 +5054,32 @@
     for (let i = 1; i <= 6; i++) {
       const nameInput = document.getElementById(`adminGameName${i}`);
       const imgInput = document.getElementById(`adminGameImg${i}`);
-      const gameName = nameInput ? nameInput.value.trim() : `เกมที่ ${i}`;
-      const gameImg = imgInput ? imgInput.value.trim() : `เกม${i}.png`;
+      const gameName = nameInput ? nameInput.value.trim() : "";
+      const gameImg = imgInput ? imgInput.value.trim() : "";
 
       if (gameName) {
         gamesObj[`g${i}`] = {
           name: gameName,
-          img: gameImg || `เกม${i}.png`,
+          img: gameImg || `images/vote${i}.png`,
           hearts: 0
         };
       }
     }
 
+    if (Object.keys(gamesObj).length === 0) {
+      showToast("⚠️ กรุณากรอกชื่อเกมอย่างน้อย 1 เกมนะครับ");
+      return;
+    }
+
     hasAnnouncedWinner = false;
     db.ref("game_vote").set({
+      title: voteTitle,
       status: "running",
       durationHours: hours,
       endTime: endTime,
       games: gamesObj
     }).then(() => {
-      showToast(`🚀 เริ่มการแข่งโหวตแล้ว! (จับเวลา ${hours} ชม.)`);
+      showToast(`🚀 เปิดโหวต "${voteTitle}" แล้ว! (จับเวลา ${hours} ชม.)`);
     });
   }
 
@@ -5103,6 +5149,15 @@
     // ✅ ย้ายมาวางตรงนี้หลังหาตัว winner เจอแล้ว
     if (db && voteData.endTime) {
       db.ref("game_vote_history/" + voteData.endTime).set({
+        name: winner.name,
+        img: winner.img || "",
+        hearts: Number(winner.hearts) || 0,
+        endedAt: voteData.endTime
+      }).catch(() => {});
+    }
+    if (db && voteData.endTime) {
+      db.ref("game_vote_history/" + voteData.endTime).set({
+        topic: voteData.title || "",
         name: winner.name,
         img: winner.img || "",
         hearts: Number(winner.hearts) || 0,
@@ -5189,6 +5244,12 @@
     const grid = document.getElementById('voteGamesGrid');
     const topBox = document.getElementById('voteTopVotersBox');
     const topList = document.getElementById('voteTopVotersList');
+    const titleEl = document.getElementById('voteMainTitle');
+    if (titleEl) {
+      titleEl.textContent = (voteData && voteData.title)
+        ? voteData.title
+        : "🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)";
+    }
     if (!grid) return;
 
     // ถ้าแอดมินกดยกเลิกโหวต ให้เคลียร์การ์ดและซ่อนกระดาน Top
