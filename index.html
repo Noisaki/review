@@ -2848,6 +2848,51 @@
       animation: rankShimmer 2.8s infinite;
       pointer-events: none;
     }
+    /* =========================================
+       ป้ายเลเวลบนแท่น Top 3 + เอฟเฟกต์ไฟลุกสุดร้อนแรง
+       ========================================= */
+    .podium-lv {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 8px;
+      border-radius: 999px;
+      margin-bottom: 3px;
+      display: inline-block;
+      line-height: 1.3;
+    }
+
+    /* ออร่าไฟลุกโชนรอบรูปโปรไฟล์ที่ 1 */
+    .podium-slot.p-1 .podium-avatar {
+      border-color: #ff7b00 !important;
+      animation: fireAuraPulse 1.3s infinite ease-in-out;
+    }
+
+    @keyframes fireAuraPulse {
+      0%, 100% {
+        box-shadow: 0 0 12px #fde047, 0 0 24px #f97316, 0 -6px 32px #ef4444;
+      }
+      50% {
+        box-shadow: 0 0 18px #fef08a, 0 0 36px #ea580c, 0 -14px 46px #dc2626;
+      }
+    }
+
+    /* เปลวไฟดุ๊กดิ๊กข้างๆ โปรไฟล์ที่ 1 */
+    .podium-flame {
+      position: absolute;
+      bottom: -4px;
+      font-size: 1.15rem;
+      pointer-events: none;
+      filter: drop-shadow(0 0 6px #f97316);
+      animation: flameFlicker 0.9s infinite alternate ease-in-out;
+    }
+    .podium-flame.left  { left: -12px; }
+    .podium-flame.right { right: -12px; animation-delay: -0.45s; }
+
+    @keyframes flameFlicker {
+      0%   { transform: translateY(0) scale(0.9) rotate(-8deg); opacity: 0.85; }
+      100% { transform: translateY(-5px) scale(1.18) rotate(8deg); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -4163,15 +4208,17 @@
         const avatar = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://cdn.discordapp.com/") === 0)
           ? u.avatarUrl
           : "https://cdn.discordapp.com/embed/avatars/0.png";
+        const lvInfo = getLevelData(Number(u.heartsClicked) || 0);
 
         const div = document.createElement('div');
         div.className = `podium-slot p-${slot.rank}`;
         div.innerHTML = `
           <div class="podium-avatar-wrap">
-            ${slot.rank === 1 ? '<span class="podium-crown">👑</span>' : ''}
+            ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
             <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
           </div>
           <div class="podium-name"></div>
+          <div class="podium-lv ${lvInfo.rarityClass}">Lv.${formatNum(lvInfo.level)}</div>
           <div class="podium-score"></div>
           <div class="podium-pillar">${slot.medal}</div>
         `;
@@ -6089,15 +6136,17 @@
         ? cached.avatarUrl
         : "https://cdn.discordapp.com/embed/avatars/0.png";
       const displayName = cached.name || slot.item.name || "Discord User";
+      const lvInfo = getLevelData(Number(cached.heartsClicked) || 0);
 
       const div = document.createElement('div');
       div.className = `podium-slot p-${slot.rank}`;
       div.innerHTML = `
         <div class="podium-avatar-wrap">
-          ${slot.rank === 1 ? '<span class="podium-crown">👑</span>' : ''}
+          ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
           <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
         </div>
         <div class="podium-name"></div>
+        <div class="podium-lv ${lvInfo.rarityClass}">Lv.${formatNum(lvInfo.level)}</div>
         <div class="podium-score"></div>
         <div class="podium-pillar">${slot.medal}</div>
       `;
