@@ -8,6 +8,7 @@
   <!-- เชื่อมต่อ Firebase Realtime Database SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <style>
     :root {
       --xmas-red: #dc2626;
@@ -2832,22 +2833,6 @@
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
       box-shadow: 0 0 18px rgba(255, 0, 128, 0.6), 0 0 8px rgba(0, 176, 255, 0.6) !important;
     }
-
-    /* เอฟเฟกต์แสงวิบวับพาดผ่านสำหรับระดับ Legendary ขึ้นไป */
-    .rarity-legendary::after,
-    .rarity-mythic::after,
-    .rarity-god::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 55%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
-      transform: skewX(-25deg);
-      animation: rankShimmer 2.8s infinite;
-      pointer-events: none;
-    }
     /* =========================================
        ป้ายเลเวลบนแท่น Top 3 + เอฟเฟกต์ไฟลุกสุดร้อนแรง
        ========================================= */
@@ -3545,7 +3530,8 @@
     </ul>
     <p style="margin-bottom:18px;">กดปุ่มด้านล่างเพื่อไปยืนยันตัวตนกับ Discord ได้เลยครับ</p>
     <div class="modal-btns">
-      <button class="modal-discord-btn" onclick="playClickSound(); startDiscordLogin();">💬 ไปล็อกอินที่ Discord</button>
+      <button class="modal-discord-btn" onclick="playClickSound(); startDiscordLogin();">💬 ล็อกอินด้วย Discord</button>
+      <button class="modal-discord-btn" style="background:linear-gradient(135deg,#ea4335,#fbbc05);" onclick="playClickSound(); startGoogleLogin();">📧 ล็อกอินด้วย Google / Gmail</button>
       <button class="modal-cancel-btn" onclick="playClickSound(); closeLoginInfo();">ยกเลิก</button>
     </div>
   </div>
@@ -3594,7 +3580,16 @@
   // =========================================================================
   // ⚙️ ค่าตั้งต้นระบบทั้งหมด (Firebase + Discord OAuth2)
   // =========================================================================
-  const FIREBASE_DATABASE_URL = "https://benzie-e1cee-default-rtdb.asia-southeast1.firebasedatabase.app";
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCROagwknWFSWuQen0zva0WEa_gb3vPlNU",
+    authDomain: "benzie-e1cee.firebaseapp.com",
+    databaseURL: "https://benzie-e1cee-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "benzie-e1cee",
+    storageBucket: "benzie-e1cee.firebasestorage.app",
+    messagingSenderId: "571478413749",
+    appId: "1:571478413749:web:cf4d53483669cd81f7c9fc"
+  };
+  const FIREBASE_DATABASE_URL = FIREBASE_CONFIG.databaseURL;
 
   const DISCORD_CLIENT_ID = "1333105049286606950";
   const DISCORD_REDIRECT_URI = "https://noisaki.github.io/review/";
@@ -3603,13 +3598,14 @@
   const DISCORD_API = "https://discord.com/api/v10";
   const VOTE_ADMIN_ROLE_ID = "1388417035842748506";
 
-  // ยศทั้ง 4 ระดับ (เรียงจากสูงสุดไปต่ำสุด)
+  // ยศระดับต่างๆ (เรียงจากสูงสุดไปต่ำสุด)
   const ROLE_TIERS = [
     { tier: 4, id: "1548678245992628315", name: "👑 『 ภาคีผู้พิทักษ์นิรันดร์ 』", short: "ภาคีผู้พิทักษ์นิรันดร์", need: "1,000 บาท" },
     { tier: 3, id: "1418677630202286253", name: "💖 『 ผู้พิทักษ์หัวใจ 』",           short: "ผู้พิทักษ์หัวใจ",           need: "500 บาท" },
     { tier: 2, id: "1484865657467043941", name: "📜 『 ผู้ร่วมจารึก 』",              short: "ผู้ร่วมจารึก",              need: "300 บาท" },
     { tier: 1, id: "1388418421959561220", name: "🦴 『 ผู้สนับสนุนทั่วไป 』",        short: "ผู้สนับสนุนทั่วไป",        need: "ไม่มีขั้นต่ำ" },
-    {tier: -1, id: "1388418227524079841", name: "『🦊』สมาชิก",                    short: "สมาชิก",                    need: "สมาชิกทั่วไป" }
+    { tier: -1, id: "1388418227524079841", name: "『🦊』สมาชิก",                    short: "สมาชิก",                    need: "สมาชิกทั่วไป" },
+    { tier: 0, id: "", name: "📧 สมาชิก Gmail",                                    short: "สมาชิก Gmail",              need: "ล็อกอินผ่าน Google" }
   ];
 
 
@@ -3692,7 +3688,7 @@
     }
 
     try {
-      firebase.initializeApp({ databaseURL: FIREBASE_DATABASE_URL });
+      firebase.initializeApp(FIREBASE_CONFIG);
       db = firebase.database();
       heartsRef = db.ref("bgt_hearts");
 
@@ -3827,6 +3823,40 @@
       prompt: "none"
     });
     window.location.href = "https://discord.com/oauth2/authorize?" + params.toString();
+  }
+
+  // ล็อกอินด้วย Google / Gmail ผ่าน Firebase Auth
+  async function startGoogleLogin() {
+    if (typeof firebase === "undefined" || !firebase.auth) {
+      showToast("⚠️ ยังไม่ได้โหลดระบบ Firebase Auth ครับ");
+      return;
+    }
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const result = await firebase.auth().signInWithPopup(provider);
+      const u = result.user;
+      if (!u) return;
+
+      const profile = {
+        id: "g_" + u.uid,
+        name: u.displayName || "Google User",
+        username: u.email || "",
+        avatarUrl: u.photoURL || "https://cdn.discordapp.com/embed/avatars/0.png",
+        roleTier: 0,
+        inGuild: false,
+        isVoteAdmin: false,
+        provider: "google"
+      };
+
+      closeLoginInfo();
+      applyProfileToUI(profile);
+      saveUserToFirebase(profile);
+      await syncCurseWithFirebase();
+      showToast(`ล็อกอินด้วย Gmail สำเร็จ! ยินดีต้อนรับ ${profile.name} 🎄`);
+    } catch (err) {
+      console.error("Google Login Error:", err);
+      showToast("ล็อกอิน Google ไม่สำเร็จ: " + (err.message || "ลองใหม่อีกครั้งนะครับ"));
+    }
   }
 
   // อ่าน access_token ที่ Discord ส่งกลับมาใน # (hash) ของ URL
@@ -4094,6 +4124,9 @@
   function discordLogout() {
     flushPendingHearts();
     clearToken();
+    if (typeof firebase !== "undefined" && firebase.auth && firebase.auth().currentUser) {
+      firebase.auth().signOut().catch(() => {});
+    }
     applyLoggedOutUI();
     const adminPanel = document.getElementById('voteAdminPanel');
     if (adminPanel) adminPanel.style.display = 'none';
@@ -4115,6 +4148,26 @@
     const saved = loadToken();
     if (saved) {
       await loadProfileFromToken(saved, false);
+    } else if (typeof firebase !== "undefined" && firebase.auth) {
+      firebase.auth().onAuthStateChanged(async (u) => {
+        if (u && !currentUser) {
+          const profile = {
+            id: "g_" + u.uid,
+            name: u.displayName || "Google User",
+            username: u.email || "",
+            avatarUrl: u.photoURL || "https://cdn.discordapp.com/embed/avatars/0.png",
+            roleTier: 0,
+            inGuild: false,
+            isVoteAdmin: false,
+            provider: "google"
+          };
+          applyProfileToUI(profile);
+          saveUserToFirebase(profile);
+          await syncCurseWithFirebase();
+        } else if (!u && !currentUser) {
+          applyLoggedOutUI();
+        }
+      });
     } else {
       applyLoggedOutUI();
     }
@@ -4138,7 +4191,7 @@
     img.className = "lb-avatar" + (tier > 0 ? " tier-" + tier : "");
     img.referrerPolicy = "no-referrer";
     img.alt = "";
-    img.src = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://cdn.discordapp.com/") === 0)
+    img.src = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://") === 0)
       ? u.avatarUrl
       : "https://cdn.discordapp.com/embed/avatars/0.png";
     row.appendChild(img);
