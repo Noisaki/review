@@ -3236,6 +3236,162 @@
     .dev-social-btn:hover {
       transform: translateY(-2px);
       filter: brightness(1.1);
+    /* =========================================
+       ❤️ ปุ่มกดใจ & 💬 กล่องคอมเมนต์แบบย่อได้ในการ์ดผู้พัฒนา
+       ========================================= */
+    .dev-interact-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #fffdf7;
+      border-top: 1px dashed #fde68a;
+    }
+    .dev-heart-btn {
+      flex: 1.15;
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #ffffff;
+      border: none;
+      border-radius: 11px;
+      padding: 8px 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 3px 10px rgba(225, 29, 72, 0.28);
+      transition: transform 0.08s ease, filter 0.2s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dev-heart-btn:hover { filter: brightness(1.08); }
+    .dev-heart-btn:active { transform: scale(0.92); }
+    .dev-heart-pill {
+      background: rgba(0, 0, 0, 0.24);
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: #fef08a;
+    }
+    .dev-comment-toggle-btn {
+      flex: 1;
+      background: #ffffff;
+      color: #92400e;
+      border: 1.5px solid #fcd34d;
+      border-radius: 11px;
+      padding: 7px 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.18s ease;
+    }
+    .dev-comment-toggle-btn:hover,
+    .dev-comment-toggle-btn.active {
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+    .dev-comment-drawer {
+      display: none;
+      background: #fffbeb;
+      border-top: 1.5px dashed #f59e0b;
+      padding: 12px 14px;
+      text-align: left;
+    }
+    .dev-comment-list {
+      max-height: 185px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 9px;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: #f59e0b #fef3c7;
+    }
+    .dev-comment-item {
+      background: #ffffff;
+      border: 1px solid #fde68a;
+      border-radius: 11px;
+      padding: 7px 9px;
+      font-size: 0.8rem;
+      position: relative;
+    }
+    .dev-comment-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+    .dev-comment-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e2e8f0;
+      flex-shrink: 0;
+    }
+    .dev-comment-author {
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: #7f1d1d;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dev-comment-del {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.78rem;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+    .dev-comment-del:hover { color: #dc2626; }
+    .dev-comment-text {
+      color: #334155;
+      line-height: 1.45;
+      word-break: break-word;
+      padding-left: 28px;
+    }
+    .dev-comment-form {
+      display: flex;
+      gap: 6px;
+    }
+    .dev-comment-input {
+      flex: 1;
+      min-width: 0;
+      padding: 7px 10px;
+      border-radius: 10px;
+      border: 1.5px solid #fcd34d;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.8rem;
+      background: #ffffff;
+      outline: none;
+    }
+    .dev-comment-input:focus { border-color: #f59e0b; }
+    .dev-comment-send {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 7px 13px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .dev-comment-send:hover { filter: brightness(1.08); }
     }
   </style>
 </head>
@@ -6916,6 +7072,8 @@
   // =========================================
   let developersCache = {};
   let editingDevKey = null;
+  let openDevCommentKeys = {};
+  let lastDevCommentTime = 0;
 
   function initDevelopersSystem() {
     if (!db) return;
@@ -7030,6 +7188,7 @@
     if (!confirm("ต้องการลบรายชื่อผู้พัฒนานี้ออกใช่ไหมครับ?")) return;
     db.ref("developers/" + key).remove().then(() => {
       if (editingDevKey === key) resetDevAdminForm();
+      delete openDevCommentKeys[key];
       showToast("🗑️ ลบรายชื่อผู้พัฒนาเรียบร้อยแล้ว");
     });
   }
@@ -7055,6 +7214,402 @@
     probe.src = bg;
   }
 
+  // ❤️ กดหัวใจรัวๆ ให้ผู้พัฒนาทีละ +1 (แฟร์ๆ ไม่มีคอมโบ + ได้ XP อัปเลเวล)
+  function devHeartClick(key, e) {
+    if (!currentUser) {
+      openLoginInfo("🔐 ล็อกอินก่อนจึงจะกดหัวใจให้ผู้พัฒนาได้นะครับ");
+      return;
+    }
+    if (!db) return;
+
+    playClickSound();
+
+    const oldMyTotal = myServerHearts + pendingClicks;
+    const oldLv = getLevelFromHearts(oldMyTotal);
+    const newMyTotal = oldMyTotal + 1;
+    const newLv = getLevelFromHearts(newMyTotal);
+    if (newLv > oldLv) {
+      const newLvData = getLevelData(newMyTotal);
+      triggerMilestoneCelebration(`🎉 LEVEL UP! ยินดีด้วย คุณเลื่อนเป็น ${newLvData.badge} [${newLvData.rarityName}] จากการส่งใจให้ผู้พัฒนา! ✨`);
+    }
+
+    const updates = {};
+    updates[`developers/${key}/hearts`] = firebase.database.ServerValue.increment(1);
+    updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(1);
+    db.ref().update(updates).catch(() => {});
+
+    if (e) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = '❤️ +1';
+      el.style.left = (e.clientX + (Math.random() - 0.5) * 40) + 'px';
+      el.style.top = (e.clientY - 12) + 'px';
+      el.style.fontSize = '1.1rem';
+      el.style.fontWeight = '800';
+      el.style.color = '#e11d48';
+      el.style.textShadow = '0 2px 6px rgba(0,0,0,0.35)';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 950);
+    }
+  }
+
+  // 💬 พับ/กางกล่องคอมเมนต์ของแต่ละผู้พัฒนา
+  function toggleDevComments(key) {
+    playClickSound();
+    openDevCommentKeys[key] = !openDevCommentKeys[key];
+    const isOpen = !!openDevCommentKeys[key];
+
+    const drawer = document.getElementById(`dev-comment-drawer-${key}`);
+    const toggleBtn = document.getElementById(`dev-comment-toggle-${key}`);
+    const dev = developersCache[key] || {};
+    const count = dev.comments ? Object.keys(dev.comments).length : 0;
+
+    if (drawer) drawer.style.display = isOpen ? 'block' : 'none';
+    if (toggleBtn) {
+      toggleBtn.classList.toggle('active', isOpen);
+      toggleBtn.textContent = `💬 คอมเมนต์ (${count}) ${isOpen ? '▴' : '▾'}`;
+    }
+    if (isOpen) {
+      const listEl = document.getElementById(`dev-comment-list-${key}`);
+      if (listEl) listEl.scrollTop = listEl.scrollHeight;
+    }
+  }
+
+  // 💬 ส่งคอมเมนต์ให้กำลังใจผู้พัฒนา
+  function submitDevComment(key) {
+    if (!currentUser) {
+      openLoginInfo("🔐 ล็อกอินก่อนจึงจะคอมเมนต์ให้ผู้พัฒนาได้นะครับ");
+      return;
+    }
+    if (!db) return;
+
+    const inputEl = document.getElementById(`dev-comment-input-${key}`);
+    if (!inputEl) return;
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    if (Date.now() - lastDevCommentTime < 2000) {
+      showToast("⏳ รอสักครู่นะครับ ค่อยส่งคอมเมนต์ถัดไป");
+      return;
+    }
+    lastDevCommentTime = Date.now();
+    playClickSound();
+
+    inputEl.value = "";
+    openDevCommentKeys[key] = true;
+
+    db.ref(`developers/${key}/comments`).push({
+      uid: currentUser.id,
+      name: currentUser.name,
+      avatarUrl: currentUser.avatarUrl || "",
+      text: text.slice(0, 200),
+      createdAt: Date.now()
+    }).then(() => {
+      showToast("💬 ส่งคอมเมนต์เรียบร้อยแล้ว!");
+    }).catch(() => {
+      showToast("⚠️ ส่งคอมเมนต์ไม่สำเร็จ");
+    });
+  }
+
+  // 🗑️ ลบคอมเมนต์ (เจ้าของคอมเมนต์หรือแอดมินลบได้)
+  function deleteDevComment(devKey, commentKey) {
+    if (!db || !currentUser) return;
+    if (!confirm("ต้องการลบคอมเมนต์นี้ใช่ไหมครับ?")) return;
+    db.ref(`developers/${devKey}/comments/${commentKey}`).remove().then(() => {
+      showToast("🗑️ ลบคอมเมนต์เรียบร้อยแล้ว");
+    });
+  }
+
+  function buildDevCardElement(dev, isAdmin) {
+    const card = document.createElement('div');
+    card.className = "dev-card";
+    card.dataset.devKey = dev.key;
+
+    // แบนเนอร์หัวการ์ด + พื้นหลังโปรไฟล์
+    const banner = document.createElement('div');
+    banner.className = "dev-card-banner";
+    if (dev.bgImg) applyDevBannerImage(banner, dev.bgImg);
+
+    if (isAdmin) {
+      const actionsWrap = document.createElement('div');
+      actionsWrap.className = "dev-admin-actions";
+
+      const editBtn = document.createElement('button');
+      editBtn.type = "button";
+      editBtn.className = "dev-card-btn edit";
+      editBtn.textContent = "✏️ แก้ไข";
+      editBtn.onclick = () => editDeveloper(dev.key);
+      actionsWrap.appendChild(editBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.type = "button";
+      delBtn.className = "dev-card-btn del";
+      delBtn.textContent = "🗑️ ลบ";
+      delBtn.onclick = () => adminDeleteDeveloper(dev.key);
+      actionsWrap.appendChild(delBtn);
+
+      banner.appendChild(actionsWrap);
+    }
+    card.appendChild(banner);
+
+    // รูปโปรไฟล์วงแหวนทองคำ
+    const avatarWrap = document.createElement('div');
+    avatarWrap.className = "dev-avatar-wrap";
+    const img = document.createElement('img');
+    const fallback = `https://placehold.co/160x160/15803d/ffffff?text=${encodeURIComponent((dev.name || 'DEV').slice(0, 3))}`;
+    img.src = dev.img || fallback;
+    img.alt = dev.name || "";
+    img.onerror = function() {
+      if (!this.dataset.tried && dev.img && !dev.img.includes('images/') && !dev.img.startsWith('http')) {
+        this.dataset.tried = "1";
+        this.src = "images/" + dev.img;
+      } else {
+        this.onerror = null;
+        this.src = fallback;
+      }
+    };
+    avatarWrap.appendChild(img);
+    card.appendChild(avatarWrap);
+
+    // เนื้อหาชื่อ + หน้าที่ + ผลงาน + ทีมงาน
+    const body = document.createElement('div');
+    body.className = "dev-body";
+
+    const nameEl = document.createElement('h3');
+    nameEl.className = "dev-name";
+    nameEl.textContent = dev.name || "Developer";
+    body.appendChild(nameEl);
+
+    const badgesRow = document.createElement('div');
+    badgesRow.className = "dev-badges-row";
+
+    if (dev.role) {
+      const roleBadge = document.createElement('span');
+      roleBadge.className = "dev-role-badge";
+      roleBadge.textContent = "👑 " + dev.role;
+      badgesRow.appendChild(roleBadge);
+    }
+
+    if (dev.games) {
+      const gameBadge = document.createElement('span');
+      gameBadge.className = "dev-game-badge";
+      gameBadge.textContent = "🎮 " + dev.games;
+      badgesRow.appendChild(gameBadge);
+    }
+    if (badgesRow.children.length > 0) body.appendChild(badgesRow);
+
+    if (dev.desc) {
+      const descEl = document.createElement('p');
+      descEl.className = "dev-desc";
+      descEl.textContent = dev.desc;
+      body.appendChild(descEl);
+    }
+
+    if (dev.team) {
+      const lines = String(dev.team).split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      if (lines.length > 0) {
+        const teamBox = document.createElement('div');
+        teamBox.className = "dev-team-box";
+
+        const teamTitle = document.createElement('div');
+        teamTitle.className = "dev-team-title";
+        teamTitle.textContent = "👥 ทีมผู้สร้าง & บทบาทหน้าที่";
+        teamBox.appendChild(teamTitle);
+
+        lines.forEach(line => {
+          const item = document.createElement('div');
+          item.className = "dev-team-item";
+
+          // ไม่ตัดคำตรง https:// หรือ http://
+          const parts = line.split(/\s+-\s+|\s*：\s*|:(?!\/\/)/);
+          const memberSpan = document.createElement('span');
+          memberSpan.className = "dev-team-member";
+          memberSpan.textContent = "• " + parts[0];
+          item.appendChild(memberSpan);
+
+          if (parts.length > 1 && parts.slice(1).join(" - ")) {
+            const dutySpan = document.createElement('span');
+            dutySpan.className = "dev-team-duty";
+            dutySpan.textContent = parts.slice(1).join(" - ");
+            item.appendChild(dutySpan);
+          }
+          teamBox.appendChild(item);
+        });
+
+        body.appendChild(teamBox);
+      }
+    }
+    card.appendChild(body);
+
+    // แถบปุ่มช่องทางโซเชียลทั้งหมด
+    const linksBar = document.createElement('div');
+    linksBar.className = "dev-links-footer";
+
+    const addLink = (rawUrl, label, bg) => {
+      const url = normalizeDevUrl(rawUrl);
+      if (!url) return;
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.className = "dev-social-btn";
+      a.textContent = label;
+      a.style.background = bg;
+      linksBar.appendChild(a);
+    };
+
+    addLink(dev.itch, "🎮 itch.io", "linear-gradient(135deg, #fa5c5c, #dc2626)");
+    addLink(dev.patreon, "💖 สนับสนุน", "linear-gradient(135deg, #f96854, #e11d48)");
+    addLink(dev.x, "𝕏 X", "linear-gradient(135deg, #1e293b, #0f172a)");
+    addLink(dev.discord, "💬 Discord", "linear-gradient(135deg, #5865F2, #4338ca)");
+    addLink(dev.bsky, "🦋 Bluesky", "linear-gradient(135deg, #0284c7, #0ea5e9)");
+
+    if (linksBar.children.length > 0) card.appendChild(linksBar);
+
+    // แถบปุ่มกดหัวใจรัวๆ (+1) & ปุ่มกางกล่องคอมเมนต์
+    const interactBar = document.createElement('div');
+    interactBar.className = "dev-interact-bar";
+
+    const heartBtn = document.createElement('button');
+    heartBtn.type = "button";
+    heartBtn.className = "dev-heart-btn";
+    heartBtn.onclick = (e) => devHeartClick(dev.key, e);
+    heartBtn.innerHTML = `❤️ ส่งใจ <span class="dev-heart-pill" id="dev-heart-count-${dev.key}">0</span>`;
+    interactBar.appendChild(heartBtn);
+
+    const commentBtn = document.createElement('button');
+    commentBtn.type = "button";
+    commentBtn.id = `dev-comment-toggle-${dev.key}`;
+    commentBtn.className = "dev-comment-toggle-btn";
+    commentBtn.textContent = "💬 คอมเมนต์ (0) ▾";
+    commentBtn.onclick = () => toggleDevComments(dev.key);
+    interactBar.appendChild(commentBtn);
+
+    card.appendChild(interactBar);
+
+    // ลิ้นชักคอมเมนต์แบบย่อ-ขยายได้ (ไม่กินพื้นที่การ์ด)
+    const drawer = document.createElement('div');
+    drawer.id = `dev-comment-drawer-${dev.key}`;
+    drawer.className = "dev-comment-drawer";
+
+    const cList = document.createElement('div');
+    cList.id = `dev-comment-list-${dev.key}`;
+    cList.className = "dev-comment-list";
+    drawer.appendChild(cList);
+
+    const cForm = document.createElement('div');
+    cForm.className = "dev-comment-form";
+
+    const cInput = document.createElement('input');
+    cInput.type = "text";
+    cInput.id = `dev-comment-input-${dev.key}`;
+    cInput.className = "dev-comment-input";
+    cInput.maxLength = 200;
+    cInput.placeholder = "พิมพ์ให้กำลังใจผู้พัฒนา (สูงสุด 200 ตัวอักษร)...";
+    cInput.onkeydown = (ev) => {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        submitDevComment(dev.key);
+      }
+    };
+    cForm.appendChild(cInput);
+
+    const cSend = document.createElement('button');
+    cSend.type = "button";
+    cSend.className = "dev-comment-send";
+    cSend.textContent = "ส่ง";
+    cSend.onclick = () => submitDevComment(dev.key);
+    cForm.appendChild(cSend);
+
+    drawer.appendChild(cForm);
+    card.appendChild(drawer);
+
+    return card;
+  }
+
+  function updateDevCardDynamic(card, dev, isAdmin) {
+    // 1. อัปเดตตัวเลขหัวใจแบบลื่นๆ ไม่รีโหลดการ์ด
+    const heartCountEl = card.querySelector(`#dev-heart-count-${dev.key}`);
+    if (heartCountEl) {
+      heartCountEl.textContent = formatCompact(Number(dev.hearts) || 0);
+    }
+
+    // 2. อัปเดตสถานะปุ่ม & รายการคอมเมนต์
+    const rawComments = dev.comments || {};
+    const commentEntries = Object.keys(rawComments)
+      .map(ck => ({ ck, ...rawComments[ck] }))
+      .sort((a, b) => (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0));
+
+    const isOpen = !!openDevCommentKeys[dev.key];
+    const toggleBtn = card.querySelector(`#dev-comment-toggle-${dev.key}`);
+    if (toggleBtn) {
+      toggleBtn.classList.toggle('active', isOpen);
+      toggleBtn.textContent = `💬 คอมเมนต์ (${commentEntries.length}) ${isOpen ? '▴' : '▾'}`;
+    }
+
+    const drawer = card.querySelector(`#dev-comment-drawer-${dev.key}`);
+    if (drawer) {
+      drawer.style.display = isOpen ? 'block' : 'none';
+    }
+
+    const listEl = card.querySelector(`#dev-comment-list-${dev.key}`);
+    if (listEl) {
+      const commentsSig = commentEntries.map(c => c.ck).join(",") + "|" + (currentUser ? currentUser.id : "") + "|" + (isAdmin ? "1" : "0");
+      if (listEl.dataset.commentsSig !== commentsSig) {
+        listEl.dataset.commentsSig = commentsSig;
+        listEl.innerHTML = "";
+
+        if (commentEntries.length === 0) {
+          const empty = document.createElement('div');
+          empty.style.cssText = "text-align:center; color:#94a3b8; font-size:0.78rem; padding:10px 4px;";
+          empty.textContent = "ยังไม่มีคอมเมนต์ — เป็นคนแรกที่ให้กำลังใจสิ! ✨";
+          listEl.appendChild(empty);
+        } else {
+          commentEntries.forEach(c => {
+            const item = document.createElement('div');
+            item.className = "dev-comment-item";
+
+            const head = document.createElement('div');
+            head.className = "dev-comment-head";
+
+            const av = document.createElement('img');
+            av.className = "dev-comment-avatar";
+            av.referrerPolicy = "no-referrer";
+            av.src = (typeof c.avatarUrl === "string" && c.avatarUrl.startsWith("https://"))
+              ? c.avatarUrl
+              : "https://cdn.discordapp.com/embed/avatars/0.png";
+            head.appendChild(av);
+
+            const author = document.createElement('span');
+            author.className = "dev-comment-author";
+            author.textContent = c.name || "User";
+            head.appendChild(author);
+
+            if (currentUser && (isAdmin || currentUser.id === c.uid)) {
+              const del = document.createElement('button');
+              del.type = "button";
+              del.className = "dev-comment-del";
+              del.title = "ลบคอมเมนต์";
+              del.textContent = "✕";
+              del.onclick = () => deleteDevComment(dev.key, c.ck);
+              head.appendChild(del);
+            }
+
+            item.appendChild(head);
+
+            const bodyTxt = document.createElement('div');
+            bodyTxt.className = "dev-comment-text";
+            bodyTxt.textContent = c.text || "";
+            item.appendChild(bodyTxt);
+
+            listEl.appendChild(item);
+          });
+        }
+        listEl.scrollTop = listEl.scrollHeight;
+      }
+    }
+  }
+
   function renderDevelopers(data) {
     const grid = document.getElementById('devGrid');
     if (!grid) return;
@@ -7069,154 +7624,47 @@
       .sort((a, b) => (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0));
 
     const isAdmin = currentUser && currentUser.isVoteAdmin;
-    grid.innerHTML = "";
+
+    // ลบข้อความ empty state ถ้ามี
+    const emptyEl = grid.querySelector('.lb-empty');
+    if (emptyEl) emptyEl.remove();
+
+    // ลบการ์ดที่ถูกลบออกจากฐานข้อมูล
+    const validKeys = new Set(list.map(d => d.key));
+    Array.from(grid.querySelectorAll('.dev-card')).forEach(el => {
+      if (!validKeys.has(el.dataset.devKey)) el.remove();
+    });
 
     list.forEach(dev => {
-      const card = document.createElement('div');
-      card.className = "dev-card";
+      const structSig = JSON.stringify({
+        isAdmin: !!isAdmin,
+        name: dev.name || "",
+        role: dev.role || "",
+        games: dev.games || "",
+        img: dev.img || "",
+        bgImg: dev.bgImg || "",
+        itch: dev.itch || "",
+        patreon: dev.patreon || "",
+        x: dev.x || "",
+        discord: dev.discord || "",
+        bsky: dev.bsky || "",
+        team: dev.team || "",
+        desc: dev.desc || ""
+      });
 
-      // แบนเนอร์หัวการ์ด + พื้นหลังโปรไฟล์ (ถ้ามี)
-      const banner = document.createElement('div');
-      banner.className = "dev-card-banner";
-      if (dev.bgImg) applyDevBannerImage(banner, dev.bgImg);
-
-      // ปุ่มแก้ไข & ลบ เฉพาะแอดมินเท่านั้น
-      if (isAdmin) {
-        const actionsWrap = document.createElement('div');
-        actionsWrap.className = "dev-admin-actions";
-
-        const editBtn = document.createElement('button');
-        editBtn.type = "button";
-        editBtn.className = "dev-card-btn edit";
-        editBtn.textContent = "✏️ แก้ไข";
-        editBtn.onclick = () => editDeveloper(dev.key);
-        actionsWrap.appendChild(editBtn);
-
-        const delBtn = document.createElement('button');
-        delBtn.type = "button";
-        delBtn.className = "dev-card-btn del";
-        delBtn.textContent = "🗑️ ลบ";
-        delBtn.onclick = () => adminDeleteDeveloper(dev.key);
-        actionsWrap.appendChild(delBtn);
-
-        banner.appendChild(actionsWrap);
-      }
-      card.appendChild(banner);
-
-      // รูปโปรไฟล์วงแหวนทองคำ
-      const avatarWrap = document.createElement('div');
-      avatarWrap.className = "dev-avatar-wrap";
-      const img = document.createElement('img');
-      const fallback = `https://placehold.co/160x160/15803d/ffffff?text=${encodeURIComponent((dev.name || 'DEV').slice(0, 3))}`;
-      img.src = dev.img || fallback;
-      img.alt = dev.name || "";
-      img.onerror = function() {
-        if (!this.dataset.tried && dev.img && !dev.img.includes('images/') && !dev.img.startsWith('http')) {
-          this.dataset.tried = "1";
-          this.src = "images/" + dev.img;
-        } else {
-          this.onerror = null;
-          this.src = fallback;
-        }
-      };
-      avatarWrap.appendChild(img);
-      card.appendChild(avatarWrap);
-
-      // เนื้อหาชื่อ + หน้าที่ + ผลงาน + ทีมงาน
-      const body = document.createElement('div');
-      body.className = "dev-body";
-
-      const nameEl = document.createElement('h3');
-      nameEl.className = "dev-name";
-      nameEl.textContent = dev.name || "Developer";
-      body.appendChild(nameEl);
-
-      const badgesRow = document.createElement('div');
-      badgesRow.className = "dev-badges-row";
-
-      if (dev.role) {
-        const roleBadge = document.createElement('span');
-        roleBadge.className = "dev-role-badge";
-        roleBadge.textContent = "👑 " + dev.role;
-        badgesRow.appendChild(roleBadge);
+      let card = grid.querySelector(`.dev-card[data-dev-key="${dev.key}"]`);
+      if (!card) {
+        card = buildDevCardElement(dev, isAdmin);
+        card.dataset.structSig = structSig;
+        grid.appendChild(card);
+      } else if (card.dataset.structSig !== structSig) {
+        const newCard = buildDevCardElement(dev, isAdmin);
+        newCard.dataset.structSig = structSig;
+        card.replaceWith(newCard);
+        card = newCard;
       }
 
-      if (dev.games) {
-        const gameBadge = document.createElement('span');
-        gameBadge.className = "dev-game-badge";
-        gameBadge.textContent = "🎮 " + dev.games;
-        badgesRow.appendChild(gameBadge);
-      }
-      if (badgesRow.children.length > 0) body.appendChild(badgesRow);
-
-      if (dev.desc) {
-        const descEl = document.createElement('p');
-        descEl.className = "dev-desc";
-        descEl.textContent = dev.desc;
-        body.appendChild(descEl);
-      }
-
-      // กล่องแสดงรายชื่อทีมผู้พัฒนาหลายคน & หน้าที่แต่ละคน
-      if (dev.team) {
-        const lines = String(dev.team).split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-        if (lines.length > 0) {
-          const teamBox = document.createElement('div');
-          teamBox.className = "dev-team-box";
-
-          const teamTitle = document.createElement('div');
-          teamTitle.className = "dev-team-title";
-          teamTitle.textContent = "👥 ทีมผู้สร้าง & บทบาทหน้าที่";
-          teamBox.appendChild(teamTitle);
-
-          lines.forEach(line => {
-            const item = document.createElement('div');
-            item.className = "dev-team-item";
-
-            const parts = line.split(/\s*[-:：]\s*/);
-            const memberSpan = document.createElement('span');
-            memberSpan.className = "dev-team-member";
-            memberSpan.textContent = "• " + parts[0];
-            item.appendChild(memberSpan);
-
-            if (parts.length > 1 && parts.slice(1).join(" - ")) {
-              const dutySpan = document.createElement('span');
-              dutySpan.className = "dev-team-duty";
-              dutySpan.textContent = parts.slice(1).join(" - ");
-              item.appendChild(dutySpan);
-            }
-            teamBox.appendChild(item);
-          });
-
-          body.appendChild(teamBox);
-        }
-      }
-      card.appendChild(body);
-
-      // แถบปุ่มช่องทางโซเชียลทั้งหมด
-      const linksBar = document.createElement('div');
-      linksBar.className = "dev-links-footer";
-
-      const addLink = (rawUrl, label, bg) => {
-        const url = normalizeDevUrl(rawUrl);
-        if (!url) return;
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.className = "dev-social-btn";
-        a.textContent = label;
-        a.style.background = bg;
-        linksBar.appendChild(a);
-      };
-
-      addLink(dev.itch, "🎮 itch.io", "linear-gradient(135deg, #fa5c5c, #dc2626)");
-      addLink(dev.patreon, "💖 สนับสนุน", "linear-gradient(135deg, #f96854, #e11d48)");
-      addLink(dev.x, "𝕏 X", "linear-gradient(135deg, #1e293b, #0f172a)");
-      addLink(dev.discord, "💬 Discord", "linear-gradient(135deg, #5865F2, #4338ca)");
-      addLink(dev.bsky, "🦋 Bluesky", "linear-gradient(135deg, #0284c7, #0ea5e9)");
-
-      if (linksBar.children.length > 0) card.appendChild(linksBar);
-      grid.appendChild(card);
+      updateDevCardDynamic(card, dev, isAdmin);
     });
   }
 </script>
