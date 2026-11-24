@@ -5477,37 +5477,31 @@
       <button type="button" class="proj-filter-btn" onclick="setProjectFilter('paused', this)">⏸️ พักชั่วคราว</button>
     </div>
 
-    <!-- แผงแอดมินเพิ่ม / แก้ไขโปรเจกต์งานแปล (โผล่เฉพาะแอดมิน) -->
+    <!-- แผงแอดมินเพิ่ม / แก้ไขโปรเจกต์งานแปล (แบบกระชับ กรอกไว!) -->
     <div id="projectsAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
       <h3 id="projAdminFormTitle" style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินจัดการสถานะงานแปล</h3>
 
       <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
         <input type="text" id="adminProjTitle" placeholder="🎮 ชื่อเกม *" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjGenre" placeholder="🏷️ แนวเกม/เวอร์ชัน เช่น VN • v1.2" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <select id="adminProjGenre" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
+          <option value="Visual Novel">📖 แนว: Visual Novel</option>
+          <option value="RPG Maker">⚔️ แนว: RPG Maker</option>
+        </select>
         <select id="adminProjStatus" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
           <option value="translating">✍️ สถานะ: กำลังแปล</option>
-          <option value="qc">🔍 สถานะ: ตรวจคำผิด / QC</option>
-          <option value="testing">🧪 สถานะ: ทดสอบในเกม</option>
+          <option value="qc">🔍 สถานะ: ตรวจคำ / QC</option>
+          <option value="testing">🧪 สถานะ: ทดสอบบั๊ก</option>
           <option value="released">✅ สถานะ: ปล่อยแล้ว (100%)</option>
           <option value="paused">⏸️ สถานะ: พักชั่วคราว</option>
         </select>
         <input type="number" id="adminProjPercent" min="0" max="100" value="0" placeholder="📊 ความคืบหน้า (0-100%)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjTranslators" placeholder="👥 ผู้แปล / ทีมงาน เช่น Ben, คุณ A" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjStageDetail" placeholder="📌 ทำถึงไหนแล้ว เช่น บทที่ 3/5 • เหลือ UI" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <select id="adminProjLicenseStatus" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
-          <option value="approved">📜 ใบอนุญาต: ได้รับอนุญาตจากผู้พัฒนาแล้ว</option>
-          <option value="pending">⏳ ใบอนุญาต: กำลังติดต่อขออนุญาต</option>
-          <option value="open">🌐 ใบอนุญาต: ผู้พัฒนาเปิดให้แปลเสรี</option>
-        </select>
-        <input type="text" id="adminProjCover" placeholder="🖼️ ปกเกม เช่น images/jacob.jpg หรือ https://..." style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjLicenseImg" placeholder="📄 รูปหลักฐานใบอนุญาต เช่น images/lic_1.png" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjDownloadUrl" placeholder="⬇️ ลิงก์ดาวน์โหลด / หน้าเกม (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjTranslators" value="Ben" placeholder="✍️ ผู้แปล เช่น Ben" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjCover" placeholder="🖼️ ลิงก์รูปปกเกม (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjLicenseImg" placeholder="📜 ลิงก์รูปใบอนุญาต/หลักฐาน (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjDownloadUrl" placeholder="⬇️ ลิงก์ดาวน์โหลด / หน้าเกม (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
       </div>
 
-      <textarea id="adminProjPreviewImgs" placeholder="🖼️ รูปตัวอย่างคำแปลในเกม (ใส่หลายรูปได้ แยกทีละบรรทัด หรือคั่นด้วย ,) เช่น:
-images/preview1.jpg
-images/preview2.jpg" style="min-height:60px; margin-bottom:10px;"></textarea>
-      <textarea id="adminProjNote" placeholder="📝 โน้ตอัปเดตล่าสุด หรือหมายเหตุถึงผู้เล่น (เช่น กำลังแก้สระลอย คาดว่าจะปล่อยปลายเดือนนี้)..." style="min-height:54px; margin-bottom:10px;"></textarea>
+      <textarea id="adminProjPreviewImgs" placeholder="🖼️ ลิงก์รูปตัวอย่างคำแปล (https://... ใส่หลายลิงก์ได้ แยกบรรทัด)" style="min-height:56px; margin-bottom:10px;"></textarea>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button type="button" id="adminProjSubmitBtn" class="submit-btn" style="flex:2; width:auto; min-width:200px; padding:11px 16px; font-size:0.98rem;" onclick="adminSaveProject()">➕ เพิ่มโปรเจกต์งานแปล</button>
@@ -11781,19 +11775,18 @@ images/preview2.jpg" style="min-height:60px; margin-bottom:10px;"></textarea>
 
   function resetProjectAdminForm() {
     editingProjKey = null;
-    [
-      'adminProjTitle', 'adminProjGenre', 'adminProjTranslators', 'adminProjStageDetail',
-      'adminProjCover', 'adminProjLicenseImg', 'adminProjDownloadUrl', 'adminProjPreviewImgs', 'adminProjNote'
-    ].forEach(id => {
+    ['adminProjTitle', 'adminProjCover', 'adminProjLicenseImg', 'adminProjDownloadUrl', 'adminProjPreviewImgs'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = "";
     });
+    const gn = document.getElementById('adminProjGenre');
+    if (gn) gn.value = "Visual Novel";
     const st = document.getElementById('adminProjStatus');
     if (st) st.value = "translating";
     const pct = document.getElementById('adminProjPercent');
     if (pct) pct.value = "0";
-    const lic = document.getElementById('adminProjLicenseStatus');
-    if (lic) lic.value = "approved";
+    const tr = document.getElementById('adminProjTranslators');
+    if (tr) tr.value = "Ben";
 
     const titleEl = document.getElementById('projAdminFormTitle');
     if (titleEl) titleEl.textContent = "👑 แผงแอดมินจัดการสถานะงานแปล";
@@ -11816,17 +11809,14 @@ images/preview2.jpg" style="min-height:60px; margin-bottom:10px;"></textarea>
     editingProjKey = key;
 
     document.getElementById('adminProjTitle').value = p.title || "";
-    document.getElementById('adminProjGenre').value = p.genre || "";
+    document.getElementById('adminProjGenre').value = p.genre === "RPG Maker" ? "RPG Maker" : "Visual Novel";
     document.getElementById('adminProjStatus').value = p.status || "translating";
     document.getElementById('adminProjPercent').value = Number(p.percent) || 0;
-    document.getElementById('adminProjTranslators').value = p.translators || "";
-    document.getElementById('adminProjStageDetail').value = p.stageDetail || "";
-    document.getElementById('adminProjLicenseStatus').value = p.licenseStatus || "approved";
+    document.getElementById('adminProjTranslators').value = p.translators || "Ben";
     document.getElementById('adminProjCover').value = p.coverImg || "";
     document.getElementById('adminProjLicenseImg').value = p.licenseProofImg || "";
     document.getElementById('adminProjDownloadUrl').value = p.downloadUrl || "";
     document.getElementById('adminProjPreviewImgs').value = p.previewImgs || "";
-    document.getElementById('adminProjNote').value = p.note || "";
 
     const titleEl = document.getElementById('projAdminFormTitle');
     if (titleEl) titleEl.textContent = `✏️ กำลังแก้ไขโปรเจกต์: ${p.title || ""}`;
@@ -11851,19 +11841,18 @@ images/preview2.jpg" style="min-height:60px; margin-bottom:10px;"></textarea>
     let percent = Math.max(0, Math.min(100, Math.floor(Number(document.getElementById('adminProjPercent').value) || 0)));
     if (status === "released" && percent < 100) percent = 100;
 
+    const licenseProofImg = document.getElementById('adminProjLicenseImg').value.trim();
     const payload = {
       title: title,
-      genre: document.getElementById('adminProjGenre').value.trim(),
+      genre: document.getElementById('adminProjGenre').value || "Visual Novel",
       status: status,
       percent: percent,
-      translators: document.getElementById('adminProjTranslators').value.trim(),
-      stageDetail: document.getElementById('adminProjStageDetail').value.trim(),
-      licenseStatus: document.getElementById('adminProjLicenseStatus').value || "approved",
+      translators: document.getElementById('adminProjTranslators').value.trim() || "Ben",
+      licenseStatus: licenseProofImg ? "approved" : "",
       coverImg: document.getElementById('adminProjCover').value.trim(),
-      licenseProofImg: document.getElementById('adminProjLicenseImg').value.trim(),
+      licenseProofImg: licenseProofImg,
       downloadUrl: normalizeDevUrl(document.getElementById('adminProjDownloadUrl').value),
       previewImgs: document.getElementById('adminProjPreviewImgs').value.trim(),
-      note: document.getElementById('adminProjNote').value.trim(),
       updatedAt: Date.now()
     };
 
