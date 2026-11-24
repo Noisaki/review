@@ -3646,6 +3646,271 @@
       flex-wrap: wrap;
       box-shadow: 0 8px 22px rgba(245, 158, 11, 0.18);
     }
+
+    /* =========================================
+       🎨 การ์ดโปรไฟล์สไตล์ Discord + แบนเนอร์ + ยศลับ
+       ========================================= */
+    .profile-card.has-banner {
+      padding: 0 !important;
+      overflow: hidden;
+    }
+    .profile-discord-banner {
+      width: 100%;
+      height: 125px;
+      background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #be123c 100%);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      border-bottom: 2px solid rgba(165, 180, 252, 0.6);
+    }
+    .profile-logged-in-body {
+      padding: 0 24px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .profile-logged-in-body .avatar-frame {
+      margin-top: -42px;
+      width: 92px;
+      height: 92px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+      z-index: 2;
+    }
+    .profile-logged-in-body .profile-info {
+      padding-top: 10px;
+    }
+    .profile-logged-in-body .profile-actions {
+      padding-top: 12px;
+    }
+    .profile-bio-box {
+      background: rgba(241, 245, 249, 0.85);
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 0.84rem;
+      color: #334155;
+      margin: 8px 0 4px 0;
+      max-width: 480px;
+      word-break: break-word;
+    }
+    body.horror-mode .profile-bio-box {
+      background: rgba(40, 5, 5, 0.85) !important;
+      border-color: #991b1b !important;
+      color: #fecaca !important;
+    }
+
+    /* ป้ายช่องทางล็อกอิน (Discord / Facebook / Gmail) */
+    .provider-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+    .provider-pill.discord  { background: #e0e7ff; color: #3730a3; border: 1px solid #818cf8; }
+    .provider-pill.facebook { background: #dbeafe; color: #1e40af; border: 1px solid #60a5fa; }
+    .provider-pill.google   { background: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }
+
+    /* ยศลับ Easter Egg สยองขวัญ */
+    .secret-horror-pill {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 3px 11px;
+      border-radius: 999px;
+      margin-top: 3px;
+      margin-left: 4px;
+      background: linear-gradient(135deg, #090000 0%, #450a0a 50%, #991b1b 100%) !important;
+      color: #fca5a5 !important;
+      border: 1.5px solid #ef4444 !important;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.75) !important;
+      text-shadow: 0 0 6px #ef4444;
+    }
+
+    /* การ์ดลอยโฮเวอร์ดูโปรไฟล์คนอื่นสไตล์ Discord */
+    .user-hover-card {
+      position: fixed;
+      width: 300px;
+      background: #111214;
+      color: #f2f3f5;
+      border: 2px solid #5865F2;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65), 0 0 18px rgba(88, 101, 242, 0.35);
+      z-index: 1200;
+      display: none;
+      pointer-events: auto;
+      animation: popIn 0.18s ease-out;
+    }
+    .uhc-banner {
+      height: 86px;
+      background: linear-gradient(135deg, #312e81, #be123c);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .uhc-body {
+      padding: 0 16px 16px;
+      position: relative;
+    }
+    .uhc-avatar-wrap {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      padding: 3px;
+      background: #5865F2;
+      margin-top: -36px;
+      margin-bottom: 8px;
+      position: relative;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+    .uhc-avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #1e293b;
+    }
+    .uhc-status-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #23a55a;
+      border: 3px solid #111214;
+    }
+    .uhc-name-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .uhc-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #ffffff;
+      word-break: break-word;
+    }
+    .uhc-bio {
+      background: #1e1f22;
+      border: 1px solid #2b2d31;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      color: #dbdee1;
+      margin: 8px 0;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .uhc-section-label {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #949ba4;
+      text-transform: uppercase;
+      margin: 8px 0 5px;
+      letter-spacing: 0.4px;
+    }
+    .uhc-roles-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .uhc-stats-row {
+      display: flex;
+      justify-content: space-between;
+      background: #1e1f22;
+      border-radius: 10px;
+      padding: 7px 12px;
+      margin-top: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fde68a;
+    }
+    [data-uid] {
+      cursor: pointer;
+    }
+
+    /* หน้าต่างแก้ไขโปรไฟล์สไตล์ Discord */
+    .ep-preview-card {
+      background: #111214;
+      color: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1.5px solid #3f4147;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .ep-preview-banner {
+      height: 92px;
+      background: linear-gradient(135deg, #312e81, #be123c);
+      background-size: cover;
+      background-position: center;
+    }
+    .ep-preview-body {
+      padding: 0 16px 14px;
+    }
+    .ep-preview-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      border: 4px solid #111214;
+      object-fit: cover;
+      margin-top: -34px;
+      background: #1e293b;
+      display: block;
+    }
+    .ep-field-group {
+      text-align: left;
+      margin-bottom: 12px;
+    }
+    .ep-field-group label {
+      display: block;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+    .ep-input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+    }
+    .ep-swatch-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .ep-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -3795,33 +4060,47 @@
   <!-- =========================================
        การ์ดโปรไฟล์ Discord (ล็อกอิน + ยศ)
        ========================================= -->
+  <!-- =========================================
+       การ์ดโปรไฟล์สไตล์ Discord (ล็อกอิน + แบนเนอร์ + ยศ)
+       ========================================= -->
   <div class="profile-card" id="profileCard">
     <!-- สถานะยังไม่ล็อกอิน -->
     <div class="profile-logged-out" id="profileLoggedOut">
       <div class="profile-out-text">
-        <h3 class="corruptible" data-cursed="🩸 ล็อกอินไปก็ไม่มีใครสนผมหรอก...">🔐 เข้าสู่ระบบด้วย Discord เพื่อกดส่งหัวใจ & แสดงยศ</h3>
-        <p class="corruptible" data-cursed="ผมทำอะไรผิดทุกอย่างเลย...">ล็อกอินผ่าน Discord ทางการเท่านั้น (ไม่ใช้ Gmail) เพื่อกดส่งหัวใจ ขึ้นกระดานจัดอันดับ และโชว์ยศของคุณในเซิร์ฟเวอร์ BGT</p>
+        <h3 class="corruptible" data-cursed="🩸 ล็อกอินไปก็ไม่มีใครสนผมหรอก...">🔐 เข้าสู่ระบบเพื่อกดส่งหัวใจ & แสดงยศ</h3>
+        <p class="corruptible" data-cursed="ผมทำอะไรผิดทุกอย่างเลย...">ล็อกอินผ่าน Discord, Google หรือ Facebook เพื่อตกแต่งโปรไฟล์ ขึ้นกระดานจัดอันดับ และโชว์ยศของคุณ</p>
       </div>
       <button type="button" class="discord-login-btn" id="discordLoginBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); openLoginInfo('');">
-        💬 <span>Login with Discord</span>
+        🔐 <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
       </button>
     </div>
 
     <!-- สถานะล็อกอินแล้ว -->
-    <div class="profile-logged-in" id="profileLoggedIn">
-      <div class="avatar-frame" id="profileAvatarFrame">
-        <img id="profileAvatar" src="" alt="Discord Avatar" referrerpolicy="no-referrer">
-      </div>
-      <div class="profile-info">
-        <h3 class="profile-name" id="profileName">-</h3>
-        <span class="role-pill" id="profileRolePill">-</span>
-        <span class="dev-patron-pill" id="profileDevPatronPill" style="display:none;">🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨</span>
-        <span class="title-pill" id="profileTitlePill" style="display:none; font-size:0.85rem; padding:4px 12px;">-</span>
-        <p class="profile-desc" id="profileDesc"></p>
-      </div>
-      <div class="profile-actions">
-        <button type="button" class="profile-btn" id="refreshRoleBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); refreshDiscordRole();">🔄 รีเฟรชยศ</button>
-        <button type="button" class="profile-btn logout" id="logoutBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); discordLogout();">🚪 ออกจากระบบ</button>
+    <div class="profile-logged-in" id="profileLoggedIn" style="flex-direction:column; gap:0; width:100%;">
+      <div class="profile-discord-banner" id="profileBannerBox"></div>
+      <div class="profile-logged-in-body" style="width:100%;">
+        <div class="avatar-frame" id="profileAvatarFrame">
+          <img id="profileAvatar" src="" alt="User Avatar" referrerpolicy="no-referrer">
+        </div>
+        <div class="profile-info">
+          <h3 class="profile-name">
+            <span id="profileName">-</span>
+            <span class="provider-pill discord" id="profileProviderPill">💬 Discord</span>
+          </h3>
+          <div style="display:flex; flex-wrap:wrap; gap:5px; align-items:center;">
+            <span class="role-pill" id="profileRolePill">-</span>
+            <span class="secret-horror-pill" id="profileHorrorPill" style="display:none;">🩸 ผู้ต้องคำสาป 1 ดาว</span>
+            <span class="dev-patron-pill" id="profileDevPatronPill" style="display:none;">🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨</span>
+            <span class="title-pill" id="profileTitlePill" style="display:none; font-size:0.85rem; padding:4px 12px;">-</span>
+          </div>
+          <div class="profile-bio-box" id="profileBioText" style="display:none;"></div>
+          <p class="profile-desc" id="profileDesc"></p>
+        </div>
+        <div class="profile-actions">
+          <button type="button" class="profile-btn" style="background:linear-gradient(135deg,#5865F2,#4338ca); color:#fff; border-color:#818cf8;" onmouseenter="playHoverSound()" onclick="playClickSound(); openEditProfileModal();">✏️ แก้ไขโปรไฟล์</button>
+          <button type="button" class="profile-btn" id="refreshRoleBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); refreshDiscordRole();">🔄 รีเฟรชยศ</button>
+          <button type="button" class="profile-btn logout" id="logoutBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); discordLogout();">🚪 ออกจากระบบ</button>
+        </div>
       </div>
     </div>
   </div>
@@ -4376,9 +4655,89 @@
     <button class="modal-close-btn" onclick="document.getElementById('voteWinnerModal').style.display='none';">ปิดหน้าต่าง</button>
   </div>
 </div>
+<!-- การ์ดโฮเวอร์ดูโปรไฟล์คนอื่นสไตล์ Discord -->
+<div class="user-hover-card" id="userHoverCard">
+  <div class="uhc-banner" id="uhcBanner"></div>
+  <div class="uhc-body">
+    <div class="uhc-avatar-wrap" id="uhcAvatarWrap">
+      <img id="uhcAvatar" src="" alt="" referrerpolicy="no-referrer">
+      <span class="uhc-status-dot"></span>
+    </div>
+    <div class="uhc-name-row">
+      <span class="uhc-name" id="uhcName">-</span>
+      <span class="provider-pill discord" id="uhcProvider">💬 Discord</span>
+    </div>
+    <div class="uhc-bio" id="uhcBio" style="display:none;"></div>
+    <div class="uhc-section-label">ยศและฉายาที่ครอบครอง</div>
+    <div class="uhc-roles-wrap" id="uhcRoles"></div>
+    <div class="uhc-stats-row">
+      <span id="uhcHeartsStat">❤️ 0 ดวง</span>
+      <span id="uhcDonateStat">🎁 ฿0</span>
+    </div>
+  </div>
+</div>
+
+<!-- หน้าต่างแก้ไขโปรไฟล์สไตล์ Discord -->
+<div class="modal-overlay" id="editProfileModal">
+  <div class="modal-box" style="max-width:480px;">
+    <h2 style="margin-bottom:12px;">✏️ ตกแต่งโปรไฟล์ของคุณ</h2>
+
+    <!-- ตัวอย่างการ์ดแบบเรียลไทม์ -->
+    <div class="ep-preview-card">
+      <div class="ep-preview-banner" id="epPreviewBanner"></div>
+      <div class="ep-preview-body">
+        <img class="ep-preview-avatar" id="epPreviewAvatar" src="" alt="">
+        <div style="font-family:'Kanit',sans-serif; font-size:1.1rem; font-weight:700; margin-top:6px;" id="epPreviewName">-</div>
+        <div style="font-size:0.8rem; color:#b5bac1; margin-top:3px;" id="epPreviewBio">ยังไม่มีข้อความแนะนำตัว...</div>
+      </div>
+    </div>
+
+    <div class="ep-field-group">
+      <label>🏷️ ชื่อที่แสดงบนเว็บ (สูงสุด 32 ตัวอักษร):</label>
+      <input type="text" id="epNameInput" class="ep-input" maxlength="32" placeholder="พิมพ์ชื่อที่ต้องการแสดง..." oninput="updateEditProfilePreview()">
+    </div>
+
+    <div class="ep-field-group">
+      <label>📝 ข้อความแนะนำตัว / สถานะ (สูงสุด 120 ตัวอักษร):</label>
+      <input type="text" id="epBioInput" class="ep-input" maxlength="120" placeholder="เช่น รอเกมแปลไทยเรื่องใหม่อยู่นะ UwU ✨" oninput="updateEditProfilePreview()">
+    </div>
+
+    <div class="ep-field-group">
+      <label>🖼️ รูปโปรไฟล์ (แนะนำสี่เหลี่ยมจัตุรัส ระบบย่อให้ 150×150px อัตโนมัติ):</label>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <input type="file" id="epAvatarFile" accept="image/*" style="font-size:0.82rem; flex:1;" onchange="handleProfileImageUpload(this, 'avatar')">
+        <button type="button" class="profile-btn" style="padding:5px 10px; font-size:0.78rem;" onclick="resetCustomAvatar()">ใช้รูปจากบัญชีเดิม</button>
+      </div>
+    </div>
+
+    <div class="ep-field-group">
+      <label>🌌 พื้นหลัง / แบนเนอร์โปรไฟล์ (แนะนำอัตราส่วน 5:2 ระบบปรับเป็น 600×240px อัตโนมัติ):</label>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <input type="file" id="epBannerFile" accept="image/*" style="font-size:0.82rem; flex:1;" onchange="handleProfileImageUpload(this, 'banner')">
+        <button type="button" class="profile-btn" style="padding:5px 10px; font-size:0.78rem;" onclick="clearCustomBanner()">ลบรูปพื้นหลัง</button>
+      </div>
+      <div class="ep-swatch-row">
+        <span style="font-size:0.78rem; color:#64748b; align-self:center;">หรือเลือกสีธีม:</span>
+        <button type="button" class="ep-swatch" style="background:linear-gradient(135deg,#1e1b4b,#4338ca,#be123c);" onclick="selectBannerPreset('linear-gradient(135deg,#1e1b4b,#4338ca,#be123c)')"></button>
+        <button type="button" class="ep-swatch" style="background:linear-gradient(135deg,#064e3b,#15803d,#f59e0b);" onclick="selectBannerPreset('linear-gradient(135deg,#064e3b,#15803d,#f59e0b)')"></button>
+        <button type="button" class="ep-swatch" style="background:linear-gradient(135deg,#831843,#ec4899,#f43f5e);" onclick="selectBannerPreset('linear-gradient(135deg,#831843,#ec4899,#f43f5e)')"></button>
+        <button type="button" class="ep-swatch" style="background:linear-gradient(135deg,#0f172a,#0284c7,#38bdf8);" onclick="selectBannerPreset('linear-gradient(135deg,#0f172a,#0284c7,#38bdf8)')"></button>
+        <button type="button" class="ep-swatch" style="background:linear-gradient(135deg,#090000,#7f1d1d,#dc2626);" onclick="selectBannerPreset('linear-gradient(135deg,#090000,#7f1d1d,#dc2626)')"></button>
+      </div>
+    </div>
+
+    <div class="ep-field-group" style="background:#fef2f2; border:1px dashed #fca5a5; border-radius:10px; padding:8px 12px;">
+      <div style="font-size:0.82rem; font-weight:700; color:#991b1b;" id="epSecretRoleStatus">🔒 ยศลับ Easter Egg: ยังไม่ปลดล็อก (ลองหาความลับในแบบประเมินดูสิ...)</div>
+    </div>
+
+    <div class="modal-btns">
+      <button type="button" class="modal-discord-btn" onclick="saveEditedProfile()">💾 บันทึกโปรไฟล์</button>
+      <button type="button" class="modal-cancel-btn" onclick="document.getElementById('editProfileModal').style.display='none';">ยกเลิก</button>
+    </div>
+  </div>
+</div>
 
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
-
 <script>
   // =========================================================================
   // ⚙️ ค่าตั้งต้นระบบทั้งหมด (Firebase + Discord OAuth2)
@@ -4522,12 +4881,7 @@
       usersCache = snap.val() || {};
       renderLeaderboards();
       if (currentUser && usersCache[currentUser.id]) {
-        const mine = usersCache[currentUser.id];
-        const v = Number(mine.heartsClicked) || 0;
-        myServerHearts = v;
-        updateMyHeartsLine();
-        updateCheerUI();
-        updateDevPatronBadgeUI();
+        applyProfileToUI(currentUser);
       }
     }, () => {
       renderLeaderboards();
@@ -4888,8 +5242,45 @@
     if (nFrame) nFrame.classList.toggle('dev-patron-frame', isPatron);
   }
 
+  
+  function getProviderMeta(id, provider) {
+    const p = provider || (String(id).startsWith("fb_") ? "facebook" : String(id).startsWith("g_") ? "google" : "discord");
+    if (p === "facebook") return { key: "facebook", label: "📘 Facebook" };
+    if (p === "google")   return { key: "google",   label: "📧 Gmail" };
+    return { key: "discord", label: "💬 Discord" };
+  }
+
+  function applyBannerStyle(el, bannerVal) {
+    if (!el) return;
+    if (!bannerVal) {
+      el.style.backgroundImage = "";
+      el.style.background = "linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #be123c 100%)";
+    } else if (bannerVal.startsWith("linear-gradient")) {
+      el.style.backgroundImage = "";
+      el.style.background = bannerVal;
+    } else {
+      el.style.background = "#0f172a";
+      el.style.backgroundImage = `url("${bannerVal.replace(/"/g, '%22')}")`;
+      el.style.backgroundSize = "cover";
+      el.style.backgroundPosition = "center";
+    }
+  }
+
   function applyProfileToUI(profile) {
+    const cached = (usersCache && usersCache[profile.id]) ? usersCache[profile.id] : {};
+    const provMeta = getProviderMeta(profile.id, profile.provider || cached.provider);
+    profile.provider = provMeta.key;
+
+    const finalName = cached.customName || profile.name;
+    const finalAvatar = cached.customAvatar || profile.avatarUrl;
+    const finalBanner = cached.bannerUrl || "";
+    const finalBio = cached.bio || "";
+    const hasHorror = !!(cached.unlockedHorrorRole || localStorage.getItem("bgt_secret_horror_unlocked") === "1");
+
+    profile.displayName = finalName;
+    profile.displayAvatar = finalAvatar;
     currentUser = profile;
+
     const info = getRoleInfoByTier(profile.roleTier);
     const adminPanel = document.getElementById('voteAdminPanel');
     if (adminPanel) adminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
@@ -4898,6 +5289,10 @@
     const devAdminPanel = document.getElementById('devAdminPanel');
     if (devAdminPanel) devAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
+
+    const cardEl = document.getElementById('profileCard');
+    if (cardEl) cardEl.classList.add('has-banner');
+    applyBannerStyle(document.getElementById('profileBannerBox'), finalBanner);
 
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
@@ -4910,20 +5305,39 @@
     if (navAvatarFrame) navAvatarFrame.className = "nav-avatar-frame" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
 
     const navAvatarImg = document.getElementById('navAvatarImg');
-    if (navAvatarImg) navAvatarImg.src = profile.avatarUrl;
+    if (navAvatarImg) navAvatarImg.src = finalAvatar;
 
-    document.getElementById('navUserName').textContent = profile.name;
+    document.getElementById('navUserName').textContent = finalName;
     const navUserRole = document.getElementById('navUserRole');
     if (navUserRole) {
       navUserRole.textContent = info ? info.name : (profile.inGuild ? "『🦊』 สมาชิก" : "👤 ผู้เยี่ยมชม");
     }
+
     const avatarImg = document.getElementById('profileAvatar');
-    avatarImg.src = profile.avatarUrl;
+    avatarImg.src = finalAvatar;
 
     const frame = document.getElementById('profileAvatarFrame');
     frame.className = "avatar-frame" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
 
-    document.getElementById('profileName').textContent = profile.name;
+    document.getElementById('profileName').textContent = finalName;
+    const provPill = document.getElementById('profileProviderPill');
+    if (provPill) {
+      provPill.className = "provider-pill " + provMeta.key;
+      provPill.textContent = provMeta.label;
+    }
+
+    const horrorPill = document.getElementById('profileHorrorPill');
+    if (horrorPill) horrorPill.style.display = hasHorror ? 'inline-flex' : 'none';
+
+    const bioEl = document.getElementById('profileBioText');
+    if (bioEl) {
+      if (finalBio) {
+        bioEl.textContent = finalBio;
+        bioEl.style.display = 'block';
+      } else {
+        bioEl.style.display = 'none';
+      }
+    }
 
     const pill = document.getElementById('profileRolePill');
     pill.className = "role-pill" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
@@ -4934,9 +5348,15 @@
       desc.textContent = `ยศสูงสุดของคุณ: ${info.short} • ขอบคุณที่สนับสนุนทีมแปลนะครับ 💖`;
     } else if (profile.inGuild) {
       desc.textContent = "สถานะ: สมาชิกเซิร์ฟเวอร์ BGT • ขอบคุณที่แวะมาร่วมสนุกและส่งกำลังใจนะครับ 🦊✨";
+    } else if (provMeta.key !== "discord") {
+      desc.textContent = `เข้าสู่ระบบผ่าน ${provMeta.label} • สามารถกดแก้ไขโปรไฟล์เพื่อเปลี่ยนชื่อ รูป และพื้นหลังได้ครับ ✨`;
     } else {
       desc.textContent = "บัญชีนี้ยังไม่ได้อยู่ในเซิร์ฟเวอร์ BGT — เข้าดิสคอร์ดผ่านปุ่มด้านบนแล้วกด 🔄 รีเฟรชยศ ได้เลย";
     }
+
+    const refreshBtn = document.getElementById('refreshRoleBtn');
+    if (refreshBtn) refreshBtn.style.display = provMeta.key === "discord" ? "inline-block" : "none";
+
     if (usersCache && usersCache[profile.id]) {
       myServerHearts = Number(usersCache[profile.id].heartsClicked) || 0;
     }
@@ -4978,14 +5398,19 @@
   function saveUserToFirebase(profile) {
     if (!db) return;
     const info = getRoleInfoByTier(profile.roleTier);
-    db.ref("users/" + profile.id).update({
+    const prov = getProviderMeta(profile.id, profile.provider).key;
+    const hasLocalHorror = localStorage.getItem("bgt_secret_horror_unlocked") === "1";
+    const payload = {
       name: profile.name,
       username: profile.username,
       avatarUrl: profile.avatarUrl,
+      provider: prov,
       roleTier: profile.roleTier,
       roleName: info ? info.name : "",
       lastSeen: firebase.database.ServerValue.TIMESTAMP
-    }).catch(() => {});
+    };
+    if (hasLocalHorror) payload.unlockedHorrorRole = true;
+    db.ref("users/" + profile.id).update(payload).catch(() => {});
   }
 
   function updateMyHeartsLine() {
@@ -5120,6 +5545,7 @@
   function buildLbRow(rank, id, u, scoreText) {
     const row = document.createElement('div');
     row.className = "lb-row" + (rank <= 3 ? " rank-" + rank : "") + (currentUser && currentUser.id === id ? " me" : "");
+    row.dataset.uid = id;
 
     const rankEl = document.createElement('div');
     rankEl.className = "lb-rank";
@@ -5127,13 +5553,14 @@
     row.appendChild(rankEl);
 
     const tier = Number(u.roleTier) || 0;
+    const rawAvatar = u.customAvatar || u.avatarUrl;
 
     const img = document.createElement('img');
     img.className = "lb-avatar" + (tier > 0 ? " tier-" + tier : "");
     img.referrerPolicy = "no-referrer";
     img.alt = "";
-    img.src = (typeof u.avatarUrl === "string" && (u.avatarUrl.indexOf("https://") === 0 || u.avatarUrl.indexOf("data:image/") === 0))
-      ? u.avatarUrl
+    img.src = (typeof rawAvatar === "string" && (rawAvatar.indexOf("https://") === 0 || rawAvatar.indexOf("data:image/") === 0))
+      ? rawAvatar
       : "https://cdn.discordapp.com/embed/avatars/0.png";
     row.appendChild(img);
 
@@ -5142,7 +5569,7 @@
 
     const nameEl = document.createElement('div');
     nameEl.className = "lb-name";
-    nameEl.textContent = u.name || "Discord User";
+    nameEl.textContent = u.customName || u.name || "Discord User";
     meta.appendChild(nameEl);
 
     const info = getRoleInfoByTier(tier);
@@ -5361,12 +5788,14 @@
         order.forEach(slot => {
           if (!slot.item) return;
           const u = slot.item.u || {};
-          const avatar = (typeof u.avatarUrl === "string" && (u.avatarUrl.indexOf("https://") === 0 || u.avatarUrl.indexOf("data:image/") === 0))
-            ? u.avatarUrl
+          const rawAv = u.customAvatar || u.avatarUrl;
+          const avatar = (typeof rawAv === "string" && (rawAv.indexOf("https://") === 0 || rawAv.indexOf("data:image/") === 0))
+            ? rawAv
             : "https://cdn.discordapp.com/embed/avatars/0.png";
 
           const div = document.createElement('div');
           div.className = `podium-slot p-${slot.rank}`;
+          div.dataset.uid = slot.item.id;
           div.innerHTML = `
             <div class="podium-avatar-wrap">
               ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
@@ -5387,7 +5816,7 @@
         if (!slotEl) return;
         const u = slot.item.u || {};
         const lvInfo = getLevelData(Number(u.heartsClicked) || 0);
-        slotEl.querySelector('.podium-name').textContent = u.name || "Discord User";
+        slotEl.querySelector('.podium-name').textContent = u.customName || u.name || "Discord User";
         const lvEl = slotEl.querySelector('.podium-lv');
         lvEl.className = `podium-lv ${lvInfo.rarityClass}`;
         lvEl.textContent = `Lv.${formatNum(lvInfo.level)}`;
@@ -5775,21 +6204,6 @@
         // เงียบไว้ ไม่ต้องเด้งป้ายเตือน
         isMusicPlaying = false;
       });
-    }
-  }
-
-  function toggleChristmasMusic() {
-    if (isHorrorTriggered) {
-      playRealCryingAudio();
-      return;
-    }
-    const bgmEl = document.getElementById('bgmAudio');
-    if (bgmEl && !bgmEl.paused) {
-      userPausedMusic = true;
-      stopChristmasMusic();
-    } else {
-      userPausedMusic = false;
-      startChristmasMusic();
     }
   }
 
@@ -6620,6 +7034,10 @@
 
     topApologyTarget = getTopApologyRequirement(curseCount);
     writeCurseToFirebase(true);
+    try { localStorage.setItem("bgt_secret_horror_unlocked", "1"); } catch (e) {}
+    if (db && currentUser) {
+      db.ref("users/" + currentUser.id + "/unlockedHorrorRole").set(true).catch(() => {});
+    }
 
     stopChristmasMusic();
     document.getElementById('musicStateIcon').textContent = '😭';
@@ -7264,6 +7682,20 @@
       box.appendChild(row);
     });
   }
+  function adminSaveDonate(uid) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    const inputEl = document.getElementById("donateAmtInput_" + uid);
+    if (!inputEl) return;
+    const amount = Math.max(0, Number(inputEl.value) || 0);
+
+    db.ref("users/" + uid + "/donateAmount").set(amount).then(() => {
+      const name = (usersCache[uid] && (usersCache[uid].customName || usersCache[uid].name)) || uid;
+      showToast(`💰 บันทึกยอดโดเนทของ ${name} เป็น ฿${formatNum(amount)} เรียบร้อยแล้ว!`);
+      renderAdminDonateSearch();
+    }).catch(() => {
+      showToast("⚠️ บันทึกยอดโดเนทไม่สำเร็จ");
+    });
+  }
 
   function adminToggleDevPatron(uid, enable) {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
@@ -7432,12 +7864,14 @@
       order.forEach(slot => {
         if (!slot.item) return;
         const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
-        const avatar = (typeof cached.avatarUrl === "string" && (cached.avatarUrl.indexOf("https://") === 0 || cached.avatarUrl.indexOf("data:image/") === 0))
-          ? cached.avatarUrl
+        const rawAv = cached.customAvatar || cached.avatarUrl;
+        const avatar = (typeof rawAv === "string" && (rawAv.indexOf("https://") === 0 || rawAv.indexOf("data:image/") === 0))
+          ? rawAv
           : "https://cdn.discordapp.com/embed/avatars/0.png";
 
         const div = document.createElement('div');
         div.className = `podium-slot p-${slot.rank}`;
+        div.dataset.uid = slot.item.id;
         div.innerHTML = `
           <div class="podium-avatar-wrap">
             ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
@@ -7458,7 +7892,7 @@
       const slotEl = stage.querySelector(`.podium-slot.p-${slot.rank}`);
       if (!slotEl) return;
       const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
-      const displayName = cached.name || slot.item.name || "Discord User";
+      const displayName = cached.customName || cached.name || slot.item.name || "Discord User";
       const lvInfo = getLevelData(Number(cached.heartsClicked) || 0);
 
       slotEl.querySelector('.podium-name').textContent = displayName;
@@ -8039,6 +8473,11 @@
           commentEntries.forEach(c => {
             const item = document.createElement('div');
             item.className = "dev-comment-item";
+            if (c.uid) item.dataset.uid = c.uid;
+
+            const uCache = (c.uid && usersCache && usersCache[c.uid]) ? usersCache[c.uid] : {};
+            const cAvRaw = uCache.customAvatar || uCache.avatarUrl || c.avatarUrl;
+            const cNameFinal = uCache.customName || uCache.name || c.name || "User";
 
             const head = document.createElement('div');
             head.className = "dev-comment-head";
@@ -8046,14 +8485,14 @@
             const av = document.createElement('img');
             av.className = "dev-comment-avatar";
             av.referrerPolicy = "no-referrer";
-            av.src = (typeof c.avatarUrl === "string" && (c.avatarUrl.startsWith("https://") || c.avatarUrl.startsWith("data:image/")))
-              ? c.avatarUrl
+            av.src = (typeof cAvRaw === "string" && (cAvRaw.startsWith("https://") || cAvRaw.startsWith("data:image/")))
+              ? cAvRaw
               : "https://cdn.discordapp.com/embed/avatars/0.png";
             head.appendChild(av);
 
             const author = document.createElement('span');
             author.className = "dev-comment-author";
-            author.textContent = c.name || "User";
+            author.textContent = cNameFinal;
             head.appendChild(author);
 
             if (currentUser && (isAdmin || currentUser.id === c.uid)) {
@@ -8136,6 +8575,262 @@
       }
 
       updateDevCardDynamic(card, dev, isAdmin);
+    });
+  }
+
+  // =========================================
+  // 12. ระบบโฮเวอร์/แตะดูโปรไฟล์คนอื่นสไตล์ Discord + แก้ไขโปรไฟล์ตัวเอง
+  // =========================================
+  let hoverHideTimer = null;
+
+  function showUserHoverCard(uid, anchorEl) {
+    const card = document.getElementById('userHoverCard');
+    if (!card || !uid) return;
+
+    const u = (usersCache && usersCache[uid]) ? usersCache[uid] : {};
+    const provMeta = getProviderMeta(uid, u.provider);
+    const tier = Number(u.roleTier) || 0;
+    const roleInfo = getRoleInfoByTier(tier);
+    const clicks = Number(u.heartsClicked) || 0;
+    const lvInfo = getLevelData(clicks);
+
+    const displayName = u.customName || u.name || "สมาชิก BGT";
+    const rawAvatar = u.customAvatar || u.avatarUrl;
+    const avatarUrl = (typeof rawAvatar === "string" && (rawAvatar.startsWith("https://") || rawAvatar.startsWith("data:image/")))
+      ? rawAvatar
+      : "https://cdn.discordapp.com/embed/avatars/0.png";
+
+    applyBannerStyle(document.getElementById('uhcBanner'), u.bannerUrl || "");
+    document.getElementById('uhcAvatar').src = avatarUrl;
+    document.getElementById('uhcName').textContent = displayName;
+
+    const provEl = document.getElementById('uhcProvider');
+    provEl.className = "provider-pill " + provMeta.key;
+    provEl.textContent = provMeta.label;
+
+    const bioEl = document.getElementById('uhcBio');
+    if (u.bio) {
+      bioEl.textContent = u.bio;
+      bioEl.style.display = "block";
+    } else {
+      bioEl.style.display = "none";
+    }
+
+    // รวมยศทั้งหมดที่คนนี้มี
+    const rolesWrap = document.getElementById('uhcRoles');
+    rolesWrap.innerHTML = "";
+
+    if (roleInfo) {
+      const rPill = document.createElement('span');
+      rPill.className = "role-pill tier-" + tier;
+      rPill.style.fontSize = "0.75rem";
+      rPill.textContent = roleInfo.name;
+      rolesWrap.appendChild(rPill);
+    }
+
+    if (u.unlockedHorrorRole) {
+      const hPill = document.createElement('span');
+      hPill.className = "secret-horror-pill";
+      hPill.textContent = "🩸 ผู้ต้องคำสาป 1 ดาว";
+      rolesWrap.appendChild(hPill);
+    }
+
+    if (u.devSupporter) {
+      const pPill = document.createElement('span');
+      pPill.className = "dev-patron-pill";
+      pPill.style.fontSize = "0.72rem";
+      pPill.textContent = "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨";
+      rolesWrap.appendChild(pPill);
+    }
+
+    const lvPill = document.createElement('span');
+    lvPill.className = "title-pill " + lvInfo.rarityClass;
+    lvPill.textContent = lvInfo.badge;
+    rolesWrap.appendChild(lvPill);
+
+    document.getElementById('uhcHeartsStat').textContent = `❤️ ${formatCompact(clicks)} ดวง`;
+    document.getElementById('uhcDonateStat').textContent = `🎁 ฿${formatNum(u.donateAmount || 0)}`;
+
+    // คำนวณตำแหน่งไม่ให้ล้นขอบจอ
+    card.style.display = "block";
+    const rect = anchorEl.getBoundingClientRect();
+    const cardW = 300;
+    const cardH = card.offsetHeight || 290;
+
+    let left = rect.right + 12;
+    if (left + cardW > window.innerWidth - 12) {
+      left = rect.left - cardW - 12;
+    }
+    if (left < 12) {
+      left = Math.max(12, Math.min(window.innerWidth - cardW - 12, rect.left));
+    }
+
+    let top = rect.top;
+    if (top + cardH > window.innerHeight - 12) {
+      top = window.innerHeight - cardH - 12;
+    }
+    if (top < 70) top = 70;
+
+    card.style.left = left + "px";
+    card.style.top = top + "px";
+  }
+
+  document.addEventListener("mouseover", (e) => {
+    if (e.target.closest("#userHoverCard")) {
+      clearTimeout(hoverHideTimer);
+      return;
+    }
+    const target = e.target.closest("[data-uid]");
+    if (target && target.dataset.uid) {
+      clearTimeout(hoverHideTimer);
+      showUserHoverCard(target.dataset.uid, target);
+    }
+  });
+
+  document.addEventListener("mouseout", (e) => {
+    if (e.target.closest("[data-uid]") || e.target.closest("#userHoverCard")) {
+      clearTimeout(hoverHideTimer);
+      hoverHideTimer = setTimeout(() => {
+        const card = document.getElementById('userHoverCard');
+        if (card) card.style.display = "none";
+      }, 220);
+    }
+  });
+
+  // รองรับการแตะบนมือถือ
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("#userHoverCard")) return;
+    const target = e.target.closest("[data-uid]");
+    if (target && target.dataset.uid && !e.target.closest("button, a, input")) {
+      showUserHoverCard(target.dataset.uid, target);
+    } else {
+      const card = document.getElementById('userHoverCard');
+      if (card) card.style.display = "none";
+    }
+  });
+
+  // --- หน้าต่างแก้ไขโปรไฟล์ ---
+  let draftCustomAvatar = null; // null = ไม่เปลี่ยน, "" = รีเซ็ต, "data:..." = รูปใหม่
+  let draftBannerUrl = null;    // null = ไม่เปลี่ยน, "" = ลบแบนเนอร์, string = รูป/สีใหม่
+
+  function openEditProfileModal() {
+    if (!currentUser) return;
+    const cached = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+
+    draftCustomAvatar = cached.customAvatar || "";
+    draftBannerUrl = cached.bannerUrl || "";
+
+    document.getElementById('epNameInput').value = cached.customName || currentUser.name || "";
+    document.getElementById('epBioInput').value = cached.bio || "";
+    document.getElementById('epAvatarFile').value = "";
+    document.getElementById('epBannerFile').value = "";
+
+    const hasHorror = !!(cached.unlockedHorrorRole || localStorage.getItem("bgt_secret_horror_unlocked") === "1");
+    const secretEl = document.getElementById('epSecretRoleStatus');
+    if (secretEl) {
+      secretEl.textContent = hasHorror
+        ? "🩸 ยศลับ Easter Egg: ปลดล็อก [ผู้ต้องคำสาป 1 ดาว] แล้ว! (แสดงอัตโนมัติบนโปรไฟล์)"
+        : "🔒 ยศลับ Easter Egg: ยังไม่ปลดล็อก (ลองหาความลับน่ากลัวในหน้าประเมินเกมดูสิ...)";
+    }
+
+    updateEditProfilePreview();
+    document.getElementById('editProfileModal').style.display = 'flex';
+  }
+
+  function updateEditProfilePreview() {
+    if (!currentUser) return;
+    const nameVal = document.getElementById('epNameInput').value.trim() || currentUser.name;
+    const bioVal = document.getElementById('epBioInput').value.trim() || "ยังไม่มีข้อความแนะนำตัว...";
+    const avSrc = draftCustomAvatar || currentUser.avatarUrl;
+
+    document.getElementById('epPreviewName').textContent = nameVal;
+    document.getElementById('epPreviewBio').textContent = bioVal;
+    document.getElementById('epPreviewAvatar').src = avSrc;
+    applyBannerStyle(document.getElementById('epPreviewBanner'), draftBannerUrl);
+  }
+
+  function resetCustomAvatar() {
+    playClickSound();
+    draftCustomAvatar = "";
+    document.getElementById('epAvatarFile').value = "";
+    updateEditProfilePreview();
+    showToast("รีเซ็ตกลับเป็นรูปโปรไฟล์หลักแล้ว");
+  }
+
+  function clearCustomBanner() {
+    playClickSound();
+    draftBannerUrl = "";
+    document.getElementById('epBannerFile').value = "";
+    updateEditProfilePreview();
+    showToast("ล้างพื้นหลังโปรไฟล์แล้ว");
+  }
+
+  function selectBannerPreset(grad) {
+    playClickSound();
+    draftBannerUrl = grad;
+    updateEditProfilePreview();
+  }
+
+  function handleProfileImageUpload(inputEl, type) {
+    const file = inputEl.files && inputEl.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const targetW = type === 'avatar' ? 150 : 600;
+        const targetH = type === 'avatar' ? 150 : 240;
+        const canvas = document.createElement('canvas');
+        canvas.width = targetW;
+        canvas.height = targetH;
+        const c = canvas.getContext('2d');
+
+        // ครอบภาพตรงกลางให้พอดีสัดส่วน (Cover Crop) ไม่บีบเบี้ยว
+        const scale = Math.max(targetW / img.width, targetH / img.height);
+        const drawW = img.width * scale;
+        const drawH = img.height * scale;
+        const offsetX = (targetW - drawW) / 2;
+        const offsetY = (targetH - drawH) / 2;
+
+        c.drawImage(img, offsetX, offsetY, drawW, drawH);
+        const compressed = canvas.toDataURL('image/jpeg', type === 'avatar' ? 0.85 : 0.78);
+
+        if (type === 'avatar') {
+          draftCustomAvatar = compressed;
+        } else {
+          draftBannerUrl = compressed;
+        }
+        updateEditProfilePreview();
+        showToast(type === 'avatar' ? "✅ ปรับขนาดรูปโปรไฟล์ 150×150px เรียบร้อย" : "✅ ปรับขนาดพื้นหลัง 600×240px เรียบร้อย");
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function saveEditedProfile() {
+    if (!db || !currentUser) return;
+    playClickSound();
+
+    const newName = document.getElementById('epNameInput').value.trim().slice(0, 32);
+    const newBio = document.getElementById('epBioInput').value.trim().slice(0, 120);
+
+    const updates = {
+      customName: newName || null,
+      bio: newBio || null,
+      customAvatar: draftCustomAvatar || null,
+      bannerUrl: draftBannerUrl || null
+    };
+
+    db.ref("users/" + currentUser.id).update(updates).then(() => {
+      if (!usersCache[currentUser.id]) usersCache[currentUser.id] = {};
+      Object.assign(usersCache[currentUser.id], updates);
+      applyProfileToUI(currentUser);
+      document.getElementById('editProfileModal').style.display = 'none';
+      showToast("💾 บันทึกการตกแต่งโปรไฟล์เรียบร้อยแล้ว! ✨");
+    }).catch(() => {
+      showToast("⚠️ บันทึกโปรไฟล์ไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
     });
   }
 </script>
