@@ -396,6 +396,15 @@
       pointer-events: none;
     }
 
+    #genkidamaCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 950;
+      pointer-events: none;
+    }
+
     .container {
       max-width: 920px;
       margin: 0 auto;
@@ -2911,71 +2920,138 @@
       }
     }
     /* =========================================
-       เอฟเฟกต์ป้ายเลเวล & ฉายาตามความแรร์ (7 ระดับ)
+       เอฟเฟกต์ป้ายเลเวล & ฉายาตามความแรร์ (12 ระดับ)
        ========================================= */
     .title-pill,
-    .cheer-rank-badge {
+    .cheer-rank-badge,
+    .podium-lv {
       position: relative;
       overflow: hidden;
     }
 
-    /* 1. Common (Lv. 1 - 19) */
+    /* 1. Common (Lv. 1 - 9) - เงินมุก */
     .rarity-common {
-      background: linear-gradient(135deg, #f1f5f9, #e2e8f0) !important;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0) !important;
       color: #475569 !important;
       border: 1.5px solid #cbd5e1 !important;
     }
 
-    /* 2. Uncommon (Lv. 20 - 49) - เขียวมรกต */
+    /* 2. Uncommon (Lv. 10 - 24) - เขียวมรกต */
     .rarity-uncommon {
-      background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-      color: #166534 !important;
-      border: 1.5px solid #4ade80 !important;
-      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25) !important;
+      background: linear-gradient(135deg, #dcfce7, #86efac) !important;
+      color: #14532d !important;
+      border: 1.5px solid #22c55e !important;
+      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.28) !important;
     }
 
-    /* 3. Rare (Lv. 50 - 99) - ฟ้าไพลินเรืองแสง */
+    /* 3. Teal (Lv. 25 - 49) - เขียวครามน้ำทะเล */
+    .rarity-teal {
+      background: linear-gradient(135deg, #ccfbf1, #5eead4, #2dd4bf) !important;
+      color: #115e59 !important;
+      border: 1.5px solid #0d9488 !important;
+      box-shadow: 0 2px 9px rgba(13, 148, 136, 0.35) !important;
+    }
+
+    /* 4. Rare (Lv. 50 - 74) - ฟ้าไพลินเรืองแสง */
     .rarity-rare {
-      background: linear-gradient(135deg, #dbeafe, #93c5fd) !important;
-      color: #1e3a8a !important;
-      border: 1.5px solid #3b82f6 !important;
-      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35) !important;
+      background: linear-gradient(135deg, #dbeafe, #60a5fa, #3b82f6) !important;
+      color: #ffffff !important;
+      border: 1.5px solid #93c5fd !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.45) !important;
     }
 
-    /* 4. Epic (Lv. 100 - 249) - ม่วงออร่า */
+    /* 5. Indigo (Lv. 75 - 99) - น้ำเงินครามอวกาศ */
+    .rarity-indigo {
+      background: linear-gradient(135deg, #312e81, #4f46e5, #6366f1) !important;
+      color: #e0e7ff !important;
+      border: 1.5px solid #a5b4fc !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 12px rgba(79, 70, 229, 0.5) !important;
+    }
+
+    /* 6. Epic (Lv. 100 - 129) - ม่วงอเมทิสต์ออร่า */
     .rarity-epic {
-      background: linear-gradient(135deg, #f3e8ff, #d8b4fe, #c084fc) !important;
-      color: #4c1d95 !important;
-      border: 1.5px solid #9333ea !important;
-      box-shadow: 0 0 12px rgba(147, 51, 234, 0.45) !important;
+      background: linear-gradient(135deg, #581c87, #9333ea, #c084fc) !important;
+      color: #ffffff !important;
+      border: 1.5px solid #e9d5ff !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 13px rgba(147, 51, 234, 0.55) !important;
     }
 
-    /* 5. Legendary (Lv. 250 - 499) - ทองคำ + แสงวิ่งพาดผ่าน */
+    /* 7. Magenta (Lv. 130 - 159) - ชมพูนีออน-บานเย็น */
+    .rarity-magenta {
+      background: linear-gradient(135deg, #831843, #db2777, #f472b6) !important;
+      color: #ffffff !important;
+      border: 1.5px solid #fbcfe8 !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 14px rgba(219, 39, 119, 0.6) !important;
+    }
+
+    /* 8. Crimson (Lv. 160 - 199) - แดงทับทิม-กุหลาบเพลิง */
+    .rarity-crimson {
+      background: linear-gradient(135deg, #4c0519, #be123c, #fb7185) !important;
+      color: #fff1f2 !important;
+      border: 1.5px solid #fda4af !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 0 15px rgba(225, 29, 72, 0.65) !important;
+    }
+
+    /* 9. Legendary (Lv. 200 - 299) - ทองคำเปลว + แสงวิ่งพาดผ่าน */
     .rarity-legendary {
-      background: linear-gradient(135deg, #fef9c3, #fde047, #f59e0b) !important;
-      color: #78350f !important;
-      border: 1.5px solid #d97706 !important;
-      box-shadow: 0 0 14px rgba(245, 158, 11, 0.65) !important;
+      background: linear-gradient(135deg, #fef08a, #f59e0b, #b45309) !important;
+      color: #ffffff !important;
+      border: 1.5px solid #fef9c3 !important;
+      text-shadow: 0 1px 3px rgba(120, 53, 15, 0.85);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.7) !important;
     }
 
-    /* 6. Mythic (Lv. 500 - 999) - แดงเพลิงลาวา + แสงวิ่ง */
+    /* 10. Mythic (Lv. 300 - 499) - แดงเพลิงลาวา-ทองคำ + แสงวิ่ง */
     .rarity-mythic {
-      background: linear-gradient(135deg, #7f1d1d, #dc2626, #f97316) !important;
+      background: linear-gradient(135deg, #450a0a, #dc2626, #f97316, #facc15) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 3.5s ease infinite !important;
       color: #ffffff !important;
       border: 1.5px solid #fde047 !important;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-      box-shadow: 0 0 16px rgba(239, 68, 68, 0.75) !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.8) !important;
     }
 
-    /* 7. God / Celestial (Lv. 1,000+) - สีรุ้งโฮโลแกรมไหล + ออร่า */
+    /* 11. Cosmic (Lv. 500 - 999) - กาแล็กซีดำ-ม่วง-ฟ้า + แสงวิ่ง */
+    .rarity-cosmic {
+      background: linear-gradient(115deg, #020617, #312e81, #7e22ce, #06b6d4, #020617) !important;
+      background-size: 260% 260% !important;
+      animation: gradientFlow 3.2s linear infinite !important;
+      color: #f0f9ff !important;
+      border: 1.5px solid #38bdf8 !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85), 0 0 8px rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 16px rgba(126, 34, 206, 0.75), 0 0 8px rgba(6, 182, 212, 0.7) !important;
+    }
+
+    /* 12. God / Celestial (Lv. 1,000+) - สีรุ้งโฮโลแกรมไหล + ออร่า */
     .rarity-god {
       background: linear-gradient(90deg, #ff0080, #ff8c00, #ffd700, #00e676, #00b0ff, #d500f9, #ff0080) !important;
       background-size: 300% 300% !important;
-      animation: gradientFlow 3s linear infinite !important;
+      animation: gradientFlow 2.8s linear infinite !important;
       color: #ffffff !important;
       border: 1.5px solid #ffffff !important;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
-      box-shadow: 0 0 18px rgba(255, 0, 128, 0.6), 0 0 8px rgba(0, 176, 255, 0.6) !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+      box-shadow: 0 0 18px rgba(255, 0, 128, 0.7), 0 0 10px rgba(0, 176, 255, 0.7) !important;
+    }
+
+    /* แสงประกายวิ่งพาดผ่านสำหรับระดับ Legendary ขึ้นไป */
+    .rarity-legendary::after,
+    .rarity-mythic::after,
+    .rarity-cosmic::after,
+    .rarity-god::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -120%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+      transform: skewX(-25deg);
+      animation: rankShimmer 2.8s infinite;
+      pointer-events: none;
     }
     /* =========================================
        ป้ายเลเวลบนแท่น Top 3 + เอฟเฟกต์ไฟลุกสุดร้อนแรง
@@ -4650,6 +4726,7 @@
   <div class="orb orb-3"></div>
 </div>
 <canvas id="snowCanvas"></canvas>
+<canvas id="genkidamaCanvas"></canvas>
 
 <!-- ฉากพื้นหลังลอยกระทง: พระจันทร์ + วัดและเมืองไทย + แม่น้ำ + กระทงจุดเทียน -->
 <div class="loy-krathong-scene" id="loyKrathongScene" aria-hidden="true">
@@ -6986,26 +7063,49 @@
   // =========================================
   const levelTitles = [
     { minLv: 1,    title: "🌱 ลูกจิ้งจอกฝึกหัด" },
+    { minLv: 3,    title: "🍂 นักสำรวจป่าน้อย" },
     { minLv: 5,    title: "🐾 นักเดินทางอุ้งเท้านุ่ม" },
+    { minLv: 8,    title: "📖 นักอ่านหน้าใหม่" },
     { minLv: 10,   title: "☕ นักชงกาแฟยามดึก" },
+    { minLv: 15,   title: "🌙 ผู้เฝ้าหน้าจอยามค่ำคืน" },
     { minLv: 20,   title: "🕯️ ผู้จุดไฟแห่งแรงบันดาลใจ" },
+    { minLv: 25,   title: "🪶 ผู้ช่วยตรวจอักษร" },
     { minLv: 30,   title: "⚔️ ทหารอาสาแห่ง BGT" },
+    { minLv: 35,   title: "🏹 พลธนูส่งกำลังใจ" },
     { minLv: 40,   title: "🛡️ อัศวินผู้พิทักษ์คำแปล" },
+    { minLv: 45,   title: "⚜️ อัศวินเกียรติยศ" },
     { minLv: 50,   title: "🎖️ แม่ทัพกองกำลังหัวใจ" },
+    { minLv: 60,   title: "🌊 ผู้คุมกระแสแห่งศรัทธา" },
     { minLv: 70,   title: "💎 ขุนนางแห่งวิหารอักษร" },
+    { minLv: 75,   title: "🔮 จอมเวทแห่งถ้อยคำ" },
+    { minLv: 80,   title: "🌌 นักปราชญ์ใต้แสงดาว" },
+    { minLv: 90,   title: "🦅 ผู้พิทักษ์หอคอยนิรันดร์" },
     { minLv: 100,  title: "👑 ราชวงศ์แห่งกำลังใจ" },
+    { minLv: 110,  title: "💜 อัครมหาเสนาบดี" },
+    { minLv: 120,  title: "🗡️ ราชองครักษ์อเมทิสต์" },
+    { minLv: 130,  title: "🌸 จักรพรรดินี/จักรพรรดิซากุระ" },
+    { minLv: 140,  title: "🎀 ผู้ร่ายมนต์สีชมพู" },
     { minLv: 150,  title: "🏰 ราชาแห่งอาณาจักร" },
-    { minLv: 200,  title: "🔥 จักรพรรดิเพลิงหัวใจ" },
+    { minLv: 160,  title: "🌹 ขุนศึกกุหลาบเพลิง" },
+    { minLv: 170,  title: "🩸 ราชันทับทิมสีชาด" },
+    { minLv: 185,  title: "🔥 เจ้าแห่งเปลวเพลิงหัวใจ" },
+    { minLv: 200,  title: "👑 จักรพรรดิทองคำ" },
+    { minLv: 225,  title: "☀️ มหาราชาแห่งรุ่งอรุณ" },
     { minLv: 250,  title: "⚡ มหาจักรพรรดิอัสนี" },
+    { minLv: 275,  title: "🐉 ราชันมังกรทองคำ" },
     { minLv: 300,  title: "🌟 เทพพิทักษ์แห่งดวงดาว" },
+    { minLv: 350,  title: "🌋 เทพเพลิงโลกันตร์" },
     { minLv: 400,  title: "☄️ มหาเทพอุกกาบาต" },
+    { minLv: 450,  title: "🔱 จ้าวแห่งตำนานโบราณ" },
     { minLv: 500,  title: "🌌 เทพเจ้าผู้สร้างกาแล็กซี" },
     { minLv: 600,  title: "🏆 ราชันแห่งเอกภพ" },
     { minLv: 700,  title: "🌀 ผู้บัญชาการมิติ" },
     { minLv: 800,  title: "🪐 เจ้าแห่งพหุจักรวาล" },
     { minLv: 900,  title: "🌠 มหาเทพนิรันดร์" },
     { minLv: 1000, title: "✨ ผู้รังสรรค์กฎแห่งจักรวาล" },
+    { minLv: 1250, title: "🌈 จิตวิญญาณแห่งแสงรุ้ง" },
     { minLv: 1500, title: "♾️ ตัวตนเหนือกาลเวลา" },
+    { minLv: 1750, title: "👁️ ผู้เฝ้ามองทุกสรรพสิ่ง" },
     { minLv: 2000, title: "👑🔥 พระเจ้าสูงสุดแห่ง BGT" }
   ];
 
@@ -7027,11 +7127,16 @@
 
   function getRarityByLevel(lv) {
     if (lv >= 1000) return { cls: "rarity-god",       name: "GOD" };
-    if (lv >= 500)  return { cls: "rarity-mythic",    name: "MYTHIC" };
-    if (lv >= 250)  return { cls: "rarity-legendary", name: "LEGENDARY" };
+    if (lv >= 500)  return { cls: "rarity-cosmic",    name: "COSMIC" };
+    if (lv >= 300)  return { cls: "rarity-mythic",    name: "MYTHIC" };
+    if (lv >= 200)  return { cls: "rarity-legendary", name: "LEGENDARY" };
+    if (lv >= 160)  return { cls: "rarity-crimson",   name: "CRIMSON" };
+    if (lv >= 130)  return { cls: "rarity-magenta",   name: "MAGENTA" };
     if (lv >= 100)  return { cls: "rarity-epic",      name: "EPIC" };
+    if (lv >= 75)   return { cls: "rarity-indigo",    name: "INDIGO" };
     if (lv >= 50)   return { cls: "rarity-rare",      name: "RARE" };
-    if (lv >= 20)   return { cls: "rarity-uncommon",  name: "UNCOMMON" };
+    if (lv >= 25)   return { cls: "rarity-teal",      name: "TEAL" };
+    if (lv >= 10)   return { cls: "rarity-uncommon",  name: "UNCOMMON" };
     return { cls: "rarity-common", name: "COMMON" };
   }
 
@@ -7231,6 +7336,8 @@
 
       updateCheerUI(leveledUp, leveledUp ? getLevelData(newMyTotal) : null);
     }
+
+    feedGenkidama(e ? e.clientX : null, e ? e.clientY : null);
 
     for (let i = 0; i < 3; i++) {
       const el = document.createElement('div');
@@ -8789,6 +8896,7 @@
     if (!voteData || !voteData.endTime || Date.now() >= voteData.endTime) return;
 
     playClickSound();
+    feedGenkidama(e ? e.clientX : null, e ? e.clientY : null);
 
     if (checkStealthAntiAutoClick('vote')) {
       // เช็กเลเวลอัปจาก +1 XP ที่ได้จากการโหวต
@@ -9466,6 +9574,7 @@
     if (!db) return;
 
     playClickSound();
+    feedGenkidama(e ? e.clientX : null, e ? e.clientY : null);
 
     if (checkStealthAntiAutoClick('dev')) {
       const oldMyTotal = myServerHearts + pendingClicks;
@@ -10524,6 +10633,7 @@
     if (!db) return;
 
     playClickSound();
+    feedGenkidama(e ? e.clientX : null, e ? e.clientY : null);
     // เช็กความเร็วแบบเนียนๆ — ถ้าเปิดโปรรัวเกิน จะข้ามการส่งคะแนนแต่ยังโชว์กระทงลอยอยู่ด้านล่าง
     if (checkStealthAntiAutoClick('krathong')) {
       const updates = {};
@@ -10842,6 +10952,213 @@
     db.ref("donate_slips/" + slipKey).remove().then(() => {
       showToast("🗑️ ลบรายการสลิปแล้ว");
     });
+  }
+
+  // =========================================
+  // 15. เอฟเฟกต์บอลเก็งกิ (Genkidama) — เบา ไม่กินสเปค หยุดทำงานเมื่ออยู่เฉยๆ
+  // =========================================
+  const genkiCanvas = document.getElementById('genkidamaCanvas');
+  const genkiCtx = genkiCanvas ? genkiCanvas.getContext('2d') : null;
+  let genkiRunning = false;
+  let genkiCharge = 0;       // พลังสะสม 0 - 100
+  let genkiLastFeed = 0;
+  let genkiParticles = [];
+  let genkiShockwaves = [];
+  let genkiFlashAlpha = 0;
+
+  function resizeGenkiCanvas() {
+    if (!genkiCanvas) return;
+    genkiCanvas.width = window.innerWidth;
+    genkiCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeGenkiCanvas);
+  resizeGenkiCanvas();
+
+  function playGenkidamaBlastSound() {
+    if (!soundEnabled) return;
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(160, now);
+      osc.frequency.exponentialRampToValueAtTime(980, now + 0.18);
+      osc.frequency.exponentialRampToValueAtTime(65, now + 0.85);
+
+      gain.gain.setValueAtTime(0.22, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.92);
+    } catch (e) {}
+  }
+
+  function feedGenkidama(clickX, clickY) {
+    if (!genkiCtx || isHorrorTriggered) return;
+    const now = Date.now();
+    genkiLastFeed = now;
+
+    // ชาร์จพลังเพิ่มทีละนิด (กดต่อเนื่อง ~35 ครั้งจะเต็ม 100% ระเบิดคลื่นพลัง)
+    genkiCharge = Math.min(100, genkiCharge + 3);
+
+    const w = genkiCanvas.width;
+    const h = genkiCanvas.height;
+    const maxP = w < 768 ? 42 : 75;
+
+    // ส่งละอองพลังจากจุดที่กด + จากขอบจอทั่วทุกสารทิศ (เหมือนขอพลังจากทุกคน)
+    const spawnCount = genkiCharge > 40 ? 3 : 2;
+    for (let i = 0; i < spawnCount; i++) {
+      if (genkiParticles.length >= maxP) break;
+      const fromClick = (i === 0 && clickX != null && clickY != null);
+      let sx, sy;
+      if (fromClick) {
+        sx = clickX + (Math.random() - 0.5) * 30;
+        sy = clickY + (Math.random() - 0.5) * 30;
+      } else {
+        const edge = Math.floor(Math.random() * 4);
+        if (edge === 0) { sx = Math.random() * w; sy = -10; }
+        else if (edge === 1) { sx = w + 10; sy = Math.random() * h; }
+        else if (edge === 2) { sx = Math.random() * w; sy = h + 10; }
+        else { sx = -10; sy = Math.random() * h; }
+      }
+
+      genkiParticles.push({
+        x: sx,
+        y: sy,
+        r: Math.random() * 2.8 + 1.8,
+        speed: 0.045 + Math.random() * 0.045,
+        angleOffset: (Math.random() - 0.5) * 0.65,
+        gold: Math.random() < 0.3
+      });
+    }
+
+    // ถ้าชาร์จเต็ม 100% -> ระเบิดคลื่นพลัง Super Genkidama!
+    if (genkiCharge >= 100) {
+      genkiCharge = 0;
+      genkiFlashAlpha = 0.55;
+      playGenkidamaBlastSound();
+      const cx = w * 0.5;
+      const cy = h * 0.24;
+      genkiShockwaves.push({ x: cx, y: cy, r: 20, maxR: Math.max(w, h) * 0.95, alpha: 0.95, color: '#38bdf8' });
+      genkiShockwaves.push({ x: cx, y: cy, r: 8,  maxR: Math.max(w, h) * 0.72, alpha: 0.9,  color: '#fde047' });
+    }
+
+    if (!genkiRunning) {
+      genkiRunning = true;
+      requestAnimationFrame(animateGenkidama);
+    }
+  }
+
+  function animateGenkidama() {
+    if (!genkiCtx) { genkiRunning = false; return; }
+    const w = genkiCanvas.width;
+    const h = genkiCanvas.height;
+    const cx = w * 0.5;
+    const cy = h * 0.24;
+
+    genkiCtx.clearRect(0, 0, w, h);
+
+    // ถ้าหยุดกดเกิน 0.7 วิ พลังจะค่อยๆ สลายลง
+    if (Date.now() - genkiLastFeed > 700 && genkiCharge > 0) {
+      genkiCharge = Math.max(0, genkiCharge - 0.75);
+    }
+
+    // 1. วาดละอองพลังที่พุ่งวนเข้าหาศูนย์กลาง
+    for (let i = genkiParticles.length - 1; i >= 0; i--) {
+      const p = genkiParticles[i];
+      const dx = cx - p.x;
+      const dy = cy - p.y;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist < 16) {
+        genkiParticles.splice(i, 1);
+        continue;
+      }
+
+      // เคลื่อนที่แบบเกลียวดูดเข้าหาลูกบอลพลัง
+      const angle = Math.atan2(dy, dx) + p.angleOffset * (dist / 360);
+      const step = Math.max(3.5, dist * p.speed);
+      p.x += Math.cos(angle) * step;
+      p.y += Math.sin(angle) * step;
+
+      genkiCtx.beginPath();
+      genkiCtx.arc(p.x, p.y, p.r * 2.2, 0, Math.PI * 2);
+      genkiCtx.fillStyle = p.gold ? 'rgba(253, 224, 71, 0.22)' : 'rgba(56, 189, 248, 0.24)';
+      genkiCtx.fill();
+
+      genkiCtx.beginPath();
+      genkiCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      genkiCtx.fillStyle = p.gold ? '#fef08a' : '#e0f2fe';
+      genkiCtx.fill();
+    }
+
+    // 2. วาดลูกบอลเก็งกิ (เริ่มโผล่ชัดเจนเมื่อกดต่อเนื่องเกิน 15%)
+    if (genkiCharge > 12) {
+      const ratio = (genkiCharge - 12) / 88;
+      const baseR = 14 + ratio * (w < 768 ? 58 : 84);
+      const pulse = Math.sin(Date.now() * 0.015) * (2 + ratio * 4);
+      const orbR = baseR + pulse;
+
+      const grad = genkiCtx.createRadialGradient(cx, cy, orbR * 0.12, cx, cy, orbR * 1.45);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.96)');
+      grad.addColorStop(0.45, 'rgba(56, 189, 248, 0.78)');
+      grad.addColorStop(0.78, 'rgba(14, 165, 233, 0.28)');
+      grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+
+      genkiCtx.beginPath();
+      genkiCtx.arc(cx, cy, orbR * 1.45, 0, Math.PI * 2);
+      genkiCtx.fillStyle = grad;
+      genkiCtx.fill();
+
+      // สายฟ้าแลบรอบลูกบอลเมื่อชาร์จเกิน 55%
+      if (genkiCharge > 55 && Math.random() < 0.45) {
+        const a = Math.random() * Math.PI * 2;
+        genkiCtx.beginPath();
+        genkiCtx.moveTo(cx + Math.cos(a) * orbR * 0.6, cy + Math.sin(a) * orbR * 0.6);
+        const midR = orbR * 1.15;
+        const a2 = a + (Math.random() - 0.5) * 0.5;
+        genkiCtx.lineTo(cx + Math.cos(a2) * midR, cy + Math.sin(a2) * midR);
+        genkiCtx.lineTo(cx + Math.cos(a2 + 0.18) * orbR * 1.45, cy + Math.sin(a2 + 0.18) * orbR * 1.45);
+        genkiCtx.strokeStyle = Math.random() < 0.4 ? '#fef08a' : '#bae6fd';
+        genkiCtx.lineWidth = 2;
+        genkiCtx.stroke();
+      }
+    }
+
+    // 3. วาดคลื่นกระแทกตอนระเบิดพลัง
+    for (let i = genkiShockwaves.length - 1; i >= 0; i--) {
+      const s = genkiShockwaves[i];
+      s.r += (s.maxR - s.r) * 0.1 + 12;
+      s.alpha -= 0.025;
+      if (s.alpha <= 0) {
+        genkiShockwaves.splice(i, 1);
+        continue;
+      }
+      genkiCtx.beginPath();
+      genkiCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      genkiCtx.strokeStyle = s.color;
+      genkiCtx.globalAlpha = Math.max(0, s.alpha);
+      genkiCtx.lineWidth = 4 + s.alpha * 8;
+      genkiCtx.stroke();
+      genkiCtx.globalAlpha = 1;
+    }
+
+    // 4. แสงแฟลชจางๆ ตอนระเบิด
+    if (genkiFlashAlpha > 0) {
+      genkiCtx.fillStyle = `rgba(224, 242, 254, ${genkiFlashAlpha})`;
+      genkiCtx.fillRect(0, 0, w, h);
+      genkiFlashAlpha = Math.max(0, genkiFlashAlpha - 0.035);
+    }
+
+    // หยุดลูปทันทีเมื่อไม่มีเอฟเฟกต์ค้าง (ประหยัดแบตและไม่กินสเปค!)
+    if (genkiCharge > 0 || genkiParticles.length > 0 || genkiShockwaves.length > 0 || genkiFlashAlpha > 0) {
+      requestAnimationFrame(animateGenkidama);
+    } else {
+      genkiRunning = false;
+    }
   }
 </script>
 
