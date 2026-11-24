@@ -4333,7 +4333,8 @@
     <p style="margin-bottom:18px;">กดปุ่มด้านล่างเพื่อไปยืนยันตัวตนกับ Discord ได้เลยครับ</p>
     <div class="modal-btns">
       <button class="modal-discord-btn" onclick="playClickSound(); startDiscordLogin();">💬 ล็อกอินด้วย Discord</button>
-      <button class="modal-discord-btn" style="background:linear-gradient(135deg,#ea4335,#fbbc05);" onclick="playClickSound(); startGoogleLogin();">📧 ล็อกอินด้วย Google / Gmail</button>
+      <button type="button" class="modal-close-btn" style="background:linear-gradient(135deg,#ea4335,#f59e0b);" onclick="playClickSound(); startGoogleLogin();">📧 ล็อกอินด้วย Google / Gmail</button>
+      <button type="button" class="modal-close-btn" style="background:linear-gradient(135deg,#1877F2,#0d5bbd);" onclick="playClickSound(); startFacebookLogin();">📘 ล็อกอินด้วย Facebook</button>
       <button class="modal-cancel-btn" onclick="playClickSound(); closeLoginInfo();">ยกเลิก</button>
     </div>
   </div>
@@ -4408,7 +4409,7 @@
     { tier: 2, id: "1484865657467043941", name: "📜 『 ผู้ร่วมจารึก 』",              short: "ผู้ร่วมจารึก",              need: "300 บาท" },
     { tier: 1, id: "1388418421959561220", name: "🦴 『 ผู้สนับสนุนทั่วไป 』",        short: "ผู้สนับสนุนทั่วไป",        need: "ไม่มีขั้นต่ำ" },
     { tier: -1, id: "1388418227524079841", name: "『🦊』สมาชิก",                    short: "สมาชิก",                    need: "สมาชิกทั่วไป" },
-    { tier: 0, id: "", name: "📧 สมาชิก Gmail",                                    short: "สมาชิก Gmail",              need: "ล็อกอินผ่าน Google" }
+    { tier: 0, id: "", name: "✨ สมาชิกชุมชน BGT", short: "สมาชิกชุมชน BGT", need: "ล็อกอินผ่าน Google / Facebook" }
   ];
 
 
