@@ -4664,7 +4664,7 @@
     }
   }
 
-  // ล็อกอินด้วย Facebook ผ่าน Firebase Auth
+  /// ล็อกอินด้วย Facebook ผ่าน Firebase Auth (พร้อมดึงรูปโปรไฟล์จริง)
   async function startFacebookLogin() {
     if (typeof firebase === "undefined" || !firebase.auth) {
       showToast("⚠️ ยังไม่ได้โหลดระบบ Firebase Auth ครับ");
@@ -4676,11 +4676,37 @@
       const u = result.user;
       if (!u) return;
 
+      let avatarUrl = u.photoURL || "https://cdn.discordapp.com/embed/avatars/0.png";
+      const fbToken = result.credential && result.credential.accessToken;
+      if (fbToken) {
+        try {
+          const picRes = await fetch(`https://graph.facebook.com/me/picture?width=200&height=200&redirect=false&access_token=${encodeURIComponent(fbToken)}`);
+          const picJson = await picRes.json();
+          if (picJson && picJson.data && picJson.data.url) {
+            avatarUrl = picJson.data.url;
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = avatarUrl;
+            });
+            const canvas = document.createElement("canvas");
+            canvas.width = 128;
+            canvas.height = 128;
+            canvas.getContext("2d").drawImage(img, 0, 0, 128, 128);
+            avatarUrl = canvas.toDataURL("image/jpeg", 0.82);
+          }
+        } catch (e) {
+          console.warn("FB Avatar fallback:", e);
+        }
+      }
+
       const profile = {
         id: "fb_" + u.uid,
         name: u.displayName || "Facebook User",
         username: u.email || "",
-        avatarUrl: u.photoURL || "https://cdn.discordapp.com/embed/avatars/0.png",
+        avatarUrl: avatarUrl,
         roleTier: 0,
         inGuild: false,
         isVoteAdmin: false,
