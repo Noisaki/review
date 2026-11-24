@@ -4664,6 +4664,44 @@
     }
   }
 
+  // ล็อกอินด้วย Facebook ผ่าน Firebase Auth
+  async function startFacebookLogin() {
+    if (typeof firebase === "undefined" || !firebase.auth) {
+      showToast("⚠️ ยังไม่ได้โหลดระบบ Firebase Auth ครับ");
+      return;
+    }
+    try {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      const result = await firebase.auth().signInWithPopup(provider);
+      const u = result.user;
+      if (!u) return;
+
+      const profile = {
+        id: "fb_" + u.uid,
+        name: u.displayName || "Facebook User",
+        username: u.email || "",
+        avatarUrl: u.photoURL || "https://cdn.discordapp.com/embed/avatars/0.png",
+        roleTier: 0,
+        inGuild: false,
+        isVoteAdmin: false,
+        provider: "facebook"
+      };
+
+      closeLoginInfo();
+      applyProfileToUI(profile);
+      saveUserToFirebase(profile);
+      await syncCurseWithFirebase();
+      showToast(`ล็อกอินด้วย Facebook สำเร็จ! ยินดีต้อนรับ ${profile.name} 📘`);
+    } catch (err) {
+      console.error("Facebook Login Error:", err);
+      if (err && err.code === "auth/account-exists-with-different-credential") {
+        showToast("⚠️ อีเมลนี้เคยล็อกอินด้วย Gmail ไว้แล้ว กรุณากดเข้าด้วยปุ่ม Google / Gmail นะครับ");
+      } else {
+        showToast("ล็อกอิน Facebook ไม่สำเร็จ: " + (err.message || "ลองใหม่อีกครั้งนะครับ"));
+      }
+    }
+  }
+
   // อ่าน access_token ที่ Discord ส่งกลับมาใน # (hash) ของ URL
   function readTokenFromHash() {
     const h = window.location.hash || "";
