@@ -3218,7 +3218,6 @@
       word-break: break-word;
       max-width: 100%;
     }
-    }
     .dev-links-footer {
       display: flex;
       gap: 7px;
@@ -3920,6 +3919,135 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.25);
       cursor: pointer;
     }
+
+    /* =========================================
+       🖼️ กรอบตกแต่งรูปโปรไฟล์สไตล์ Discord & 📅 เช็กอินรายวัน
+       ========================================= */
+    .nav-avatar-frame { position: relative; }
+    .lb-avatar-wrap {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ep-preview-avatar-wrap {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      margin-top: -34px;
+      display: inline-block;
+    }
+    .ep-preview-avatar-wrap .ep-preview-avatar {
+      margin-top: 0;
+    }
+
+    .avatar-deco-overlay {
+      position: absolute;
+      inset: -17%;
+      width: 134%;
+      height: 134%;
+      pointer-events: none;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-deco-overlay svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    @keyframes decoSlowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes decoEarWiggle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-3deg) scale(1.03); }
+      75% { transform: rotate(3deg) scale(1.03); }
+    }
+    @keyframes decoPulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.75)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.95)); transform: scale(1.04); }
+    }
+    .deco-spin { transform-origin: 50px 50px; animation: decoSlowSpin 14s linear infinite; }
+    .deco-spin-fast { transform-origin: 50px 50px; animation: decoSlowSpin 6s linear infinite; }
+    .deco-wiggle { transform-origin: 50px 30px; animation: decoEarWiggle 2.8s ease-in-out infinite; }
+    .deco-pulse { transform-origin: 50px 50px; animation: decoPulseGlow 2s ease-in-out infinite; }
+
+    /* ปุ่มเช็กอินรายวัน */
+    .checkin-btn {
+      background: linear-gradient(135deg, #f59e0b, #ea580c) !important;
+      color: #ffffff !important;
+      border-color: #fde68a !important;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+      font-weight: 700 !important;
+    }
+    .checkin-btn.checked-in {
+      background: linear-gradient(135deg, #15803d, #16a34a) !important;
+      border-color: #86efac !important;
+      box-shadow: none;
+    }
+
+    /* ตารางเลือกกรอบรูปในหน้าแก้ไขโปรไฟล์ */
+    .deco-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+    }
+    @media (max-width: 460px) {
+      .deco-picker-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .deco-choice-card {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 8px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      position: relative;
+    }
+    .deco-choice-card:hover:not(.locked) {
+      border-color: #5865F2;
+      transform: translateY(-2px);
+    }
+    .deco-choice-card.selected {
+      background: #eef2ff;
+      border-color: #5865F2;
+      box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.25);
+    }
+    .deco-choice-card.locked {
+      opacity: 0.58;
+      cursor: not-allowed;
+      background: #f1f5f9;
+    }
+    .deco-choice-preview {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      margin: 4px auto 6px;
+      border-radius: 50%;
+      background: #1e293b;
+    }
+    .deco-choice-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.25;
+    }
+    .deco-choice-req {
+      font-size: 0.65rem;
+      color: #64748b;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
   </style>
 </head>
 <body>
@@ -3941,6 +4069,7 @@
     <button type="button" class="nav-profile-pill" id="navUserWrap" style="display:none;" onmouseenter="playHoverSound()" onclick="switchPage('home'); setTimeout(()=>document.getElementById('profileCard').scrollIntoView({behavior:'smooth', block:'center'}), 120);" title="ไปที่โปรไฟล์ของคุณ">
       <span class="nav-avatar-frame" id="navAvatarFrame">
         <img id="navAvatarImg" src="" alt="Avatar" referrerpolicy="no-referrer">
+        <span class="avatar-deco-overlay" id="navAvatarDeco"></span>
       </span>
       <span class="nav-profile-meta">
         <span class="nav-profile-name" id="navUserName">-</span>
@@ -4090,6 +4219,7 @@
       <div class="profile-logged-in-body" style="width:100%;">
         <div class="avatar-frame" id="profileAvatarFrame">
           <img id="profileAvatar" src="" alt="User Avatar" referrerpolicy="no-referrer">
+          <div class="avatar-deco-overlay" id="profileAvatarDeco"></div>
         </div>
         <div class="profile-info">
           <h3 class="profile-name">
@@ -4106,7 +4236,8 @@
           <p class="profile-desc" id="profileDesc"></p>
         </div>
         <div class="profile-actions">
-          <button type="button" class="profile-btn" style="background:linear-gradient(135deg,#5865F2,#4338ca); color:#fff; border-color:#818cf8;" onmouseenter="playHoverSound()" onclick="playClickSound(); openEditProfileModal();">✏️ แก้ไขโปรไฟล์</button>
+          <button type="button" class="profile-btn checkin-btn" id="dailyCheckinBtn" onmouseenter="playHoverSound()" onclick="claimDailyCheckin();">📅 เช็กอินรายวัน</button>
+          <button type="button" class="profile-btn" style="background:linear-gradient(135deg,#5865F2,#4338ca); color:#fff; border-color:#818cf8;" onmouseenter="playHoverSound()" onclick="playClickSound(); openEditProfileModal();">✏️ แต่งโปรไฟล์ & กรอบ</button>
           <button type="button" class="profile-btn" id="refreshRoleBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); refreshDiscordRole();">🔄 รีเฟรชยศ</button>
           <button type="button" class="profile-btn logout" id="logoutBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); discordLogout();">🚪 ออกจากระบบ</button>
         </div>
@@ -4670,6 +4801,7 @@
   <div class="uhc-body">
     <div class="uhc-avatar-wrap" id="uhcAvatarWrap">
       <img id="uhcAvatar" src="" alt="" referrerpolicy="no-referrer">
+      <div class="avatar-deco-overlay" id="uhcAvatarDeco"></div>
       <span class="uhc-status-dot"></span>
     </div>
     <div class="uhc-name-row">
@@ -4695,10 +4827,18 @@
     <div class="ep-preview-card">
       <div class="ep-preview-banner" id="epPreviewBanner"></div>
       <div class="ep-preview-body">
-        <img class="ep-preview-avatar" id="epPreviewAvatar" src="" alt="">
+        <div class="ep-preview-avatar-wrap">
+          <img class="ep-preview-avatar" id="epPreviewAvatar" src="" alt="">
+          <div class="avatar-deco-overlay" id="epPreviewDeco"></div>
+        </div>
         <div style="font-family:'Kanit',sans-serif; font-size:1.1rem; font-weight:700; margin-top:6px;" id="epPreviewName">-</div>
         <div style="font-size:0.8rem; color:#b5bac1; margin-top:3px;" id="epPreviewBio">ยังไม่มีข้อความแนะนำตัว...</div>
       </div>
+    </div>
+
+    <div class="ep-field-group">
+      <label>🖼️ กรอบตกแต่งรูปโปรไฟล์สไตล์ Discord <span id="epCheckinSummary" style="font-size:0.76rem; color:#d97706;"></span>:</label>
+      <div class="deco-picker-grid" id="epDecoPickerGrid"></div>
     </div>
 
     <div class="ep-field-group">
@@ -5274,6 +5414,175 @@
       el.style.backgroundPosition = "center";
     }
   }
+  // =========================================
+  // 🖼️ รายการกรอบตกแต่งรูปโปรไฟล์สไตล์ Discord & 📅 เช็กอินรายวัน
+  // =========================================
+  const AVATAR_DECORATIONS = [
+    {
+      id: "none",
+      name: "ไม่ใส่กรอบ",
+      reqText: "ปลดล็อกเริ่มต้น",
+      svg: ""
+    },
+    {
+      id: "fox_ears",
+      name: "🦊 หูจิ้งจอก BGT",
+      reqText: "เช็กอินครบ 1 วัน",
+      svg: `<svg viewBox="0 0 100 100"><g class="deco-wiggle"><polygon points="14,34 20,4 39,23" fill="#f97316" stroke="#7c2d12" stroke-width="2.5" stroke-linejoin="round"/><polygon points="19,30 22,11 34,23" fill="#fed7aa"/><polygon points="86,34 80,4 61,23" fill="#f97316" stroke="#7c2d12" stroke-width="2.5" stroke-linejoin="round"/><polygon points="81,30 78,11 66,23" fill="#fed7aa"/></g><circle cx="50" cy="50" r="41" fill="none" stroke="#fb923c" stroke-width="2.5" stroke-dasharray="10 6"/></svg>`
+    },
+    {
+      id: "sakura",
+      name: "🌸 กลีบซากุระ",
+      reqText: "เช็กอินสะสม 3 วัน",
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#f472b6" stroke-width="3"/><g class="deco-spin"><circle cx="50" cy="9" r="5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/><circle cx="91" cy="50" r="4.5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/><circle cx="50" cy="91" r="5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/><circle cx="9" cy="50" r="4.5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/></g></svg>`
+    },
+    {
+      id: "xmas",
+      name: "🎄 คริสต์มาส",
+      reqText: "เช็กอินสะสม 5 วัน",
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="12 4"/><polygon points="50,2 53,10 61,10 55,15 57,23 50,18 43,23 45,15 39,10 47,10" fill="#facc15" stroke="#b45309" stroke-width="1.2"/><circle cx="22" cy="78" r="4" fill="#dc2626"/><circle cx="78" cy="78" r="4" fill="#dc2626"/><circle cx="50" cy="91" r="4.5" fill="#ef4444"/></svg>`
+    },
+    {
+      id: "cyber",
+      name: "⚡ ไซเบอร์นีออน",
+      reqText: "เช็กอินสะสม 7 วัน",
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#38bdf8" stroke-width="2.5"/><g class="deco-spin-fast"><circle cx="50" cy="50" r="45" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="18 12 6 12"/></g></svg>`
+    },
+    {
+      id: "fire",
+      name: "🔥 เพลิงโลกันตร์",
+      reqText: "ถึง Lv.20 ขึ้นไป",
+      svg: `<svg viewBox="0 0 100 100"><g class="deco-pulse"><circle cx="50" cy="50" r="41" fill="none" stroke="#f97316" stroke-width="3.5"/><path d="M16,66 Q8,50 18,38 Q16,52 24,56 Z" fill="#ef4444"/><path d="M84,66 Q92,50 82,38 Q84,52 76,56 Z" fill="#ef4444"/><path d="M42,93 Q50,78 58,93 Z" fill="#facc15"/></g></svg>`
+    },
+    {
+      id: "cursed",
+      name: "🩸 คำสาป 1 ดาว",
+      reqText: "ปลดล็อกยศลับ",
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#dc2626" stroke-width="3.5" stroke-dasharray="8 3"/><path d="M24,83 Q24,96 27,96 Q30,96 30,83 Z" fill="#dc2626"/><path d="M72,81 Q72,98 75,98 Q78,98 78,81 Z" fill="#991b1b"/><circle cx="50" cy="9" r="4.5" fill="#ef4444" stroke="#000" stroke-width="1.5"/></svg>`
+    },
+    {
+      id: "celestial",
+      name: "👑 มงกุฎผู้พิทักษ์",
+      reqText: "ผู้สนับสนุน / VIP",
+      svg: `<svg viewBox="0 0 100 100"><g class="deco-spin"><circle cx="50" cy="50" r="44" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="4 8"/></g><polygon points="33,16 39,5 50,13 61,5 67,16" fill="#facc15" stroke="#b45309" stroke-width="1.8" stroke-linejoin="round"/><circle cx="50" cy="50" r="41" fill="none" stroke="#f59e0b" stroke-width="3"/></svg>`
+    }
+  ];
+
+  function getBangkokDateStr(offsetDays = 0) {
+    const d = new Date(Date.now() + 7 * 3600 * 1000 + offsetDays * 86400 * 1000);
+    return d.toISOString().slice(0, 10);
+  }
+
+  function isDecorationUnlocked(decoId, uData) {
+    if (!decoId || decoId === "none") return true;
+    const u = uData || {};
+    const totalDays = Number(u.totalCheckins) || 0;
+    const clicks = Number(u.heartsClicked) || 0;
+    const lv = getLevelFromHearts(clicks);
+    const hasHorror = !!(u.unlockedHorrorRole || localStorage.getItem("bgt_secret_horror_unlocked") === "1");
+    const isVip = !!(Number(u.donateAmount) > 0 || u.devSupporter || Number(u.roleTier) > 0);
+
+    if (decoId === "fox_ears")  return totalDays >= 1;
+    if (decoId === "sakura")    return totalDays >= 3;
+    if (decoId === "xmas")      return totalDays >= 5;
+    if (decoId === "cyber")     return totalDays >= 7;
+    if (decoId === "fire")      return lv >= 20;
+    if (decoId === "cursed")    return hasHorror;
+    if (decoId === "celestial") return isVip;
+    return false;
+  }
+
+  function applyAvatarDecoration(overlayEl, decoId) {
+    if (!overlayEl) return;
+    if (!decoId || decoId === "none") {
+      overlayEl.innerHTML = "";
+      return;
+    }
+    const found = AVATAR_DECORATIONS.find(d => d.id === decoId);
+    overlayEl.innerHTML = found ? found.svg : "";
+  }
+
+  function updateCheckinButtonUI() {
+    const btn = document.getElementById('dailyCheckinBtn');
+    if (!btn || !currentUser) return;
+    const cached = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+    const today = getBangkokDateStr(0);
+    const streak = Number(cached.checkinStreak) || 0;
+    const isDoneToday = cached.lastCheckinDate === today;
+
+    if (isDoneToday) {
+      btn.classList.add('checked-in');
+      btn.textContent = `✅ เช็กอินแล้ว (สตรีค ${streak} วัน)`;
+    } else {
+      btn.classList.remove('checked-in');
+      btn.textContent = streak > 0 ? `📅 เช็กอินรายวัน (สตรีค ${streak} วัน)` : "📅 เช็กอินรายวัน (+60 ❤️)";
+    }
+  }
+
+  function claimDailyCheckin() {
+    if (!currentUser) {
+      openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนกดเช็กอินรายวันนะครับ");
+      return;
+    }
+    if (!db) return;
+
+    playClickSound();
+    const cached = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+    const today = getBangkokDateStr(0);
+    const yesterday = getBangkokDateStr(-1);
+
+    if (cached.lastCheckinDate === today) {
+      showToast(`✅ วันนี้เจ้านายเช็กอินรับรางวัลไปแล้วครับ (สตรีค ${cached.checkinStreak || 1} วัน) กลับมาใหม่พรุ่งนี้นะ UwU`);
+      return;
+    }
+
+    const prevStreak = Number(cached.checkinStreak) || 0;
+    const newStreak = (cached.lastCheckinDate === yesterday) ? (prevStreak + 1) : 1;
+    const newTotalDays = (Number(cached.totalCheckins) || 0) + 1;
+    const bonusHearts = 50 + Math.min(newStreak, 7) * 10;
+
+    const oldMyTotal = myServerHearts + pendingClicks;
+    const oldLv = getLevelFromHearts(oldMyTotal);
+
+    const updates = {};
+    updates[`users/${currentUser.id}/lastCheckinDate`] = today;
+    updates[`users/${currentUser.id}/checkinStreak`] = newStreak;
+    updates[`users/${currentUser.id}/totalCheckins`] = newTotalDays;
+    updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(bonusHearts);
+    updates["bgt_hearts"] = firebase.database.ServerValue.increment(bonusHearts);
+
+    // ปลดล็อกกรอบหูจิ้งจอกให้อัตโนมัติเมื่อเช็กอินครั้งแรกถ้ายังไม่เคยใส่กรอบ
+    if (newTotalDays === 1 && !cached.avatarDecoration) {
+      updates[`users/${currentUser.id}/avatarDecoration`] = "fox_ears";
+    }
+
+    db.ref().update(updates).then(() => {
+      if (!usersCache[currentUser.id]) usersCache[currentUser.id] = {};
+      usersCache[currentUser.id].lastCheckinDate = today;
+      usersCache[currentUser.id].checkinStreak = newStreak;
+      usersCache[currentUser.id].totalCheckins = newTotalDays;
+      if (newTotalDays === 1 && !cached.avatarDecoration) {
+        usersCache[currentUser.id].avatarDecoration = "fox_ears";
+      }
+
+      const newMyTotal = oldMyTotal + bonusHearts;
+      const newLv = getLevelFromHearts(newMyTotal);
+      if (newLv > oldLv) {
+        const newLvData = getLevelData(newMyTotal);
+        triggerMilestoneCelebration(`🎉 เช็กอินวันที่ ${newTotalDays}! รับ +${bonusHearts} ❤️ และเลื่อนเป็น ${newLvData.badge}! ✨`);
+      } else {
+        playMilestoneFanfare();
+        const unlockMsg = newTotalDays === 1 ? " + ปลดล็อกกรอบ 🦊 หูจิ้งจอก BGT!" :
+                          newTotalDays === 3 ? " + ปลดล็อกกรอบ 🌸 กลีบซากุระ!" :
+                          newTotalDays === 5 ? " + ปลดล็อกกรอบ 🎄 คริสต์มาส!" :
+                          newTotalDays === 7 ? " + ปลดล็อกกรอบ ⚡ ไซเบอร์นีออน!" : "";
+        showToast(`🎉 เช็กอินสำเร็จ (สตรีค ${newStreak} วัน) รับ +${bonusHearts} หัวใจ${unlockMsg} 💖`);
+      }
+      applyProfileToUI(currentUser);
+    }).catch(() => {
+      showToast("⚠️ เช็กอินไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
+    });
+  }
 
   function applyProfileToUI(profile) {
     const cached = (usersCache && usersCache[profile.id]) ? usersCache[profile.id] : {};
@@ -5284,7 +5593,11 @@
     const finalAvatar = cached.customAvatar || profile.avatarUrl;
     const finalBanner = cached.bannerUrl || "";
     const finalBio = cached.bio || "";
+    const finalDeco = cached.avatarDecoration || "none";
     const hasHorror = !!(cached.unlockedHorrorRole || localStorage.getItem("bgt_secret_horror_unlocked") === "1");
+    applyAvatarDecoration(document.getElementById('profileAvatarDeco'), finalDeco);
+    applyAvatarDecoration(document.getElementById('navAvatarDeco'), finalDeco);
+    updateCheckinButtonUI();
 
     profile.displayName = finalName;
     profile.displayAvatar = finalAvatar;
@@ -5564,6 +5877,9 @@
     const tier = Number(u.roleTier) || 0;
     const rawAvatar = u.customAvatar || u.avatarUrl;
 
+    const avWrap = document.createElement('div');
+    avWrap.className = "lb-avatar-wrap";
+
     const img = document.createElement('img');
     img.className = "lb-avatar" + (tier > 0 ? " tier-" + tier : "");
     img.referrerPolicy = "no-referrer";
@@ -5571,7 +5887,14 @@
     img.src = (typeof rawAvatar === "string" && (rawAvatar.indexOf("https://") === 0 || rawAvatar.indexOf("data:image/") === 0))
       ? rawAvatar
       : "https://cdn.discordapp.com/embed/avatars/0.png";
-    row.appendChild(img);
+    avWrap.appendChild(img);
+
+    const decoOverlay = document.createElement('div');
+    decoOverlay.className = "avatar-deco-overlay";
+    applyAvatarDecoration(decoOverlay, u.avatarDecoration || "none");
+    avWrap.appendChild(decoOverlay);
+
+    row.appendChild(avWrap);
 
     const meta = document.createElement('div');
     meta.className = "lb-meta";
@@ -5826,6 +6149,13 @@
         const u = slot.item.u || {};
         const lvInfo = getLevelData(Number(u.heartsClicked) || 0);
         slotEl.querySelector('.podium-name').textContent = u.customName || u.name || "Discord User";
+        let pDeco = slotEl.querySelector('.avatar-deco-overlay');
+        if (!pDeco) {
+          pDeco = document.createElement('div');
+          pDeco.className = 'avatar-deco-overlay';
+          slotEl.querySelector('.podium-avatar-wrap').appendChild(pDeco);
+        }
+        applyAvatarDecoration(pDeco, u.avatarDecoration || "none");
         const lvEl = slotEl.querySelector('.podium-lv');
         lvEl.className = `podium-lv ${lvInfo.rarityClass}`;
         lvEl.textContent = `Lv.${formatNum(lvInfo.level)}`;
@@ -7903,6 +8233,13 @@
       const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
       const displayName = cached.customName || cached.name || slot.item.name || "Discord User";
       const lvInfo = getLevelData(Number(cached.heartsClicked) || 0);
+      let pDeco = slotEl.querySelector('.avatar-deco-overlay');
+      if (!pDeco) {
+        pDeco = document.createElement('div');
+        pDeco.className = 'avatar-deco-overlay';
+        slotEl.querySelector('.podium-avatar-wrap').appendChild(pDeco);
+      }
+      applyAvatarDecoration(pDeco, cached.avatarDecoration || "none");
 
       slotEl.querySelector('.podium-name').textContent = displayName;
       const lvEl = slotEl.querySelector('.podium-lv');
@@ -8612,6 +8949,7 @@
 
     applyBannerStyle(document.getElementById('uhcBanner'), u.bannerUrl || "");
     document.getElementById('uhcAvatar').src = avatarUrl;
+    applyAvatarDecoration(document.getElementById('uhcAvatarDeco'), u.avatarDecoration || "none");
     document.getElementById('uhcName').textContent = displayName;
 
     const provEl = document.getElementById('uhcProvider');
@@ -8720,8 +9058,46 @@
   });
 
   // --- หน้าต่างแก้ไขโปรไฟล์ ---
-  let draftCustomAvatar = null; // null = ไม่เปลี่ยน, "" = รีเซ็ต, "data:..." = รูปใหม่
-  let draftBannerUrl = null;    // null = ไม่เปลี่ยน, "" = ลบแบนเนอร์, string = รูป/สีใหม่
+  let draftCustomAvatar = null;
+  let draftBannerUrl = null;
+  let draftAvatarDecoration = "none";
+
+  function renderDecorationPicker() {
+    const grid = document.getElementById('epDecoPickerGrid');
+    if (!grid || !currentUser) return;
+    const cached = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+    const sumEl = document.getElementById('epCheckinSummary');
+    if (sumEl) {
+      sumEl.textContent = `(เช็กอินสะสม ${Number(cached.totalCheckins) || 0} วัน)`;
+    }
+
+    grid.innerHTML = "";
+    AVATAR_DECORATIONS.forEach(deco => {
+      const unlocked = isDecorationUnlocked(deco.id, cached);
+      const isSelected = draftAvatarDecoration === deco.id;
+
+      const card = document.createElement('div');
+      card.className = "deco-choice-card" + (isSelected ? " selected" : "") + (!unlocked ? " locked" : "");
+      card.innerHTML = `
+        <div class="deco-choice-preview">
+          <div class="avatar-deco-overlay">${deco.svg}</div>
+        </div>
+        <div class="deco-choice-name">${unlocked ? deco.name : "🔒 " + deco.name}</div>
+        <div class="deco-choice-req">${deco.reqText}</div>
+      `;
+      card.onclick = () => {
+        if (!unlocked) {
+          showToast(`🔒 เงื่อนไขปลดล็อก: ${deco.reqText}`);
+          return;
+        }
+        playClickSound();
+        draftAvatarDecoration = deco.id;
+        renderDecorationPicker();
+        updateEditProfilePreview();
+      };
+      grid.appendChild(card);
+    });
+  }
 
   function openEditProfileModal() {
     if (!currentUser) return;
@@ -8729,6 +9105,7 @@
 
     draftCustomAvatar = cached.customAvatar || "";
     draftBannerUrl = cached.bannerUrl || "";
+    draftAvatarDecoration = cached.avatarDecoration || "none";
 
     document.getElementById('epNameInput').value = cached.customName || currentUser.name || "";
     document.getElementById('epBioInput').value = cached.bio || "";
@@ -8743,6 +9120,7 @@
         : "🔒 ยศลับ Easter Egg: ยังไม่ปลดล็อก (ลองหาความลับน่ากลัวในหน้าประเมินเกมดูสิ...)";
     }
 
+    renderDecorationPicker();
     updateEditProfilePreview();
     document.getElementById('editProfileModal').style.display = 'flex';
   }
@@ -8756,6 +9134,7 @@
     document.getElementById('epPreviewName').textContent = nameVal;
     document.getElementById('epPreviewBio').textContent = bioVal;
     document.getElementById('epPreviewAvatar').src = avSrc;
+    applyAvatarDecoration(document.getElementById('epPreviewDeco'), draftAvatarDecoration);
     applyBannerStyle(document.getElementById('epPreviewBanner'), draftBannerUrl);
   }
 
@@ -8830,7 +9209,8 @@
       customName: newName || null,
       bio: newBio || null,
       customAvatar: draftCustomAvatar || null,
-      bannerUrl: draftBannerUrl || null
+      bannerUrl: draftBannerUrl || null,
+      avatarDecoration: (draftAvatarDecoration && draftAvatarDecoration !== "none") ? draftAvatarDecoration : null
     };
 
     db.ref("users/" + currentUser.id).update(updates).then(() => {
