@@ -5080,15 +5080,27 @@
     } else if (typeof firebase !== "undefined" && firebase.auth) {
       firebase.auth().onAuthStateChanged(async (u) => {
         if (u && !currentUser) {
+          const isFb = Array.isArray(u.providerData) && u.providerData.some(p => p && p.providerId === "facebook.com");
+          const uidKey = (isFb ? "fb_" : "g_") + u.uid;
+          let savedAvatar = "";
+          try {
+            if (usersCache && usersCache[uidKey] && usersCache[uidKey].avatarUrl) {
+              savedAvatar = usersCache[uidKey].avatarUrl;
+            } else if (db) {
+              const snap = await db.ref("users/" + uidKey + "/avatarUrl").once("value");
+              if (snap.exists()) savedAvatar = snap.val() || "";
+            }
+          } catch (e) {}
+
           const profile = {
-            id: "g_" + u.uid,
-            name: u.displayName || "Google User",
+            id: uidKey,
+            name: u.displayName || (isFb ? "Facebook User" : "Google User"),
             username: u.email || "",
-            avatarUrl: u.photoURL || "https://cdn.discordapp.com/embed/avatars/0.png",
+            avatarUrl: savedAvatar || u.photoURL || "https://cdn.discordapp.com/embed/avatars/0.png",
             roleTier: 0,
             inGuild: false,
             isVoteAdmin: false,
-            provider: "google"
+            provider: isFb ? "facebook" : "google"
           };
           applyProfileToUI(profile);
           saveUserToFirebase(profile);
@@ -5120,7 +5132,7 @@
     img.className = "lb-avatar" + (tier > 0 ? " tier-" + tier : "");
     img.referrerPolicy = "no-referrer";
     img.alt = "";
-    img.src = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://") === 0)
+    img.src = (typeof u.avatarUrl === "string" && (u.avatarUrl.indexOf("https://") === 0 || u.avatarUrl.indexOf("data:image/") === 0))
       ? u.avatarUrl
       : "https://cdn.discordapp.com/embed/avatars/0.png";
     row.appendChild(img);
@@ -5349,7 +5361,7 @@
         order.forEach(slot => {
           if (!slot.item) return;
           const u = slot.item.u || {};
-          const avatar = (typeof u.avatarUrl === "string" && u.avatarUrl.indexOf("https://") === 0)
+          const avatar = (typeof u.avatarUrl === "string" && (u.avatarUrl.indexOf("https://") === 0 || u.avatarUrl.indexOf("data:image/") === 0))
             ? u.avatarUrl
             : "https://cdn.discordapp.com/embed/avatars/0.png";
 
@@ -5781,6 +5793,35 @@
     }
   }
 
+  function stopChristmasMusic() {
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl) {
+      bgmEl.pause();
+    }
+    isMusicPlaying = false;
+    if (!isHorrorTriggered) {
+      const iconEl = document.getElementById('musicStateIcon');
+      const textEl = document.getElementById('musicStateText');
+      if (iconEl) iconEl.textContent = '▶️';
+      if (textEl) textEl.textContent = BGM_PLAYLIST[currentTrackIndex] ? BGM_PLAYLIST[currentTrackIndex].name : 'เพลงพื้นหลัง';
+    }
+  }
+
+  function toggleChristmasMusic() {
+    if (isHorrorTriggered) {
+      playRealCryingAudio();
+      return;
+    }
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl && !bgmEl.paused) {
+      userPausedMusic = true;
+      stopChristmasMusic();
+    } else {
+      userPausedMusic = false;
+      startChristmasMusic();
+    }
+  }
+
   function toggleBgmLoop() {
     if (isHorrorTriggered) return;
     playClickSound();
@@ -5807,21 +5848,6 @@
     currentTrackIndex = (currentTrackIndex + 1) % BGM_PLAYLIST.length;
     userPausedMusic = false;
     startChristmasMusic();
-  }
-
-  function toggleChristmasMusic() {
-    if (isHorrorTriggered) {
-      playRealCryingAudio();
-      return;
-    }
-    const bgmEl = document.getElementById('bgmAudio');
-    if (bgmEl && !bgmEl.paused) {
-      userPausedMusic = true;
-      stopChristmasMusic();
-    } else {
-      userPausedMusic = false;
-      startChristmasMusic();
-    }
   }
 
   function changeMusicVolume(val) {
@@ -7406,7 +7432,7 @@
       order.forEach(slot => {
         if (!slot.item) return;
         const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
-        const avatar = (typeof cached.avatarUrl === "string" && cached.avatarUrl.indexOf("https://") === 0)
+        const avatar = (typeof cached.avatarUrl === "string" && (cached.avatarUrl.indexOf("https://") === 0 || cached.avatarUrl.indexOf("data:image/") === 0))
           ? cached.avatarUrl
           : "https://cdn.discordapp.com/embed/avatars/0.png";
 
@@ -8020,7 +8046,7 @@
             const av = document.createElement('img');
             av.className = "dev-comment-avatar";
             av.referrerPolicy = "no-referrer";
-            av.src = (typeof c.avatarUrl === "string" && c.avatarUrl.startsWith("https://"))
+            av.src = (typeof c.avatarUrl === "string" && (c.avatarUrl.startsWith("https://") || c.avatarUrl.startsWith("data:image/")))
               ? c.avatarUrl
               : "https://cdn.discordapp.com/embed/avatars/0.png";
             head.appendChild(av);
