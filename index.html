@@ -4149,6 +4149,119 @@
       margin-top: 2px;
       line-height: 1.2;
     }
+
+    /* =========================================
+       🌕🪷 ธีมลอยกระทง (เมืองไทย + แม่น้ำ + กระทงจุดเทียน)
+       ========================================= */
+    body.loy-krathong-mode:not(.horror-mode) {
+      background: linear-gradient(180deg, #06091f 0%, #101942 42%, #1e1b4b 72%, #0c1428 100%);
+    }
+    body.loy-krathong-mode:not(.horror-mode) .orb-1 { background: #f59e0b; opacity: 0.38; }
+    body.loy-krathong-mode:not(.horror-mode) .orb-2 { background: #3b82f6; opacity: 0.35; }
+    body.loy-krathong-mode:not(.horror-mode) .orb-3 { background: #fbbf24; opacity: 0.32; }
+    body.loy-krathong-mode:not(.horror-mode) .logo-showcase {
+      background: radial-gradient(circle at center, #1e1b4b 0%, #312e81 55%, #090d24 100%);
+      border-bottom-color: #fbbf24;
+    }
+    body.loy-krathong-mode:not(.horror-mode) .brand-badge {
+      background: linear-gradient(90deg, #b45309, #f59e0b, #4338ca);
+    }
+
+    .loy-krathong-scene {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    body.loy-krathong-mode:not(.horror-mode) .loy-krathong-scene {
+      display: block;
+    }
+
+    /* พระจันทร์เต็มดวง */
+    .lk-moon {
+      position: absolute;
+      top: 86px;
+      right: 9%;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fffbeb 0%, #fef08a 55%, #f59e0b 100%);
+      box-shadow: 0 0 38px rgba(254, 240, 138, 0.85), 0 0 85px rgba(245, 158, 11, 0.45);
+      opacity: 0.92;
+    }
+
+    /* เส้นขอบฟ้าเมืองไทยและวัดริมน้ำ */
+    .lk-skyline {
+      position: absolute;
+      bottom: 92px;
+      left: 0;
+      width: 100%;
+      height: 150px;
+      opacity: 0.88;
+    }
+
+    /* แม่น้ำเจ้าพระยาตอนกลางคืน */
+    .lk-river {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 105px;
+      background: linear-gradient(180deg, #0b1636 0%, #071026 55%, #040814 100%);
+      border-top: 2px solid rgba(251, 191, 36, 0.35);
+      overflow: hidden;
+    }
+    .lk-river::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(253, 224, 71, 0.08) 0px,
+        rgba(253, 224, 71, 0.08) 2px,
+        transparent 2px,
+        transparent 12px
+      );
+      animation: lkWaterShimmer 4s ease-in-out infinite alternate;
+    }
+    @keyframes lkWaterShimmer {
+      0% { opacity: 0.35; transform: translateX(-8px); }
+      100% { opacity: 0.85; transform: translateX(8px); }
+    }
+
+    /* กระทงจุดเทียนลอยตามน้ำ */
+    .lk-krathong {
+      position: absolute;
+      bottom: 18px;
+      left: -80px;
+      width: 56px;
+      height: 46px;
+      animation: lkFloatAcross 24s linear infinite, lkBobbing 3s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.75));
+    }
+    .lk-krathong.k2 { bottom: 48px; width: 42px; height: 34px; animation-duration: 32s, 2.6s; animation-delay: -9s, -1s; opacity: 0.85; }
+    .lk-krathong.k3 { bottom: 26px; width: 50px; height: 40px; animation-duration: 28s, 3.4s; animation-delay: -17s, -2s; }
+    .lk-krathong.k4 { bottom: 60px; width: 34px; height: 28px; animation-duration: 38s, 2.2s; animation-delay: -24s, -0.5s; opacity: 0.72; }
+    .lk-krathong.k5 { bottom: 12px; width: 62px; height: 50px; animation-duration: 21s, 2.9s; animation-delay: -4s, -1.5s; }
+
+    @keyframes lkFloatAcross {
+      0% { transform: translateX(-80px); }
+      100% { transform: translateX(calc(100vw + 120px)); }
+    }
+    @keyframes lkBobbing {
+      0% { margin-bottom: 0px; }
+      100% { margin-bottom: 6px; }
+    }
+    @keyframes lkCandleFlicker {
+      0%, 100% { transform: scale(1); opacity: 0.92; }
+      50% { transform: scale(1.18) translateY(-1px); opacity: 1; }
+    }
+    .lk-flame {
+      transform-origin: 30px 14px;
+      animation: lkCandleFlicker 0.65s infinite ease-in-out;
+    }
   </style>
 </head>
 <body>
@@ -4246,6 +4359,35 @@
   <div class="orb orb-3"></div>
 </div>
 <canvas id="snowCanvas"></canvas>
+
+<!-- ฉากพื้นหลังลอยกระทง: พระจันทร์ + วัดและเมืองไทย + แม่น้ำ + กระทงจุดเทียน -->
+<div class="loy-krathong-scene" id="loyKrathongScene" aria-hidden="true">
+  <div class="lk-moon"></div>
+
+  <!-- เงาเมืองไทย & วัดริมแม่น้ำ -->
+  <svg class="lk-skyline" viewBox="0 0 1440 160" preserveAspectRatio="none">
+    <path fill="#090f26" d="M0,160 L0,115 L45,115 L45,95 L70,95 L70,120 L110,120 L130,85 L140,48 L150,85 L170,120 L215,120 L215,90 L260,90 L260,115 L310,115 L335,72 L350,26 L365,72 L390,115 L430,115 L430,100 L485,100 L485,120 L540,120 L560,78 L580,120 L620,120 L620,84 L675,84 L675,115 L730,115 L750,62 L762,18 L774,62 L795,115 L850,115 L850,92 L910,92 L910,122 L970,122 L995,70 L1010,32 L1025,70 L1050,122 L1110,122 L1110,88 L1165,88 L1165,118 L1220,118 L1245,68 L1260,22 L1275,68 L1300,118 L1360,118 L1360,94 L1410,94 L1410,118 L1440,118 L1440,160 Z"/>
+    <!-- แสงไฟเมืองไทยระยิบระยับ -->
+    <g fill="#fde047" opacity="0.7">
+      <rect x="52" y="102" width="4" height="5"/><rect x="60" y="102" width="4" height="5"/>
+      <rect x="225" y="98" width="5" height="6"/><rect x="238" y="98" width="5" height="6"/><rect x="250" y="108" width="4" height="5"/>
+      <rect x="442" y="108" width="4" height="5"/><rect x="456" y="108" width="4" height="5"/>
+      <rect x="632" y="94" width="5" height="6"/><rect x="646" y="94" width="5" height="6"/><rect x="660" y="104" width="4" height="5"/>
+      <rect x="862" y="100" width="5" height="6"/><rect x="876" y="100" width="5" height="6"/>
+      <rect x="1122" y="98" width="5" height="6"/><rect x="1136" y="98" width="5" height="6"/>
+      <rect x="1372" y="102" width="5" height="6"/><rect x="1388" y="102" width="5" height="6"/>
+    </g>
+  </svg>
+
+  <!-- แม่น้ำและกระทงที่จุดเทียนลอยอยู่ 5 ใบ -->
+  <div class="lk-river">
+    <svg class="lk-krathong k1" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#22c55e" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#f472b6"/><circle cx="38" cy="31" r="3" fill="#facc15"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#facc15"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
+    <svg class="lk-krathong k2" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#16a34a" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#fb7185"/><circle cx="38" cy="31" r="3" fill="#fde047"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#f59e0b"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
+    <svg class="lk-krathong k3" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#22c55e" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#c084fc"/><circle cx="38" cy="31" r="3" fill="#f472b6"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#facc15"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
+    <svg class="lk-krathong k4" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#16a34a" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#facc15"/><circle cx="38" cy="31" r="3" fill="#fb7185"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#facc15"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
+    <svg class="lk-krathong k5" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#22c55e" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#f472b6"/><circle cx="38" cy="31" r="3" fill="#fde047"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#f59e0b"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.3"/></svg>
+  </div>
+</div>
 
 <div class="container">
   <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT -->
@@ -6594,9 +6736,13 @@
   // =========================================
   // 🎵 ใส่รายชื่อไฟล์เพลงของเจ้านายตรงนี้เลย! (มีเพลงเดียวก็ใส่แค่ 1 บรรทัดได้ครับ)
   // 🎵 ใส่เฉพาะไฟล์เพลงที่มีจริง (ถ้ามีเพลงเดียวใส่แค่ 1 บรรทัดได้เลยครับ มันจะวนซ้ำให้เอง)
-  const BGM_PLAYLIST = [
-  { name: "เพลงที่ 1", src: "images/bgm1.mp3" } // 👈 ถ้าวางในโฟลเดอร์ music ให้แก้เป็น "music/bgm1.mp3" นะครับ
-  ];
+  // 🌕 เช็กช่วงเทศกาลลอยกระทง (วันนี้ 24 พ.ย. ถึงสิ้นวันที่ 26 พ.ย. 2026 -> วันที่ 27 พ.ย. กลับเป็นคริสต์มาสอัตโนมัติ)
+  const LOY_KRATHONG_END_MS = new Date("2026-11-26T23:59:59+07:00").getTime();
+  const isLoyKrathongActive = Date.now() <= LOY_KRATHONG_END_MS;
+
+  const BGM_PLAYLIST = isLoyKrathongActive
+    ? [{ name: "เพลงลอยกระทง 🌕", src: "images/loykrathong.mp3" }]
+    : [{ name: "เพลงที่ 1", src: "images/bgm1.mp3" }];
 
   let currentTrackIndex = 0;
   let isLoopOne = false;
@@ -7177,8 +7323,22 @@
     }
     update() {
       this.angle += 0.015;
-      this.y += isHorrorTriggered ? this.speedY * 2.4 : this.speedY;
-      this.x += isHorrorTriggered ? Math.sin(this.angle) * 0.15 : (Math.sin(this.angle) * 0.45 + this.wind);
+      if (isHorrorTriggered) {
+        this.y += this.speedY * 2.4;
+        this.x += Math.sin(this.angle) * 0.15;
+      } else if (isLoyKrathongActive) {
+        // โคมลอยลอยขึ้นฟ้าช้าๆ
+        this.y -= this.speedY * 0.65;
+        this.x += Math.sin(this.angle) * 0.35 + this.wind * 0.4;
+        if (this.y < -25) {
+          this.y = canvas.height + 20;
+          this.x = Math.random() * canvas.width;
+        }
+        return;
+      } else {
+        this.y += this.speedY;
+        this.x += Math.sin(this.angle) * 0.45 + this.wind;
+      }
 
       if (!isHorrorTriggered && mouse.x !== null) {
         const dx = this.x - mouse.x;
@@ -7198,6 +7358,10 @@
       if (isHorrorTriggered) {
         ctx.ellipse(this.x, this.y, this.radius * 0.85, this.radius * 2.2, 0, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(220, 20, 20, 0.88)";
+      } else if (isLoyKrathongActive) {
+        // วาดโคมลอยสีทองส้มเรืองแสง
+        ctx.ellipse(this.x, this.y, this.radius * 1.5, this.radius * 2.1, 0, 0, Math.PI * 2);
+        ctx.fillStyle = this.isGoldSparkle ? "rgba(254, 240, 138, 0.92)" : "rgba(251, 146, 60, 0.82)";
       } else {
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = this.isGoldSparkle ? "rgba(253, 224, 71, 0.9)" : "rgba(255, 255, 255, 0.85)";
@@ -7228,7 +7392,9 @@
   // =========================================
   // 5. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม
   // =========================================
-  const introText = "Ho Ho Ho~ รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! 🎄✨";
+  const introText = isLoyKrathongActive
+    ? "สุขสันต์วันลอยกระทง~ รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! 🌕🪷"
+    : "Ho Ho Ho~ รบกวนเวลาสักนิดน้าา ช่วยประเมินและติชมคุณภาพการแปลภาษาไทยในเกมนี้ เพื่อนำไปปรับปรุงให้ดียิ่งขึ้นฮะ! 🎄✨";
   const typeTarget = document.getElementById("typewriterText");
   let charIndex = 0;
 
@@ -7604,11 +7770,11 @@
 
     document.body.classList.remove('horror-mode');
 
-    document.getElementById('decorLeft').textContent = '🎄✨';
-    document.getElementById('decorRight').textContent = '🎅❄️';
-    document.getElementById('titleIcon').textContent = '🎅';
+    document.getElementById('decorLeft').textContent = isLoyKrathongActive ? '🌕🏮' : '🎄✨';
+    document.getElementById('decorRight').textContent = isLoyKrathongActive ? '🪷✨' : '🎅❄️';
+    document.getElementById('titleIcon').textContent = isLoyKrathongActive ? '🪷' : '🎅';
     document.getElementById('musicStateIcon').textContent = '▶️';
-    document.getElementById('musicSpeakerIcon').textContent = '🎄🔊';
+    document.getElementById('musicSpeakerIcon').textContent = isLoyKrathongActive ? '🏮🔊' : '🎄🔊';
 
     restoreAllElements();
     switchPage('home', true);
@@ -7679,6 +7845,19 @@
   }
 
   window.addEventListener("DOMContentLoaded", () => {
+    if (isLoyKrathongActive) {
+      document.body.classList.add('loy-krathong-mode');
+      const dL = document.getElementById('decorLeft');
+      const dR = document.getElementById('decorRight');
+      const tI = document.getElementById('titleIcon');
+      const bB = document.getElementById('brandBadge');
+      const mS = document.getElementById('musicSpeakerIcon');
+      if (dL) dL.textContent = '🌕🏮';
+      if (dR) dR.textContent = '🪷✨';
+      if (tI) tI.textContent = '🪷';
+      if (bB) bB.textContent = '🌕 BEN THE GAME TRANSLATOR • LOY KRATHONG EDITION 🪷';
+      if (mS) mS.textContent = '🏮🔊';
+    }
     initFirebaseHearts();
     initGameVoteSystem();
     initDevelopersSystem();
