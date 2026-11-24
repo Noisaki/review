@@ -9168,8 +9168,9 @@
     reader.onload = (ev) => {
       const img = new Image();
       img.onload = () => {
-        const targetW = type === 'avatar' ? 150 : 600;
-        const targetH = type === 'avatar' ? 150 : 240;
+        const targetW = type === 'avatar' ? 128 : 450;
+        const targetH = type === 'avatar' ? 128 : 180;
+        
         const canvas = document.createElement('canvas');
         canvas.width = targetW;
         canvas.height = targetH;
@@ -9183,7 +9184,7 @@
         const offsetY = (targetH - drawH) / 2;
 
         c.drawImage(img, offsetX, offsetY, drawW, drawH);
-        const compressed = canvas.toDataURL('image/jpeg', type === 'avatar' ? 0.85 : 0.78);
+        const compressed = canvas.toDataURL('image/jpeg', type === 'avatar' ? 0.75 : 0.62);
 
         if (type === 'avatar') {
           draftCustomAvatar = compressed;
