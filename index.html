@@ -3930,7 +3930,49 @@
       background: linear-gradient(135deg, #312e81, #be123c);
       background-size: cover;
       background-position: center;
+      position: relative;
+      user-select: none;
     }
+    .ep-preview-banner.draggable {
+      cursor: grab;
+      touch-action: none;
+    }
+    .ep-preview-banner.draggable:active {
+      cursor: grabbing;
+    }
+    .ep-banner-hint {
+      position: absolute;
+      right: 8px;
+      bottom: 6px;
+      background: rgba(0, 0, 0, 0.68);
+      color: #fde68a;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(253, 230, 138, 0.55);
+      pointer-events: none;
+      display: none;
+    }
+    .ep-banner-adjust-box {
+      display: none;
+      margin-top: 8px;
+      background: #f8fafc;
+      border: 1.5px dashed #818cf8;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .ep-adjust-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+    .ep-adjust-row:last-child { margin-bottom: 0; }
+    .ep-adjust-row span { min-width: 72px; font-weight: 600; }
+    .ep-adjust-row input[type="range"] { flex: 1; accent-color: #5865F2; cursor: pointer; }
     .ep-preview-body {
       padding: 0 16px 14px;
     }
@@ -4903,7 +4945,9 @@
 
     <!-- ตัวอย่างการ์ดแบบเรียลไทม์ -->
     <div class="ep-preview-card">
-      <div class="ep-preview-banner" id="epPreviewBanner"></div>
+      <div class="ep-preview-banner" id="epPreviewBanner">
+        <span class="ep-banner-hint" id="epBannerDragHint">✋ ลากเพื่อจัดมุมภาพ</span>
+      </div>
       <div class="ep-preview-body">
         <div class="ep-preview-avatar-wrap">
           <img class="ep-preview-avatar" id="epPreviewAvatar" src="" alt="">
@@ -4942,6 +4986,24 @@
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
         <input type="file" id="epBannerFile" accept="image/*" style="font-size:0.82rem; flex:1;" onchange="handleProfileImageUpload(this, 'banner')">
         <button type="button" class="profile-btn" style="padding:5px 10px; font-size:0.78rem;" onclick="clearCustomBanner()">ลบรูปพื้นหลัง</button>
+      </div>
+      <div class="ep-banner-adjust-box" id="epBannerAdjustBox">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:0.78rem; font-weight:700; color:#4338ca;">🎯 จัดมุมภาพพื้นหลัง (ลากบนรูปด้านบนก็ได้)</span>
+          <button type="button" class="profile-btn" style="padding:2px 8px; font-size:0.72rem;" onclick="resetBannerCropPosition()">รีเซ็ตกลางภาพ</button>
+        </div>
+        <div class="ep-adjust-row">
+          <span>🔍 ซูมภาพ:</span>
+          <input type="range" id="epBannerZoom" min="100" max="250" value="100" oninput="onBannerSliderChange()">
+        </div>
+        <div class="ep-adjust-row">
+          <span>↔️ ซ้าย-ขวา:</span>
+          <input type="range" id="epBannerPosX" min="0" max="100" value="50" oninput="onBannerSliderChange()">
+        </div>
+        <div class="ep-adjust-row">
+          <span>↕️ บน-ล่าง:</span>
+          <input type="range" id="epBannerPosY" min="0" max="100" value="50" oninput="onBannerSliderChange()">
+        </div>
       </div>
       <div class="ep-swatch-row">
         <span style="font-size:0.78rem; color:#64748b; align-self:center;">หรือเลือกสีธีม:</span>
@@ -9301,6 +9363,8 @@
     draftCustomAvatar = cached.customAvatar || "";
     draftBannerUrl = cached.bannerUrl || "";
     draftAvatarDecoration = cached.avatarDecoration || "none";
+    draftBannerRawImg = null;
+    setBannerAdjustVisible(false);
 
     document.getElementById('epNameInput').value = cached.customName || currentUser.name || "";
     document.getElementById('epBioInput').value = cached.bio || "";
@@ -9341,9 +9405,123 @@
     showToast("รีเซ็ตกลับเป็นรูปโปรไฟล์หลักแล้ว");
   }
 
+  let draftBannerRawImg = null;
+  let bannerPosX = 50;
+  let bannerPosY = 50;
+  let bannerZoom = 1;
+
+  function setBannerAdjustVisible(visible) {
+    const box = document.getElementById('epBannerAdjustBox');
+    const hint = document.getElementById('epBannerDragHint');
+    const preview = document.getElementById('epPreviewBanner');
+    if (box) box.style.display = visible ? 'block' : 'none';
+    if (hint) hint.style.display = visible ? 'inline-block' : 'none';
+    if (preview) preview.classList.toggle('draggable', !!visible);
+  }
+
+  function resetBannerCropPosition() {
+    bannerPosX = 50;
+    bannerPosY = 50;
+    bannerZoom = 1;
+    const zEl = document.getElementById('epBannerZoom');
+    const xEl = document.getElementById('epBannerPosX');
+    const yEl = document.getElementById('epBannerPosY');
+    if (zEl) zEl.value = 100;
+    if (xEl) xEl.value = 50;
+    if (yEl) yEl.value = 50;
+    if (draftBannerRawImg) renderBannerFromRaw();
+  }
+
+  function onBannerSliderChange() {
+    const zEl = document.getElementById('epBannerZoom');
+    const xEl = document.getElementById('epBannerPosX');
+    const yEl = document.getElementById('epBannerPosY');
+    bannerZoom = zEl ? (Number(zEl.value) / 100) : 1;
+    bannerPosX = xEl ? Number(xEl.value) : 50;
+    bannerPosY = yEl ? Number(yEl.value) : 50;
+    renderBannerFromRaw();
+  }
+
+  function renderBannerFromRaw() {
+    if (!draftBannerRawImg) return;
+    const targetW = 450;
+    const targetH = 180;
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const c = canvas.getContext('2d');
+
+    const baseScale = Math.max(targetW / draftBannerRawImg.width, targetH / draftBannerRawImg.height);
+    const scale = baseScale * bannerZoom;
+    const drawW = draftBannerRawImg.width * scale;
+    const drawH = draftBannerRawImg.height * scale;
+    const extraW = Math.max(0, drawW - targetW);
+    const extraH = Math.max(0, drawH - targetH);
+
+    const offsetX = -extraW * (bannerPosX / 100);
+    const offsetY = -extraH * (bannerPosY / 100);
+
+    c.drawImage(draftBannerRawImg, offsetX, offsetY, drawW, drawH);
+    draftBannerUrl = canvas.toDataURL('image/jpeg', 0.62);
+    updateEditProfilePreview();
+  }
+
+  // รองรับการลากขยับมุมภาพตรงๆ บนภาพตัวอย่าง (ทั้งเมาส์และนิ้วบนมือถือ)
+  (function initBannerDrag() {
+    const preview = document.getElementById('epPreviewBanner');
+    if (!preview) return;
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let startPosX = 50, startPosY = 50;
+
+    preview.addEventListener('pointerdown', (e) => {
+      if (!draftBannerRawImg) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startPosX = bannerPosX;
+      startPosY = bannerPosY;
+      preview.setPointerCapture(e.pointerId);
+    });
+
+    preview.addEventListener('pointermove', (e) => {
+      if (!isDragging || !draftBannerRawImg) return;
+      const rect = preview.getBoundingClientRect();
+      const targetW = 450, targetH = 180;
+      const baseScale = Math.max(targetW / draftBannerRawImg.width, targetH / draftBannerRawImg.height);
+      const scale = baseScale * bannerZoom;
+      const extraW = Math.max(0, draftBannerRawImg.width * scale - targetW);
+      const extraH = Math.max(0, draftBannerRawImg.height * scale - targetH);
+
+      const dx = (e.clientX - startX) * (targetW / Math.max(1, rect.width));
+      const dy = (e.clientY - startY) * (targetH / Math.max(1, rect.height));
+
+      if (extraW > 0) {
+        const newOffX = Math.max(-extraW, Math.min(0, -extraW * (startPosX / 100) + dx));
+        bannerPosX = (-newOffX / extraW) * 100;
+      }
+      if (extraH > 0) {
+        const newOffY = Math.max(-extraH, Math.min(0, -extraH * (startPosY / 100) + dy));
+        bannerPosY = (-newOffY / extraH) * 100;
+      }
+
+      const xEl = document.getElementById('epBannerPosX');
+      const yEl = document.getElementById('epBannerPosY');
+      if (xEl) xEl.value = Math.round(bannerPosX);
+      if (yEl) yEl.value = Math.round(bannerPosY);
+      renderBannerFromRaw();
+    });
+
+    const stopDrag = () => { isDragging = false; };
+    preview.addEventListener('pointerup', stopDrag);
+    preview.addEventListener('pointercancel', stopDrag);
+  })();
+
   function clearCustomBanner() {
     playClickSound();
+    draftBannerRawImg = null;
     draftBannerUrl = "";
+    setBannerAdjustVisible(false);
     document.getElementById('epBannerFile').value = "";
     updateEditProfilePreview();
     showToast("ล้างพื้นหลังโปรไฟล์แล้ว");
@@ -9351,7 +9529,9 @@
 
   function selectBannerPreset(grad) {
     playClickSound();
+    draftBannerRawImg = null;
     draftBannerUrl = grad;
+    setBannerAdjustVisible(false);
     updateEditProfilePreview();
   }
 
@@ -9363,31 +9543,25 @@
     reader.onload = (ev) => {
       const img = new Image();
       img.onload = () => {
-        const targetW = type === 'avatar' ? 128 : 450;
-        const targetH = type === 'avatar' ? 128 : 180;
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = targetW;
-        canvas.height = targetH;
-        const c = canvas.getContext('2d');
-
-        // ครอบภาพตรงกลางให้พอดีสัดส่วน (Cover Crop) ไม่บีบเบี้ยว
-        const scale = Math.max(targetW / img.width, targetH / img.height);
-        const drawW = img.width * scale;
-        const drawH = img.height * scale;
-        const offsetX = (targetW - drawW) / 2;
-        const offsetY = (targetH - drawH) / 2;
-
-        c.drawImage(img, offsetX, offsetY, drawW, drawH);
-        const compressed = canvas.toDataURL('image/jpeg', type === 'avatar' ? 0.75 : 0.62);
-
         if (type === 'avatar') {
-          draftCustomAvatar = compressed;
+          const targetW = 128, targetH = 128;
+          const canvas = document.createElement('canvas');
+          canvas.width = targetW;
+          canvas.height = targetH;
+          const c = canvas.getContext('2d');
+          const scale = Math.max(targetW / img.width, targetH / img.height);
+          const drawW = img.width * scale;
+          const drawH = img.height * scale;
+          c.drawImage(img, (targetW - drawW) / 2, (targetH - drawH) / 2, drawW, drawH);
+          draftCustomAvatar = canvas.toDataURL('image/jpeg', 0.75);
+          updateEditProfilePreview();
+          showToast("✅ ปรับขนาดรูปโปรไฟล์เรียบร้อย");
         } else {
-          draftBannerUrl = compressed;
+          draftBannerRawImg = img;
+          resetBannerCropPosition();
+          setBannerAdjustVisible(true);
+          showToast("✅ อัปโหลดแล้ว! ลากบนภาพด้านบนหรือเลื่อนแถบเพื่อจัดมุมได้เลย");
         }
-        updateEditProfilePreview();
-        showToast(type === 'avatar' ? "✅ ปรับขนาดรูปโปรไฟล์ 150×150px เรียบร้อย" : "✅ ปรับขนาดพื้นหลัง 600×240px เรียบร้อย");
       };
       img.src = ev.target.result;
     };
