@@ -3058,8 +3058,10 @@
       box-shadow: 0 16px 34px rgba(245, 158, 11, 0.32);
     }
     .dev-card-banner {
-      height: 68px;
+      height: 96px;
       background: linear-gradient(135deg, #14532d 0%, #991b1b 55%, #b45309 100%);
+      background-size: cover;
+      background-position: center;
       position: relative;
       border-bottom: 2px solid #fbbf24;
     }
@@ -3067,25 +3069,50 @@
       content: "✨ ORIGINAL CREATOR ✨";
       position: absolute;
       top: 8px;
-      left: 12px;
-      background: rgba(0, 0, 0, 0.38);
-      border: 1px solid rgba(253, 230, 138, 0.65);
+      left: 10px;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(253, 230, 138, 0.7);
       color: #fde68a;
       font-family: 'Kanit', sans-serif;
-      font-size: 0.66rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       padding: 2px 9px;
       border-radius: 999px;
     }
+    .dev-admin-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 5;
+      display: flex;
+      gap: 5px;
+    }
+    .dev-card-btn {
+      background: rgba(15, 23, 42, 0.85);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s;
+    }
+    .dev-card-btn:hover { transform: scale(1.06); }
+    .dev-card-btn.edit:hover { background: #2563eb; border-color: #93c5fd; }
+    .dev-card-btn.del:hover { background: #dc2626; border-color: #fca5a5; }
+
     .dev-avatar-wrap {
       width: 88px;
       height: 88px;
-      margin: -44px auto 10px;
+      margin: -46px auto 10px;
       border-radius: 50%;
       padding: 3.5px;
       background: conic-gradient(#fde047, #f59e0b, #dc2626, #f59e0b, #fde047);
-      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.45);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
       position: relative;
       z-index: 2;
     }
@@ -3566,14 +3593,15 @@
       ทุกโปรเจกต์แปลไทยได้รับการอนุญาตและพัฒนาต่อยอดจากผลงานของนักพัฒนาเกมอิสระเหล่านี้ หากชื่นชอบตัวเกมอย่าลืมแวะไปติดตามและสนับสนุนผู้พัฒนาตัวจริงกันนะครับ! 💖
     </p>
 
-    <!-- แผงแอดมินเพิ่มผู้พัฒนา (โผล่เฉพาะแอดมิน) -->
+    <!-- แผงแอดมินเพิ่ม / แก้ไขผู้พัฒนา (โผล่เฉพาะแอดมิน) -->
     <div id="devAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
-      <h3 style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินเพิ่มผู้พัฒนา & ทีมผู้สร้าง</h3>
+      <h3 id="devAdminFormTitle" style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินเพิ่มผู้พัฒนา & ทีมผู้สร้าง</h3>
       <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
         <input type="text" id="adminDevName" placeholder="ชื่อผู้พัฒนาหลัก / ชื่อสตูดิโอ *" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
         <input type="text" id="adminDevRole" placeholder="หน้าที่หลัก เช่น ผู้สร้าง & เขียนบท / นักวาด" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
         <input type="text" id="adminDevGames" placeholder="ผลงานเกมที่แปล เช่น Do Not Kill Me Jacob" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminDevImg" placeholder="รูปโปรไฟล์ เช่น images/dev1.png หรือ https://..." style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminDevImg" placeholder="👤 รูปโปรไฟล์ เช่น images/dev1.png หรือ https://..." style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminDevBgImg" placeholder="🖼️ รูปพื้นหลัง/แบนเนอร์ เช่น images/bg1.png หรือ https://..." style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
         <input type="text" id="adminDevItch" placeholder="🎮 ลิงก์ itch.io (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
         <input type="text" id="adminDevPatreon" placeholder="💖 ลิงก์ Patreon / Ko-fi (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
         <input type="text" id="adminDevX" placeholder="𝕏 ลิงก์ X / Twitter (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
@@ -3584,7 +3612,10 @@
       <textarea id="adminDevTeam" placeholder="👥 กรณีมีผู้พัฒนาหลายคน ให้พิมพ์แยกบรรทัดละ 1 คน (ใส่เครื่องหมาย - คั่นหน้าที่) เช่น:&#10;คุณ A - นักวาดตัวละคร & CG&#10;คุณ B - โปรแกรมเมอร์ & ระบบเกม" style="min-height:68px; margin-bottom:10px;"></textarea>
       <textarea id="adminDevDesc" placeholder="คำแนะนำตัวผู้พัฒนาหรือข้อความขอบคุณสั้นๆ..." style="min-height:56px; margin-bottom:10px;"></textarea>
 
-      <button type="button" class="submit-btn" style="padding:11px 16px; font-size:0.98rem;" onclick="adminAddDeveloper()">➕ เพิ่มรายชื่อผู้พัฒนา</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" id="adminDevSubmitBtn" class="submit-btn" style="flex:2; width:auto; min-width:200px; padding:11px 16px; font-size:0.98rem;" onclick="adminSaveDeveloper()">➕ เพิ่มรายชื่อผู้พัฒนา</button>
+        <button type="button" id="adminDevCancelBtn" class="submit-btn" style="display:none; flex:1; width:auto; min-width:130px; padding:11px 16px; font-size:0.98rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="cancelEditDeveloper()">❌ ยกเลิกการแก้ไข</button>
+      </div>
     </div>
 
     <!-- ตารางการ์ดผู้พัฒนา -->
@@ -4310,6 +4341,7 @@
     if (donateAdminPanel) donateAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     const devAdminPanel = document.getElementById('devAdminPanel');
     if (devAdminPanel) devAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
+    if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
     document.getElementById('navLoginBtn').style.display = 'none';
@@ -4360,8 +4392,10 @@
   }
 
   function applyLoggedOutUI() {
-    const donateAdminPanel = document.getElementById('donateAdminPanel');
-    if (donateAdminPanel) donateAdminPanel.style.display = 'none';
+    const devAdminPanel = document.getElementById('devAdminPanel');
+    if (devAdminPanel) devAdminPanel.style.display = 'none';
+    if (typeof cancelEditDeveloper === "function") cancelEditDeveloper();
+    if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
     currentUser = null;
     myServerHearts = 0;
     document.getElementById('navLoginBtn').style.display = 'inline-block';
@@ -6880,10 +6914,14 @@
   // =========================================
   // 11. ระบบผู้พัฒนา & พันธมิตร (Creators & Developers)
   // =========================================
+  let developersCache = {};
+  let editingDevKey = null;
+
   function initDevelopersSystem() {
     if (!db) return;
     db.ref("developers").on("value", (snap) => {
-      renderDevelopers(snap.val());
+      developersCache = snap.val() || {};
+      renderDevelopers(developersCache);
     });
   }
 
@@ -6895,7 +6933,61 @@
     return "";
   }
 
-  function adminAddDeveloper() {
+  function resetDevAdminForm() {
+    editingDevKey = null;
+    [
+      'adminDevName', 'adminDevRole', 'adminDevGames', 'adminDevImg', 'adminDevBgImg',
+      'adminDevItch', 'adminDevPatreon', 'adminDevX', 'adminDevDiscord',
+      'adminDevBsky', 'adminDevTeam', 'adminDevDesc'
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+    const titleEl = document.getElementById('devAdminFormTitle');
+    if (titleEl) titleEl.textContent = "👑 แผงแอดมินเพิ่มผู้พัฒนา & ทีมผู้สร้าง";
+    const subBtn = document.getElementById('adminDevSubmitBtn');
+    if (subBtn) subBtn.textContent = "➕ เพิ่มรายชื่อผู้พัฒนา";
+    const cancelBtn = document.getElementById('adminDevCancelBtn');
+    if (cancelBtn) cancelBtn.style.display = "none";
+  }
+
+  function cancelEditDeveloper() {
+    resetDevAdminForm();
+  }
+
+  function editDeveloper(key) {
+    if (!currentUser || !currentUser.isVoteAdmin) return;
+    const dev = developersCache[key];
+    if (!dev) return;
+
+    playClickSound();
+    editingDevKey = key;
+
+    document.getElementById('adminDevName').value = dev.name || "";
+    document.getElementById('adminDevRole').value = dev.role || "";
+    document.getElementById('adminDevGames').value = dev.games || "";
+    document.getElementById('adminDevImg').value = dev.img || "";
+    document.getElementById('adminDevBgImg').value = dev.bgImg || "";
+    document.getElementById('adminDevItch').value = dev.itch || "";
+    document.getElementById('adminDevPatreon').value = dev.patreon || "";
+    document.getElementById('adminDevX').value = dev.x || "";
+    document.getElementById('adminDevDiscord').value = dev.discord || "";
+    document.getElementById('adminDevBsky').value = dev.bsky || "";
+    document.getElementById('adminDevTeam').value = dev.team || "";
+    document.getElementById('adminDevDesc').value = dev.desc || "";
+
+    const titleEl = document.getElementById('devAdminFormTitle');
+    if (titleEl) titleEl.textContent = `✏️ กำลังแก้ไขข้อมูล: ${dev.name || "ผู้พัฒนา"}`;
+    const subBtn = document.getElementById('adminDevSubmitBtn');
+    if (subBtn) subBtn.textContent = "💾 บันทึกการแก้ไข";
+    const cancelBtn = document.getElementById('adminDevCancelBtn');
+    if (cancelBtn) cancelBtn.style.display = "inline-block";
+
+    const panel = document.getElementById('devAdminPanel');
+    if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function adminSaveDeveloper() {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
     const name = document.getElementById('adminDevName').value.trim();
     if (!name) {
@@ -6903,40 +6995,64 @@
       return;
     }
 
-    const newDev = {
+    const devPayload = {
       name: name,
       role: document.getElementById('adminDevRole').value.trim(),
       games: document.getElementById('adminDevGames').value.trim(),
       img: document.getElementById('adminDevImg').value.trim(),
+      bgImg: document.getElementById('adminDevBgImg').value.trim(),
       itch: normalizeDevUrl(document.getElementById('adminDevItch').value),
       patreon: normalizeDevUrl(document.getElementById('adminDevPatreon').value),
       x: normalizeDevUrl(document.getElementById('adminDevX').value),
       discord: normalizeDevUrl(document.getElementById('adminDevDiscord').value),
       bsky: normalizeDevUrl(document.getElementById('adminDevBsky').value),
       team: document.getElementById('adminDevTeam').value.trim(),
-      desc: document.getElementById('adminDevDesc').value.trim(),
-      createdAt: Date.now()
+      desc: document.getElementById('adminDevDesc').value.trim()
     };
 
-    db.ref("developers").push(newDev).then(() => {
-      showToast(`✅ เพิ่มผู้พัฒนา "${name}" เรียบร้อยแล้ว!`);
-      [
-        'adminDevName', 'adminDevRole', 'adminDevGames', 'adminDevImg',
-        'adminDevItch', 'adminDevPatreon', 'adminDevX', 'adminDevDiscord',
-        'adminDevBsky', 'adminDevTeam', 'adminDevDesc'
-      ].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-      });
-    }).catch(() => showToast("⚠️ บันทึกข้อมูลไม่สำเร็จ"));
+    if (editingDevKey) {
+      devPayload.updatedAt = Date.now();
+      db.ref("developers/" + editingDevKey).update(devPayload).then(() => {
+        showToast(`💾 บันทึกการแก้ไข "${name}" เรียบร้อยแล้ว!`);
+        resetDevAdminForm();
+      }).catch(() => showToast("⚠️ บันทึกการแก้ไขไม่สำเร็จ"));
+    } else {
+      devPayload.createdAt = Date.now();
+      db.ref("developers").push(devPayload).then(() => {
+        showToast(`✅ เพิ่มผู้พัฒนา "${name}" เรียบร้อยแล้ว!`);
+        resetDevAdminForm();
+      }).catch(() => showToast("⚠️ บันทึกข้อมูลไม่สำเร็จ"));
+    }
   }
 
   function adminDeleteDeveloper(key) {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
     if (!confirm("ต้องการลบรายชื่อผู้พัฒนานี้ออกใช่ไหมครับ?")) return;
     db.ref("developers/" + key).remove().then(() => {
+      if (editingDevKey === key) resetDevAdminForm();
       showToast("🗑️ ลบรายชื่อผู้พัฒนาเรียบร้อยแล้ว");
     });
+  }
+
+  function applyDevBannerImage(bannerEl, rawBg) {
+    const bg = (rawBg || "").trim();
+    if (!bg) return;
+
+    const setBg = (finalUrl) => {
+      bannerEl.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.48)), url("${finalUrl.replace(/"/g, '%22')}")`;
+    };
+
+    const probe = new Image();
+    probe.onload = () => setBg(bg);
+    probe.onerror = () => {
+      if (!bg.includes('images/') && !bg.startsWith('http')) {
+        const alt = "images/" + bg;
+        const probe2 = new Image();
+        probe2.onload = () => setBg(alt);
+        probe2.src = alt;
+      }
+    };
+    probe.src = bg;
   }
 
   function renderDevelopers(data) {
@@ -6959,16 +7075,31 @@
       const card = document.createElement('div');
       card.className = "dev-card";
 
-      // แบนเนอร์หัวการ์ด
+      // แบนเนอร์หัวการ์ด + พื้นหลังโปรไฟล์ (ถ้ามี)
       const banner = document.createElement('div');
       banner.className = "dev-card-banner";
+      if (dev.bgImg) applyDevBannerImage(banner, dev.bgImg);
+
+      // ปุ่มแก้ไข & ลบ เฉพาะแอดมินเท่านั้น
       if (isAdmin) {
+        const actionsWrap = document.createElement('div');
+        actionsWrap.className = "dev-admin-actions";
+
+        const editBtn = document.createElement('button');
+        editBtn.type = "button";
+        editBtn.className = "dev-card-btn edit";
+        editBtn.textContent = "✏️ แก้ไข";
+        editBtn.onclick = () => editDeveloper(dev.key);
+        actionsWrap.appendChild(editBtn);
+
         const delBtn = document.createElement('button');
         delBtn.type = "button";
-        delBtn.className = "history-del-btn";
-        delBtn.textContent = "🗑️";
+        delBtn.className = "dev-card-btn del";
+        delBtn.textContent = "🗑️ ลบ";
         delBtn.onclick = () => adminDeleteDeveloper(dev.key);
-        banner.appendChild(delBtn);
+        actionsWrap.appendChild(delBtn);
+
+        banner.appendChild(actionsWrap);
       }
       card.appendChild(banner);
 
