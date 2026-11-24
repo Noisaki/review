@@ -2233,6 +2233,29 @@
       .lb-grid { grid-template-columns: minmax(0, 1fr) !important; }
       .lb-column { min-width: 0; padding: 12px 10px !important; }
       .lb-row { gap: 8px; padding: 8px; }
+      /* แก้ป้ายยศ & ป้ายเลเวลบวมบนมือถือ ให้เรียวสวยบรรทัดเดียว */
+      .lb-rank { min-width: 24px; font-size: 0.9rem; }
+      .lb-avatar { width: 34px; height: 34px; }
+      .lb-score { font-size: 0.82rem; }
+      .lb-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+      }
+      .lb-name { font-size: 0.86rem; max-width: 100%; }
+      .lb-meta .role-pill,
+      .lb-meta .title-pill {
+        font-size: 0.66rem !important;
+        padding: 2px 8px !important;
+        margin: 0 !important;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        line-height: 1.35;
+      }
     }
 
     /* การ์ดเมนูลัด 4 ปุ่มบนหน้าหลัก */
@@ -3028,6 +3051,7 @@
       <button type="button" class="nav-tab-btn" id="nav-vote" onclick="switchPage('vote')">🔥 โหวตเกม</button>
       <button type="button" class="nav-tab-btn" id="nav-eval" onclick="switchPage('eval')">📝 ประเมินเกม</button>
       <button type="button" class="nav-tab-btn" id="nav-donate" onclick="switchPage('donate')">🎁 สนับสนุน</button>
+      <button type="button" class="nav-tab-btn" id="nav-dev" onclick="switchPage('dev')">🤝 ผู้พัฒนา</button>
     </div>
   </div>
   <div class="nav-right">
@@ -3356,6 +3380,38 @@
           <div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีประวัติผู้ชนะในขณะนี้</div>
         </div>
       </div>
+    </div>
+  </div>
+  <!-- =========================================
+       หน้าผู้พัฒนา & พันธมิตร (Creators & Developers)
+       ========================================= -->
+  <div class="section-card" id="devSection" style="display:none;">
+    <div class="section-header">
+      <h2 class="section-title">🤝 ผู้พัฒนาเกมต้นฉบับ & พันธมิตร</h2>
+      <span class="step-pill">สนับสนุนผู้สร้างต้นฉบับ 🐾</span>
+    </div>
+    <p style="color:#475569; font-size:0.92rem; margin:0 0 18px 0; line-height:1.55;">
+      ทุกโปรเจกต์แปลไทยได้รับการอนุญาตและพัฒนาต่อยอดจากผลงานของนักพัฒนาเกมอิสระเหล่านี้ หากชื่นชอบตัวเกมอย่าลืมแวะไปติดตามและสนับสนุนผู้พัฒนาตัวจริงกันนะครับ! 💖
+    </p>
+
+    <!-- แผงแอดมินเพิ่มผู้พัฒนา (โผล่เฉพาะแอดมิน) -->
+    <div id="devAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
+      <h3 style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินเพิ่มผู้พัฒนา & พันธมิตร</h3>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
+        <input type="text" id="adminDevName" placeholder="ชื่อผู้พัฒนา / ชื่อค่ายเกม *" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminDevGames" placeholder="ผลงานเกมที่แปล เช่น Echo, Arches" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminDevImg" placeholder="รูปโปรไฟล์ เช่น images/dev1.png หรือ https://..." style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminDevItch" placeholder="ลิงก์ itch.io (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminDevPatreon" placeholder="ลิงก์ Patreon / Ko-fi (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminDevX" placeholder="ลิงก์ X / Twitter (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      </div>
+      <textarea id="adminDevDesc" placeholder="คำแนะนำตัวผู้พัฒนาสั้นๆ..." style="min-height:60px; margin-bottom:10px;"></textarea>
+      <button type="button" class="submit-btn" style="padding:11px 16px; font-size:0.98rem;" onclick="adminAddDeveloper()">➕ เพิ่มรายชื่อผู้พัฒนา</button>
+    </div>
+
+    <!-- ตารางการ์ดผู้พัฒนา -->
+    <div id="devGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
+      <div class="lb-empty" style="grid-column:1/-1;">กำลังโหลดรายชื่อผู้พัฒนา...</div>
     </div>
   </div>
   <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
@@ -4074,6 +4130,8 @@
     if (adminPanel) adminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     const donateAdminPanel = document.getElementById('donateAdminPanel');
     if (donateAdminPanel) donateAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
+    const devAdminPanel = document.getElementById('devAdminPanel');
+    if (devAdminPanel) devAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
     document.getElementById('navLoginBtn').style.display = 'none';
@@ -4971,68 +5029,24 @@
     }
   }
 
-  function toggleChristmasMusic() {
-    if (isHorrorTriggered) {
-      playRealCryingAudio();
-      return;
-    }
-    if (isMusicPlaying) {
-      userPausedMusic = true;
-      stopChristmasMusic();
-    } else {
-      userPausedMusic = false;
-      startChristmasMusic();
-    }
-  }
+  function toggleBgmLoop() {
+    if (isHorrorTriggered) return;
+    playClickSound();
+    isLoopOne = !isLoopOne;
 
-  function startChristmasMusic() {
-    if (isHorrorTriggered || BGM_PLAYLIST.length === 0) return;
     const bgmEl = document.getElementById('bgmAudio');
-    if (!bgmEl) return;
-
-    loadCurrentBgmTrack();
-
-    // ถ้าหาไฟล์หน้าแรกไม่เจอ ให้ลองหาในโฟลเดอร์ music/ และ images/ ให้อัตโนมัติ
-    bgmEl.onerror = () => {
-      const baseName = BGM_PLAYLIST[currentTrackIndex].src.replace(/^(music|images)\//, '');
-      const step = Number(bgmEl.dataset.fallbackStep || 0);
-      if (step === 0) {
-        bgmEl.dataset.fallbackStep = "1";
-        bgmEl.src = "music/" + baseName;
-        bgmEl.play().catch(() => {});
-      } else if (step === 1) {
-        bgmEl.dataset.fallbackStep = "2";
-        bgmEl.src = "images/" + baseName;
-        bgmEl.play().catch(() => {});
-      } else {
-        isMusicPlaying = false;
-        showToast(`⚠️ หาไฟล์เพลง "${baseName}" ไม่เจอ! (เช็กว่าอัปขึ้น GitHub และไม่ได้ชื่อ .mp3.mp3 นะครับ)`);
-      }
-    };
-
-    bgmEl.dataset.fallbackStep = "0";
-    const playPromise = bgmEl.play();
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        isMusicPlaying = true;
-        document.getElementById('musicStateIcon').textContent = '⏸️';
-        document.getElementById('musicStateText').textContent = BGM_PLAYLIST[currentTrackIndex].name;
-      }).catch((err) => {
-        if (err && err.name !== "NotAllowedError") {
-          showToast("⚠️ เล่นเพลงไม่ได้: " + err.name);
-        }
-      });
+    if (bgmEl) {
+      bgmEl.loop = isLoopOne || (BGM_PLAYLIST.length === 1);
     }
-  }
 
-  function stopChristmasMusic() {
-    isMusicPlaying = false;
-    const bgmEl = document.getElementById('bgmAudio');
-    if (bgmEl) bgmEl.pause();
-    if (!isHorrorTriggered) {
-      document.getElementById('musicStateIcon').textContent = '▶️';
-      document.getElementById('musicStateText').textContent = 'เล่นเพลง';
+    const btn = document.getElementById('loopSongBtn');
+    if (btn) {
+      btn.textContent = isLoopOne ? '🔂' : '🔁';
+      btn.style.opacity = isLoopOne ? '1' : '0.6';
+      btn.style.boxShadow = isLoopOne ? '0 0 10px rgba(251, 191, 36, 0.85)' : 'none';
+      btn.title = isLoopOne ? 'กำลังวนซ้ำเพลงนี้' : 'เล่นวนตามคิว';
     }
+    showToast(isLoopOne ? '🔂 เปิดวนซ้ำเพลงนี้แล้ว!' : '🔁 เล่นวนตามคิวปกติแล้ว');
   }
 
   function nextBgmTrack() {
@@ -5048,7 +5062,8 @@
       playRealCryingAudio();
       return;
     }
-    if (isMusicPlaying) {
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl && !bgmEl.paused) {
       userPausedMusic = true;
       stopChristmasMusic();
     } else {
@@ -5077,8 +5092,7 @@
 
   document.addEventListener('pointerdown', function autoStartOnFirstInteraction(e) {
     initAudio();
-    // กันไม่ให้คลิกแรกบนปุ่มเล่นเพลงไปชนกับ toggleChristmasMusic()
-    if (e.target && e.target.closest && e.target.closest('#musicToggleBtn, #nextSongBtn')) return;
+    if (e.target && e.target.closest && e.target.closest('#musicToggleBtn, #nextSongBtn, #loopSongBtn')) return;
     if (isHorrorTriggered) {
       playRealCryingAudio();
       if (!horrorInterval) startHorrorAmbience();
@@ -5959,6 +5973,7 @@
   window.addEventListener("DOMContentLoaded", () => {
     initFirebaseHearts();
     initGameVoteSystem();
+    initDevelopersSystem();
     updateCheerUI();
 
     let wasCursed = false;
@@ -6186,6 +6201,7 @@
     const voteCard = document.getElementById('gameVoteSection');
     const evalForm = document.getElementById('customForm');
     const donateCard = document.getElementById('donateSection');
+    const devCard = document.getElementById('devSection');
 
     if (isHorrorTriggered) {
       if (podiumCard) podiumCard.style.display = 'none';
@@ -6195,6 +6211,7 @@
       if (cheerCard) cheerCard.style.display = 'block';
       if (lbCard) lbCard.style.display = 'none';
       if (voteCard) voteCard.style.display = 'none';
+      if (devCard) devCard.style.display = 'none';
       if (evalForm) evalForm.style.display = 'block';
       if (donateCard) donateCard.style.display = 'block';
       updateVotePromoAd();
@@ -6202,14 +6219,15 @@
     }
 
     const pageMap = {
-      home: [headerCard, quickGrid, profileCard, cheerCard, podiumCard],
+      home:   [headerCard, quickGrid, profileCard, cheerCard, podiumCard],
       rank:   [lbCard],
       vote:   [voteCard],
       eval:   [evalForm],
-      donate: [donateCard]
+      donate: [donateCard],
+      dev:    [devCard]
     };
 
-    const allSections = [headerCard, quickGrid, profileCard, cheerCard, podiumCard, lbCard, voteCard, evalForm, donateCard];
+    const allSections = [headerCard, quickGrid, profileCard, cheerCard, podiumCard, lbCard, voteCard, evalForm, donateCard, devCard];
     allSections.forEach(el => {
       if (!el) return;
       el.style.display = 'none';
@@ -6680,6 +6698,132 @@
     document.getElementById('adVoteTimer').textContent = `⏱️ ${hrs}ชม. ${mins}น. ${secs}วิ`;
 
     ad.style.display = 'block';
+  }
+  // =========================================
+  // 11. ระบบผู้พัฒนา & พันธมิตร (Creators & Developers)
+  // =========================================
+  function initDevelopersSystem() {
+    if (!db) return;
+    db.ref("developers").on("value", (snap) => {
+      renderDevelopers(snap.val());
+    });
+  }
+
+  function adminAddDeveloper() {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    const name = document.getElementById('adminDevName').value.trim();
+    if (!name) {
+      showToast("⚠️ กรุณากรอกชื่อผู้พัฒนาก่อนนะครับ");
+      return;
+    }
+
+    const newDev = {
+      name: name,
+      games: document.getElementById('adminDevGames').value.trim(),
+      img: document.getElementById('adminDevImg').value.trim(),
+      itch: document.getElementById('adminDevItch').value.trim(),
+      patreon: document.getElementById('adminDevPatreon').value.trim(),
+      x: document.getElementById('adminDevX').value.trim(),
+      desc: document.getElementById('adminDevDesc').value.trim(),
+      createdAt: Date.now()
+    };
+
+    db.ref("developers").push(newDev).then(() => {
+      showToast(`✅ เพิ่มผู้พัฒนา "${name}" เรียบร้อยแล้ว!`);
+      ['adminDevName', 'adminDevGames', 'adminDevImg', 'adminDevItch', 'adminDevPatreon', 'adminDevX', 'adminDevDesc'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+    }).catch(() => showToast("⚠️ บันทึกข้อมูลไม่สำเร็จ"));
+  }
+
+  function adminDeleteDeveloper(key) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!confirm("ต้องการลบรายชื่อผู้พัฒนานี้ออกใช่ไหมครับ?")) return;
+    db.ref("developers/" + key).remove().then(() => {
+      showToast("🗑️ ลบรายชื่อผู้พัฒนาเรียบร้อยแล้ว");
+    });
+  }
+
+  function renderDevelopers(data) {
+    const grid = document.getElementById('devGrid');
+    if (!grid) return;
+
+    if (!data || Object.keys(data).length === 0) {
+      grid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีรายชื่อผู้พัฒนาในขณะนี้ 🤝</div>`;
+      return;
+    }
+
+    const list = Object.keys(data)
+      .map(k => ({ key: k, ...data[k] }))
+      .sort((a, b) => (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0));
+
+    const isAdmin = currentUser && currentUser.isVoteAdmin;
+    grid.innerHTML = "";
+
+    list.forEach(dev => {
+      const card = document.createElement('div');
+      card.style.cssText = "position:relative; background:#ffffff; border:1.5px solid #fde68a; border-radius:18px; padding:18px 16px; text-align:center; box-shadow:0 6px 16px rgba(0,0,0,0.08); display:flex; flex-direction:column; justify-content:space-between;";
+
+      if (isAdmin) {
+        const delBtn = document.createElement('button');
+        delBtn.type = "button";
+        delBtn.className = "history-del-btn";
+        delBtn.textContent = "🗑️";
+        delBtn.onclick = () => adminDeleteDeveloper(dev.key);
+        card.appendChild(delBtn);
+      }
+
+      const top = document.createElement('div');
+      const img = document.createElement('img');
+      const fallback = `https://placehold.co/160x160/15803d/ffffff?text=${encodeURIComponent((dev.name || 'DEV').slice(0, 3))}`;
+      img.src = dev.img || fallback;
+      img.alt = dev.name || "";
+      img.style.cssText = "width:76px; height:76px; border-radius:50%; object-fit:cover; border:3px solid #fbbf24; margin:0 auto 10px; display:block; background:#e2e8f0;";
+      img.onerror = function() { this.onerror = null; this.src = fallback; };
+      top.appendChild(img);
+
+      const nameEl = document.createElement('h3');
+      nameEl.style.cssText = "font-family:'Kanit',sans-serif; font-size:1.12rem; color:#991b1b; margin:0 0 6px 0;";
+      nameEl.textContent = dev.name || "Developer";
+      top.appendChild(nameEl);
+
+      if (dev.games) {
+        const gameTag = document.createElement('div');
+        gameTag.style.cssText = "display:inline-block; background:#dcfce7; color:#14532d; border:1px solid #86efac; font-size:0.75rem; font-weight:600; padding:3px 10px; border-radius:999px; margin-bottom:8px;";
+        gameTag.textContent = "🎮 " + dev.games;
+        top.appendChild(gameTag);
+      }
+
+      if (dev.desc) {
+        const descEl = document.createElement('p');
+        descEl.style.cssText = "font-size:0.84rem; color:#475569; margin:0 0 14px 0; line-height:1.5;";
+        descEl.textContent = dev.desc;
+        top.appendChild(descEl);
+      }
+      card.appendChild(top);
+
+      const linksBar = document.createElement('div');
+      linksBar.style.cssText = "display:flex; gap:6px; justify-content:center; flex-wrap:wrap; padding-top:10px; border-top:1px dashed #fde68a;";
+
+      const addLink = (url, label, bg) => {
+        if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) return;
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = label;
+        a.style.cssText = `background:${bg}; color:#fff; text-decoration:none; font-size:0.78rem; font-weight:600; padding:6px 12px; border-radius:10px;`;
+        linksBar.appendChild(a);
+      };
+
+      addLink(dev.itch, "🎮 itch.io", "#fa5c5c");
+      addLink(dev.patreon, "💖 สนับสนุน", "#f96854");
+      addLink(dev.x, "𝕏 ติดตาม", "#1e293b");
+
+      if (linksBar.children.length > 0) card.appendChild(linksBar);
+      grid.appendChild(card);
+    });
   }
 </script>
 
