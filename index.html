@@ -2611,6 +2611,65 @@
     @media (max-width: 520px) {
       .nav-profile-meta { max-width: 95px; }
     }
+    /* ปุ่มลัดจัดการโปรไฟล์บนแถบดำด้านบน */
+    .nav-quick-actions {
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-action-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #f8fafc;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 6px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+    .nav-action-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-1px);
+    }
+    .nav-action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .nav-action-btn.checkin {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      border-color: rgba(253, 230, 138, 0.75);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .nav-action-btn.checkin.checked-in {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      border-color: rgba(134, 239, 172, 0.75);
+    }
+    .nav-action-btn.edit {
+      background: linear-gradient(135deg, #5865F2, #4338ca);
+      border-color: rgba(165, 180, 252, 0.75);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .nav-action-btn.logout:hover {
+      background: #dc2626;
+      border-color: #fca5a5;
+    }
+    @media (max-width: 1120px) {
+      .nav-action-btn .nav-btn-txt { display: none; }
+      .nav-action-btn { padding: 6px 9px; font-size: 0.88rem; }
+    }
+    @media (max-width: 780px) {
+      .nav-right { gap: 5px; }
+      .nav-quick-actions { gap: 4px; }
+      .nav-action-btn { padding: 5px 7px; font-size: 0.82rem; }
+    }
    /* ล็อกความสูงชื่อเกมและรายชื่อคนกดในหน้าโหวต ไม่ให้ดันปุ่มขึ้นลง */
     #voteGamesGrid .game-title {
       flex-grow: 0;
@@ -4066,6 +4125,20 @@
   </div>
   <div class="nav-right">
     <button type="button" class="nav-purple-btn" id="navLoginBtn" onclick="playClickSound(); openLoginInfo('');">ล็อกอิน</button>
+    <div class="nav-quick-actions" id="navQuickActions">
+      <button type="button" class="nav-action-btn checkin" id="navCheckinBtn" onmouseenter="playHoverSound()" onclick="claimDailyCheckin();" title="เช็กอินรายวัน">
+        <span>📅</span><span class="nav-btn-txt" id="navCheckinText">เช็กอิน</span>
+      </button>
+      <button type="button" class="nav-action-btn edit" id="navEditProfileBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); openEditProfileModal();" title="แต่งโปรไฟล์ & กรอบ">
+        <span>✏️</span><span class="nav-btn-txt">แต่งโปรไฟล์</span>
+      </button>
+      <button type="button" class="nav-action-btn" id="navRefreshRoleBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); refreshDiscordRole();" title="รีเฟรชยศ">
+        <span>🔄</span><span class="nav-btn-txt">รีเฟรชยศ</span>
+      </button>
+      <button type="button" class="nav-action-btn logout" id="navLogoutBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); discordLogout();" title="ออกจากระบบ">
+        <span>🚪</span>
+      </button>
+    </div>
     <button type="button" class="nav-profile-pill" id="navUserWrap" style="display:none;" onmouseenter="playHoverSound()" onclick="switchPage('home'); setTimeout(()=>document.getElementById('profileCard').scrollIntoView({behavior:'smooth', block:'center'}), 120);" title="ไปที่โปรไฟล์ของคุณ">
       <span class="nav-avatar-frame" id="navAvatarFrame">
         <img id="navAvatarImg" src="" alt="Avatar" referrerpolicy="no-referrer">
@@ -4078,6 +4151,8 @@
     </button>
   </div>
 </nav>
+
+<!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
 
 <!-- ไฟล์เสียงร้องไห้จริง cry.mp3 -->
 <audio id="realCryAudio" src="cry.mp3" loop preload="auto" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/cry.mp3';}"></audio>
@@ -4160,46 +4235,8 @@
       </div>
     </div>
   </div>
-  <div class="podium-card" id="homePodiumSection">
-    <div class="section-header" style="margin-bottom: 16px;">
-      <h2 class="section-title">🏆 แท่นเกียรติยศ Top 3 ประจำเว็บ</h2>
-      <button type="button" class="profile-btn" onclick="switchPage('rank')" style="padding: 6px 14px; font-size: 0.8rem;">ดูอันดับทั้งหมด →</button>
-    </div>
-    <div class="podium-grid">
-      <div class="podium-box">
-        <h3 class="podium-box-title">🎁 Top 3 ผู้สนับสนุนสูงสุด</h3>
-        <div class="podium-stage" id="podiumDonateStage">
-          <div class="lb-empty">กำลังโหลดแท่นรับเหรียญ...</div>
-        </div>
-      </div>
-      <div class="podium-box">
-        <h3 class="podium-box-title">💖 Top 3 นักส่งหัวใจสูงสุด</h3>
-        <div class="podium-stage" id="podiumHeartsStage">
-          <div class="lb-empty">กำลังโหลดแท่นรับเหรียญ...</div>
-        </div>
-      </div>
-      <!-- แท่นที่ 3: Top 3 ผู้ร่วมโหวตเกมสูงสุด -->
-      <div class="podium-box">
-        <h3 class="podium-box-title">🔥 Top 3 ผู้ร่วมโหวตเกมสูงสุด (รอบล่าสุด)</h3>
-        <div class="podium-stage" id="podiumVoteStage">
-          <div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥</div>
-        </div>
-      </div>
-
-      <!-- แท่นที่ 4: Top 3 ใจรักผู้พัฒนาสูงสุด -->
-      <div class="podium-box">
-        <h3 class="podium-box-title">🤝 Top 3 ใจรักผู้พัฒนาสูงสุด</h3>
-        <div class="podium-stage" id="podiumDevHeartsStage">
-          <div class="lb-empty">ยังไม่มีผู้ส่งใจให้ผู้พัฒนา 🤝</div>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- =========================================
-       การ์ดโปรไฟล์ Discord (ล็อกอิน + ยศ)
-       ========================================= -->
-  <!-- =========================================
-       การ์ดโปรไฟล์สไตล์ Discord (ล็อกอิน + แบนเนอร์ + ยศ)
+       การ์ดโปรไฟล์สไตล์ Discord (ย้ายขึ้นมาอยู่บนก่อนตารางทอปแล้ว! ✨)
        ========================================= -->
   <div class="profile-card" id="profileCard">
     <!-- สถานะยังไม่ล็อกอิน -->
@@ -4246,6 +4283,44 @@
   </div>
 
   <!-- =========================================
+       แท่นเกียรติยศ Top 3 ประจำเว็บ (ย้ายลงมาอยู่ใต้โปรไฟล์แล้ว! 🏆)
+       ========================================= -->
+  <div class="podium-card" id="homePodiumSection">
+    <div class="section-header" style="margin-bottom: 16px;">
+      <h2 class="section-title">🏆 แท่นเกียรติยศ Top 3 ประจำเว็บ</h2>
+      <button type="button" class="profile-btn" onclick="switchPage('rank')" style="padding: 6px 14px; font-size: 0.8rem;">ดูอันดับทั้งหมด →</button>
+    </div>
+    <div class="podium-grid">
+      <div class="podium-box">
+        <h3 class="podium-box-title">🎁 Top 3 ผู้สนับสนุนสูงสุด</h3>
+        <div class="podium-stage" id="podiumDonateStage">
+          <div class="lb-empty">กำลังโหลดแท่นรับเหรียญ...</div>
+        </div>
+      </div>
+      <div class="podium-box">
+        <h3 class="podium-box-title">💖 Top 3 นักส่งหัวใจสูงสุด</h3>
+        <div class="podium-stage" id="podiumHeartsStage">
+          <div class="lb-empty">กำลังโหลดแท่นรับเหรียญ...</div>
+        </div>
+      </div>
+      <!-- แท่นที่ 3: Top 3 ผู้ร่วมโหวตเกมสูงสุด -->
+      <div class="podium-box">
+        <h3 class="podium-box-title">🔥 Top 3 ผู้ร่วมโหวตเกมสูงสุด (รอบล่าสุด)</h3>
+        <div class="podium-stage" id="podiumVoteStage">
+          <div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥</div>
+        </div>
+      </div>
+
+      <!-- แท่นที่ 4: Top 3 ใจรักผู้พัฒนาสูงสุด -->
+      <div class="podium-box">
+        <h3 class="podium-box-title">🤝 Top 3 ใจรักผู้พัฒนาสูงสุด</h3>
+        <div class="podium-stage" id="podiumDevHeartsStage">
+          <div class="lb-empty">ยังไม่มีผู้ส่งใจให้ผู้พัฒนา 🤝</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- =========================================
        โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
        ========================================= -->
   <div class="cheer-spotlight-card" id="cheerSpotlightSection">
@@ -4287,7 +4362,7 @@
       <span class="live-sync-badge"><span class="live-dot"></span> REAL-TIME</span>
     </div>
     
-      <div class="lb-grid">
+    <div class="lb-grid">
       <div class="lb-column">
         <h3 class="lb-col-title">🎁 ทำเนียบผู้สนับสนุน (Top Donate)</h3>
         <!-- แผงแอดมินค้นหาชื่อ & ใส่ยอดโดเนท (โผล่เฉพาะแอดมิน) -->
@@ -4319,7 +4394,6 @@
       </div>
     </div>
   </div>
-
   <!-- หน้าแข่งกดใจโหวตเกม (ซ่อนไว้ก่อน กดแท็บแล้วจะโผล่) -->
   <div class="section-card" id="gameVoteSection" style="display:none;">
     <div class="section-header">
@@ -5517,8 +5591,17 @@
       btn.classList.remove('checked-in');
       btn.textContent = streak > 0 ? `📅 เช็กอินรายวัน (สตรีค ${streak} วัน)` : "📅 เช็กอินรายวัน (+60 ❤️)";
     }
-  }
 
+    const navBtn = document.getElementById('navCheckinBtn');
+    const navTxt = document.getElementById('navCheckinText');
+    if (navBtn) {
+      navBtn.classList.toggle('checked-in', isDoneToday);
+      navBtn.title = isDoneToday ? `เช็กอินแล้ว (สตรีค ${streak} วัน)` : "เช็กอินรายวัน";
+    }
+    if (navTxt) {
+      navTxt.textContent = isDoneToday ? `เช็กอินแล้ว (${streak}d)` : "เช็กอิน";
+    }
+  }
   function claimDailyCheckin() {
     if (!currentUser) {
       openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนกดเช็กอินรายวันนะครับ");
@@ -5619,6 +5702,8 @@
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
     document.getElementById('navLoginBtn').style.display = 'none';
+    const navQuick = document.getElementById('navQuickActions');
+    if (navQuick) navQuick.style.display = 'inline-flex';
     const navWrap = document.getElementById('navUserWrap');
     navWrap.style.display = 'inline-flex';
     navWrap.className = "nav-profile-pill" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
@@ -5678,6 +5763,8 @@
 
     const refreshBtn = document.getElementById('refreshRoleBtn');
     if (refreshBtn) refreshBtn.style.display = provMeta.key === "discord" ? "inline-block" : "none";
+    const navRefreshBtn = document.getElementById('navRefreshRoleBtn');
+    if (navRefreshBtn) navRefreshBtn.style.display = provMeta.key === "discord" ? "inline-flex" : "none";
 
     if (usersCache && usersCache[profile.id]) {
       myServerHearts = Number(usersCache[profile.id].heartsClicked) || 0;
@@ -5709,6 +5796,8 @@
     // สลับหน้าตาโปรไฟล์กลับเป็นสถานะยังไม่ล็อกอิน
     document.getElementById('navLoginBtn').style.display = 'inline-block';
     document.getElementById('navUserWrap').style.display = 'none';
+    const navQuick = document.getElementById('navQuickActions');
+    if (navQuick) navQuick.style.display = 'none';
     document.getElementById('profileLoggedOut').style.display = 'flex';
     document.getElementById('profileLoggedIn').style.display = 'none';
 
@@ -5783,8 +5872,10 @@
       return;
     }
     const btn = document.getElementById('refreshRoleBtn');
+    const navRefreshBtn = document.getElementById('navRefreshRoleBtn');
     refreshCooldown = true;
     btn.disabled = true;
+    if (navRefreshBtn) navRefreshBtn.disabled = true;
     btn.textContent = "⏳ กำลังตรวจสอบ...";
 
     const ok = await loadProfileFromToken(tokenObj, false);
@@ -5793,6 +5884,7 @@
     setTimeout(() => {
       refreshCooldown = false;
       btn.disabled = false;
+      if (navRefreshBtn) navRefreshBtn.disabled = false;
       btn.textContent = "🔄 รีเฟรชยศ";
     }, 4000);
   }
