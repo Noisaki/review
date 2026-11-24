@@ -3406,7 +3406,6 @@
       box-shadow: 0 3px 8px rgba(21, 128, 61, 0.25);
     }
     .dev-comment-send:hover { filter: brightness(1.08); }
-    }
     /* =========================================
        ❤️ ปุ่มกดใจ & 💬 กล่องคอมเมนต์แบบย่อได้ในการ์ดผู้พัฒนา
        ========================================= */
@@ -4034,6 +4033,16 @@
     </div>
     <div id="devAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
       <h3 id="devAdminFormTitle" style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินเพิ่มผู้พัฒนา & ทีมผู้สร้าง</h3>
+
+      <!-- กล่องแอดมินค้นหาชื่อ & มอบยศผู้พิทักษ์ผู้สร้างต้นฉบับ (1 คลิก) -->
+      <div style="background:#ffffff; border:1.5px solid #f59e0b; border-radius:12px; padding:10px 12px; margin-bottom:14px;">
+        <div style="font-size:0.84rem; font-weight:700; color:#92400e; margin-bottom:6px;">
+          🕊️💎 มอบยศพิเศษ "ผู้พิทักษ์ผู้สร้างต้นฉบับ" (ค้นหาชื่อคนที่ส่งสลิปทาง Discord):
+        </div>
+        <input type="text" id="devPagePatronSearch" placeholder="พิมพ์ชื่อ หรือ username ของผู้เล่น..." oninput="renderDevPagePatronSearch()" style="width:100%; padding:7px 10px; border-radius:8px; border:1px solid #fcd34d; font-family:'Prompt',sans-serif; font-size:0.85rem;">
+        <div id="devPagePatronResults"></div>
+      </div>
+
       <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
         <input type="text" id="adminDevName" placeholder="ชื่อผู้พัฒนาหลัก / ชื่อสตูดิโอ *" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
         <input type="text" id="adminDevRole" placeholder="หน้าที่หลัก เช่น ผู้สร้าง & เขียนบท / นักวาด" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
@@ -4731,16 +4740,20 @@
   }
 
   // ดึงข้อมูลผู้ใช้ + ยศในเซิร์ฟเวอร์ BGT
+  const DISCORD_MEMBER_CACHE_KEY = "bgt_discord_member_cache_v1";
+
+  // ดึงข้อมูลผู้ใช้ + ยศในเซิร์ฟเวอร์ BGT (มีระบบจำค่าเดิมกัน Discord Rate Limit 429)
   async function fetchDiscordProfile(token) {  
     const userRes = await fetchDiscordJson("/users/@me", token);
     if (userRes.status === 401) throw new Error("TOKEN_INVALID");
     if (!userRes.ok) throw new Error("USER_FETCH_FAILED");
     const user = await userRes.json();
+    const uid = String(user.id);
+
     let roleTier = 0;
     let inGuild = false;
     let nick = null;
     let isVoteAdmin = false;
-    let guildAvatar = null;
 
     try {
       const memRes = await fetchDiscordJson(`/users/@me/guilds/${DISCORD_GUILD_ID}/member`, token);
@@ -4753,15 +4766,42 @@
         for (const r of ROLE_TIERS) {
           if (roles.indexOf(r.id) !== -1) {
             roleTier = r.tier;
-            break; // ROLE_TIERS เรียงจากสูงไปต่ำ เจอตัวแรกคือยศสูงสุด
+            break;
           }
         }
+        // บันทึกค่าสิทธิ์ล่าสุดเก็บไว้ในเครื่อง
+        try {
+          localStorage.setItem(DISCORD_MEMBER_CACHE_KEY + "_" + uid, JSON.stringify({
+            roleTier, inGuild, isVoteAdmin, nick
+          }));
+        } catch (e) {}
+      } else {
+        // ถ้า Discord ติด Rate Limit (429) ให้ดึงสิทธิ์ที่จำไว้มาใช้ต่อทันที
+        const cachedRaw = localStorage.getItem(DISCORD_MEMBER_CACHE_KEY + "_" + uid);
+        if (cachedRaw) {
+          const c = JSON.parse(cachedRaw);
+          roleTier = Number(c.roleTier) || 0;
+          inGuild = !!c.inGuild;
+          isVoteAdmin = !!c.isVoteAdmin;
+          nick = c.nick || null;
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      try {
+        const cachedRaw = localStorage.getItem(DISCORD_MEMBER_CACHE_KEY + "_" + uid);
+        if (cachedRaw) {
+          const c = JSON.parse(cachedRaw);
+          roleTier = Number(c.roleTier) || 0;
+          inGuild = !!c.inGuild;
+          isVoteAdmin = !!c.isVoteAdmin;
+          nick = c.nick || null;
+        }
+      } catch (err) {}
+    }
 
     const displayName = nick || user.global_name || user.username || "Discord User";
     return {
-      id: String(user.id),
+      id: uid,
       name: displayName,
       username: user.username || "",
       avatarUrl: buildAvatarUrl(user),
@@ -4770,16 +4810,17 @@
       isVoteAdmin: isVoteAdmin
     };
   }
+
   function updateDevPatronBadgeUI() {
-  const isPatron = !!(currentUser && usersCache && usersCache[currentUser.id] && usersCache[currentUser.id].devSupporter);
-  const pBadge = document.getElementById('profileDevPatronPill');
-  if (pBadge) pBadge.style.display = isPatron ? 'inline-flex' : 'none';
+    const isPatron = !!(currentUser && usersCache && usersCache[currentUser.id] && usersCache[currentUser.id].devSupporter);
+    const pBadge = document.getElementById('profileDevPatronPill');
+    if (pBadge) pBadge.style.display = isPatron ? 'inline-flex' : 'none';
 
-  const pFrame = document.getElementById('profileAvatarFrame');
-  if (pFrame) pFrame.classList.toggle('dev-patron-frame', isPatron);
+    const pFrame = document.getElementById('profileAvatarFrame');
+    if (pFrame) pFrame.classList.toggle('dev-patron-frame', isPatron);
 
-  const nFrame = document.getElementById('navAvatarFrame');
-  if (nFrame) nFrame.classList.toggle('dev-patron-frame', isPatron);
+    const nFrame = document.getElementById('navAvatarFrame');
+    if (nFrame) nFrame.classList.toggle('dev-patron-frame', isPatron);
   }
 
   function applyProfileToUI(profile) {
@@ -4792,6 +4833,7 @@
     const devAdminPanel = document.getElementById('devAdminPanel');
     if (devAdminPanel) devAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
+
     document.getElementById('profileLoggedOut').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'flex';
     document.getElementById('navLoginBtn').style.display = 'none';
@@ -4814,18 +4856,15 @@
     avatarImg.src = profile.avatarUrl;
 
     const frame = document.getElementById('profileAvatarFrame');
-    // แก้จาก > 0 เป็น !== 0
     frame.className = "avatar-frame" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
 
     document.getElementById('profileName').textContent = profile.name;
 
     const pill = document.getElementById('profileRolePill');
-    // แก้จาก > 0 เป็น !== 0
     pill.className = "role-pill" + (profile.roleTier !== 0 ? " tier-" + profile.roleTier : "");
     pill.textContent = info ? info.name : (profile.inGuild ? "『🦊』 สมาชิก" : "👤 ยังไม่ได้เข้าเซิร์ฟเวอร์ BGT");
 
     const desc = document.getElementById('profileDesc');
-    // แก้จาก if (info) เป็น if (info && profile.roleTier > 0) เพื่อแยกข้อความคนโดเนทกับสมาชิกทั่วไป
     if (info && profile.roleTier > 0) {
       desc.textContent = `ยศสูงสุดของคุณ: ${info.short} • ขอบคุณที่สนับสนุนทีมแปลนะครับ 💖`;
     } else if (profile.inGuild) {
@@ -4838,9 +4877,9 @@
     }
     updateMyHeartsLine();
     updateCheerUI();
+    updateDevPatronBadgeUI();
     renderLeaderboards();
   }
-
   function applyLoggedOutUI() {
     currentUser = null;
     myServerHearts = 0;
@@ -5497,10 +5536,9 @@
         setTimeout(() => el.remove(), 1200);
       }
 
-      updateMyHeartsLine();
       updateCheerUI();
-      updateDevPatronBadgeUI();
-      renderLeaderboards();
+      updateApologyChecklistUI();
+      checkIfFullyForgiven();
       return;
     }
 
@@ -5663,50 +5701,12 @@
     }
   }
 
-  function stopChristmasMusic() {
-    isMusicPlaying = false;
-    const bgmEl = document.getElementById('bgmAudio');
-    if (bgmEl) bgmEl.pause();
-    if (!isHorrorTriggered) {
-      document.getElementById('musicStateIcon').textContent = '▶️';
-      document.getElementById('musicStateText').textContent = 'เล่นเพลง';
-    }
-  }
-  function toggleBgmLoop() {
-    if (isHorrorTriggered) return;
-    playClickSound();
-    isLoopOne = !isLoopOne;
-
-    const bgmEl = document.getElementById('bgmAudio');
-    if (bgmEl) {
-      bgmEl.loop = isLoopOne || (BGM_PLAYLIST.length === 1);
-    }
-
-    const btn = document.getElementById('loopSongBtn');
-    if (btn) {
-      btn.textContent = isLoopOne ? '🔂' : '🔁';
-      btn.style.opacity = isLoopOne ? '1' : '0.6';
-      btn.style.boxShadow = isLoopOne ? '0 0 10px rgba(251, 191, 36, 0.85)' : 'none';
-      btn.title = isLoopOne ? 'กำลังวนซ้ำเพลงนี้' : 'เล่นวนตามคิว';
-    }
-    showToast(isLoopOne ? '🔂 เปิดวนซ้ำเพลงนี้แล้ว!' : '🔁 เล่นวนตามคิวปกติแล้ว');
-  }
-  
-  function nextBgmTrack() {
-    if (isHorrorTriggered || BGM_PLAYLIST.length <= 1) return;
-    playClickSound();
-    currentTrackIndex = (currentTrackIndex + 1) % BGM_PLAYLIST.length;
-    userPausedMusic = false;
-    startChristmasMusic();
-  }
-
   function toggleChristmasMusic() {
     if (isHorrorTriggered) {
       playRealCryingAudio();
       return;
     }
     const bgmEl = document.getElementById('bgmAudio');
-    // เช็กจากสถานะจริงของตัวเล่นเพลง (แก้ปัญหากดติดบ้างไม่ติดบ้าง!)
     if (bgmEl && !bgmEl.paused) {
       userPausedMusic = true;
       stopChristmasMusic();
@@ -7184,6 +7184,57 @@
       renderAdminDonateSearch();
     }).catch(() => {
       showToast("⚠️ อัปเดตยศไม่สำเร็จ");
+    });
+  }
+  function renderDevPagePatronSearch() {
+    const inputEl = document.getElementById('devPagePatronSearch');
+    const box = document.getElementById('devPagePatronResults');
+    if (!inputEl || !box) return;
+
+    const q = inputEl.value.trim().toLowerCase();
+    if (!q) {
+      box.innerHTML = "";
+      return;
+    }
+
+    const matches = Object.keys(usersCache || {})
+      .map(id => ({ id, u: usersCache[id] || {} }))
+      .filter(e => {
+        const name = (e.u.name || "").toLowerCase();
+        const uname = (e.u.username || "").toLowerCase();
+        return name.includes(q) || uname.includes(q) || e.id.includes(q);
+      })
+      .slice(0, 6);
+
+    if (matches.length === 0) {
+      box.innerHTML = '<div style="font-size:0.78rem; color:#9f1239; margin-top:6px;">ไม่พบรายชื่อ (คนนั้นต้องเคยล็อกอินเว็บอย่างน้อย 1 ครั้ง)</div>';
+      return;
+    }
+
+    box.innerHTML = "";
+    matches.forEach(m => {
+      const row = document.createElement('div');
+      row.style.cssText = "display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fffbeb; padding:7px 10px; border-radius:10px; border:1px solid #fde68a; margin-top:6px; flex-wrap:wrap;";
+
+      const label = document.createElement('span');
+      label.style.cssText = "font-size:0.84rem; font-weight:700; color:#1e293b;";
+      label.textContent = `${m.u.name || "User"} ${m.u.username ? `(${m.u.username})` : ""}`;
+
+      const isPatron = !!m.u.devSupporter;
+      const patronBtn = document.createElement('button');
+      patronBtn.type = "button";
+      patronBtn.textContent = isPatron ? "✅ มียศนี้แล้ว (กดเพื่อถอด)" : "🕊️💎 กดมอบยศนี้";
+      patronBtn.style.cssText = isPatron
+        ? "background:linear-gradient(135deg,#ec4899,#8b5cf6); color:#fff; border:none; padding:6px 12px; border-radius:999px; font-size:0.8rem; cursor:pointer; font-weight:700;"
+        : "background:linear-gradient(135deg,#f59e0b,#dc2626); color:#fff; border:none; padding:6px 12px; border-radius:999px; font-size:0.8rem; cursor:pointer; font-weight:700;";
+      patronBtn.onclick = () => {
+        adminToggleDevPatron(m.id, !isPatron);
+        setTimeout(renderDevPagePatronSearch, 250);
+      };
+
+      row.appendChild(label);
+      row.appendChild(patronBtn);
+      box.appendChild(row);
     });
   }
     
