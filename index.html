@@ -4370,11 +4370,13 @@
           <div style="font-size:0.8rem; font-weight:700; color:#9f1239; margin-bottom:6px;">👑 แอดมิน: ค้นหาชื่อเพื่อใส่ยอดโดเนท (บาท)</div>
           <input type="text" id="adminDonateSearch" placeholder="พิมพ์ชื่อ หรือ username..." oninput="renderAdminDonateSearch()" style="width:100%; padding:6px 10px; border-radius:8px; border:1px solid #fda4af; font-family:'Prompt',sans-serif; font-size:0.84rem; margin-bottom:6px;">
           <div id="adminDonateResults"></div>
+          <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #fda4af;">
+            <button type="button" onclick="adminResetAllPointsExceptDonate()" style="width:100%; background:linear-gradient(135deg,#991b1b,#dc2626); color:#fff; border:1.5px solid #fca5a5; padding:8px 12px; border-radius:10px; font-family:'Kanit',sans-serif; font-size:0.84rem; font-weight:700; cursor:pointer; box-shadow:0 3px 10px rgba(220,38,38,0.28);">
+              🧨 รีเซ็ตแต้มทั้งหมดเป็น 0 (ยกเว้นยอดโดเนท)
+            </button>
+          </div>
         </div>
-        <div class="lb-list" id="lbDonateList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
-        <div class="lb-pagination" id="lbDonatePager" style="display:none;"></div>
       </div>
-
       <div class="lb-column">
         <h3 class="lb-col-title">💖 ทำเนียบนักส่งหัวใจสูงสุด</h3>
         <div class="lb-list" id="lbHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
@@ -6479,45 +6481,20 @@
       return;
     }
 
-    // โหมดปกติ: ต้องล็อกอิน Discord ก่อนจึงจะกดส่งหัวใจได้
+    // โหมดปกติ: ต้องล็อกอินก่อนจึงจะกดส่งหัวใจได้
     if (!currentUser) {
-      openLoginInfo("🔐 ต้องล็อกอินด้วย Discord ก่อน จึงจะกดส่งหัวใจให้กำลังใจได้นะครับ");
+      openLoginInfo("🔐 ต้องล็อกอินก่อน จึงจะกดส่งหัวใจให้กำลังใจได้นะครับ");
       return;
     }
 
-    // กดส่งหัวใจสะสมขึ้น Firebase Realtime Database + Combo
-    const now = Date.now();
-    if (now - lastClickTime < 380) {
-      comboCount++;
-    } else {
-      comboCount = 1;
-    }
-    lastClickTime = now;
-
-    let bonus = 1;
-    if (comboCount >= 50) bonus = 50;
-    else if (comboCount >= 30) bonus = 25;
-    else if (comboCount >= 18) bonus = 10;
-    else if (comboCount >= 10) bonus = 5;
-    else if (comboCount >= 4) bonus = 2;
-
+    // กดส่งหัวใจทีละ +1 แฟร์ๆ (ไม่มีระบบคอมโบแล้ว)
     const comboPill = document.getElementById('comboPill');
-    if (bonus > 1) {
-      comboPill.textContent = `COMBO x${bonus}! 🔥`;
-      comboPill.classList.add('active');
-    } else {
-      comboPill.classList.remove('active');
-    }
-    clearTimeout(comboResetTimer);
-    comboResetTimer = setTimeout(() => {
-      comboCount = 0;
-      comboPill.classList.remove('active');
-    }, 800);
+    if (comboPill) comboPill.classList.remove('active');
 
     const oldMyTotal = myServerHearts + pendingClicks;
     const oldLv = getLevelFromHearts(oldMyTotal);
 
-    pendingClicks += bonus;
+    pendingClicks += 1;
     const newMyTotal = myServerHearts + pendingClicks;
     const newTotal = getTotalHearts();
 
@@ -6525,7 +6502,7 @@
       localStorage.setItem(CHEER_COUNT_KEY, String(newTotal));
     } catch (err) {}
 
-    // ตั้งเวลาส่งยอดรวมขึ้น Firebase ทุกๆ 1.2 วินาที
+    // ส่งยอดรวมขึ้น Firebase ทุกๆ 1.2 วินาที
     clearTimeout(flushTimer);
     flushTimer = setTimeout(flushPendingHearts, 1200);
 
@@ -6713,16 +6690,54 @@
     }
   }
 
-  document.addEventListener('pointerdown', function autoStartOnFirstInteraction(e) {
-    initAudio();
-    if (e.target && e.target.closest && e.target.closest('#musicToggleBtn, #nextSongBtn, #loopSongBtn')) return;
+  function tryAutoPlayBgm(e) {
+    if (e && e.target && e.target.closest && e.target.closest('#musicToggleBtn, #nextSongBtn, #loopSongBtn')) return;
+    if (userPausedMusic || musicVolume <= 0) return;
+
+    try { initAudio(); } catch (err) {}
+
     if (isHorrorTriggered) {
       playRealCryingAudio();
       if (!horrorInterval) startHorrorAmbience();
-    } else if (!isMusicPlaying && !userPausedMusic && musicVolume > 0) {
-      startChristmasMusic();
+      return;
     }
-  }, { once: true });
+
+    const bgmEl = document.getElementById('bgmAudio');
+    if (!bgmEl) return;
+    if (!bgmEl.paused && isMusicPlaying) {
+      removeAutoPlayListeners();
+      return;
+    }
+
+    loadCurrentBgmTrack();
+    const p = bgmEl.play();
+    if (p !== undefined) {
+      p.then(() => {
+        isMusicPlaying = true;
+        document.getElementById('musicStateIcon').textContent = '⏸️';
+        document.getElementById('musicStateText').textContent = BGM_PLAYLIST[currentTrackIndex].name;
+        removeAutoPlayListeners();
+      }).catch(() => {
+        // ถ้าเบราว์เซอร์มือถือยังบล็อกอยู่ จะรอจังหวะแตะครั้งถัดไปโดยไม่ถอดตัวดักฟัง
+      });
+    }
+  }
+
+  function removeAutoPlayListeners() {
+    ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(evt => {
+      document.removeEventListener(evt, tryAutoPlayBgm);
+    });
+  }
+
+  // 1. พยายามเล่นอัตโนมัติทันทีที่เปิดเว็บ
+  window.addEventListener('load', () => {
+    setTimeout(() => tryAutoPlayBgm(), 350);
+  });
+
+  // 2. เผื่อมือถือ/เบราว์เซอร์บล็อกเสียง -> แตะจอหรือคลิกตรงไหนก็เล่นเพลงทันที
+  ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(evt => {
+    document.addEventListener(evt, tryAutoPlayBgm, { passive: true });
+  });
 
   function playRealCryingAudio() {
     const cryEl = document.getElementById('realCryAudio');
@@ -8127,7 +8142,82 @@
       showToast("⚠️ บันทึกยอดโดเนทไม่สำเร็จ");
     });
   }
+  // 🧨 แอดมินรีเซ็ตแต้มทั้งหมดในเว็บเป็น 0 (ยกเว้นยอดโดเนท & ข้อมูลโปรไฟล์)
+  async function adminResetAllPointsExceptDonate() {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    playClickSound();
 
+    // แจ้งเตือนยืนยันรอบที่ 1
+    const firstAsk = confirm(
+      "⚠️ แจ้งเตือนแอดมิน! จะยอมรีเซ็ตแต้มทั้งหมดเป็น 0 จริงๆ เหรอครับ?\n\n" +
+      "สิ่งที่กำลังจะถูกรีเซ็ตเป็น 0:\n" +
+      "• ยอดหัวใจรวมทั้งเว็บ (bgt_hearts)\n" +
+      "• ยอดหัวใจ & เลเวลของสมาชิกทุกคน\n" +
+      "• ยอดกดใจหน้าผู้พัฒนาทุกคน\n" +
+      "• คะแนนโหวตเกมรอบปัจจุบัน\n\n" +
+      "✅ ยอดโดเนท (Top Donate), ยศพิเศษ และข้อมูลแต่งโปรไฟล์จะอยู่ครบไม่หายครับ!"
+    );
+    if (!firstAsk) return;
+
+    // แจ้งเตือนยืนยันรอบที่ 2 (พิมพ์ยืนยันกันกดพลาด)
+    const confirmText = prompt(
+      "⚠️ ยืนยันครั้งสุดท้าย! จะยอมรีเซ็ตแต้มทั้งหมดเป็น 0 จริงๆ นะครับ?\n" +
+      "ข้อมูลที่รีไปแล้วจะกู้คืนไม่ได้ พิมพ์คำว่า RESET เพื่อยืนยัน:"
+    );
+    if (!confirmText || confirmText.trim().toUpperCase() !== "RESET") {
+      showToast("❌ ยกเลิกการรีเซ็ตแต้มแล้วครับ");
+      return;
+    }
+
+    try {
+      clearTimeout(flushTimer);
+      pendingClicks = 0;
+
+      // ดึงรายชื่อล่าสุดจาก Firebase เพื่อรีให้ครบทุกคน
+      const [usersSnap, devsSnap, voteGamesSnap] = await Promise.all([
+        db.ref("users").once("value"),
+        db.ref("developers").once("value"),
+        db.ref("game_vote/games").once("value")
+      ]);
+
+      const updates = {};
+      updates["bgt_hearts"] = 0;
+
+      // รีแต้มหัวใจของทุกคนเป็น 0 (ไม่แตะ donateAmount)
+      const allUsers = usersSnap.val() || {};
+      Object.keys(allUsers).forEach(uid => {
+        updates[`users/${uid}/heartsClicked`] = 0;
+        updates[`users/${uid}/devHeartsClicked`] = 0;
+      });
+
+      // รีแต้มหัวใจในการ์ดผู้พัฒนาทุกคนเป็น 0
+      const allDevs = devsSnap.val() || {};
+      Object.keys(allDevs).forEach(devKey => {
+        updates[`developers/${devKey}/hearts`] = 0;
+      });
+
+      // รีคะแนนโหวตเกมรอบปัจจุบันเป็น 0 (ถ้ามี)
+      const allVoteGames = voteGamesSnap.val() || {};
+      Object.keys(allVoteGames).forEach(gameId => {
+        updates[`game_vote/games/${gameId}/hearts`] = 0;
+        updates[`game_vote/games/${gameId}/voters`] = null;
+      });
+
+      await db.ref().update(updates);
+
+      serverHearts = 0;
+      myServerHearts = 0;
+      pendingClicks = 0;
+      try { localStorage.removeItem(CHEER_COUNT_KEY); } catch (e) {}
+
+      updateCheerUI();
+      renderLeaderboards(true);
+      showToast("✨ รีเซ็ตแต้มทั้งหมดเป็น 0 เรียบร้อยแล้ว! (ยอดโดเนทอยู่ครบ 100%)");
+    } catch (err) {
+      console.error("Reset Points Error:", err);
+      showToast("⚠️ รีเซ็ตแต้มไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
+    }
+  }
   function adminToggleDevPatron(uid, enable) {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
     db.ref("users/" + uid + "/devSupporter").set(enable ? true : null).then(() => {
