@@ -1135,7 +1135,41 @@
     .lb-meta .role-pill {
       font-size: 0.72rem;
       padding: 1px 9px;
-      margin-top: 2px;
+      margin-top: 0;
+    }
+    .lb-badges-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      margin-top: 3px;
+    }
+    .lb-badges-wrap > * {
+      margin: 0 !important;
+    }
+    .lb-more-roles-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 1px 8px;
+      border-radius: 999px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .lb-more-roles-btn:hover {
+      background: #334155;
+      transform: scale(1.06);
+    }
+    body.horror-mode .lb-more-roles-btn {
+      background: #450a0a;
+      color: #fecaca;
+      border-color: #991b1b;
     }
 
     .lb-score {
@@ -6628,20 +6662,22 @@
     nameEl.textContent = u.customName || u.name || "Discord User";
     meta.appendChild(nameEl);
 
+    const allBadges = [];
+
     const info = getRoleInfoByTier(tier);
     if (info) {
       const pill = document.createElement('span');
       pill.className = "role-pill tier-" + tier;
       pill.textContent = info.name;
-      meta.appendChild(pill);
+      allBadges.push(pill);
     }
     if (u.devSupporter) {
-    img.classList.add('dev-patron-avatar');
-    const patronPill = document.createElement('span');
-    patronPill.className = "dev-patron-pill";
-    patronPill.style.cssText = "font-size:0.7rem; padding:1px 9px;";
-    patronPill.textContent = "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨";
-    meta.appendChild(patronPill);
+      img.classList.add('dev-patron-avatar');
+      const patronPill = document.createElement('span');
+      patronPill.className = "dev-patron-pill";
+      patronPill.style.cssText = "font-size:0.7rem; padding:1px 9px;";
+      patronPill.textContent = "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨";
+      allBadges.push(patronPill);
     }
 
     const lkInfo = getLoyKrathongRankInfo(id);
@@ -6649,7 +6685,7 @@
       const lkPill = document.createElement('span');
       lkPill.className = "lk-event-pill " + lkInfo.cls;
       lkPill.textContent = lkInfo.label;
-      meta.appendChild(lkPill);
+      allBadges.push(lkPill);
     }
 
     const acInfo = getAutoClickMysteryInfo(u.autoClickTier);
@@ -6658,17 +6694,50 @@
       acPill.className = "ac-mystery-pill " + acInfo.cls;
       acPill.style.fontSize = "0.7rem";
       acPill.textContent = acInfo.name;
-      meta.appendChild(acPill);
+      allBadges.push(acPill);
     }
 
-    // ✅ ย้าย 7 บรรทัดนี้มาวางตรงนี้แทนครับ
     const userClicks = Number(u.heartsClicked) || 0;
     if (userClicks > 0) {
       const lvInfo = getLevelData(userClicks);
       const titlePill = document.createElement('span');
       titlePill.className = "title-pill " + lvInfo.rarityClass;
       titlePill.textContent = lvInfo.badge;
-      meta.appendChild(titlePill);
+      allBadges.push(titlePill);
+    }
+
+    // แสดงสูงสุด 2 ยศหลัก ที่เหลือยุบเป็นปุ่ม +N แบบ Discord (กดกางออกได้)
+    const MAX_VISIBLE_BADGES = 2;
+    if (allBadges.length > 0) {
+      const badgesWrap = document.createElement('div');
+      badgesWrap.className = "lb-badges-wrap";
+
+      allBadges.slice(0, MAX_VISIBLE_BADGES).forEach(b => badgesWrap.appendChild(b));
+
+      if (allBadges.length > MAX_VISIBLE_BADGES) {
+        const extraBadges = allBadges.slice(MAX_VISIBLE_BADGES);
+        const moreBtn = document.createElement('button');
+        moreBtn.type = "button";
+        moreBtn.className = "lb-more-roles-btn";
+        moreBtn.textContent = `+${extraBadges.length}`;
+        moreBtn.title = "คลิกเพื่อดูยศที่เหลือ";
+
+        let expanded = false;
+        moreBtn.onclick = (e) => {
+          e.stopPropagation();
+          playClickSound();
+          expanded = !expanded;
+          if (expanded) {
+            extraBadges.forEach(b => badgesWrap.insertBefore(b, moreBtn));
+            moreBtn.textContent = "ย่อ";
+          } else {
+            extraBadges.forEach(b => b.remove());
+            moreBtn.textContent = `+${extraBadges.length}`;
+          }
+        };
+        badgesWrap.appendChild(moreBtn);
+      }
+      meta.appendChild(badgesWrap);
     }
 
     row.appendChild(meta);
