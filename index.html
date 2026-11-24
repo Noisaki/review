@@ -4075,10 +4075,10 @@
       0%, 100% { filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.75)); transform: scale(1); }
       50% { filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.95)); transform: scale(1.04); }
     }
-    .deco-spin { transform-origin: 50px 50px; animation: decoSlowSpin 14s linear infinite; }
-    .deco-spin-fast { transform-origin: 50px 50px; animation: decoSlowSpin 6s linear infinite; }
-    .deco-wiggle { transform-origin: 50px 30px; animation: decoEarWiggle 2.8s ease-in-out infinite; }
-    .deco-pulse { transform-origin: 50px 50px; animation: decoPulseGlow 2s ease-in-out infinite; }
+    .deco-spin { transform-origin: 50px 50px; animation: decoSlowSpin 14s linear infinite; will-change: transform; }
+    .deco-spin-fast { transform-origin: 50px 50px; animation: decoSlowSpin 6s linear infinite; will-change: transform; }
+    .deco-wiggle { transform-origin: 50px 30px; animation: decoEarWiggle 2.8s ease-in-out infinite; will-change: transform; }
+    .deco-pulse { transform-origin: 50px 50px; animation: decoPulseGlow 2s ease-in-out infinite; will-change: transform, filter; }
 
     /* ปุ่มเช็กอินรายวัน */
     .checkin-btn {
@@ -5938,11 +5938,16 @@
 
   function applyAvatarDecoration(overlayEl, decoId) {
     if (!overlayEl) return;
-    if (!decoId || decoId === "none") {
+    const nextId = decoId || "none";
+    // ถ้าเป็นกรอบเดิมอยู่แล้ว ไม่ต้องวาดทับใหม่ (กันแอนิเมชันรีเซ็ตกระตุก!)
+    if (overlayEl.dataset.decoId === nextId) return;
+    overlayEl.dataset.decoId = nextId;
+
+    if (nextId === "none") {
       overlayEl.innerHTML = "";
       return;
     }
-    const found = AVATAR_DECORATIONS.find(d => d.id === decoId);
+    const found = AVATAR_DECORATIONS.find(d => d.id === nextId);
     overlayEl.innerHTML = found ? found.svg : "";
   }
 
@@ -9817,12 +9822,14 @@
 
   function renderBannerFromRaw() {
     if (!draftBannerRawImg) return;
-    const targetW = 450;
-    const targetH = 180;
+    const targetW = 900;
+    const targetH = 270;
     const canvas = document.createElement('canvas');
     canvas.width = targetW;
     canvas.height = targetH;
     const c = canvas.getContext('2d');
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = 'high';
 
     const baseScale = Math.max(targetW / draftBannerRawImg.width, targetH / draftBannerRawImg.height);
     const scale = baseScale * bannerZoom;
@@ -9835,7 +9842,8 @@
     const offsetY = -extraH * (bannerPosY / 100);
 
     c.drawImage(draftBannerRawImg, offsetX, offsetY, drawW, drawH);
-    draftBannerUrl = canvas.toDataURL('image/jpeg', 0.62);
+    // ใช้ WebP คุณภาพสูง ภาพคมชัดมากแต่ขนาดไฟล์ยังเล็กประหยัดพื้นที่ Firebase
+    draftBannerUrl = canvas.toDataURL('image/webp', 0.85);
     updateEditProfilePreview();
   }
 
@@ -9860,7 +9868,7 @@
     preview.addEventListener('pointermove', (e) => {
       if (!isDragging || !draftBannerRawImg) return;
       const rect = preview.getBoundingClientRect();
-      const targetW = 450, targetH = 180;
+      const targetW = 900, targetH = 270;
       const baseScale = Math.max(targetW / draftBannerRawImg.width, targetH / draftBannerRawImg.height);
       const scale = baseScale * bannerZoom;
       const extraW = Math.max(0, draftBannerRawImg.width * scale - targetW);
@@ -10070,13 +10078,18 @@
     }
 
     if (listEl) {
-      listEl.textContent = "";
-      if (sorted.length === 0) {
-        listEl.innerHTML = `<div class="lb-empty" style="color:#cbd5e1;">ยังไม่มีผู้ลอยกระทง — เป็นคนแรกเลยสิ! 🪷</div>`;
-      } else {
-        sorted.slice(0, 5).forEach((e, i) => {
-          listEl.appendChild(buildLbRow(i + 1, e.id, e.u, "🪷 " + formatCompact(e.count) + " ใบ"));
-        });
+      const top5 = sorted.slice(0, 5);
+      const sig = top5.map(e => `${e.id}:${e.count}:${e.u.avatarDecoration || ""}:${e.u.customName || e.u.name || ""}`).join("|") + "|" + (currentUser ? currentUser.id : "");
+      if (listEl.dataset.lkSig !== sig) {
+        listEl.dataset.lkSig = sig;
+        listEl.textContent = "";
+        if (top5.length === 0) {
+          listEl.innerHTML = `<div class="lb-empty" style="color:#cbd5e1;">ยังไม่มีผู้ลอยกระทง — เป็นคนแรกเลยสิ! 🪷</div>`;
+        } else {
+          top5.forEach((e, i) => {
+            listEl.appendChild(buildLbRow(i + 1, e.id, e.u, "🪷 " + formatCompact(e.count) + " ใบ"));
+          });
+        }
       }
     }
   }
