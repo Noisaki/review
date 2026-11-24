@@ -4629,6 +4629,305 @@
       animation: celestialShimmer 1.9s infinite;
       pointer-events: none;
     }
+
+    /* =========================================
+       📚 ระบบติดตามสถานะงานแปลไทย (Translation Projects)
+       ========================================= */
+    .proj-filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .proj-filter-btn {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #475569;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .proj-filter-btn:hover {
+      border-color: #f59e0b;
+      color: #b91c1c;
+    }
+    .proj-filter-btn.active {
+      background: linear-gradient(135deg, #dc2626, #f59e0b);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 3px 10px rgba(220, 38, 38, 0.35);
+    }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    @media (max-width: 640px) {
+      .proj-grid { grid-template-columns: 1fr; }
+    }
+
+    .proj-card {
+      position: relative;
+      background: #ffffff;
+      border: 2px solid #fde68a;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .proj-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(245, 158, 11, 0.25);
+    }
+    .proj-cover-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #0f172a;
+      overflow: hidden;
+      border-bottom: 2px solid #fbbf24;
+    }
+    .proj-cover-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+    .proj-card:hover .proj-cover-wrap img {
+      transform: scale(1.04);
+    }
+    .proj-status-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+      z-index: 2;
+    }
+    .proj-status-translating { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+    .proj-status-qc          { background: linear-gradient(135deg, #9333ea, #c084fc); }
+    .proj-status-testing     { background: linear-gradient(135deg, #ea580c, #f59e0b); }
+    .proj-status-paused      { background: linear-gradient(135deg, #475569, #64748b); }
+    .proj-status-released    { background: linear-gradient(135deg, #15803d, #22c55e); }
+
+    .proj-license-chip {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+      z-index: 2;
+    }
+    .proj-license-approved { background: rgba(20, 83, 45, 0.9); color: #bbf7d0; border: 1px solid #4ade80; }
+    .proj-license-pending  { background: rgba(120, 53, 15, 0.9); color: #fef08a; border: 1px solid #fbbf24; }
+    .proj-license-open     { background: rgba(30, 58, 138, 0.9); color: #bfdbfe; border: 1px solid #60a5fa; }
+
+    .proj-body {
+      padding: 16px 18px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .proj-head-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .proj-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #7f1d1d;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .proj-genre-pill {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .proj-progress-box {
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .proj-progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #92400e;
+      margin-bottom: 6px;
+      gap: 6px;
+    }
+    .proj-progress-track {
+      width: 100%;
+      height: 11px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .proj-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #dc2626, #f59e0b, #16a34a);
+      transition: width 0.35s ease;
+    }
+    .proj-stage-detail {
+      font-size: 0.76rem;
+      color: #64748b;
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
+    .proj-meta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.82rem;
+      color: #334155;
+      line-height: 1.45;
+    }
+    .proj-meta-list strong { color: #1e293b; }
+
+    .proj-note-box {
+      background: #f8fafc;
+      border-left: 3.5px solid #f59e0b;
+      border-radius: 0 10px 10px 0;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .proj-media-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .proj-media-btn {
+      flex: 1;
+      min-width: 120px;
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      color: #1e293b;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .proj-media-btn:hover {
+      background: #eef2ff;
+      border-color: #5865F2;
+      color: #3730a3;
+      transform: translateY(-1px);
+    }
+
+    .proj-footer {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px 14px;
+      background: rgba(254, 243, 199, 0.55);
+      border-top: 1.5px dashed #fcd34d;
+      flex-wrap: wrap;
+    }
+    .proj-hype-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #f43f5e, #f59e0b);
+      color: #ffffff;
+      border: 1.5px solid #fde68a;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.28);
+      transition: transform 0.12s ease, filter 0.2s;
+    }
+    .proj-hype-btn:hover { filter: brightness(1.08); }
+    .proj-hype-btn:active { transform: scale(0.93); }
+
+    .proj-dl-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(21, 128, 61, 0.28);
+      transition: transform 0.15s ease, filter 0.2s;
+    }
+    .proj-dl-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+    /* Lightbox ขยายรูปใบอนุญาต & ตัวอย่างคำแปล */
+    .media-lightbox-box {
+      background: #0f172a;
+      color: #f8fafc;
+      border: 2px solid #fbbf24;
+      border-radius: 22px;
+      padding: 20px;
+      max-width: 780px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+      animation: popIn 0.25s ease-out;
+    }
+    .media-lightbox-img {
+      max-width: 100%;
+      max-height: 62vh;
+      border-radius: 14px;
+      border: 1.5px solid rgba(253, 230, 138, 0.45);
+      object-fit: contain;
+      background: #020617;
+      display: block;
+      margin: 10px auto 14px;
+    }
+    body.horror-mode .proj-card { background: #1f0404 !important; border-color: #7f1d1d !important; }
+    body.horror-mode .proj-title, body.horror-mode .proj-meta-list { color: #fca5a5 !important; }
   </style>
 </head>
 <body>
@@ -4642,6 +4941,7 @@
       <button type="button" class="nav-tab-btn" id="nav-vote" onclick="switchPage('vote')">🔥 โหวตเกม</button>
       <button type="button" class="nav-tab-btn" id="nav-eval" onclick="switchPage('eval')">📝 ประเมินเกม</button>
       <button type="button" class="nav-tab-btn" id="nav-donate" onclick="switchPage('donate')">🎁 สนับสนุน</button>
+      <button type="button" class="nav-tab-btn" id="nav-projects" onclick="switchPage('projects')">📚 งานแปล</button>
       <button type="button" class="nav-tab-btn" id="nav-dev" onclick="switchPage('dev')">🤝 ผู้พัฒนา</button>
     </div>
   </div>
@@ -5157,6 +5457,70 @@
       <div class="lb-empty" style="grid-column:1/-1;">กำลังโหลดรายชื่อผู้พัฒนา...</div>
     </div>
   </div>
+
+  <!-- =========================================
+       📚 หน้าติดตามสถานะงานแปลไทย (Translation Projects Tracker)
+       ========================================= -->
+  <div class="section-card" id="projectsSection" style="display:none;">
+    <div class="section-header">
+      <h2 class="section-title">📚 สถานะงานแปลไทย (กำลังทำ & โปรเจกต์ทั้งหมด)</h2>
+      <span class="step-pill" id="projCountBadge">กำลังโหลดโปรเจกต์...</span>
+    </div>
+
+    <!-- แถบกรองสถานะงาน -->
+    <div class="proj-filter-bar" id="projFilterBar">
+      <button type="button" class="proj-filter-btn active" onclick="setProjectFilter('all', this)">🌟 ทั้งหมด</button>
+      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('translating', this)">✍️ กำลังแปล</button>
+      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('qc', this)">🔍 ตรวจคำ / QC</button>
+      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('testing', this)">🧪 ทดสอบบั๊ก</button>
+      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('released', this)">✅ ปล่อยแล้ว</button>
+      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('paused', this)">⏸️ พักชั่วคราว</button>
+    </div>
+
+    <!-- แผงแอดมินเพิ่ม / แก้ไขโปรเจกต์งานแปล (โผล่เฉพาะแอดมิน) -->
+    <div id="projectsAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
+      <h3 id="projAdminFormTitle" style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินจัดการสถานะงานแปล</h3>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
+        <input type="text" id="adminProjTitle" placeholder="🎮 ชื่อเกม *" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjGenre" placeholder="🏷️ แนวเกม/เวอร์ชัน เช่น VN • v1.2" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <select id="adminProjStatus" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
+          <option value="translating">✍️ สถานะ: กำลังแปล</option>
+          <option value="qc">🔍 สถานะ: ตรวจคำผิด / QC</option>
+          <option value="testing">🧪 สถานะ: ทดสอบในเกม</option>
+          <option value="released">✅ สถานะ: ปล่อยแล้ว (100%)</option>
+          <option value="paused">⏸️ สถานะ: พักชั่วคราว</option>
+        </select>
+        <input type="number" id="adminProjPercent" min="0" max="100" value="0" placeholder="📊 ความคืบหน้า (0-100%)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjTranslators" placeholder="👥 ผู้แปล / ทีมงาน เช่น Ben, คุณ A" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjStageDetail" placeholder="📌 ทำถึงไหนแล้ว เช่น บทที่ 3/5 • เหลือ UI" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <select id="adminProjLicenseStatus" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
+          <option value="approved">📜 ใบอนุญาต: ได้รับอนุญาตจากผู้พัฒนาแล้ว</option>
+          <option value="pending">⏳ ใบอนุญาต: กำลังติดต่อขออนุญาต</option>
+          <option value="open">🌐 ใบอนุญาต: ผู้พัฒนาเปิดให้แปลเสรี</option>
+        </select>
+        <input type="text" id="adminProjCover" placeholder="🖼️ ปกเกม เช่น images/jacob.jpg หรือ https://..." style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjLicenseImg" placeholder="📄 รูปหลักฐานใบอนุญาต เช่น images/lic_1.png" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        <input type="text" id="adminProjDownloadUrl" placeholder="⬇️ ลิงก์ดาวน์โหลด / หน้าเกม (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      </div>
+
+      <textarea id="adminProjPreviewImgs" placeholder="🖼️ รูปตัวอย่างคำแปลในเกม (ใส่หลายรูปได้ แยกทีละบรรทัด หรือคั่นด้วย ,) เช่น:
+images/preview1.jpg
+images/preview2.jpg" style="min-height:60px; margin-bottom:10px;"></textarea>
+      <textarea id="adminProjNote" placeholder="📝 โน้ตอัปเดตล่าสุด หรือหมายเหตุถึงผู้เล่น (เช่น กำลังแก้สระลอย คาดว่าจะปล่อยปลายเดือนนี้)..." style="min-height:54px; margin-bottom:10px;"></textarea>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" id="adminProjSubmitBtn" class="submit-btn" style="flex:2; width:auto; min-width:200px; padding:11px 16px; font-size:0.98rem;" onclick="adminSaveProject()">➕ เพิ่มโปรเจกต์งานแปล</button>
+        <button type="button" id="adminProjCancelBtn" class="submit-btn" style="display:none; flex:1; width:auto; min-width:130px; padding:11px 16px; font-size:0.98rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="cancelEditProject()">❌ ยกเลิกการแก้ไข</button>
+      </div>
+    </div>
+
+    <!-- ตารางการ์ดงานแปล -->
+    <div class="proj-grid" id="projectsGrid">
+      <div class="lb-empty" style="grid-column:1/-1;">กำลังโหลดรายการงานแปล...</div>
+    </div>
+  </div>
+
   <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
   <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="return handleSubmit(event)">
     <input type="hidden" name="pageHistory" value="0,1,2,3">
@@ -5620,6 +5984,22 @@
     <div class="modal-btns">
       <button type="button" id="slipSubmitBtn" class="modal-close-btn" onclick="submitDonateSlip()">✅ ส่งสลิปแจ้งโอน</button>
       <button type="button" class="modal-cancel-btn" onclick="document.getElementById('slipSubmitModal').style.display='none';">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- หน้าต่างขยายดูรูปใบอนุญาต / ตัวอย่างคำแปล -->
+<div class="modal-overlay" id="projectMediaModal" onclick="if(event.target===this) closeProjectMediaModal();">
+  <div class="media-lightbox-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:6px;">
+      <h3 id="pmModalTitle" style="font-family:'Kanit',sans-serif; margin:0; font-size:1.1rem; color:#fde047; text-align:left;">🖼️ ตัวอย่าง</h3>
+      <button type="button" class="modal-cancel-btn" style="padding:5px 12px; font-size:0.85rem;" onclick="closeProjectMediaModal()">✕ ปิด</button>
+    </div>
+    <img id="pmModalImg" class="media-lightbox-img" src="" alt="">
+    <div id="pmModalControls" style="display:none; justify-content:center; align-items:center; gap:12px;">
+      <button type="button" class="profile-btn" onclick="stepProjectMedia(-1)">◀ ภาพก่อนหน้า</button>
+      <span id="pmModalCounter" style="font-family:'Kanit',sans-serif; font-size:0.9rem; color:#fde68a;">1 / 1</span>
+      <button type="button" class="profile-btn" onclick="stepProjectMedia(1)">ภาพถัดไป ▶</button>
     </div>
   </div>
 </div>
@@ -6414,7 +6794,10 @@
     if (devAdminPanel) devAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     const slipAdminPanel = document.getElementById('adminSlipReviewPanel');
     if (slipAdminPanel) slipAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
+    const projAdminPanel = document.getElementById('projectsAdminPanel');
+    if (projAdminPanel) projAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
+    if (typeof renderTranslationProjects === "function") renderTranslationProjects();
 
     const cardEl = document.getElementById('profileCard');
     if (cardEl) cardEl.classList.add('has-banner');
@@ -6536,10 +6919,14 @@
     if (devAdminPanel) devAdminPanel.style.display = 'none';
     const slipAdminPanel = document.getElementById('adminSlipReviewPanel');
     if (slipAdminPanel) slipAdminPanel.style.display = 'none';
+    const projAdminPanel = document.getElementById('projectsAdminPanel');
+    if (projAdminPanel) projAdminPanel.style.display = 'none';
 
-    // รีเซ็ตฟอร์มแก้ไขผู้พัฒนา & ซ่อนปุ่มแก้ไข/ลบในการ์ด
+    // รีเซ็ตฟอร์มแก้ไขผู้พัฒนา/งานแปล & ซ่อนปุ่มแก้ไข/ลบในการ์ด
     if (typeof cancelEditDeveloper === "function") cancelEditDeveloper();
     if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
+    if (typeof cancelEditProject === "function") cancelEditProject();
+    if (typeof renderTranslationProjects === "function") renderTranslationProjects();
 
     // ซ่อนยศพิเศษ & กรอบออร่าผู้สนับสนุนผู้พัฒนา
     if (typeof updateDevPatronBadgeUI === "function") updateDevPatronBadgeUI();
@@ -8492,6 +8879,7 @@
     initGameVoteSystem();
     initDevelopersSystem();
     initDonateSlipSystem();
+    initTranslationProjectsSystem();
     updateCheerUI();
 
     let wasCursed = false;
@@ -8720,6 +9108,7 @@
     const evalForm = document.getElementById('customForm');
     const donateCard = document.getElementById('donateSection');
     const devCard = document.getElementById('devSection');
+    const projectsCard = document.getElementById('projectsSection');
 
     if (isHorrorTriggered) {
       if (podiumCard) podiumCard.style.display = 'none';
@@ -8730,6 +9119,7 @@
       if (lbCard) lbCard.style.display = 'none';
       if (voteCard) voteCard.style.display = 'none';
       if (devCard) devCard.style.display = 'none';
+      if (projectsCard) projectsCard.style.display = 'none';
       if (evalForm) evalForm.style.display = 'block';
       if (donateCard) donateCard.style.display = 'block';
       updateVotePromoAd();
@@ -8740,15 +9130,16 @@
     const lkRunningNow = Date.now() <= LOY_KRATHONG_END_MS;
 
     const pageMap = {
-      home:   lkRunningNow ? [headerCard, quickGrid, profileCard, lkCard, cheerCard, podiumCard] : [headerCard, quickGrid, profileCard, cheerCard, podiumCard],
-      rank:   [lbCard],
-      vote:   [voteCard],
-      eval:   [evalForm],
-      donate: [donateCard],
-      dev:    [devCard]
+      home:     lkRunningNow ? [headerCard, quickGrid, profileCard, lkCard, cheerCard, podiumCard] : [headerCard, quickGrid, profileCard, cheerCard, podiumCard],
+      rank:     [lbCard],
+      vote:     [voteCard],
+      eval:     [evalForm],
+      donate:   [donateCard],
+      projects: [projectsCard],
+      dev:      [devCard]
     };
 
-    const allSections = [headerCard, quickGrid, profileCard, lkCard, cheerCard, podiumCard, lbCard, voteCard, evalForm, donateCard, devCard];
+    const allSections = [headerCard, quickGrid, profileCard, lkCard, cheerCard, podiumCard, lbCard, voteCard, evalForm, donateCard, projectsCard, devCard];
     allSections.forEach(el => {
       if (!el) return;
       el.style.display = 'none';
@@ -11349,6 +11740,435 @@
       stopGenkiChargeAudio();
       genkiRunning = false;
     }
+  }
+
+  // =========================================
+  // 16. ระบบติดตามสถานะงานแปลไทย (Translation Projects Tracker)
+  // =========================================
+  let projectsCache = {};
+  let editingProjKey = null;
+  let currentProjFilter = 'all';
+
+  const PROJ_STATUS_META = {
+    translating: { label: "✍️ กำลังแปล",      cls: "proj-status-translating" },
+    qc:          { label: "🔍 ตรวจคำ / QC",   cls: "proj-status-qc" },
+    testing:     { label: "🧪 ทดสอบในเกม",    cls: "proj-status-testing" },
+    released:    { label: "✅ ปล่อยแล้ว",     cls: "proj-status-released" },
+    paused:      { label: "⏸️ พักชั่วคราว",   cls: "proj-status-paused" }
+  };
+
+  const PROJ_LICENSE_META = {
+    approved: { label: "📜 ได้รับอนุญาตถูกต้อง", cls: "proj-license-approved" },
+    pending:  { label: "⏳ รอการตอบรับสิทธิ์",    cls: "proj-license-pending" },
+    open:     { label: "🌐 ผู้พัฒนาเปิดให้แปลเสรี", cls: "proj-license-open" }
+  };
+
+  function initTranslationProjectsSystem() {
+    if (!db) return;
+    db.ref("translation_projects").on("value", (snap) => {
+      projectsCache = snap.val() || {};
+      renderTranslationProjects();
+    });
+  }
+
+  function setProjectFilter(statusKey, btnEl) {
+    playClickSound();
+    currentProjFilter = statusKey;
+    document.querySelectorAll('#projFilterBar .proj-filter-btn').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    renderTranslationProjects();
+  }
+
+  function resetProjectAdminForm() {
+    editingProjKey = null;
+    [
+      'adminProjTitle', 'adminProjGenre', 'adminProjTranslators', 'adminProjStageDetail',
+      'adminProjCover', 'adminProjLicenseImg', 'adminProjDownloadUrl', 'adminProjPreviewImgs', 'adminProjNote'
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+    const st = document.getElementById('adminProjStatus');
+    if (st) st.value = "translating";
+    const pct = document.getElementById('adminProjPercent');
+    if (pct) pct.value = "0";
+    const lic = document.getElementById('adminProjLicenseStatus');
+    if (lic) lic.value = "approved";
+
+    const titleEl = document.getElementById('projAdminFormTitle');
+    if (titleEl) titleEl.textContent = "👑 แผงแอดมินจัดการสถานะงานแปล";
+    const subBtn = document.getElementById('adminProjSubmitBtn');
+    if (subBtn) subBtn.textContent = "➕ เพิ่มโปรเจกต์งานแปล";
+    const cancelBtn = document.getElementById('adminProjCancelBtn');
+    if (cancelBtn) cancelBtn.style.display = "none";
+  }
+
+  function cancelEditProject() {
+    resetProjectAdminForm();
+  }
+
+  function editProject(key) {
+    if (!currentUser || !currentUser.isVoteAdmin) return;
+    const p = projectsCache[key];
+    if (!p) return;
+
+    playClickSound();
+    editingProjKey = key;
+
+    document.getElementById('adminProjTitle').value = p.title || "";
+    document.getElementById('adminProjGenre').value = p.genre || "";
+    document.getElementById('adminProjStatus').value = p.status || "translating";
+    document.getElementById('adminProjPercent').value = Number(p.percent) || 0;
+    document.getElementById('adminProjTranslators').value = p.translators || "";
+    document.getElementById('adminProjStageDetail').value = p.stageDetail || "";
+    document.getElementById('adminProjLicenseStatus').value = p.licenseStatus || "approved";
+    document.getElementById('adminProjCover').value = p.coverImg || "";
+    document.getElementById('adminProjLicenseImg').value = p.licenseProofImg || "";
+    document.getElementById('adminProjDownloadUrl').value = p.downloadUrl || "";
+    document.getElementById('adminProjPreviewImgs').value = p.previewImgs || "";
+    document.getElementById('adminProjNote').value = p.note || "";
+
+    const titleEl = document.getElementById('projAdminFormTitle');
+    if (titleEl) titleEl.textContent = `✏️ กำลังแก้ไขโปรเจกต์: ${p.title || ""}`;
+    const subBtn = document.getElementById('adminProjSubmitBtn');
+    if (subBtn) subBtn.textContent = "💾 บันทึกการแก้ไข";
+    const cancelBtn = document.getElementById('adminProjCancelBtn');
+    if (cancelBtn) cancelBtn.style.display = "inline-block";
+
+    const panel = document.getElementById('projectsAdminPanel');
+    if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function adminSaveProject() {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    const title = document.getElementById('adminProjTitle').value.trim();
+    if (!title) {
+      showToast("⚠️ กรุณากรอกชื่อเกมก่อนนะครับ");
+      return;
+    }
+
+    const status = document.getElementById('adminProjStatus').value || "translating";
+    let percent = Math.max(0, Math.min(100, Math.floor(Number(document.getElementById('adminProjPercent').value) || 0)));
+    if (status === "released" && percent < 100) percent = 100;
+
+    const payload = {
+      title: title,
+      genre: document.getElementById('adminProjGenre').value.trim(),
+      status: status,
+      percent: percent,
+      translators: document.getElementById('adminProjTranslators').value.trim(),
+      stageDetail: document.getElementById('adminProjStageDetail').value.trim(),
+      licenseStatus: document.getElementById('adminProjLicenseStatus').value || "approved",
+      coverImg: document.getElementById('adminProjCover').value.trim(),
+      licenseProofImg: document.getElementById('adminProjLicenseImg').value.trim(),
+      downloadUrl: normalizeDevUrl(document.getElementById('adminProjDownloadUrl').value),
+      previewImgs: document.getElementById('adminProjPreviewImgs').value.trim(),
+      note: document.getElementById('adminProjNote').value.trim(),
+      updatedAt: Date.now()
+    };
+
+    if (editingProjKey) {
+      db.ref("translation_projects/" + editingProjKey).update(payload).then(() => {
+        showToast(`💾 อัปเดตโปรเจกต์ "${title}" (${percent}%) เรียบร้อย!`);
+        resetProjectAdminForm();
+      }).catch(() => showToast("⚠️ บันทึกไม่สำเร็จ (เช็ก Firebase Rules)"));
+    } else {
+      payload.createdAt = Date.now();
+      payload.hypeCount = 0;
+      db.ref("translation_projects").push(payload).then(() => {
+        showToast(`✅ เพิ่มงานแปล "${title}" เรียบร้อย!`);
+        resetProjectAdminForm();
+      }).catch(() => showToast("⚠️ เพิ่มข้อมูลไม่สำเร็จ (เช็ก Firebase Rules)"));
+    }
+  }
+
+  function adminDeleteProject(key) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!confirm("ต้องการลบโปรเจกต์งานแปลนี้ออกใช่ไหมครับ?")) return;
+    db.ref("translation_projects/" + key).remove().then(() => {
+      if (editingProjKey === key) resetProjectAdminForm();
+      showToast("🗑️ ลบโปรเจกต์เรียบร้อยแล้ว");
+    });
+  }
+
+  function hypeProjectClick(key, e) {
+    if (!db) return;
+    playClickSound();
+    if (!checkStealthAntiAutoClick('proj_' + key)) return;
+
+    db.ref(`translation_projects/${key}/hypeCount`).set(firebase.database.ServerValue.increment(1)).catch(() => {});
+
+    if (e) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = '🔥 รอเล่น!';
+      el.style.left = (e.clientX + (Math.random() - 0.5) * 40) + 'px';
+      el.style.top = (e.clientY - 12) + 'px';
+      el.style.fontSize = '1rem';
+      el.style.fontWeight = '800';
+      el.style.color = '#f59e0b';
+      el.style.textShadow = '0 2px 6px rgba(0,0,0,0.45)';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 950);
+    }
+  }
+
+  function parseProjectMediaList(raw) {
+    if (!raw) return [];
+    return String(raw).split(/[\r\n,]+/).map(s => s.trim()).filter(Boolean);
+  }
+
+  function setImgWithFallback(imgEl, rawSrc, fallbackText) {
+    const fb = `https://placehold.co/600x340/1e293b/fde68a?text=${encodeURIComponent(fallbackText || 'BGT')}`;
+    imgEl.src = rawSrc || fb;
+    imgEl.onerror = function () {
+      if (!this.dataset.tried && rawSrc && !rawSrc.includes('images/') && !rawSrc.startsWith('http') && !rawSrc.startsWith('data:')) {
+        this.dataset.tried = "1";
+        this.src = "images/" + rawSrc;
+      } else {
+        this.onerror = null;
+        this.src = fb;
+      }
+    };
+  }
+
+  // Lightbox ดูรูปหลักฐานใบอนุญาต & แกลเลอรีตัวอย่างคำแปล
+  let pmGalleryList = [];
+  let pmGalleryIdx = 0;
+
+  function openProjectMediaModal(title, imgList) {
+    if (!imgList || imgList.length === 0) return;
+    playClickSound();
+    pmGalleryList = imgList;
+    pmGalleryIdx = 0;
+    document.getElementById('pmModalTitle').textContent = title;
+    renderProjectMediaFrame();
+    document.getElementById('projectMediaModal').style.display = 'flex';
+  }
+
+  function renderProjectMediaFrame() {
+    const imgEl = document.getElementById('pmModalImg');
+    const ctrlEl = document.getElementById('pmModalControls');
+    const cntEl = document.getElementById('pmModalCounter');
+    if (!imgEl || pmGalleryList.length === 0) return;
+
+    imgEl.dataset.tried = "";
+    setImgWithFallback(imgEl, pmGalleryList[pmGalleryIdx], "Image Not Found");
+    if (ctrlEl) ctrlEl.style.display = pmGalleryList.length > 1 ? 'flex' : 'none';
+    if (cntEl) cntEl.textContent = `${pmGalleryIdx + 1} / ${pmGalleryList.length}`;
+  }
+
+  function stepProjectMedia(delta) {
+    if (pmGalleryList.length <= 1) return;
+    playClickSound();
+    pmGalleryIdx = (pmGalleryIdx + delta + pmGalleryList.length) % pmGalleryList.length;
+    renderProjectMediaFrame();
+  }
+
+  function closeProjectMediaModal() {
+    playClickSound();
+    document.getElementById('projectMediaModal').style.display = 'none';
+  }
+
+  function renderTranslationProjects() {
+    const grid = document.getElementById('projectsGrid');
+    const badge = document.getElementById('projCountBadge');
+    if (!grid) return;
+
+    const allList = Object.keys(projectsCache || {})
+      .map(k => ({ key: k, ...projectsCache[k] }))
+      .sort((a, b) => (Number(b.updatedAt || b.createdAt) || 0) - (Number(a.updatedAt || a.createdAt) || 0));
+
+    if (badge) badge.textContent = `ทั้งหมด ${allList.length} โปรเจกต์`;
+
+    const filtered = currentProjFilter === 'all'
+      ? allList
+      : allList.filter(p => (p.status || 'translating') === currentProjFilter);
+
+    grid.innerHTML = "";
+    if (filtered.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = "lb-empty";
+      empty.style.gridColumn = "1 / -1";
+      empty.textContent = allList.length === 0
+        ? "ยังไม่มีรายการงานแปลในขณะนี้ 📚"
+        : "ไม่มีโปรเจกต์ในสถานะที่เลือกครับ";
+      grid.appendChild(empty);
+      return;
+    }
+
+    const isAdmin = currentUser && currentUser.isVoteAdmin;
+
+    filtered.forEach(p => {
+      const stMeta = PROJ_STATUS_META[p.status] || PROJ_STATUS_META.translating;
+      const licMeta = PROJ_LICENSE_META[p.licenseStatus] || PROJ_LICENSE_META.approved;
+      const pct = Math.max(0, Math.min(100, Number(p.percent) || 0));
+      const previews = parseProjectMediaList(p.previewImgs);
+
+      const card = document.createElement('div');
+      card.className = "proj-card";
+
+      // 1. ปกเกม + ป้ายสถานะ + ป้ายใบอนุญาต + ปุ่มแอดมิน
+      const coverWrap = document.createElement('div');
+      coverWrap.className = "proj-cover-wrap";
+
+      const coverImg = document.createElement('img');
+      coverImg.alt = p.title || "";
+      setImgWithFallback(coverImg, p.coverImg, p.title || "Game");
+      coverWrap.appendChild(coverImg);
+
+      const stBadge = document.createElement('span');
+      stBadge.className = `proj-status-badge ${stMeta.cls}`;
+      stBadge.textContent = stMeta.label;
+      coverWrap.appendChild(stBadge);
+
+      const licBadge = document.createElement('span');
+      licBadge.className = `proj-license-chip ${licMeta.cls}`;
+      licBadge.textContent = licMeta.label;
+      coverWrap.appendChild(licBadge);
+
+      if (isAdmin) {
+        const admWrap = document.createElement('div');
+        admWrap.className = "dev-admin-actions";
+
+        const editBtn = document.createElement('button');
+        editBtn.type = "button";
+        editBtn.className = "dev-card-btn edit";
+        editBtn.textContent = "✏️ แก้ไข";
+        editBtn.onclick = () => editProject(p.key);
+        admWrap.appendChild(editBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = "button";
+        delBtn.className = "dev-card-btn del";
+        delBtn.textContent = "🗑️ ลบ";
+        delBtn.onclick = () => adminDeleteProject(p.key);
+        admWrap.appendChild(delBtn);
+
+        coverWrap.appendChild(admWrap);
+      }
+      card.appendChild(coverWrap);
+
+      // 2. เนื้อหาการ์ด
+      const body = document.createElement('div');
+      body.className = "proj-body";
+
+      const headRow = document.createElement('div');
+      headRow.className = "proj-head-row";
+      const titleEl = document.createElement('h3');
+      titleEl.className = "proj-title";
+      titleEl.textContent = p.title || "Untitled";
+      headRow.appendChild(titleEl);
+
+      if (p.genre) {
+        const genreEl = document.createElement('span');
+        genreEl.className = "proj-genre-pill";
+        genreEl.textContent = p.genre;
+        headRow.appendChild(genreEl);
+      }
+      body.appendChild(headRow);
+
+      // แถบเปอร์เซ็นต์ความคืบหน้า
+      const progBox = document.createElement('div');
+      progBox.className = "proj-progress-box";
+      const progTop = document.createElement('div');
+      progTop.className = "proj-progress-top";
+      progTop.innerHTML = `<span>📊 ความคืบหน้างานแปล</span><span>${pct}%</span>`;
+      progBox.appendChild(progTop);
+
+      const track = document.createElement('div');
+      track.className = "proj-progress-track";
+      const fill = document.createElement('div');
+      fill.className = "proj-progress-fill";
+      fill.style.width = `${pct}%`;
+      track.appendChild(fill);
+      progBox.appendChild(track);
+
+      if (p.stageDetail) {
+        const detailEl = document.createElement('div');
+        detailEl.className = "proj-stage-detail";
+        detailEl.textContent = "📌 " + p.stageDetail;
+        progBox.appendChild(detailEl);
+      }
+      body.appendChild(progBox);
+
+      // ข้อมูลผู้แปล + เวลาอัปเดต
+      const metaList = document.createElement('div');
+      metaList.className = "proj-meta-list";
+
+      if (p.translators) {
+        const tRow = document.createElement('div');
+        tRow.innerHTML = `<strong>✍️ ผู้แปล / ทีมงาน:</strong> `;
+        tRow.appendChild(document.createTextNode(p.translators));
+        metaList.appendChild(tRow);
+      }
+      if (p.updatedAt) {
+        const dRow = document.createElement('div');
+        const dateStr = new Date(p.updatedAt).toLocaleString('th-TH', { day: 'numeric', month: 'short', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+        dRow.style.color = "#64748b";
+        dRow.style.fontSize = "0.75rem";
+        dRow.textContent = `🕒 อัปเดตล่าสุด: ${dateStr}`;
+        metaList.appendChild(dRow);
+      }
+      if (metaList.children.length > 0) body.appendChild(metaList);
+
+      if (p.note) {
+        const noteEl = document.createElement('div');
+        noteEl.className = "proj-note-box";
+        noteEl.textContent = "💬 " + p.note;
+        body.appendChild(noteEl);
+      }
+
+      // ปุ่มเปิดดูใบอนุญาต & ตัวอย่างคำแปล
+      if (p.licenseProofImg || previews.length > 0) {
+        const mediaRow = document.createElement('div');
+        mediaRow.className = "proj-media-row";
+
+        if (p.licenseProofImg) {
+          const licBtn = document.createElement('button');
+          licBtn.type = "button";
+          licBtn.className = "proj-media-btn";
+          licBtn.textContent = "📜 ดูหลักฐานใบอนุญาต";
+          licBtn.onclick = () => openProjectMediaModal(`📜 หลักฐานใบอนุญาต — ${p.title}`, [p.licenseProofImg]);
+          mediaRow.appendChild(licBtn);
+        }
+        if (previews.length > 0) {
+          const prevBtn = document.createElement('button');
+          prevBtn.type = "button";
+          prevBtn.className = "proj-media-btn";
+          prevBtn.textContent = `🖼️ ดูตัวอย่างคำแปล (${previews.length})`;
+          prevBtn.onclick = () => openProjectMediaModal(`🖼️ ตัวอย่างคำแปล — ${p.title}`, previews);
+          mediaRow.appendChild(prevBtn);
+        }
+        body.appendChild(mediaRow);
+      }
+
+      card.appendChild(body);
+
+      // 3. แถบล่าง: ปุ่มรอเล่น / ดาวน์โหลด
+      const footer = document.createElement('div');
+      footer.className = "proj-footer";
+
+      const hypeBtn = document.createElement('button');
+      hypeBtn.type = "button";
+      hypeBtn.className = "proj-hype-btn";
+      hypeBtn.innerHTML = `🔥 รอเล่น! <span class="dev-heart-pill">${formatCompact(p.hypeCount || 0)}</span>`;
+      hypeBtn.onclick = (e) => hypeProjectClick(p.key, e);
+      footer.appendChild(hypeBtn);
+
+      if (p.downloadUrl) {
+        const dlLink = document.createElement('a');
+        dlLink.href = p.downloadUrl;
+        dlLink.target = "_blank";
+        dlLink.rel = "noopener";
+        dlLink.className = "proj-dl-btn";
+        dlLink.textContent = p.status === 'released' ? "⬇️ ดาวน์โหลดแพตช์" : "🔗 หน้าเกมต้นฉบับ";
+        footer.appendChild(dlLink);
+      }
+
+      card.appendChild(footer);
+      grid.appendChild(card);
+    });
   }
 </script>
 
