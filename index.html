@@ -3191,24 +3191,33 @@
     }
     .dev-team-item {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
       font-size: 0.78rem;
-      padding: 3px 0;
+      padding: 6px 0;
       border-bottom: 1px solid rgba(245, 158, 11, 0.18);
     }
     .dev-team-item:last-child { border-bottom: none; }
-    .dev-team-member { font-weight: 700; color: #1e293b; }
+    .dev-team-member {
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.4;
+      word-break: break-word;
+    }
     .dev-team-duty {
       background: #ffffff;
       border: 1px solid #fde68a;
       color: #b45309;
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 600;
-      padding: 1px 8px;
-      border-radius: 999px;
-      white-space: nowrap;
+      padding: 3px 10px;
+      border-radius: 10px;
+      line-height: 1.45;
+      white-space: normal;
+      word-break: break-word;
+      max-width: 100%;
+    }
     }
     .dev-links-footer {
       display: flex;
@@ -8325,11 +8334,12 @@
           const item = document.createElement('div');
           item.className = "dev-team-item";
 
-          // ไม่ตัดคำตรง https:// หรือ http://
+          // ไม่ตัดคำตรง https:// หรือ http:// และลบจุด • หรือขีด - ที่ซ้ำด้านหน้าออก
           const parts = line.split(/\s+-\s+|\s*：\s*|:(?!\/\/)/);
+          const cleanMember = parts[0].replace(/^[\s•\-–—*]+/, '').trim();
           const memberSpan = document.createElement('span');
           memberSpan.className = "dev-team-member";
-          memberSpan.textContent = "• " + parts[0];
+          memberSpan.textContent = "• " + cleanMember;
           item.appendChild(memberSpan);
 
           if (parts.length > 1 && parts.slice(1).join(" - ")) {
