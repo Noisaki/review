@@ -6887,25 +6887,27 @@
     const comboPill = document.getElementById('comboPill');
     if (comboPill) comboPill.classList.remove('active');
 
-    const oldMyTotal = myServerHearts + pendingClicks;
-    const oldLv = getLevelFromHearts(oldMyTotal);
+    if (checkStealthAntiAutoClick('hearts')) {
+      const oldMyTotal = myServerHearts + pendingClicks;
+      const oldLv = getLevelFromHearts(oldMyTotal);
 
-    pendingClicks += 1;
-    const newMyTotal = myServerHearts + pendingClicks;
-    const newTotal = getTotalHearts();
+      pendingClicks += 1;
+      const newMyTotal = myServerHearts + pendingClicks;
+      const newTotal = getTotalHearts();
 
-    try {
-      localStorage.setItem(CHEER_COUNT_KEY, String(newTotal));
-    } catch (err) {}
+      try {
+        localStorage.setItem(CHEER_COUNT_KEY, String(newTotal));
+      } catch (err) {}
 
-    // ส่งยอดรวมขึ้น Firebase ทุกๆ 1.2 วินาที
-    clearTimeout(flushTimer);
-    flushTimer = setTimeout(flushPendingHearts, 1200);
+      // ส่งยอดรวมขึ้น Firebase ทุกๆ 1.2 วินาที
+      clearTimeout(flushTimer);
+      flushTimer = setTimeout(flushPendingHearts, 1200);
 
-    const newLv = getLevelFromHearts(newMyTotal);
-    const leveledUp = newLv > oldLv;
+      const newLv = getLevelFromHearts(newMyTotal);
+      const leveledUp = newLv > oldLv;
 
-    updateCheerUI(leveledUp, leveledUp ? getLevelData(newMyTotal) : null);
+      updateCheerUI(leveledUp, leveledUp ? getLevelData(newMyTotal) : null);
+    }
 
     for (let i = 0; i < 3; i++) {
       const el = document.createElement('div');
@@ -8464,23 +8466,25 @@
 
     playClickSound();
 
-    // เช็กเลเวลอัปจาก +1 XP ที่ได้จากการโหวต
-    const oldMyTotal = myServerHearts + pendingClicks;
-    const oldLv = getLevelFromHearts(oldMyTotal);
-    const newMyTotal = oldMyTotal + 1;
-    const newLv = getLevelFromHearts(newMyTotal);
-    if (newLv > oldLv) {
-      const newLvData = getLevelData(newMyTotal);
-      triggerMilestoneCelebration(`🎉 LEVEL UP! ยินดีด้วย คุณเลื่อนเป็น ${newLvData.badge} [${newLvData.rarityName}] จากการโหวตเกม! ✨`);
-    }
+    if (checkStealthAntiAutoClick('vote')) {
+      // เช็กเลเวลอัปจาก +1 XP ที่ได้จากการโหวต
+      const oldMyTotal = myServerHearts + pendingClicks;
+      const oldLv = getLevelFromHearts(oldMyTotal);
+      const newMyTotal = oldMyTotal + 1;
+      const newLv = getLevelFromHearts(newMyTotal);
+      if (newLv > oldLv) {
+        const newLvData = getLevelData(newMyTotal);
+        triggerMilestoneCelebration(`🎉 LEVEL UP! ยินดีด้วย คุณเลื่อนเป็น ${newLvData.badge} [${newLvData.rarityName}] จากการโหวตเกม! ✨`);
+      }
 
-    // อัปเดตคะแนนโหวต +1 + รายชื่อคนโหวต + เพิ่ม XP บน Firebase
-    const updates = {};
-    updates[`game_vote/games/${gameId}/hearts`] = firebase.database.ServerValue.increment(1);
-    updates[`game_vote/games/${gameId}/voters/${currentUser.id}/name`] = currentUser.name;
-    updates[`game_vote/games/${gameId}/voters/${currentUser.id}/count`] = firebase.database.ServerValue.increment(1);
-    updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(1);
-    db.ref().update(updates).catch(() => {});
+      // อัปเดตคะแนนโหวต +1 + รายชื่อคนโหวต + เพิ่ม XP บน Firebase
+      const updates = {};
+      updates[`game_vote/games/${gameId}/hearts`] = firebase.database.ServerValue.increment(1);
+      updates[`game_vote/games/${gameId}/voters/${currentUser.id}/name`] = currentUser.name;
+      updates[`game_vote/games/${gameId}/voters/${currentUser.id}/count`] = firebase.database.ServerValue.increment(1);
+      updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(1);
+      db.ref().update(updates).catch(() => {});
+    }
 
     // เอฟเฟกต์ลอยโชว์ ❤️ +1
     if (e) {
@@ -9101,20 +9105,22 @@
 
     playClickSound();
 
-    const oldMyTotal = myServerHearts + pendingClicks;
-    const oldLv = getLevelFromHearts(oldMyTotal);
-    const newMyTotal = oldMyTotal + 1;
-    const newLv = getLevelFromHearts(newMyTotal);
-    if (newLv > oldLv) {
-      const newLvData = getLevelData(newMyTotal);
-      triggerMilestoneCelebration(`🎉 LEVEL UP! ยินดีด้วย คุณเลื่อนเป็น ${newLvData.badge} [${newLvData.rarityName}] จากการส่งใจให้ผู้พัฒนา! ✨`);
-    }
+    if (checkStealthAntiAutoClick('dev')) {
+      const oldMyTotal = myServerHearts + pendingClicks;
+      const oldLv = getLevelFromHearts(oldMyTotal);
+      const newMyTotal = oldMyTotal + 1;
+      const newLv = getLevelFromHearts(newMyTotal);
+      if (newLv > oldLv) {
+        const newLvData = getLevelData(newMyTotal);
+        triggerMilestoneCelebration(`🎉 LEVEL UP! ยินดีด้วย คุณเลื่อนเป็น ${newLvData.badge} [${newLvData.rarityName}] จากการส่งใจให้ผู้พัฒนา! ✨`);
+      }
 
-    const updates = {};
-    updates[`developers/${key}/hearts`] = firebase.database.ServerValue.increment(1);
-    updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(1);
-    updates[`users/${currentUser.id}/devHeartsClicked`] = firebase.database.ServerValue.increment(1);
-    db.ref().update(updates).catch(() => {});
+      const updates = {};
+      updates[`developers/${key}/hearts`] = firebase.database.ServerValue.increment(1);
+      updates[`users/${currentUser.id}/heartsClicked`] = firebase.database.ServerValue.increment(1);
+      updates[`users/${currentUser.id}/devHeartsClicked`] = firebase.database.ServerValue.increment(1);
+      db.ref().update(updates).catch(() => {});
+    }
 
     if (e) {
       const el = document.createElement('div');
@@ -10005,6 +10011,35 @@
     if (rank === 3) return { rank: 3, label: "🥉🏮 ผู้พิทักษ์สายน้ำ #3 (2026)", cls: "lk-rank-3", hasFrame: true };
     return { rank, label: "🪷 ผู้ร่วมลอยกระทง 2026", cls: "lk-rank-join", hasFrame: false };
   }
+  // 🦊 ระบบแกล้ง Auto Clicker แบบเนียนๆ (ยิ่งกดรัว ยิ่งนับช้าลง!)
+  const _clickGuards = {};
+  function checkStealthAntiAutoClick(actionKey) {
+    const now = Date.now();
+    if (!_clickGuards[actionKey]) {
+      _clickGuards[actionKey] = { stamps: [], lastAccepted: 0 };
+    }
+    const g = _clickGuards[actionKey];
+
+    // เก็บประวัติการกดใน 1 วินาทีล่าสุด
+    g.stamps.push(now);
+    while (g.stamps.length > 0 && now - g.stamps[0] > 1000) {
+      g.stamps.shift();
+    }
+
+    const cps = g.stamps.length; // ความเร็วการกดต่อวินาที
+    let requiredGapMs = 115;     // คนกดมือปกติ (สูงสุด ~8 ครั้ง/วิ)
+
+    if (cps > 8) {
+      // ยิ่งกดรัวเกิน 8 ครั้ง/วิ ยิ่งแอบเพิ่มดีเลย์จนช้ากว่าคนกดมือ! (สูงสุดหน่วง 500ms = 2 ครั้ง/วิ)
+      requiredGapMs = 140 + Math.min(360, (cps - 8) * 14);
+    }
+
+    if (now - g.lastAccepted >= requiredGapMs) {
+      g.lastAccepted = now;
+      return true;  // ✅ นับคะแนนให้
+    }
+    return false;   // 🦊 แอบทิ้งเงียบๆ ไม่นับคะแนน (แต่เอฟเฟกต์ยังเล่นให้เนียน)
+  }
 
   function loyKrathongClick(e) {
     if (Date.now() > LOY_KRATHONG_END_MS) {
@@ -10019,9 +10054,12 @@
     if (!db) return;
 
     playClickSound();
-    const updates = {};
-    updates[`users/${currentUser.id}/krathongCount`] = firebase.database.ServerValue.increment(1);
-    db.ref().update(updates).catch(() => {});
+    // เช็กความเร็วแบบเนียนๆ — ถ้าเปิดโปรรัวเกิน จะข้ามการส่งคะแนนแต่ยังโชว์กระทงลอยอยู่ด้านล่าง
+    if (checkStealthAntiAutoClick('krathong')) {
+      const updates = {};
+      updates[`users/${currentUser.id}/krathongCount`] = firebase.database.ServerValue.increment(1);
+      db.ref().update(updates).catch(() => {});
+    }
 
     if (e) {
       const icons = ['🪷', '🕯️', '🌕', '✨'];
