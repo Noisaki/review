@@ -4376,6 +4376,8 @@
             </button>
           </div>
         </div>
+        <div class="lb-list" id="lbDonateList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
+        <div class="lb-pagination" id="lbDonatePager" style="display:none;"></div>
       </div>
       <div class="lb-column">
         <h3 class="lb-col-title">💖 ทำเนียบนักส่งหัวใจสูงสุด</h3>
@@ -8147,7 +8149,6 @@
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
     playClickSound();
 
-    // แจ้งเตือนยืนยันรอบที่ 1
     const firstAsk = confirm(
       "⚠️ แจ้งเตือนแอดมิน! จะยอมรีเซ็ตแต้มทั้งหมดเป็น 0 จริงๆ เหรอครับ?\n\n" +
       "สิ่งที่กำลังจะถูกรีเซ็ตเป็น 0:\n" +
@@ -8159,63 +8160,73 @@
     );
     if (!firstAsk) return;
 
-    // แจ้งเตือนยืนยันรอบที่ 2 (พิมพ์ยืนยันกันกดพลาด)
     const confirmText = prompt(
-      "⚠️ ยืนยันครั้งสุดท้าย! จะยอมรีเซ็ตแต้มทั้งหมดเป็น 0 จริงๆ นะครับ?\n" +
-      "ข้อมูลที่รีไปแล้วจะกู้คืนไม่ได้ พิมพ์คำว่า RESET เพื่อยืนยัน:"
+      "⚠️ ยืนยันครั้งสุดท้าย! พิมพ์คำว่า RESET เพื่อยืนยัน:"
     );
     if (!confirmText || confirmText.trim().toUpperCase() !== "RESET") {
       showToast("❌ ยกเลิกการรีเซ็ตแต้มแล้วครับ");
       return;
     }
 
+    clearTimeout(flushTimer);
+    pendingClicks = 0;
+
+    const failedParts = [];
+
+    // 1. รียอดหัวใจรวมทั้งเว็บ
     try {
-      clearTimeout(flushTimer);
-      pendingClicks = 0;
+      await db.ref("bgt_hearts").set(0);
+    } catch (e) {
+      failedParts.push("bgt_hearts (" + (e.code || e.message) + ")");
+    }
 
-      // ดึงรายชื่อล่าสุดจาก Firebase เพื่อรีให้ครบทุกคน
-      const [usersSnap, devsSnap, voteGamesSnap] = await Promise.all([
-        db.ref("users").once("value"),
-        db.ref("developers").once("value"),
-        db.ref("game_vote/games").once("value")
-      ]);
-
-      const updates = {};
-      updates["bgt_hearts"] = 0;
-
-      // รีแต้มหัวใจของทุกคนเป็น 0 (ไม่แตะ donateAmount)
+    // 2. รีแต้มหัวใจสมาชิกทุกคน (ไม่แตะ donateAmount)
+    try {
+      const usersSnap = await db.ref("users").once("value");
       const allUsers = usersSnap.val() || {};
-      Object.keys(allUsers).forEach(uid => {
-        updates[`users/${uid}/heartsClicked`] = 0;
-        updates[`users/${uid}/devHeartsClicked`] = 0;
-      });
+      const userTasks = Object.keys(allUsers).map(uid =>
+        db.ref("users/" + uid).update({ heartsClicked: 0, devHeartsClicked: 0 })
+      );
+      await Promise.all(userTasks);
+    } catch (e) {
+      failedParts.push("users (" + (e.code || e.message) + ")");
+    }
 
-      // รีแต้มหัวใจในการ์ดผู้พัฒนาทุกคนเป็น 0
+    // 3. รีแต้มหัวใจหน้าผู้พัฒนา
+    try {
+      const devsSnap = await db.ref("developers").once("value");
       const allDevs = devsSnap.val() || {};
-      Object.keys(allDevs).forEach(devKey => {
-        updates[`developers/${devKey}/hearts`] = 0;
-      });
+      const devTasks = Object.keys(allDevs).map(devKey =>
+        db.ref("developers/" + devKey + "/hearts").set(0)
+      );
+      await Promise.all(devTasks);
+    } catch (e) {
+      failedParts.push("developers (" + (e.code || e.message) + ")");
+    }
 
-      // รีคะแนนโหวตเกมรอบปัจจุบันเป็น 0 (ถ้ามี)
+    // 4. รีคะแนนโหวตเกมรอบปัจจุบัน
+    try {
+      const voteGamesSnap = await db.ref("game_vote/games").once("value");
       const allVoteGames = voteGamesSnap.val() || {};
-      Object.keys(allVoteGames).forEach(gameId => {
-        updates[`game_vote/games/${gameId}/hearts`] = 0;
-        updates[`game_vote/games/${gameId}/voters`] = null;
-      });
+      const voteTasks = Object.keys(allVoteGames).map(gameId =>
+        db.ref("game_vote/games/" + gameId).update({ hearts: 0, voters: null })
+      );
+      await Promise.all(voteTasks);
+    } catch (e) {
+      failedParts.push("game_vote (" + (e.code || e.message) + ")");
+    }
 
-      await db.ref().update(updates);
-
+    if (failedParts.length === 0) {
       serverHearts = 0;
       myServerHearts = 0;
       pendingClicks = 0;
       try { localStorage.removeItem(CHEER_COUNT_KEY); } catch (e) {}
-
       updateCheerUI();
       renderLeaderboards(true);
       showToast("✨ รีเซ็ตแต้มทั้งหมดเป็น 0 เรียบร้อยแล้ว! (ยอดโดเนทอยู่ครบ 100%)");
-    } catch (err) {
-      console.error("Reset Points Error:", err);
-      showToast("⚠️ รีเซ็ตแต้มไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
+    } else {
+      console.error("Reset failed parts:", failedParts);
+      alert("⚠️ บางส่วนรีไม่ได้เพราะติดกฎ Firebase Rules:\n- " + failedParts.join("\n- "));
     }
   }
   function adminToggleDevPatron(uid, enable) {
