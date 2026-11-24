@@ -5203,12 +5203,27 @@
         </div>
 
         <div class="discord-ticket-note">
-          📌 <strong>ขั้นตอนการแจ้งรับยศ:</strong> 1. เช็กชื่อบัญชีปลายทาง <strong>นาย เบญจพล</strong> • 2. เก็บภาพสลิปไว้ (ห้ามส่งในแชทส่วนรวมเด็ดขาด) • 3. กดปุ่ม <strong>"เปิดตั๋วส่งหลักฐาน"</strong> ใน Discord เพื่อส่งสลิปและรับยศถาวรได้เลยครับ!
+          📌 <strong>ขั้นตอนการแจ้งรับยศ (ไม่ต้องใช้ Discord ก็รับยศได้!):</strong> 1. สแกน QR เช็กชื่อบัญชี <strong>นาย เบญจพล</strong> • 2. กดปุ่ม <strong>"📤 แจ้งโอน & แนบสลิปหน้าเว็บ"</strong> ด้านล่าง • 3. แอดมินตรวจยอดแล้ว ยศจะขึ้นบนโปรไฟล์อัตโนมัติทันทีครับ!
         </div>
 
-        <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
-          💬 ติดต่อ & แจ้งสลิปใน Discord
-        </a>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button type="button" class="discord-ticket-btn" style="background:linear-gradient(135deg,#15803d,#16a34a); box-shadow:0 6px 16px rgba(21,128,61,0.32);" onmouseenter="playHoverSound()" onclick="playClickSound(); openSlipModal();">
+            📤 แจ้งโอน & แนบสลิปหน้าเว็บ (ไม่ต้องใช้ Discord)
+          </button>
+          <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
+            💬 หรือแจ้งสลิปผ่าน Discord (สำหรับคนอยากรับยศในดิสด้วย)
+          </a>
+        </div>
+
+        <!-- แผงแอดมินตรวจสลิปรออนุมัติ (เห็นเฉพาะแอดมิน) -->
+        <div id="adminSlipReviewPanel" style="display:none; margin-top:16px; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:14px;">
+          <div style="font-family:'Kanit',sans-serif; font-size:0.98rem; font-weight:700; color:#9f1239; margin-bottom:8px;">
+            👑 แอดมิน: รายการสลิปรอตรวจสอบ (<span id="pendingSlipCount">0</span>)
+          </div>
+          <div id="adminSlipList" style="display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size:0.82rem; color:#64748b; text-align:center;">ไม่มีสลิปรอตรวจในขณะนี้ ✨</div>
+          </div>
+        </div>
       </div>
 
       <div class="qr-box-wrapper">
@@ -5456,6 +5471,36 @@
     <div class="modal-btns">
       <button type="button" class="modal-discord-btn" onclick="saveEditedProfile()">💾 บันทึกโปรไฟล์</button>
       <button type="button" class="modal-cancel-btn" onclick="document.getElementById('editProfileModal').style.display='none';">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- หน้าต่างแนบสลิปแจ้งโอนหน้าเว็บ (ไม่ต้องใช้ Discord) -->
+<div class="modal-overlay" id="slipSubmitModal">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="modal-icon" style="font-size:2.6rem;">📤🧾</div>
+    <h2 style="margin-bottom:6px;">แจ้งโอน & แนบสลิปเพื่อรับยศ</h2>
+    <p style="font-size:0.84rem; margin-bottom:14px;">สลิปจะถูกส่งให้แอดมินตรวจแบบส่วนตัวเท่านั้น (ไม่แสดงต่อสาธารณะ) เมื่ออนุมัติแล้ว ยศและยอดสะสมจะขึ้นอัตโนมัติครับ ✨</p>
+
+    <div class="ep-field-group">
+      <label>💰 ยอดเงินที่โอน (บาท) *:</label>
+      <input type="number" id="slipAmountInput" class="ep-input" min="1" step="1" placeholder="เช่น 50, 300, 500">
+    </div>
+
+    <div class="ep-field-group">
+      <label>🧾 รูปภาพสลิปโอนเงิน *:</label>
+      <input type="file" id="slipFileInput" accept="image/*" style="font-size:0.84rem; width:100%;" onchange="handleSlipImageSelect(this)">
+      <img id="slipPreviewImg" src="" alt="" style="display:none; max-width:100%; max-height:200px; margin:8px auto 0; border-radius:10px; border:1.5px solid #cbd5e1; object-fit:contain;">
+    </div>
+
+    <div class="ep-field-group">
+      <label>💬 ข้อความถึงทีมแปล (ไม่บังคับ):</label>
+      <input type="text" id="slipNoteInput" class="ep-input" maxlength="100" placeholder="เช่น เป็นกำลังใจให้แปลเกมต่อไปนะ!">
+    </div>
+
+    <div class="modal-btns">
+      <button type="button" id="slipSubmitBtn" class="modal-close-btn" onclick="submitDonateSlip()">✅ ส่งสลิปแจ้งโอน</button>
+      <button type="button" class="modal-cancel-btn" onclick="document.getElementById('slipSubmitModal').style.display='none';">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -6239,13 +6284,17 @@
     profile.displayAvatar = finalAvatar;
     currentUser = profile;
 
-    const info = getRoleInfoByTier(profile.roleTier);
+    const effectiveTier = getEffectiveRoleTier(profile.roleTier, cached.donateAmount);
+    profile.roleTier = effectiveTier;
+    const info = getRoleInfoByTier(effectiveTier);
     const adminPanel = document.getElementById('voteAdminPanel');
     if (adminPanel) adminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     const donateAdminPanel = document.getElementById('donateAdminPanel');
     if (donateAdminPanel) donateAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     const devAdminPanel = document.getElementById('devAdminPanel');
     if (devAdminPanel) devAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
+    const slipAdminPanel = document.getElementById('adminSlipReviewPanel');
+    if (slipAdminPanel) slipAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
 
     const cardEl = document.getElementById('profileCard');
@@ -6366,6 +6415,8 @@
     if (donateAdminPanel) donateAdminPanel.style.display = 'none';
     const devAdminPanel = document.getElementById('devAdminPanel');
     if (devAdminPanel) devAdminPanel.style.display = 'none';
+    const slipAdminPanel = document.getElementById('adminSlipReviewPanel');
+    if (slipAdminPanel) slipAdminPanel.style.display = 'none';
 
     // รีเซ็ตฟอร์มแก้ไขผู้พัฒนา & ซ่อนปุ่มแก้ไข/ลบในการ์ด
     if (typeof cancelEditDeveloper === "function") cancelEditDeveloper();
@@ -6547,7 +6598,7 @@
     rankEl.textContent = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : (rank > 100 ? "99+" : "#" + rank);
     row.appendChild(rankEl);
 
-    const tier = Number(u.roleTier) || 0;
+    const tier = getEffectiveRoleTier(u.roleTier, u.donateAmount);
     const rawAvatar = u.customAvatar || u.avatarUrl;
 
     const avWrap = document.createElement('div');
@@ -8254,6 +8305,7 @@
     initFirebaseHearts();
     initGameVoteSystem();
     initDevelopersSystem();
+    initDonateSlipSystem();
     updateCheerUI();
 
     let wasCursed = false;
@@ -9772,7 +9824,7 @@
 
     const u = (usersCache && usersCache[uid]) ? usersCache[uid] : {};
     const provMeta = getProviderMeta(uid, u.provider);
-    const tier = Number(u.roleTier) || 0;
+    const tier = getEffectiveRoleTier(u.roleTier, u.donateAmount);
     const roleInfo = getRoleInfoByTier(tier);
     const clicks = Number(u.heartsClicked) || 0;
     const lvInfo = getLevelData(clicks);
@@ -10448,6 +10500,217 @@
       renderLoyKrathongEvent();
     }
   }, 1000);
+
+  // =========================================
+  // 14. ระบบยศอัตโนมัติตามยอดโดเนท + แนบสลิปหน้าเว็บ (ไม่ต้องใช้ Discord)
+  // =========================================
+  function getDonateTierFromAmount(amount) {
+    const amt = Number(amount) || 0;
+    if (amt >= 1000) return 4;
+    if (amt >= 500)  return 3;
+    if (amt >= 300)  return 2;
+    if (amt > 0)     return 1;
+    return 0;
+  }
+
+  function getEffectiveRoleTier(baseTier, donateAmount) {
+    const t = Number(baseTier) || 0;
+    if (t === 99) return 99; // แอดมินสูงสุดเสมอ
+    const dTier = getDonateTierFromAmount(donateAmount);
+    if (dTier > 0) return Math.max(t, dTier);
+    return t;
+  }
+
+  let draftSlipBase64 = "";
+
+  function openSlipModal() {
+    if (!currentUser) {
+      openLoginInfo("🔐 กรุณาเข้าสู่ระบบ (Gmail / Facebook / Discord) ก่อนแจ้งโอน เพื่อผูกยศกับโปรไฟล์ของคุณครับ");
+      return;
+    }
+    draftSlipBase64 = "";
+    document.getElementById('slipAmountInput').value = "";
+    document.getElementById('slipNoteInput').value = "";
+    document.getElementById('slipFileInput').value = "";
+    const prev = document.getElementById('slipPreviewImg');
+    if (prev) { prev.src = ""; prev.style.display = "none"; }
+    document.getElementById('slipSubmitModal').style.display = 'flex';
+  }
+
+  function handleSlipImageSelect(inputEl) {
+    const file = inputEl.files && inputEl.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxW = 560;
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        draftSlipBase64 = canvas.toDataURL('image/jpeg', 0.72);
+        const prev = document.getElementById('slipPreviewImg');
+        if (prev) { prev.src = draftSlipBase64; prev.style.display = "block"; }
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function submitDonateSlip() {
+    if (!db || !currentUser) return;
+    const amount = Math.floor(Number(document.getElementById('slipAmountInput').value) || 0);
+    const note = document.getElementById('slipNoteInput').value.trim().slice(0, 100);
+
+    if (amount <= 0) {
+      showToast("⚠️ กรุณากรอกยอดเงินที่โอนให้ถูกต้องครับ");
+      return;
+    }
+    if (!draftSlipBase64) {
+      showToast("⚠️ กรุณาเลือกรูปภาพสลิปโอนเงินก่อนส่งครับ");
+      return;
+    }
+
+    const btn = document.getElementById('slipSubmitBtn');
+    if (btn) { btn.disabled = true; btn.textContent = "⏳ กำลังส่งสลิป..."; }
+
+    db.ref("donate_slips").push({
+      uid: currentUser.id,
+      name: currentUser.displayName || currentUser.name || "User",
+      amount: amount,
+      note: note,
+      slipImg: draftSlipBase64,
+      createdAt: Date.now()
+    }).then(() => {
+      playSuccessSound();
+      document.getElementById('slipSubmitModal').style.display = 'none';
+      showToast("✅ ส่งสลิปเรียบร้อย! รอแอดมินตรวจสอบแล้วรับยศอัตโนมัติได้เลยครับ 💖");
+    }).catch(() => {
+      showToast("⚠️ ส่งสลิปไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+    }).finally(() => {
+      if (btn) { btn.disabled = false; btn.textContent = "✅ ส่งสลิปแจ้งโอน"; }
+    });
+  }
+
+  function initDonateSlipSystem() {
+    if (!db) return;
+    db.ref("donate_slips").on("value", (snap) => {
+      renderAdminSlipList(snap.val() || {});
+    });
+  }
+
+  function renderAdminSlipList(data) {
+    const countEl = document.getElementById('pendingSlipCount');
+    const listEl = document.getElementById('adminSlipList');
+    if (!listEl) return;
+
+    const items = Object.keys(data)
+      .map(k => ({ key: k, ...data[k] }))
+      .sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+
+    if (countEl) countEl.textContent = items.length;
+    if (items.length === 0) {
+      listEl.innerHTML = `<div style="font-size:0.82rem; color:#64748b; text-align:center;">ไม่มีสลิปรอตรวจในขณะนี้ ✨</div>`;
+      return;
+    }
+
+    listEl.innerHTML = "";
+    items.forEach(item => {
+      const box = document.createElement('div');
+      box.style.cssText = "background:#fff; border:1.5px solid #fda4af; border-radius:12px; padding:10px; display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;";
+
+      const thumb = document.createElement('img');
+      thumb.src = item.slipImg || "";
+      thumb.style.cssText = "width:76px; height:96px; object-fit:cover; border-radius:8px; border:1px solid #cbd5e1; cursor:pointer; flex-shrink:0;";
+      thumb.title = "คลิกเพื่อดูรูปสลิปเต็ม";
+      thumb.onclick = () => {
+        const w = window.open("");
+        if (w) w.document.write(`<img src="${item.slipImg}" style="max-width:100%;">`);
+      };
+      box.appendChild(thumb);
+
+      const info = document.createElement('div');
+      info.style.cssText = "flex:1; min-width:170px; font-size:0.82rem; color:#1e293b;";
+      const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString('th-TH') : '';
+
+      const nameDiv = document.createElement('div');
+      nameDiv.style.cssText = "font-weight:700; color:#9f1239;";
+      nameDiv.textContent = "👤 " + (item.name || "User");
+      info.appendChild(nameDiv);
+
+      const dateDiv = document.createElement('div');
+      dateDiv.style.cssText = "color:#64748b; font-size:0.74rem; margin-bottom:4px;";
+      dateDiv.textContent = "🕒 " + dateStr;
+      info.appendChild(dateDiv);
+
+      if (item.note) {
+        const noteDiv = document.createElement('div');
+        noteDiv.style.cssText = "background:#f8fafc; padding:4px 8px; border-radius:6px; margin-bottom:6px; font-size:0.78rem;";
+        noteDiv.textContent = "💬 " + item.note;
+        info.appendChild(noteDiv);
+      }
+
+      const actionsDiv = document.createElement('div');
+      actionsDiv.style.cssText = "display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;";
+
+      const amtInput = document.createElement('input');
+      amtInput.type = "number";
+      amtInput.id = "approveAmt_" + item.key;
+      amtInput.value = Number(item.amount) || 0;
+      amtInput.min = "1";
+      amtInput.style.cssText = "width:82px; padding:4px 6px; border-radius:6px; border:1px solid #cbd5e1; font-weight:700;";
+
+      const approveBtn = document.createElement('button');
+      approveBtn.type = "button";
+      approveBtn.textContent = "✅ อนุมัติ & บวกยอด";
+      approveBtn.style.cssText = "background:#15803d; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:0.78rem; font-weight:700; cursor:pointer;";
+      approveBtn.onclick = () => adminApproveSlip(item.key, item.uid);
+
+      const rejectBtn = document.createElement('button');
+      rejectBtn.type = "button";
+      rejectBtn.textContent = "❌ ลบ";
+      rejectBtn.style.cssText = "background:#dc2626; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:0.78rem; font-weight:700; cursor:pointer;";
+      rejectBtn.onclick = () => adminRejectSlip(item.key);
+
+      actionsDiv.appendChild(amtInput);
+      actionsDiv.appendChild(approveBtn);
+      actionsDiv.appendChild(rejectBtn);
+      info.appendChild(actionsDiv);
+      box.appendChild(info);
+      listEl.appendChild(box);
+    });
+  }
+
+  function adminApproveSlip(slipKey, uid) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    const amtInput = document.getElementById("approveAmt_" + slipKey);
+    const addAmt = Math.floor(Number(amtInput ? amtInput.value : 0) || 0);
+    if (addAmt <= 0) {
+      showToast("⚠️ กรุณาระบุยอดเงินมากกว่า 0 บาท");
+      return;
+    }
+
+    const updates = {};
+    updates[`users/${uid}/donateAmount`] = firebase.database.ServerValue.increment(addAmt);
+    updates[`donate_slips/${slipKey}`] = null;
+
+    db.ref().update(updates).then(() => {
+      playSuccessSound();
+      showToast(`✅ อนุมัติ +฿${formatNum(addAmt)} เรียบร้อย! ยศของผู้เล่นอัปเดตอัตโนมัติแล้ว 🎉`);
+    }).catch(() => {
+      showToast("⚠️ อนุมัติไม่สำเร็จ กรุณาเช็ก Firebase Rules");
+    });
+  }
+
+  function adminRejectSlip(slipKey) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!confirm("ต้องการลบ/ปฏิเสธสลิปนี้ใช่ไหมครับ?")) return;
+    db.ref("donate_slips/" + slipKey).remove().then(() => {
+      showToast("🗑️ ลบรายการสลิปแล้ว");
+    });
+  }
 </script>
 
 </body>
