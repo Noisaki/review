@@ -10955,16 +10955,23 @@
   }
 
   // =========================================
-  // 15. เอฟเฟกต์บอลเก็งกิ (Genkidama) — เบา ไม่กินสเปค หยุดทำงานเมื่ออยู่เฉยๆ
+  // 15. เอฟเฟกต์บอลเก็งกิ (Genkidama) v2 — ขยายใหญ่ + เปลี่ยนสี 5 ขั้น + หรี่เสียงเพลง + เสียงชาร์จต่อเนื่อง
   // =========================================
   const genkiCanvas = document.getElementById('genkidamaCanvas');
   const genkiCtx = genkiCanvas ? genkiCanvas.getContext('2d') : null;
   let genkiRunning = false;
-  let genkiCharge = 0;       // พลังสะสม 0 - 100
+  let genkiCharge = 0;          // พลังสะสม 0 - 200
   let genkiLastFeed = 0;
+  let genkiLastStage = 0;
   let genkiParticles = [];
   let genkiShockwaves = [];
   let genkiFlashAlpha = 0;
+
+  let genkiAudioActive = false;
+  let genkiOscSub = null;
+  let genkiOscHarm = null;
+  let genkiFilter = null;
+  let genkiGain = null;
 
   function resizeGenkiCanvas() {
     if (!genkiCanvas) return;
@@ -10974,6 +10981,14 @@
   window.addEventListener('resize', resizeGenkiCanvas);
   resizeGenkiCanvas();
 
+  function getGenkiColorPalette(norm) {
+    if (norm < 0.25) return { r: 56,  g: 189, b: 248, hex: '#38bdf8', bolt: '#bae6fd' }; // ฟ้าอ่อน
+    if (norm < 0.50) return { r: 37,  g: 99,  b: 235, hex: '#2563eb', bolt: '#93c5fd' }; // น้ำเงินเข้ม
+    if (norm < 0.75) return { r: 168, g: 85,  b: 247, hex: '#a855f7', bolt: '#e9d5ff' }; // ม่วงอวกาศ
+    if (norm < 0.92) return { r: 245, g: 158, b: 11,  hex: '#f59e0b', bolt: '#fef08a' }; // ทองคำเพลิง
+    return                  { r: 239, g: 68,  b: 68,  hex: '#ef4444', bolt: '#ffffff' }; // แดงซูเปอร์โนวา
+  }
+
   function playGenkidamaBlastSound() {
     if (!soundEnabled) return;
     try {
@@ -10982,9 +10997,9 @@
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(160, now);
-      osc.frequency.exponentialRampToValueAtTime(980, now + 0.18);
-      osc.frequency.exponentialRampToValueAtTime(65, now + 0.85);
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.16);
+      osc.frequency.exponentialRampToValueAtTime(55, now + 0.85);
 
       gain.gain.setValueAtTime(0.22, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
@@ -10996,20 +11011,92 @@
     } catch (e) {}
   }
 
+  function updateGenkiAudioAndDucking(norm) {
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl && !isHorrorTriggered) {
+      const duckFactor = 1 - (norm * 0.85);
+      bgmEl.volume = Math.max(0, Math.min(1, musicVolume * duckFactor));
+    }
+
+    if (!soundEnabled || isHorrorTriggered || norm <= 0.04) {
+      stopGenkiChargeAudio();
+      return;
+    }
+
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      if (!genkiAudioActive) {
+        genkiOscSub = audioCtx.createOscillator();
+        genkiOscHarm = audioCtx.createOscillator();
+        genkiFilter = audioCtx.createBiquadFilter();
+        genkiGain = audioCtx.createGain();
+
+        genkiOscSub.type = 'triangle';
+        genkiOscHarm.type = 'sawtooth';
+        genkiFilter.type = 'lowpass';
+
+        genkiOscSub.frequency.setValueAtTime(55, now);
+        genkiOscHarm.frequency.setValueAtTime(110, now);
+        genkiFilter.frequency.setValueAtTime(220, now);
+        genkiGain.gain.setValueAtTime(0.001, now);
+
+        genkiOscSub.connect(genkiFilter);
+        genkiOscHarm.connect(genkiFilter);
+        genkiFilter.connect(genkiGain);
+        genkiGain.connect(audioCtx.destination);
+
+        genkiOscSub.start(now);
+        genkiOscHarm.start(now);
+        genkiAudioActive = true;
+      }
+
+      const subFreq = 55 + norm * 95;
+      const harmFreq = 110 + norm * 280;
+      const filterFreq = 220 + norm * 2400;
+      const targetGain = Math.min(0.18, 0.02 + norm * 0.16);
+
+      genkiOscSub.frequency.setTargetAtTime(subFreq, now, 0.08);
+      genkiOscHarm.frequency.setTargetAtTime(harmFreq, now, 0.08);
+      genkiFilter.frequency.setTargetAtTime(filterFreq, now, 0.08);
+      genkiGain.gain.setTargetAtTime(targetGain, now, 0.08);
+    } catch (e) {}
+  }
+
+  function stopGenkiChargeAudio() {
+    if (!genkiAudioActive) return;
+    genkiAudioActive = false;
+    try {
+      const now = audioCtx ? audioCtx.currentTime : 0;
+      if (genkiGain && audioCtx) {
+        genkiGain.gain.setTargetAtTime(0.0001, now, 0.06);
+      }
+      const oldSub = genkiOscSub;
+      const oldHarm = genkiOscHarm;
+      genkiOscSub = null;
+      genkiOscHarm = null;
+      genkiFilter = null;
+      genkiGain = null;
+      setTimeout(() => {
+        try { if (oldSub) oldSub.stop(); } catch (e) {}
+        try { if (oldHarm) oldHarm.stop(); } catch (e) {}
+      }, 220);
+    } catch (e) {}
+  }
+
   function feedGenkidama(clickX, clickY) {
     if (!genkiCtx || isHorrorTriggered) return;
-    const now = Date.now();
-    genkiLastFeed = now;
+    genkiLastFeed = Date.now();
 
-    // ชาร์จพลังเพิ่มทีละนิด (กดต่อเนื่อง ~35 ครั้งจะเต็ม 100% ระเบิดคลื่นพลัง)
-    genkiCharge = Math.min(100, genkiCharge + 3);
+    genkiCharge = Math.min(200, genkiCharge + 2.4);
+    const norm = genkiCharge / 200;
+    const pal = getGenkiColorPalette(norm);
 
     const w = genkiCanvas.width;
     const h = genkiCanvas.height;
-    const maxP = w < 768 ? 42 : 75;
+    const maxP = w < 768 ? 48 : 85;
 
-    // ส่งละอองพลังจากจุดที่กด + จากขอบจอทั่วทุกสารทิศ (เหมือนขอพลังจากทุกคน)
-    const spawnCount = genkiCharge > 40 ? 3 : 2;
+    const spawnCount = norm > 0.5 ? 3 : 2;
     for (let i = 0; i < spawnCount; i++) {
       if (genkiParticles.length >= maxP) break;
       const fromClick = (i === 0 && clickX != null && clickY != null);
@@ -11031,19 +11118,25 @@
         r: Math.random() * 2.8 + 1.8,
         speed: 0.045 + Math.random() * 0.045,
         angleOffset: (Math.random() - 0.5) * 0.65,
-        gold: Math.random() < 0.3
+        rCol: pal.r, gCol: pal.g, bCol: pal.b
       });
     }
 
-    // ถ้าชาร์จเต็ม 100% -> ระเบิดคลื่นพลัง Super Genkidama!
-    if (genkiCharge >= 100) {
-      genkiCharge = 0;
-      genkiFlashAlpha = 0.55;
-      playGenkidamaBlastSound();
+    const currentStage = norm >= 0.99 ? 5 : norm >= 0.92 ? 4 : norm >= 0.75 ? 3 : norm >= 0.50 ? 2 : norm >= 0.25 ? 1 : 0;
+    if (currentStage > genkiLastStage) {
+      genkiLastStage = currentStage;
       const cx = w * 0.5;
-      const cy = h * 0.24;
-      genkiShockwaves.push({ x: cx, y: cy, r: 20, maxR: Math.max(w, h) * 0.95, alpha: 0.95, color: '#38bdf8' });
-      genkiShockwaves.push({ x: cx, y: cy, r: 8,  maxR: Math.max(w, h) * 0.72, alpha: 0.9,  color: '#fde047' });
+      const cy = h * 0.26;
+      genkiShockwaves.push({
+        x: cx, y: cy, r: 24,
+        maxR: Math.max(w, h) * (0.45 + currentStage * 0.12),
+        alpha: 0.85,
+        color: pal.hex
+      });
+      if (currentStage >= 4) {
+        genkiFlashAlpha = currentStage === 5 ? 0.5 : 0.28;
+        playGenkidamaBlastSound();
+      }
     }
 
     if (!genkiRunning) {
@@ -11057,28 +11150,31 @@
     const w = genkiCanvas.width;
     const h = genkiCanvas.height;
     const cx = w * 0.5;
-    const cy = h * 0.24;
+    const cy = h * 0.26;
 
     genkiCtx.clearRect(0, 0, w, h);
 
-    // ถ้าหยุดกดเกิน 0.7 วิ พลังจะค่อยๆ สลายลง
-    if (Date.now() - genkiLastFeed > 700 && genkiCharge > 0) {
-      genkiCharge = Math.max(0, genkiCharge - 0.75);
+    if (Date.now() - genkiLastFeed > 750 && genkiCharge > 0) {
+      genkiCharge = Math.max(0, genkiCharge - 1.15);
+      if (genkiCharge < 20) genkiLastStage = 0;
     }
 
-    // 1. วาดละอองพลังที่พุ่งวนเข้าหาศูนย์กลาง
+    const norm = Math.min(1, genkiCharge / 200);
+    const pal = getGenkiColorPalette(norm);
+
+    updateGenkiAudioAndDucking(norm);
+
     for (let i = genkiParticles.length - 1; i >= 0; i--) {
       const p = genkiParticles[i];
       const dx = cx - p.x;
       const dy = cy - p.y;
       const dist = Math.hypot(dx, dy);
 
-      if (dist < 16) {
+      if (dist < 18) {
         genkiParticles.splice(i, 1);
         continue;
       }
 
-      // เคลื่อนที่แบบเกลียวดูดเข้าหาลูกบอลพลัง
       const angle = Math.atan2(dy, dx) + p.angleOffset * (dist / 360);
       const step = Math.max(3.5, dist * p.speed);
       p.x += Math.cos(angle) * step;
@@ -11086,49 +11182,49 @@
 
       genkiCtx.beginPath();
       genkiCtx.arc(p.x, p.y, p.r * 2.2, 0, Math.PI * 2);
-      genkiCtx.fillStyle = p.gold ? 'rgba(253, 224, 71, 0.22)' : 'rgba(56, 189, 248, 0.24)';
+      genkiCtx.fillStyle = `rgba(${p.rCol}, ${p.gCol}, ${p.bCol}, 0.25)`;
       genkiCtx.fill();
 
       genkiCtx.beginPath();
       genkiCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      genkiCtx.fillStyle = p.gold ? '#fef08a' : '#e0f2fe';
+      genkiCtx.fillStyle = '#ffffff';
       genkiCtx.fill();
     }
 
-    // 2. วาดลูกบอลเก็งกิ (เริ่มโผล่ชัดเจนเมื่อกดต่อเนื่องเกิน 15%)
-    if (genkiCharge > 12) {
-      const ratio = (genkiCharge - 12) / 88;
-      const baseR = 14 + ratio * (w < 768 ? 58 : 84);
-      const pulse = Math.sin(Date.now() * 0.015) * (2 + ratio * 4);
+    if (genkiCharge > 8) {
+      const maxOrbR = w < 768 ? 105 : 155;
+      const baseR = 14 + norm * maxOrbR;
+      const pulse = Math.sin(Date.now() * (0.014 + norm * 0.02)) * (2 + norm * 7);
       const orbR = baseR + pulse;
 
-      const grad = genkiCtx.createRadialGradient(cx, cy, orbR * 0.12, cx, cy, orbR * 1.45);
-      grad.addColorStop(0, 'rgba(255, 255, 255, 0.96)');
-      grad.addColorStop(0.45, 'rgba(56, 189, 248, 0.78)');
-      grad.addColorStop(0.78, 'rgba(14, 165, 233, 0.28)');
-      grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+      const grad = genkiCtx.createRadialGradient(cx, cy, orbR * 0.1, cx, cy, orbR * 1.55);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.98)');
+      grad.addColorStop(0.35, `rgba(${pal.r}, ${pal.g}, ${pal.b}, ${0.72 + norm * 0.25})`);
+      grad.addColorStop(0.75, `rgba(${pal.r}, ${pal.g}, ${pal.b}, ${0.22 + norm * 0.2})`);
+      grad.addColorStop(1, `rgba(${pal.r}, ${pal.g}, ${pal.b}, 0)`);
 
       genkiCtx.beginPath();
-      genkiCtx.arc(cx, cy, orbR * 1.45, 0, Math.PI * 2);
+      genkiCtx.arc(cx, cy, orbR * 1.55, 0, Math.PI * 2);
       genkiCtx.fillStyle = grad;
       genkiCtx.fill();
 
-      // สายฟ้าแลบรอบลูกบอลเมื่อชาร์จเกิน 55%
-      if (genkiCharge > 55 && Math.random() < 0.45) {
-        const a = Math.random() * Math.PI * 2;
-        genkiCtx.beginPath();
-        genkiCtx.moveTo(cx + Math.cos(a) * orbR * 0.6, cy + Math.sin(a) * orbR * 0.6);
-        const midR = orbR * 1.15;
-        const a2 = a + (Math.random() - 0.5) * 0.5;
-        genkiCtx.lineTo(cx + Math.cos(a2) * midR, cy + Math.sin(a2) * midR);
-        genkiCtx.lineTo(cx + Math.cos(a2 + 0.18) * orbR * 1.45, cy + Math.sin(a2 + 0.18) * orbR * 1.45);
-        genkiCtx.strokeStyle = Math.random() < 0.4 ? '#fef08a' : '#bae6fd';
-        genkiCtx.lineWidth = 2;
-        genkiCtx.stroke();
+      const boltChance = norm > 0.75 ? 0.75 : norm > 0.35 ? 0.42 : 0;
+      const boltCount = norm > 0.8 ? 3 : 1;
+      for (let b = 0; b < boltCount; b++) {
+        if (Math.random() < boltChance) {
+          const a = Math.random() * Math.PI * 2;
+          const a2 = a + (Math.random() - 0.5) * 0.55;
+          genkiCtx.beginPath();
+          genkiCtx.moveTo(cx + Math.cos(a) * orbR * 0.55, cy + Math.sin(a) * orbR * 0.55);
+          genkiCtx.lineTo(cx + Math.cos(a2) * orbR * 1.15, cy + Math.sin(a2) * orbR * 1.15);
+          genkiCtx.lineTo(cx + Math.cos(a2 + 0.18) * orbR * 1.5, cy + Math.sin(a2 + 0.18) * orbR * 1.5);
+          genkiCtx.strokeStyle = pal.bolt;
+          genkiCtx.lineWidth = 1.8 + norm * 1.8;
+          genkiCtx.stroke();
+        }
       }
     }
 
-    // 3. วาดคลื่นกระแทกตอนระเบิดพลัง
     for (let i = genkiShockwaves.length - 1; i >= 0; i--) {
       const s = genkiShockwaves[i];
       s.r += (s.maxR - s.r) * 0.1 + 12;
@@ -11146,17 +11242,16 @@
       genkiCtx.globalAlpha = 1;
     }
 
-    // 4. แสงแฟลชจางๆ ตอนระเบิด
     if (genkiFlashAlpha > 0) {
-      genkiCtx.fillStyle = `rgba(224, 242, 254, ${genkiFlashAlpha})`;
+      genkiCtx.fillStyle = `rgba(${pal.r}, ${pal.g}, ${pal.b}, ${genkiFlashAlpha})`;
       genkiCtx.fillRect(0, 0, w, h);
-      genkiFlashAlpha = Math.max(0, genkiFlashAlpha - 0.035);
+      genkiFlashAlpha = Math.max(0, genkiFlashAlpha - 0.032);
     }
 
-    // หยุดลูปทันทีเมื่อไม่มีเอฟเฟกต์ค้าง (ประหยัดแบตและไม่กินสเปค!)
     if (genkiCharge > 0 || genkiParticles.length > 0 || genkiShockwaves.length > 0 || genkiFlashAlpha > 0) {
       requestAnimationFrame(animateGenkidama);
     } else {
+      stopGenkiChargeAudio();
       genkiRunning = false;
     }
   }
