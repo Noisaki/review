@@ -9982,7 +9982,16 @@
     const sorted = getLoyKrathongSortedUsers();
     const idx = sorted.findIndex(e => e.id === uid);
     if (idx === -1) return null;
+
     const rank = idx + 1;
+    const isEventEnded = Date.now() > LOY_KRATHONG_END_MS;
+
+    // ถ้ายงไม่จบกิจกรรม: ได้แค่ยศเข้าร่วมไปก่อน และยังล็อกกรอบรูปไว้จนกว่าจะจบเวลา!
+    if (!isEventEnded) {
+      return { rank, label: "🪷 ผู้ร่วมลอยกระทง 2026", cls: "lk-rank-join", hasFrame: false };
+    }
+
+    // หลังจบกิจกรรมแล้ว: Top 1-3 รับยศตามอันดับ + ปลดล็อกกรอบมหาบัวกระทงทองถาวร!
     if (rank === 1) return { rank: 1, label: "👑🌕 ราชันลอยกระทง 2026", cls: "lk-rank-1", hasFrame: true };
     if (rank === 2) return { rank: 2, label: "🥈🪷 เทพกระทง #2 (2026)", cls: "lk-rank-2", hasFrame: true };
     if (rank === 3) return { rank: 3, label: "🥉🏮 ผู้พิทักษ์สายน้ำ #3 (2026)", cls: "lk-rank-3", hasFrame: true };
