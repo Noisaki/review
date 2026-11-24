@@ -4262,6 +4262,128 @@
       transform-origin: 30px 14px;
       animation: lkCandleFlicker 0.65s infinite ease-in-out;
     }
+
+    /* =========================================
+       🪷🏆 การ์ดอีเวนต์จำกัดเวลา ลอยกระทง 2026 & ป้ายยศถาวร
+       ========================================= */
+    .lk-event-card {
+      background: linear-gradient(145deg, rgba(15, 23, 56, 0.95), rgba(49, 27, 94, 0.94));
+      border: 2.5px solid #fbbf24;
+      border-radius: 26px;
+      padding: 24px 22px;
+      margin-bottom: 24px;
+      color: #fef3c7;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45), 0 0 26px rgba(251, 191, 36, 0.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .lk-event-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(90deg, #d97706, #f59e0b, #ec4899);
+      color: #ffffff;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+      box-shadow: 0 3px 12px rgba(245, 158, 11, 0.45);
+    }
+    .lk-event-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      background: linear-gradient(90deg, #fef08a, #fbbf24, #f472b6, #fef08a);
+      background-size: 250% 250%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientFlow 4s ease infinite;
+    }
+    .lk-event-desc {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      margin: 0 auto 14px;
+      max-width: 620px;
+      line-height: 1.55;
+    }
+    .lk-float-btn {
+      background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6);
+      background-size: 200% 200%;
+      animation: gradientFlow 3.5s ease infinite;
+      color: #ffffff;
+      border: 2.5px solid #fef08a;
+      border-radius: 999px;
+      padding: 15px 34px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.22rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 24px rgba(251, 191, 36, 0.55);
+      transition: transform 0.1s ease, filter 0.2s;
+      margin-bottom: 14px;
+    }
+    .lk-float-btn:hover { filter: brightness(1.1); transform: scale(1.03); }
+    .lk-float-btn:active { transform: scale(0.92); }
+    .lk-event-lb-box {
+      background: rgba(9, 13, 36, 0.72);
+      border: 1.5px solid rgba(251, 191, 36, 0.45);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 12px;
+      text-align: left;
+    }
+    .lk-event-lb-box .lb-row {
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    /* ป้ายยศถาวรจากกิจกรรมลอยกระทง 2026 */
+    .lk-event-pill {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-top: 2px;
+      margin-left: 4px;
+    }
+    .lk-event-pill.lk-rank-1 {
+      background: linear-gradient(90deg, #f59e0b, #fde047, #ec4899, #f59e0b);
+      background-size: 250% 250%;
+      animation: gradientFlow 3s linear infinite;
+      color: #ffffff;
+      border: 1.5px solid #fef08a;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 0 12px rgba(251, 191, 36, 0.75);
+    }
+    .lk-event-pill.lk-rank-2 {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      color: #ffffff;
+      border: 1.5px solid #f9a8d4;
+      box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+    }
+    .lk-event-pill.lk-rank-3 {
+      background: linear-gradient(135deg, #0284c7, #f59e0b);
+      color: #ffffff;
+      border: 1.5px solid #fde68a;
+      box-shadow: 0 0 9px rgba(245, 158, 11, 0.45);
+    }
+    .lk-event-pill.lk-rank-join {
+      background: linear-gradient(135deg, #fdf2f8, #fef3c7);
+      color: #9d174d;
+      border: 1.5px solid #f472b6;
+    }
   </style>
 </head>
 <body>
@@ -4451,6 +4573,7 @@
             <span class="role-pill" id="profileRolePill">-</span>
             <span class="secret-horror-pill" id="profileHorrorPill" style="display:none;">🩸 ผู้ต้องคำสาป 1 ดาว</span>
             <span class="dev-patron-pill" id="profileDevPatronPill" style="display:none;">🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨</span>
+            <span class="lk-event-pill" id="profileLkEventPill" style="display:none;"></span>
             <span class="title-pill" id="profileTitlePill" style="display:none; font-size:0.85rem; padding:4px 12px;">-</span>
           </div>
           <div class="profile-bio-box" id="profileBioText" style="display:none;"></div>
@@ -4504,6 +4627,34 @@
       </div>
     </div>
   </div>
+  <!-- =========================================
+       🪷 อีเวนต์จำกัดเวลา: ลอยกระทง 2026 (หายไปเองเมื่อหมดเวลา แต่ยศและกรอบอยู่ถาวร!)
+       ========================================= -->
+  <div class="lk-event-card" id="loyKrathongEventCard" style="display:none;">
+    <div class="lk-event-badge-tag">⏳ อีเวนต์จำกัดเวลา • <span id="lkEventCountdown">กำลังโหลดเวลา...</span></div>
+    <h2 class="lk-event-title">🌕🪷 กิจกรรมลอยกระทง Ben the Game Translator 2026</h2>
+    <p class="lk-event-desc">
+      ร่วมกดลอยกระทงสะสมอันดับ! <strong>Top 1–3</strong> รับกรอบรูปสุดพิเศษ <strong>🪷✨ มหาบัวกระทงทอง</strong> + <strong>ยศตามอันดับถาวร</strong> • ผู้เข้าร่วมทุกคนรับยศ <strong>🪷 ผู้ร่วมลอยกระทง 2026</strong> ถาวร (หมดเวลาแล้วปุ่มจะหายไป แต่กรอบและยศอยู่ตลอดไป!)
+    </p>
+    <div>
+      <button type="button" class="lk-float-btn" id="lkFloatBtn" onmouseenter="playHoverSound()" onclick="loyKrathongClick(event)">
+        <span>🪷 กดลอยกระทง!</span>
+        <span class="cheer-counter-pill" id="lkTotalCounter">0 ใบ</span>
+      </button>
+    </div>
+    <div id="lkMyCountLine" style="font-size:0.86rem; color:#fde68a; font-weight:600; margin-bottom:6px;"></div>
+
+    <div class="lk-event-lb-box">
+      <div style="font-family:'Kanit',sans-serif; font-size:1rem; font-weight:700; color:#fde047; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+        <span>🏆 Top 5 นักลอยกระทงสูงสุด (Top 1–3 รับกรอบกระทงทองถาวร!)</span>
+        <span style="font-size:0.75rem; color:#f9a8d4;">LIVE</span>
+      </div>
+      <div class="lb-list" id="lkEventTopList">
+        <div class="lb-empty" style="color:#cbd5e1;">ยังไม่มีผู้ลอยกระทง — เป็นคนแรกเลยสิ! 🪷</div>
+      </div>
+    </div>
+  </div>
+
   <!-- =========================================
        โซนเด่น: ปุ่มส่งหัวใจให้กำลังใจแบบเรียลไทม์ (Firebase 1 - 1,000,000)
        ========================================= -->
@@ -5747,6 +5898,12 @@
       name: "👑 มงกุฎผู้พิทักษ์",
       reqText: "ผู้สนับสนุน / VIP",
       svg: `<svg viewBox="0 0 100 100"><g class="deco-spin"><circle cx="50" cy="50" r="44" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="4 8"/></g><polygon points="33,16 39,5 50,13 61,5 67,16" fill="#facc15" stroke="#b45309" stroke-width="1.8" stroke-linejoin="round"/><circle cx="50" cy="50" r="41" fill="none" stroke="#f59e0b" stroke-width="3"/></svg>`
+    },
+    {
+      id: "krathong_supreme",
+      name: "🪷✨ มหาบัวกระทงทอง",
+      reqText: "Top 3 ลอยกระทง 2026 (Limited)",
+      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="lkGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fef08a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><g class="deco-pulse"><circle cx="50" cy="50" r="42" fill="none" stroke="url(#lkGoldGrad)" stroke-width="3.6"/></g><g class="deco-spin"><circle cx="50" cy="50" r="46" fill="none" stroke="#fde047" stroke-width="1.6" stroke-dasharray="3 6"/><path d="M50,2 Q55,10 50,15 Q45,10 50,2 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/><path d="M50,98 Q55,90 50,85 Q45,90 50,98 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/><path d="M2,50 Q10,45 15,50 Q10,55 2,50 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/><path d="M98,50 Q90,45 85,50 Q90,55 98,50 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/></g><g class="deco-spin-fast"><circle cx="19" cy="19" r="2.6" fill="#fef08a"/><circle cx="81" cy="19" r="2.2" fill="#38bdf8"/><circle cx="81" cy="81" r="2.6" fill="#f472b6"/><circle cx="19" cy="81" r="2.2" fill="#fef08a"/></g><path d="M32,89 Q50,98 68,89" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/><path d="M36,16 L43,9 L50,14 L57,9 L64,16 Q50,20 36,16 Z" fill="#22c55e" stroke="#fef08a" stroke-width="1.1"/><path d="M41,15 L46,7 L50,13 L54,7 L59,15 Z" fill="#f472b6"/><rect x="48.5" y="6" width="3" height="8" rx="1" fill="#fffbeb"/><path class="lk-flame" d="M50,-2 Q54,3 50,7 Q46,3 50,-2 Z" fill="#facc15"/></svg>`
     }
   ];
 
@@ -5771,6 +5928,11 @@
     if (decoId === "fire")      return lv >= 20;
     if (decoId === "cursed")    return hasHorror;
     if (decoId === "celestial") return isVip;
+    if (decoId === "krathong_supreme") {
+      const targetUid = (u && u._uid) || (currentUser ? currentUser.id : null);
+      const lkInfo = getLoyKrathongRankInfo(targetUid);
+      return !!(lkInfo && lkInfo.hasFrame);
+    }
     return false;
   }
 
@@ -5943,6 +6105,18 @@
 
     const horrorPill = document.getElementById('profileHorrorPill');
     if (horrorPill) horrorPill.style.display = hasHorror ? 'inline-flex' : 'none';
+
+    const lkPill = document.getElementById('profileLkEventPill');
+    if (lkPill) {
+      const lkInfo = getLoyKrathongRankInfo(profile.id);
+      if (lkInfo) {
+        lkPill.className = "lk-event-pill " + lkInfo.cls;
+        lkPill.textContent = lkInfo.label;
+        lkPill.style.display = 'inline-flex';
+      } else {
+        lkPill.style.display = 'none';
+      }
+    }
 
     const bioEl = document.getElementById('profileBioText');
     if (bioEl) {
@@ -6220,6 +6394,14 @@
     meta.appendChild(patronPill);
     }
 
+    const lkInfo = getLoyKrathongRankInfo(id);
+    if (lkInfo) {
+      const lkPill = document.createElement('span');
+      lkPill.className = "lk-event-pill " + lkInfo.cls;
+      lkPill.textContent = lkInfo.label;
+      meta.appendChild(lkPill);
+    }
+
     // ✅ ย้าย 7 บรรทัดนี้มาวางตรงนี้แทนครับ
     const userClicks = Number(u.heartsClicked) || 0;
     if (userClicks > 0) {
@@ -6394,6 +6576,7 @@
     // อัปเดตแท่นรับเหรียญ Top 3 บนหน้าหลักแบบเรียลไทม์
     renderHomePodiums(donors, hearters, devHearters);
     renderVotePodium();
+    renderLoyKrathongEvent();
   }
 
   function renderHomePodiums(donors, hearters, devHearters = []) {
@@ -8105,8 +8288,11 @@
       return;
     }
 
+    const lkCard = document.getElementById('loyKrathongEventCard');
+    const lkRunningNow = Date.now() <= LOY_KRATHONG_END_MS;
+
     const pageMap = {
-      home:   [headerCard, quickGrid, profileCard, cheerCard, podiumCard],
+      home:   lkRunningNow ? [headerCard, quickGrid, profileCard, lkCard, cheerCard, podiumCard] : [headerCard, quickGrid, profileCard, cheerCard, podiumCard],
       rank:   [lbCard],
       vote:   [voteCard],
       eval:   [evalForm],
@@ -8114,7 +8300,7 @@
       dev:    [devCard]
     };
 
-    const allSections = [headerCard, quickGrid, profileCard, cheerCard, podiumCard, lbCard, voteCard, evalForm, donateCard, devCard];
+    const allSections = [headerCard, quickGrid, profileCard, lkCard, cheerCard, podiumCard, lbCard, voteCard, evalForm, donateCard, devCard];
     allSections.forEach(el => {
       if (!el) return;
       el.style.display = 'none';
@@ -9427,6 +9613,14 @@
       rolesWrap.appendChild(pPill);
     }
 
+    const lkInfo = getLoyKrathongRankInfo(uid);
+    if (lkInfo) {
+      const lkPill = document.createElement('span');
+      lkPill.className = "lk-event-pill " + lkInfo.cls;
+      lkPill.textContent = lkInfo.label;
+      rolesWrap.appendChild(lkPill);
+    }
+
     const lvPill = document.createElement('span');
     lvPill.className = "title-pill " + lvInfo.rarityClass;
     lvPill.textContent = lvInfo.badge;
@@ -9772,6 +9966,117 @@
       showToast("⚠️ บันทึกโปรไฟล์ไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
     });
   }
+
+  // =========================================
+  // 13. ระบบอีเวนต์จำกัดเวลา ลอยกระทง 2026 (ยศ & กรอบอยู่ถาวร!)
+  // =========================================
+  function getLoyKrathongSortedUsers() {
+    return Object.keys(usersCache || {})
+      .map(id => ({ id, u: usersCache[id] || {}, count: Number((usersCache[id] || {}).krathongCount) || 0 }))
+      .filter(e => e.count > 0)
+      .sort((a, b) => b.count - a.count || a.id.localeCompare(b.id));
+  }
+
+  function getLoyKrathongRankInfo(uid) {
+    if (!uid) return null;
+    const sorted = getLoyKrathongSortedUsers();
+    const idx = sorted.findIndex(e => e.id === uid);
+    if (idx === -1) return null;
+    const rank = idx + 1;
+    if (rank === 1) return { rank: 1, label: "👑🌕 ราชันลอยกระทง 2026", cls: "lk-rank-1", hasFrame: true };
+    if (rank === 2) return { rank: 2, label: "🥈🪷 เทพกระทง #2 (2026)", cls: "lk-rank-2", hasFrame: true };
+    if (rank === 3) return { rank: 3, label: "🥉🏮 ผู้พิทักษ์สายน้ำ #3 (2026)", cls: "lk-rank-3", hasFrame: true };
+    return { rank, label: "🪷 ผู้ร่วมลอยกระทง 2026", cls: "lk-rank-join", hasFrame: false };
+  }
+
+  function loyKrathongClick(e) {
+    if (Date.now() > LOY_KRATHONG_END_MS) {
+      showToast("⏳ กิจกรรมลอยกระทง 2026 หมดเวลาแล้วครับ! กรอบและยศจะอยู่กับคุณตลอดไป 🪷");
+      renderLoyKrathongEvent();
+      return;
+    }
+    if (!currentUser) {
+      openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนกดลอยกระทงเพื่อรับยศและสะสมอันดับนะครับ 🪷");
+      return;
+    }
+    if (!db) return;
+
+    playClickSound();
+    const updates = {};
+    updates[`users/${currentUser.id}/krathongCount`] = firebase.database.ServerValue.increment(1);
+    db.ref().update(updates).catch(() => {});
+
+    if (e) {
+      const icons = ['🪷', '🕯️', '🌕', '✨'];
+      for (let i = 0; i < 3; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-heart';
+        el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = (e.clientX + (Math.random() - 0.5) * 80) + 'px';
+        el.style.top = (e.clientY - 12) + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1200);
+      }
+    }
+  }
+
+  function renderLoyKrathongEvent() {
+    const card = document.getElementById('loyKrathongEventCard');
+    const countdownEl = document.getElementById('lkEventCountdown');
+    const totalEl = document.getElementById('lkTotalCounter');
+    const myLineEl = document.getElementById('lkMyCountLine');
+    const listEl = document.getElementById('lkEventTopList');
+
+    const diff = LOY_KRATHONG_END_MS - Date.now();
+    if (diff <= 0) {
+      // หมดเวลาอีเวนต์ -> ซ่อนการ์ดปุ่ม + เอาพื้นหลังลอยกระทงออก (กลับเป็นคริสต์มาสอัตโนมัติ)
+      if (card) card.style.display = 'none';
+      document.body.classList.remove('loy-krathong-mode');
+      return;
+    }
+
+    if (countdownEl) {
+      const days = Math.floor(diff / 86400000);
+      const hrs = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      countdownEl.textContent = `เหลือเวลา ${days} วัน ${hrs} ชม. ${mins} น. ${secs} วิ`;
+    }
+
+    const sorted = getLoyKrathongSortedUsers();
+    const totalKrathongs = sorted.reduce((sum, e) => sum + e.count, 0);
+    if (totalEl) totalEl.textContent = formatCompact(totalKrathongs) + " ใบ";
+
+    if (myLineEl) {
+      if (!currentUser) {
+        myLineEl.textContent = "🔐 ล็อกอินเพื่อร่วมลอยกระทงและรับยศถาวร 🪷";
+      } else {
+        const myEntry = sorted.find(e => e.id === currentUser.id);
+        const myCnt = myEntry ? myEntry.count : 0;
+        const myRankIdx = sorted.findIndex(e => e.id === currentUser.id);
+        myLineEl.textContent = myCnt > 0
+          ? `🪷 คุณลอยกระทงไปแล้ว: ${formatCompact(myCnt)} ใบ (อันดับ #${myRankIdx + 1})`
+          : "🪷 กดลอยกระทงอย่างน้อย 1 ใบ เพื่อรับยศถาวร [ผู้ร่วมลอยกระทง 2026] ทันที!";
+      }
+    }
+
+    if (listEl) {
+      listEl.textContent = "";
+      if (sorted.length === 0) {
+        listEl.innerHTML = `<div class="lb-empty" style="color:#cbd5e1;">ยังไม่มีผู้ลอยกระทง — เป็นคนแรกเลยสิ! 🪷</div>`;
+      } else {
+        sorted.slice(0, 5).forEach((e, i) => {
+          listEl.appendChild(buildLbRow(i + 1, e.id, e.u, "🪷 " + formatCompact(e.count) + " ใบ"));
+        });
+      }
+    }
+  }
+
+  setInterval(() => {
+    if (Date.now() <= LOY_KRATHONG_END_MS + 2000) {
+      renderLoyKrathongEvent();
+    }
+  }, 1000);
 </script>
 
 </body>
