@@ -8797,15 +8797,24 @@
       const numInput = document.createElement('input');
       numInput.type = "number";
       numInput.min = "0";
-      numInput.value = currentAmt;
+      numInput.placeholder = "จำนวนเงิน";
+      numInput.value = "";
       numInput.id = "donateAmtInput_" + m.id;
       numInput.style.cssText = "width:85px; padding:4px 6px; border-radius:6px; border:1px solid #cbd5e1; font-size:0.82rem;";
 
-      const btn = document.createElement('button');
-      btn.type = "button";
-      btn.textContent = "บันทึก";
-      btn.style.cssText = "background:#15803d; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:0.78rem; cursor:pointer; font-weight:600;";
-      btn.onclick = () => adminSaveDonate(m.id);
+      const addBtn = document.createElement('button');
+      addBtn.type = "button";
+      addBtn.textContent = "➕ บวกเพิ่ม";
+      addBtn.title = "บวกทบเข้ากับยอดเดิม (ยศขึ้นอัตโนมัติ)";
+      addBtn.style.cssText = "background:#15803d; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:0.78rem; cursor:pointer; font-weight:600;";
+      addBtn.onclick = () => adminAddDonate(m.id);
+
+      const setBtn = document.createElement('button');
+      setBtn.type = "button";
+      setBtn.textContent = "💾 ตั้งยอดรวม";
+      setBtn.title = "แก้ไขยอดรวมทั้งหมดเป็นตัวเลขที่พิมพ์";
+      setBtn.style.cssText = "background:#0284c7; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:0.78rem; cursor:pointer; font-weight:600;";
+      setBtn.onclick = () => adminSaveDonate(m.id);
 
       const isPatron = !!m.u.devSupporter;
       const patronBtn = document.createElement('button');
@@ -8818,20 +8827,49 @@
 
       row.appendChild(label);
       row.appendChild(numInput);
-      row.appendChild(btn);
+      row.appendChild(addBtn);
+      row.appendChild(setBtn);
       row.appendChild(patronBtn);
       box.appendChild(row);
     });
   }
-  function adminSaveDonate(uid) {
+
+  // บวกยอดโดเนททบกับยอดเดิม (ครั้งแรกหรือโอนเพิ่มก็ใช้ปุ่มนี้ได้เลย + ยศขึ้นอัตโนมัติ)
+  function adminAddDonate(uid) {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
     const inputEl = document.getElementById("donateAmtInput_" + uid);
     if (!inputEl) return;
-    const amount = Math.max(0, Number(inputEl.value) || 0);
+    const addAmt = Math.floor(Number(inputEl.value) || 0);
+    if (addAmt <= 0) {
+      showToast("⚠️ กรุณาพิมพ์จำนวนเงินที่ต้องการบวกเพิ่มครับ");
+      return;
+    }
 
-    db.ref("users/" + uid + "/donateAmount").set(amount).then(() => {
+    db.ref("users/" + uid).update({
+      donateAmount: firebase.database.ServerValue.increment(addAmt)
+    }).then(() => {
       const name = (usersCache[uid] && (usersCache[uid].customName || usersCache[uid].name)) || uid;
-      showToast(`💰 บันทึกยอดโดเนทของ ${name} เป็น ฿${formatNum(amount)} เรียบร้อยแล้ว!`);
+      showToast(`➕ บวกยอดให้ ${name} เพิ่ม +฿${formatNum(addAmt)} แล้ว! ยศอัปเดตอัตโนมัติ 🎉`);
+      inputEl.value = "";
+      renderAdminDonateSearch();
+    }).catch(() => {
+      showToast("⚠️ บวกยอดโดเนทไม่สำเร็จ");
+    });
+  }
+
+  function adminSaveDonate(uid) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    const inputEl = document.getElementById("donateAmtInput_" + uid);
+    if (!inputEl || inputEl.value.trim() === "") {
+      showToast("⚠️ กรุณาพิมพ์ยอดรวมที่ต้องการตั้งค่าครับ");
+      return;
+    }
+    const amount = Math.max(0, Math.floor(Number(inputEl.value) || 0));
+
+    db.ref("users/" + uid).update({ donateAmount: amount }).then(() => {
+      const name = (usersCache[uid] && (usersCache[uid].customName || usersCache[uid].name)) || uid;
+      showToast(`💰 ตั้งยอดโดเนทของ ${name} เป็น ฿${formatNum(amount)} เรียบร้อยแล้ว!`);
+      inputEl.value = "";
       renderAdminDonateSearch();
     }).catch(() => {
       showToast("⚠️ บันทึกยอดโดเนทไม่สำเร็จ");
@@ -10594,11 +10632,29 @@
     });
   }
 
+  let donateSlipsCache = {};
+
   function initDonateSlipSystem() {
     if (!db) return;
     db.ref("donate_slips").on("value", (snap) => {
-      renderAdminSlipList(snap.val() || {});
+      donateSlipsCache = snap.val() || {};
+      renderAdminSlipList(donateSlipsCache);
     });
+  }
+
+  // ฟังก์ชันดาวน์โหลดรูปสลิปสำรองลงเครื่องแอดมินอัตโนมัติ
+  function downloadSlipBackup(slipItem, approvedAmount) {
+    if (!slipItem || !slipItem.slipImg) return;
+    const safeName = String(slipItem.name || "user").replace(/[^a-zA-Z0-9ก-๙_-]/g, "_").slice(0, 24);
+    const dateTag = new Date(slipItem.createdAt || Date.now()).toISOString().slice(0, 10);
+    const fileName = `slip_${dateTag}_${safeName}_${approvedAmount}THB.jpg`;
+
+    const a = document.createElement('a');
+    a.href = slipItem.slipImg;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   function renderAdminSlipList(data) {
@@ -10692,13 +10748,20 @@
       return;
     }
 
+    // 1. ดาวน์โหลดรูปสลิปสำรองเก็บลงเครื่องแอดมินก่อนลบออกจากฐานข้อมูล
+    const slipItem = donateSlipsCache[slipKey];
+    if (slipItem) {
+      downloadSlipBackup(slipItem, addAmt);
+    }
+
+    // 2. บวกยอดโดเนท + ลบรูปสลิปออกจาก Firebase ทันที
     const updates = {};
     updates[`users/${uid}/donateAmount`] = firebase.database.ServerValue.increment(addAmt);
     updates[`donate_slips/${slipKey}`] = null;
 
     db.ref().update(updates).then(() => {
       playSuccessSound();
-      showToast(`✅ อนุมัติ +฿${formatNum(addAmt)} เรียบร้อย! ยศของผู้เล่นอัปเดตอัตโนมัติแล้ว 🎉`);
+      showToast(`✅ สำรองสลิปลงเครื่อง + อนุมัติ +฿${formatNum(addAmt)} และลบสลิปจากฐานข้อมูลแล้ว! 🔒`);
     }).catch(() => {
       showToast("⚠️ อนุมัติไม่สำเร็จ กรุณาเช็ก Firebase Rules");
     });
