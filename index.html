@@ -5121,14 +5121,14 @@
     /* --- 🦊 ตัวละครครึ่งตัว + Idle Animation แบบ Live2D --- */
     .lg-mascot-stage {
       position: absolute;
-      right: 3%;
-      bottom: 34px;
+      right: 1%;
+      bottom: 32px;
       z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       pointer-events: none;
-      width: min(46%, 430px);
+      width: min(56%, 640px);
     }
 
     .lg-speech-bubble {
@@ -5166,7 +5166,7 @@
 
     .lg-mascot-img {
       width: 100%;
-      max-height: 76vh;
+      max-height: 86vh;
       object-fit: contain;
       object-position: bottom center;
       display: block;
@@ -5918,8 +5918,8 @@
       <!-- 🦊 ตัวละครครึ่งตัวของเจ้านายพร้อม Idle Animation -->
       <div class="lg-mascot-stage">
         <div class="lg-speech-bubble" id="lgSpeechText">ล็อกอินแป๊บเดียวเองนะ~ UwU 💙</div>
-        <img src="images/mascot.png" alt="Mascot" class="lg-mascot-img"
-             onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='mascot.png';}else{this.style.display='none';}">
+        <img id="lgMascotImg" src="images/mascot.png" alt="Mascot" class="lg-mascot-img"
+             onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}else{this.style.display='none';}">
       </div>
 
       <!-- แถบข้อความวิ่งด้านล่าง -->
@@ -13252,6 +13252,112 @@
   let lgGuestDismissed = false;
   let lgSlideIdx = 0;
   let lgSlideTimer = null;
+  let lgTypeTimer = null;
+  let lgTalkTimer = null;
+  let lgBlinkTimer = null;
+  let lgIsTalking = false;
+
+  const MASCOT_SPRITES = {
+    idle:  "images/mascot.png",
+    blink: "images/mascot_blink.png",
+    talk:  "images/mascot_talk.png"
+  };
+
+  // โหลดรูปล่วงหน้ากันภาพกะพริบตอนสลับท่า
+  const _mascotReady = { idle: true, blink: false, talk: false };
+  Object.keys(MASCOT_SPRITES).forEach(k => {
+    const im = new Image();
+    im.onload = () => { _mascotReady[k] = true; };
+    im.src = MASCOT_SPRITES[k];
+  });
+
+  function setMascotSprite(mode) {
+    const img = document.getElementById('lgMascotImg');
+    if (!img) return;
+    const useMode = _mascotReady[mode] ? mode : 'idle';
+    if (img.dataset.mode !== useMode) {
+      img.dataset.mode = useMode;
+      img.src = MASCOT_SPRITES[useMode];
+    }
+  }
+
+  // 🦊 เสียงพูดน้องจิ้งจอกสไตล์ RPG น่ารักๆ (สังเคราะห์ด้วย Web Audio API • ปลอดลิขสิทธิ์ 100%)
+  function playMascotTalkBlip() {
+    if (!soundEnabled || isHorrorTriggered) return;
+    try {
+      if (!audioCtx || audioCtx.state !== 'running') return; // รอให้ผู้ใช้แตะหน้าจอก่อนตามกฎเบราว์เซอร์
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      // โทนเสียงนุ่มน่ารัก (triangle wave) + สุ่มระดับเสียงสูง-ต่ำนิดๆ ให้เหมือนกำลังพูด
+      const baseFreq = 560 + Math.random() * 140;
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(baseFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.14, now + 0.045);
+
+      gain.gain.setValueAtTime(0.055, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+    } catch (e) {}
+  }
+
+  function playMascotSpeech(text) {
+    const speechEl = document.getElementById('lgSpeechText');
+    if (!speechEl) return;
+
+    clearInterval(lgTypeTimer);
+    clearInterval(lgTalkTimer);
+    lgIsTalking = true;
+
+    let idx = 0;
+    let mouthOpen = true;
+    speechEl.textContent = "";
+    setMascotSprite('talk');
+
+    // สลับปากอ้า-หุบทุก 130ms ระหว่างพูด
+    lgTalkTimer = setInterval(() => {
+      mouthOpen = !mouthOpen;
+      setMascotSprite(mouthOpen ? 'talk' : 'idle');
+    }, 130);
+
+    // พิมพ์ข้อความทีละตัวอักษร + มีเสียงพูดน่ารักๆ ทุก 2 ตัวอักษร (เว้นช่องว่าง)
+    const chars = Array.from(text);
+    lgTypeTimer = setInterval(() => {
+      if (idx < chars.length) {
+        const ch = chars[idx++];
+        speechEl.textContent += ch;
+        if (ch.trim() !== "" && idx % 2 === 1) {
+          playMascotTalkBlip();
+        }
+      } else {
+        clearInterval(lgTypeTimer);
+        clearInterval(lgTalkTimer);
+        lgIsTalking = false;
+        setMascotSprite('idle');
+      }
+    }, 45);
+  }
+
+  function scheduleMascotBlink() {
+    clearTimeout(lgBlinkTimer);
+    const delay = 2600 + Math.random() * 2400; // กะพริบตาทุก 2.6 - 5 วิ
+    lgBlinkTimer = setTimeout(() => {
+      const gate = document.getElementById('bgtLoginGate');
+      if (!gate || gate.style.display === 'none') return;
+      if (!lgIsTalking) {
+        setMascotSprite('blink');
+        setTimeout(() => {
+          if (!lgIsTalking) setMascotSprite('idle');
+        }, 180);
+      }
+      scheduleMascotBlink();
+    }, delay);
+  }
 
   const LG_SPEECH_LINES = [
     "ล็อกอินแป๊บเดียวเองนะ~ UwU 💙",
@@ -13274,10 +13380,11 @@
     const gate = document.getElementById('bgtLoginGate');
     if (gate) gate.style.display = 'none';
     document.body.classList.remove('login-gate-open');
-    if (lgSlideTimer) {
-      clearInterval(lgSlideTimer);
-      lgSlideTimer = null;
-    }
+    clearInterval(lgSlideTimer); lgSlideTimer = null;
+    clearInterval(lgTypeTimer);  lgTypeTimer = null;
+    clearInterval(lgTalkTimer);  lgTalkTimer = null;
+    clearTimeout(lgBlinkTimer);  lgBlinkTimer = null;
+    lgIsTalking = false;
   }
 
   function dismissLoginGateGuest() {
@@ -13289,10 +13396,9 @@
     const list = (typeof games !== "undefined" && Array.isArray(games) && games.length > 0) ? games : [];
     if (list.length === 0) return;
 
-    // สร้างแถบข้อความวิ่งจากรายชื่อเกมที่มีอยู่จริง
     const track = document.getElementById('lgMarqueeTrack');
     if (track) {
-      const textChunk = list.map(g => `✦ ${g.name}`).join("     ");
+      const textChunk = list.map(g => `✦ ${g.name}`).join("    ");
       track.innerHTML = `<span>${textChunk}</span><span>${textChunk}</span>`;
     }
 
@@ -13319,19 +13425,17 @@
         }
       }
 
-      const speechEl = document.getElementById('lgSpeechText');
-      if (speechEl) {
-        speechEl.textContent = LG_SPEECH_LINES[lgSpeechIdx % LG_SPEECH_LINES.length];
-      }
+      playMascotSpeech(LG_SPEECH_LINES[lgSpeechIdx % LG_SPEECH_LINES.length]);
     };
 
     renderSlide();
+    scheduleMascotBlink();
     if (!lgSlideTimer) {
       lgSlideTimer = setInterval(() => {
         lgSlideIdx = (lgSlideIdx + 1) % list.length;
         lgSpeechIdx = (lgSpeechIdx + 1) % LG_SPEECH_LINES.length;
         renderSlide();
-      }, 3600);
+      }, 4500);
     }
   }
   // =========================================
