@@ -10,6 +10,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  
   <style>
     :root {
       --xmas-red: #dc2626;
@@ -6175,6 +6176,18 @@
     .deco-choice-card.r-legendary { border-color: #f59e0b; background: linear-gradient(180deg, #fffbeb, #fef3c7); }
     .deco-choice-card.r-limited   { border-color: #ec4899; background: linear-gradient(180deg, #fdf2f8, #fef3c7); }
     .deco-choice-card.r-mythic    { border-color: #a855f7; background: linear-gradient(180deg, #f5f3ff, #eff6ff); }
+
+    /* ซ่อนแถบแจ้งเตือนของ Google Translate ไม่ให้ดันหน้าเว็บลง */
+    .goog-te-banner-frame.skiptranslate,
+    iframe.goog-te-banner-frame,
+    .VIpgJd-ZVi9od-ORHb-OEVmcd,
+    #goog-gt-tt,
+    .goog-te-balloon-frame {
+      display: none !important;
+    }
+    body {
+      top: 0px !important;
+    }
   </style>
 </head>
 <body>
@@ -6383,6 +6396,11 @@
   <button type="button" class="pill-control-btn" id="genkiSfxToggle" onclick="toggleGenkiSfx()">
     <span id="genkiSfxIcon">⚡</span> <span id="genkiSfxLabel">เสียงพลัง: เปิด</span>
   </button>
+
+  <button type="button" class="pill-control-btn notranslate" id="langToggleBtn" onclick="toggleSiteLanguage()">
+    <span>🌐</span> <span id="langToggleLabel">EN</span>
+  </button>
+  <div id="google_translate_element" style="display:none;"></div>
 </div>
 
 
@@ -14572,6 +14590,49 @@
     }
   };
 </script>
+
+<script>
+  // =========================================
+  // 🌐 ระบบสลับภาษาอัตโนมัติ TH <-> EN (Google Translate)
+  // =========================================
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'th',
+      includedLanguages: 'en,th',
+      autoDisplay: false
+    }, 'google_translate_element');
+    updateLangButtonLabel();
+  }
+
+  function isEnglishActive() {
+    return document.cookie.includes('googtrans=/th/en');
+  }
+
+  function updateLangButtonLabel() {
+    const lbl = document.getElementById('langToggleLabel');
+    if (lbl) lbl.textContent = isEnglishActive() ? 'TH' : 'EN';
+  }
+
+  function toggleSiteLanguage() {
+    if (typeof playClickSound === 'function') playClickSound();
+    const toEn = !isEnglishActive();
+    const targetLang = toEn ? 'en' : 'th';
+    const cookieVal = toEn ? '/th/en' : '/th/th';
+
+    document.cookie = `googtrans=${cookieVal}; path=/;`;
+    document.cookie = `googtrans=${cookieVal}; path=/; domain=${location.hostname};`;
+
+    const combo = document.querySelector('.goog-te-combo');
+    if (combo) {
+      combo.value = targetLang;
+      combo.dispatchEvent(new Event('change'));
+      updateLangButtonLabel();
+    } else {
+      location.reload();
+    }
+  }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
