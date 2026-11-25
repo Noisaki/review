@@ -4306,6 +4306,18 @@
       100% { transform: scale(2.02) translate(0, 0); filter: contrast(2.4) saturate(2.4); }
     }
 
+    .ck-dialogue-box { cursor: pointer; user-select: none; }
+    .ck-next-hint {
+      display: none;
+      text-align: right;
+      font-size: 0.78rem;
+      color: #fde047;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+      animation: blink 0.9s infinite;
+    }
+    #curseKingStage.phase-horror .ck-next-hint { color: #fca5a5; }
+
     /* 📱 รองรับหน้าจอมือถือโดยเฉพาะ */
     @media (max-width: 640px) {
       .ck-char-wrap { width: 96vw; }
@@ -6941,6 +6953,7 @@
   <div class="ck-dialogue-box">
     <div class="ck-speaker" id="ckSpeaker">???</div>
     <div id="ckDialogueText"></div>
+    <div class="ck-next-hint" id="ckNextHint">▼ คลิกเพื่อไปต่อ</div>
     <div class="ck-choices-wrap" id="ckChoicesWrap"></div>
   </div>
 </div>
@@ -11868,7 +11881,7 @@
         div.innerHTML = `
           <div class="podium-avatar-wrap">
             ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
-            <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
+            <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://cdn.discordapp.com/embed/avatars/0.png';">
           </div>
           <div class="podium-name"></div>
           <div class="podium-lv"></div>
@@ -15962,84 +15975,199 @@
     }, speedMs);
   }
 
+  let ckWaitingAdvance = null;
+  let ckForceFinishLine = null;
+
+  // คลิกที่กล่องข้อความหรือบนเวทีเพื่อเร่งพิมพ์ / ไปประโยคถัดไป
+  (function initCurseKingClickAdvance() {
+    const stage = document.getElementById('curseKingStage');
+    if (!stage || stage.dataset.clickBound) return;
+    stage.dataset.clickBound = "1";
+    stage.addEventListener('click', (e) => {
+      if (e.target.closest('.ck-choice-btn')) return;
+      if (ckForceFinishLine) {
+        ckForceFinishLine();
+      } else if (ckWaitingAdvance) {
+        const nextFn = ckWaitingAdvance;
+        ckWaitingAdvance = null;
+        const hint = document.getElementById('ckNextHint');
+        if (hint) hint.style.display = 'none';
+        playClickSound();
+        nextFn();
+      }
+    });
+  })();
+
+  // ตัวเล่นบทสนทนาทีละประโยคแบบ VN (คลิกเพื่อไปต่อ)
+  function playCurseSequence(lines, onAllDone) {
+    let i = 0;
+    const hint = document.getElementById('ckNextHint');
+    const speaker = document.getElementById('ckSpeaker');
+
+    function runNext() {
+      if (i >= lines.length) {
+        if (hint) hint.style.display = 'none';
+        if (onAllDone) onAllDone();
+        return;
+      }
+      const line = lines[i++];
+      if (line.speaker && speaker) speaker.textContent = line.speaker;
+      if (line.onStart) line.onStart();
+
+      clearInterval(ckTalkTimer);
+      clearInterval(ckTypeTimer);
+      ckWaitingAdvance = null;
+      if (hint) hint.style.display = 'none';
+
+      const charImg = document.getElementById('ckCharImg');
+      const txtEl = document.getElementById('ckDialogueText');
+      const choicesWrap = document.getElementById('ckChoicesWrap');
+      if (choicesWrap) { choicesWrap.style.display = 'none'; choicesWrap.innerHTML = ''; }
+      if (!txtEl) return;
+
+      txtEl.textContent = "";
+      txtEl.classList.toggle('ck-red-slow-text', !!line.horror);
+
+      let toggleMouth = true;
+      if (charImg) charImg.src = line.talkA;
+      ckTalkTimer = setInterval(() => {
+        toggleMouth = !toggleMouth;
+        if (charImg) charImg.src = toggleMouth ? line.talkA : line.talkB;
+      }, line.horror ? 175 : 150);
+
+      const chars = Array.from(line.text);
+      let idx = 0;
+      const speedMs = line.speed || (line.horror ? 115 : 78);
+      const isVerySlow = speedMs >= 200;
+
+      const finishTyping = () => {
+        clearInterval(ckTalkTimer);
+        clearInterval(ckTypeTimer);
+        ckForceFinishLine = null;
+        txtEl.textContent = line.text;
+        if (charImg) charImg.src = line.idle;
+
+        if (line.autoNext) {
+          setTimeout(runNext, line.autoDelay || 550);
+        } else {
+          if (hint) hint.style.display = 'block';
+          ckWaitingAdvance = runNext;
+        }
+      };
+
+      // ถ้าไม่ใช่ประโยคช้าสุดก่อนจัมป์สแกร์ ให้คลิกเร่งให้พิมพ์จบประโยคได้
+      ckForceFinishLine = line.noSkip ? null : finishTyping;
+
+      ckTypeTimer = setInterval(() => {
+        if (idx < chars.length) {
+          const ch = chars[idx++];
+          txtEl.textContent += ch;
+          if (ch.trim() !== "") playCurseVoiceBlip(!!line.horror, isVerySlow);
+        } else {
+          finishTyping();
+        }
+      }, speedMs);
+    }
+
+    runNext();
+  }
+
   function startCurseKingCutscene() {
     clearInterval(horrorScareTimer);
     removeCursedEye();
     stopHorrorAmbience();
 
     const stage = document.getElementById('curseKingStage');
-    const speaker = document.getElementById('ckSpeaker');
     const bgm = document.getElementById('curseBgmAudio');
     if (!stage) return;
 
     stage.classList.remove('phase-horror');
     stage.style.display = 'block';
-    if (speaker) speaker.textContent = "Ben";
 
     let usingSynth = false;
     if (bgm) {
       bgm.volume = Math.max(0.25, musicVolume);
       bgm.currentTime = 0;
-      bgm.play().catch(() => {
-        usingSynth = true;
-        startCreepySynthBgm(false);
-      });
-      bgm.onerror = () => {
-        usingSynth = true;
-        startCreepySynthBgm(false);
-      };
+      bgm.play().catch(() => { usingSynth = true; startCreepySynthBgm(false); });
+      bgm.onerror = () => { usingSynth = true; startCreepySynthBgm(false); };
     } else {
       usingSynth = true;
       startCreepySynthBgm(false);
     }
 
-    // ขั้นที่ 1: ภาพนิ่ง curse_1 / สลับพูด curse_2 <-> curse_3
-    typeCurseKingLine(
-      "สรุปแล้วงานเกมของผมมีปัญหาอะไรหรือเปล่า?",
-      "images/curse_1.png",
-      "images/curse_2.png",
-      "images/curse_3.png",
-      false,
-      50,
-      () => {
-        showCurseChoices([
-          { label: "ผมไม่ได้ตั้งใจ...", onPick: () => enterCursePhase2(usingSynth) },
-          { label: "แค่แกล้งหยอกพี่เบนเล่นๆ เท่านั้น", onPick: () => enterCursePhase2(usingSynth) }
-        ]);
+    // ช่วงที่ 1: นิ่งๆ น้อยใจ ค่อยๆ ถามทีละประโยค (คลิกอ่านต่อเอง)
+    playCurseSequence([
+      {
+        speaker: "Ben",
+        text: "...อ้าว พิมพ์คำว่า 'ไม่ขอโทษ!' เข้ามาจริงๆ ด้วยสินะครับ ทั้งที่ระบบก็เตือนไปแล้วแท้ๆ...",
+        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+        horror: false, speed: 78
+      },
+      {
+        speaker: "Ben",
+        text: "ผมก็อุตส่าห์นั่งแปลเกมพวกนี้ทีละบรรทัด แก้บั๊ก ตรวจสระลอยจนดึกดื่นแทบไม่ได้นอน... เพื่อให้ทุกคนได้เล่นกันฟรีๆ โดยไม่คิดเงินสักบาท",
+        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+        horror: false, speed: 75
+      },
+      {
+        speaker: "Ben",
+        text: "แต่คุณกลับกดให้ 1 ดาวรัวๆ ทุกข้อ ไม่แม้แต่จะพิมพ์บอกเหตุผลสักคำ... ช่วยบอกผมทีเถอะครับ สรุปแล้วงานแปลของผมมันมีปัญหาอะไรหรือเปล่า?",
+        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+        horror: false, speed: 78, autoNext: true, autoDelay: 250
       }
-    );
+    ], () => {
+      showCurseChoices([
+        {
+          label: "ผมไม่ได้ตั้งใจจริงๆ นะ...",
+          onPick: () => enterCursePhase2(usingSynth, "ไม่ได้ตั้งใจ... แต่ก็ตั้งใจกด 1 ดาวทุกข้อ แล้วพิมพ์คำนั้นเข้ามาเองกับมือเลยนะครับ...")
+        },
+        {
+          label: "แค่แกล้งหยอกพี่เบนเล่นๆ เท่านั้นเอง",
+          onPick: () => enterCursePhase2(usingSynth, "ความตั้งใจและความรู้สึกของคนทำ... มันเป็นเรื่องที่เอามาหยอกเล่นกันได้ง่ายๆ แบบนี้เลยเหรอครับ?")
+        },
+        {
+          label: "แค่อยากลองดูว่าจะเกิดอะไรขึ้น...",
+          onPick: () => enterCursePhase2(usingSynth, "อยากรู้มากเลยใช่ไหมครับ ว่าถ้าทำให้ผมเสียใจจนถึงที่สุดแล้ว... จะเกิดอะไรขึ้น?")
+        }
+      ]);
+    });
   }
 
-  function enterCursePhase2(usingSynth) {
+  function enterCursePhase2(usingSynth, replyLine) {
     const stage = document.getElementById('curseKingStage');
-    const speaker = document.getElementById('ckSpeaker');
-    const charImg = document.getElementById('ckCharImg');
-    if (charImg) charImg.src = "images/curse_2.png";
 
-    setTimeout(() => {
-      if (stage) stage.classList.add('phase-horror');
-      if (speaker) speaker.textContent = "👁️ BGT.EXE // ราชาคำสาป";
-      if (usingSynth) startCreepySynthBgm(true);
-      spawnCurseSysPopup("⚠️ [SYSTEM]: ตรวจพบคำโกหกในระบบ...");
-
-      ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
-
-      // ขั้นที่ 2: โหมดหลอน พูดช้าสีแดง "ทำไม..."
-      typeCurseKingLine(
-        "ทำไม...",
-        "images/curse_4.png",
-        "images/curse_4.png",
-        "images/curse_5.png",
-        true,
-        220,
-        () => {
-          showCurseChoices([
-            { label: "ผมขอโทษจริงๆ นะ...", onPick: enterCurseFinalLie },
-            { label: "ผมไม่ได้คิดแบบนั้นเลย...", onPick: enterCurseFinalLie }
-          ]);
+    // ตอบกลับตามช้อยส์ 1 ประโยคก่อน แล้วค่อยตัดเข้าโหมดหลอน .EXE
+    playCurseSequence([
+      {
+        speaker: "Ben",
+        text: replyLine,
+        idle: "images/curse_2.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+        horror: false, speed: 82
+      },
+      {
+        speaker: "👁️ BGT.EXE // ราชาคำสาป",
+        text: "ทำไมกันนะ... ทั้งที่ผมให้โอกาสคุณกดขอโทษตั้งหลายรอบแล้วแท้ๆ...",
+        idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+        horror: true, speed: 120,
+        onStart: () => {
+          if (stage) stage.classList.add('phase-horror');
+          if (usingSynth) startCreepySynthBgm(true);
+          spawnCurseSysPopup("⚠️ [SYSTEM]: ตรวจพบคำโกหกในระบบ...");
+          ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
         }
-      );
-    }, 450);
+      },
+      {
+        speaker: "👁️ BGT.EXE // ราชาคำสาป",
+        text: "แต่คุณก็ยังเลือกที่จะเหยียบย่ำมันซ้ำแล้วซ้ำเล่า จนเดินมาถึงตรงนี้จนได้... ตอนที่เห็นหน้าเว็บพัง เห็นผมร้องไห้ คุณกำลังนั่งยิ้มอยู่หน้าจอหรือเปล่า?",
+        idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+        horror: true, speed: 105, autoNext: true, autoDelay: 300
+      }
+    ], () => {
+      showCurseChoices([
+        { label: "ผมขอโทษจริงๆ นะ... ปล่อยผมไปเถอะ", onPick: enterCurseFinalLie },
+        { label: "ผมไม่ได้คิดแบบนั้นเลย...", onPick: enterCurseFinalLie }
+      ]);
+    });
   }
 
   function enterCurseFinalLie() {
@@ -16048,83 +16176,84 @@
       spawnCurseSysPopup("👁️ โกหก... คุณกำลังโกหกผมอยู่...");
     }, 1200);
 
-    // ขั้นที่ 3: พูดช้ามาก "โกหก......"
-    typeCurseKingLine(
-      "โกหก......",
-      "images/curse_4.png",
-      "images/curse_4.png",
-      "images/curse_5.png",
-      true,
-      320,
-      () => {
-        // ขั้นที่ 4: จัมป์สแกร์ซูมหน้า curse_5 เต็มจอ
-        setTimeout(() => {
-          clearInterval(ckFlyInterval);
-          clearInterval(ckSysInterval);
-          stopCreepySynthBgm();
-          const bgm = document.getElementById('curseBgmAudio');
-          if (bgm) { bgm.pause(); bgm.currentTime = 0; }
-
-          const jsBox = document.getElementById('ckJumpscareFlash');
-          const jsAudio = document.getElementById('curseJumpscareAudio');
-          if (jsBox) jsBox.style.display = 'flex';
-          if (jsAudio) {
-            jsAudio.volume = Math.min(0.65, Math.max(0.3, musicVolume));
-            jsAudio.currentTime = 0;
-            jsAudio.play().catch(() => playExeSilentScareAudio());
-          } else {
-            playExeSilentScareAudio();
-          }
-
-          // ขั้นที่ 5: ตัดจบ
-          setTimeout(() => {
-            if (jsBox) jsBox.style.display = 'none';
-            const stage = document.getElementById('curseKingStage');
-            if (stage) {
-              stage.style.display = 'none';
-              stage.classList.remove('phase-horror');
-            }
-
-            if (isAdminTestingCurse) {
-              isAdminTestingCurse = false;
-              showToast("✅ จบการทดสอบฉากราชาคำสาปแล้วครับ!");
-              if (!userPausedMusic && musicVolume > 0) startChristmasMusic();
-              return;
-            }
-
-            try {
-              localStorage.setItem("bgt_horror_tier", "5");
-              localStorage.setItem("bgt_curse_king_unlocked", "1");
-              localStorage.setItem(CURSE_COUNT_KEY, "0");
-            } catch (e) {}
-            curseCount = 0;
-
-            if (db && currentUser) {
-              db.ref("users/" + currentUser.id).update({
-                unlockedHorrorRole: true,
-                unlockedCurseKing: true,
-                horrorTier: 5
-              }).catch(() => {});
-            }
-
-            forgiveAndRestore(false);
-
-            const fIcon = document.getElementById('forgivenIcon');
-            const fTitle = document.getElementById('forgivenTitle');
-            const fDesc = document.getElementById('forgivenDesc');
-            if (fIcon) fIcon.textContent = "🦊✨";
-            if (fTitle) fTitle.textContent = "เกิดอะไรขึ้นนิ ชั่งเถอะ ;3";
-            if (fDesc) {
-              fDesc.textContent =
-                "เอ๊ะ เมื่อกี้เหมือนเว็บจะกระตุกนิดหน่อยนะ~ ชั่งเถอะ! ยินดีด้วยครับ คุณปลดล็อกยศและกรอบลับระดับสูงสุด [👑👁️ ราชาคำสาป] (มีลูกตากระพริบในกรอบ!) ถาวรแล้ว เข้าไปลองใส่ในหน้าแต่งโปรไฟล์ได้เลยนะ ;3";
-            }
-            if (currentUser) applyProfileToUI(currentUser);
-          }, 850);
-        }, 500);
+    playCurseSequence([
+      {
+        speaker: "👁️ BGT.EXE // ราชาคำสาป",
+        text: "มาพูดคำนั้นเอาตอนนี้... มันสายเกินไปแล้วครับ คำขอโทษที่หลุดออกมาจากปากของคุณน่ะ...",
+        idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+        horror: true, speed: 125
+      },
+      {
+        speaker: "👁️ BGT.EXE // ราชาคำสาป",
+        text: "โกหก......",
+        idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+        horror: true, speed: 280, autoNext: true, autoDelay: 450, noSkip: true
       }
-    );
-  }
+    ], () => {
+      // จัมป์สแกร์ซูมหน้า curse_5 เต็มจอ
+      clearInterval(ckFlyInterval);
+      clearInterval(ckSysInterval);
+      stopCreepySynthBgm();
+      const bgm = document.getElementById('curseBgmAudio');
+      if (bgm) { bgm.pause(); bgm.currentTime = 0; }
 
+      const jsBox = document.getElementById('ckJumpscareFlash');
+      const jsAudio = document.getElementById('curseJumpscareAudio');
+      if (jsBox) jsBox.style.display = 'flex';
+      if (jsAudio) {
+        jsAudio.volume = Math.min(0.65, Math.max(0.3, musicVolume));
+        jsAudio.currentTime = 0;
+        jsAudio.play().catch(() => playExeSilentScareAudio());
+      } else {
+        playExeSilentScareAudio();
+      }
+
+      // ตัดจบและมอบยศราชาคำสาป
+      setTimeout(() => {
+        if (jsBox) jsBox.style.display = 'none';
+        const stage = document.getElementById('curseKingStage');
+        if (stage) {
+          stage.style.display = 'none';
+          stage.classList.remove('phase-horror');
+        }
+
+        if (isAdminTestingCurse) {
+          isAdminTestingCurse = false;
+          showToast("✅ จบการทดสอบฉากราชาคำสาปแล้วครับ!");
+          if (!userPausedMusic && musicVolume > 0) startChristmasMusic();
+          return;
+        }
+
+        try {
+          localStorage.setItem("bgt_horror_tier", "5");
+          localStorage.setItem("bgt_curse_king_unlocked", "1");
+          localStorage.setItem(CURSE_COUNT_KEY, "0");
+        } catch (e) {}
+        curseCount = 0;
+
+        if (db && currentUser) {
+          db.ref("users/" + currentUser.id).update({
+            unlockedHorrorRole: true,
+            unlockedCurseKing: true,
+            horrorTier: 5
+          }).catch(() => {});
+        }
+
+        forgiveAndRestore(false);
+
+        const fIcon = document.getElementById('forgivenIcon');
+        const fTitle = document.getElementById('forgivenTitle');
+        const fDesc = document.getElementById('forgivenDesc');
+        if (fIcon) fIcon.textContent = "🦊✨";
+        if (fTitle) fTitle.textContent = "เกิดอะไรขึ้นนิ ชั่งเถอะ ;3";
+        if (fDesc) {
+          fDesc.textContent =
+            "เอ๊ะ เมื่อกี้เหมือนเว็บจะกระตุกนิดหน่อยนะ~ ชั่งเถอะ! ยินดีด้วยครับ คุณปลดล็อกยศและกรอบลับระดับสูงสุด [👑👁️ ราชาคำสาป] (มีลูกตากระพริบในกรอบ!) ถาวรแล้ว เข้าไปลองใส่ในหน้าแต่งโปรไฟล์ได้เลยนะ ;3";
+        }
+        if (currentUser) applyProfileToUI(currentUser);
+      }, 850);
+    });
+  }
   const _origGetHorrorTier = getHorrorTierOfUser;
   getHorrorTierOfUser = function(uData, uid) {
     const u = uData || {};
