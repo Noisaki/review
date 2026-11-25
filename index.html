@@ -6128,6 +6128,53 @@
       box-shadow: 0 3px 10px rgba(0,0,0,0.4);
       z-index: 3;
     }
+
+    /* =========================================
+       ✨👑 อัปเกรดกรอบโปรไฟล์ & ยศตามระดับความแรร์ (Rarity Overhaul)
+       ========================================= */
+    @keyframes decoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
+    }
+    @keyframes decoDivineGlow {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(253, 224, 71, 0.85)) drop-shadow(0 0 10px rgba(245, 158, 11, 0.55)); }
+      50% { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 16px rgba(236, 72, 153, 0.8)); }
+    }
+    @keyframes decoCosmicGlow {
+      0%, 100% { filter: drop-shadow(0 0 5px #38bdf8) drop-shadow(0 0 12px #a855f7); }
+      50% { filter: drop-shadow(0 0 9px #fde047) drop-shadow(0 0 18px #ec4899); }
+    }
+    @keyframes decoFireGlow {
+      0%, 100% { filter: drop-shadow(0 0 4px #f97316) drop-shadow(0 0 9px #ef4444); }
+      50% { filter: drop-shadow(0 0 8px #fde047) drop-shadow(0 0 15px #dc2626); }
+    }
+    .deco-float { animation: decoFloat 2.6s ease-in-out infinite; }
+    .deco-divine { animation: decoDivineGlow 2.4s ease-in-out infinite; }
+    .deco-cosmic { animation: decoCosmicGlow 2.2s ease-in-out infinite; }
+    .deco-fire { animation: decoFireGlow 1.6s ease-in-out infinite; }
+
+    /* ป้ายบอกระดับความแรร์บนการ์ดเลือกกรอบ */
+    .deco-rarity-tag {
+      display: inline-block;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: 999px;
+      margin-bottom: 3px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .dr-common    { background: #e2e8f0; color: #475569; }
+    .dr-rare      { background: linear-gradient(135deg, #38bdf8, #2563eb); color: #fff; }
+    .dr-epic      { background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; }
+    .dr-legendary { background: linear-gradient(135deg, #fde047, #f59e0b); color: #78350f; box-shadow: 0 0 8px rgba(245,158,11,0.5); }
+    .dr-limited   { background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6); color: #fff; box-shadow: 0 0 10px rgba(236,72,153,0.55); }
+    .dr-mythic    { background: linear-gradient(90deg, #06b6d4, #a855f7, #ec4899, #fde047); color: #fff; box-shadow: 0 0 10px rgba(168,85,247,0.7); }
+
+    .deco-choice-card.r-legendary { border-color: #f59e0b; background: linear-gradient(180deg, #fffbeb, #fef3c7); }
+    .deco-choice-card.r-limited   { border-color: #ec4899; background: linear-gradient(180deg, #fdf2f8, #fef3c7); }
+    .deco-choice-card.r-mythic    { border-color: #a855f7; background: linear-gradient(180deg, #f5f3ff, #eff6ff); }
   </style>
 </head>
 <body>
@@ -6229,7 +6276,7 @@
     <div class="nav-links">
       <button type="button" class="nav-tab-btn active" id="nav-home" onclick="switchPage('home')">🏠 หน้าหลัก</button>
       <button type="button" class="nav-tab-btn" id="nav-projects" onclick="switchPage('projects')">📚 งานแปล</button>
-      <button type="button" class="nav-tab-btn" id="nav-vote" onclick="switchPage('vote')">✨ ขอเกม</button>
+      <button type="button" class="nav-tab-btn" id="nav-vote" onclick="switchPage('vote')">🔥 โหวต & ขอเกม</button>
       <button type="button" class="nav-tab-btn" id="nav-rank" onclick="switchPage('rank')">🏆 อันดับ</button>
       <button type="button" class="nav-tab-btn" id="nav-eval" onclick="switchPage('eval')">📝 ประเมินเกม</button>
       <button type="button" class="nav-tab-btn" id="nav-donate" onclick="switchPage('donate')">🎁 สนับสนุน</button>
@@ -6642,6 +6689,55 @@
        ✨ กระดานขอเกมที่อยากให้แปล (ใช้หัวใจโหวต • ฟรี 100% ไม่มี VIP)
        ========================================= -->
   <div class="section-card" id="gameVoteSection" style="display:none;">
+    <!-- 🔥 ระบบแข่งกดใจโหวตเกมรอบปัจจุบัน -->
+    <div id="liveVoteWrapper" style="margin-bottom:28px; padding-bottom:24px; border-bottom:2px dashed rgba(251,191,36,0.45);">
+      <div class="section-header">
+        <h2 class="section-title" id="voteMainTitle">🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)</h2>
+        <span class="step-pill" id="voteCountdownText">⏳ กำลังโหลดเวลา...</span>
+      </div>
+
+      <!-- แผงแอดมินตั้งรอบโหวต -->
+      <div id="voteAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:14px; margin-bottom:16px;">
+        <h3 style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินจัดการรอบโหวตเกม</h3>
+        <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; margin-bottom:10px;">
+          <input type="text" id="adminVoteTitle" placeholder="หัวข้อรอบโหวต เช่น โปรเจกต์ต่อไป..." style="padding:8px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+          <input type="number" id="adminVoteHours" value="24" min="0.1" step="0.5" placeholder="จำนวนชั่วโมง" style="padding:8px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; margin-bottom:10px;">
+          <input type="text" id="adminGameName1" placeholder="ชื่อเกม 1"><input type="text" id="adminGameImg1" placeholder="รูปเกม 1 (เช่น images/vote1.png)">
+          <input type="text" id="adminGameName2" placeholder="ชื่อเกม 2"><input type="text" id="adminGameImg2" placeholder="รูปเกม 2">
+          <input type="text" id="adminGameName3" placeholder="ชื่อเกม 3"><input type="text" id="adminGameImg3" placeholder="รูปเกม 3">
+          <input type="text" id="adminGameName4" placeholder="ชื่อเกม 4"><input type="text" id="adminGameImg4" placeholder="รูปเกม 4">
+          <input type="text" id="adminGameName5" placeholder="ชื่อเกม 5"><input type="text" id="adminGameImg5" placeholder="รูปเกม 5">
+          <input type="text" id="adminGameName6" placeholder="ชื่อเกม 6"><input type="text" id="adminGameImg6" placeholder="รูปเกม 6">
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="profile-btn" style="background:#15803d; color:#fff; border:none;" onclick="adminStartVoteEvent()">🚀 เริ่มรอบโหวตใหม่</button>
+          <button type="button" class="profile-btn" onclick="adminAdjustVoteTime(60)">⏱️ +1 ชม.</button>
+          <button type="button" class="profile-btn" onclick="adminAdjustVoteTime(-60)">⏱️ -1 ชม.</button>
+          <button type="button" class="profile-btn" style="background:#f59e0b; color:#fff; border:none;" onclick="adminEndVoteNow()">🏁 ปิดโหวตทันที</button>
+          <button type="button" class="profile-btn" onclick="adminResetVoteScores()">🔄 รีคะแนนเป็น 0</button>
+          <button type="button" class="profile-btn logout" onclick="adminCancelVoteEvent()">🗑️ ล้างรอบโหวต</button>
+        </div>
+      </div>
+
+      <div id="voteTopicBanner" style="display:none; text-align:center; font-family:'Kanit',sans-serif; font-size:1.15rem; font-weight:700; color:#fde047; background:rgba(15,23,42,0.8); border:1.5px solid #fbbf24; border-radius:14px; padding:10px; margin-bottom:14px;"></div>
+
+      <div class="game-grid" id="voteGamesGrid"></div>
+
+      <div id="voteTopVotersBox" style="display:none; margin-top:20px;">
+        <h3 class="lb-col-title">🔥 Top 10 ผู้ร่วมโหวตสูงสุดในรอบนี้</h3>
+        <div class="lb-list" id="voteTopVotersList"></div>
+      </div>
+
+      <div style="margin-top:22px;">
+        <h3 class="lb-col-title">🏆 ประวัติเกมที่ชนะการโหวต</h3>
+        <div class="vote-history-scroll">
+          <div class="vote-history-grid" id="voteHistoryGrid"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="wish-hero-banner">
       <div style="flex:1; min-width:240px;">
         <div class="lg-welcome-pill" style="margin:0 0 8px;">✨ WISH BOARD • ขอเกมแปลไทย</div>
@@ -7881,60 +7977,94 @@
     {
       id: "none",
       name: "ไม่ใส่กรอบ",
+      rarity: "common",
+      rarityLabel: "BASIC",
       reqText: "ปลดล็อกเริ่มต้น",
       svg: ""
     },
+    // --- 🟢 ระดับหาง่าย (ธรรมดาแต่สวย น่ารัก สบายตา) ---
     {
       id: "fox_ears",
       name: "🦊 หูจิ้งจอก BGT",
+      rarity: "common",
+      rarityLabel: "COMMON",
       reqText: "เช็กอินครบ 1 วัน",
-      svg: `<svg viewBox="0 0 100 100"><g class="deco-wiggle"><polygon points="14,34 20,4 39,23" fill="#f97316" stroke="#7c2d12" stroke-width="2.5" stroke-linejoin="round"/><polygon points="19,30 22,11 34,23" fill="#fed7aa"/><polygon points="86,34 80,4 61,23" fill="#f97316" stroke="#7c2d12" stroke-width="2.5" stroke-linejoin="round"/><polygon points="81,30 78,11 66,23" fill="#fed7aa"/></g><circle cx="50" cy="50" r="41" fill="none" stroke="#fb923c" stroke-width="2.5" stroke-dasharray="10 6"/></svg>`
+      svg: `<svg viewBox="0 0 100 100"><g class="deco-wiggle"><polygon points="15,35 20,6 39,23" fill="#fb923c" stroke="#9a3412" stroke-width="2.2" stroke-linejoin="round"/><polygon points="20,30 22,12 34,23" fill="#ffedd5"/><polygon points="85,35 80,6 61,23" fill="#fb923c" stroke="#9a3412" stroke-width="2.2" stroke-linejoin="round"/><polygon points="80,30 78,12 66,23" fill="#ffedd5"/></g><circle cx="50" cy="50" r="41" fill="none" stroke="#fdba74" stroke-width="2.5"/></svg>`
     },
     {
       id: "sakura",
       name: "🌸 กลีบซากุระ",
+      rarity: "common",
+      rarityLabel: "COMMON",
       reqText: "เช็กอินสะสม 3 วัน",
-      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#f472b6" stroke-width="3"/><g class="deco-spin"><circle cx="50" cy="9" r="5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/><circle cx="91" cy="50" r="4.5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/><circle cx="50" cy="91" r="5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/><circle cx="9" cy="50" r="4.5" fill="#fbcfe8" stroke="#ec4899" stroke-width="1.5"/></g></svg>`
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#f9a8d4" stroke-width="2.6"/><g class="deco-spin"><path d="M50,4 Q55,9 50,14 Q45,9 50,4 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/><path d="M96,50 Q91,55 86,50 Q91,45 96,50 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/><path d="M50,96 Q45,91 50,86 Q55,91 50,96 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/><path d="M4,50 Q9,45 14,50 Q9,55 4,50 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/></g></svg>`
     },
     {
       id: "xmas",
-      name: "🎄 คริสต์มาส",
+      name: "🎄 พวงมาลัยคริสต์มาส",
+      rarity: "rare",
+      rarityLabel: "RARE",
       reqText: "เช็กอินสะสม 5 วัน",
-      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="12 4"/><polygon points="50,2 53,10 61,10 55,15 57,23 50,18 43,23 45,15 39,10 47,10" fill="#facc15" stroke="#b45309" stroke-width="1.2"/><circle cx="22" cy="78" r="4" fill="#dc2626"/><circle cx="78" cy="78" r="4" fill="#dc2626"/><circle cx="50" cy="91" r="4.5" fill="#ef4444"/></svg>`
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41.5" fill="none" stroke="#15803d" stroke-width="4.5" stroke-dasharray="10 3"/><circle cx="50" cy="50" r="41.5" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4 9"/><polygon class="deco-float" points="50,1 53.5,9.5 62,9.5 55,14.5 57.5,23 50,18 42.5,23 45,14.5 38,9.5 46.5,9.5" fill="#fde047" stroke="#b45309" stroke-width="1.2"/><circle cx="21" cy="79" r="3.8" fill="#ef4444" stroke="#fef08a" stroke-width="1"/><circle cx="79" cy="79" r="3.8" fill="#ef4444" stroke="#fef08a" stroke-width="1"/><circle cx="50" cy="91.5" r="4.2" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/></svg>`
     },
+    // --- 🟣 ระดับหายาก (Rare / Epic — เริ่มมีวงแหวนคู่ & ออร่า) ---
     {
       id: "cyber",
       name: "⚡ ไซเบอร์นีออน",
+      rarity: "epic",
+      rarityLabel: "EPIC",
       reqText: "เช็กอินสะสม 7 วัน",
-      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#38bdf8" stroke-width="2.5"/><g class="deco-spin-fast"><circle cx="50" cy="50" r="45" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="18 12 6 12"/></g></svg>`
+      svg: `<svg viewBox="0 0 100 100"><g class="deco-cosmic"><circle cx="50" cy="50" r="41" fill="none" stroke="#38bdf8" stroke-width="2.6"/><g class="deco-spin-fast"><circle cx="50" cy="50" r="45.5" fill="none" stroke="#a855f7" stroke-width="2.8" stroke-dasharray="22 10 6 10"/></g><g class="deco-spin-rev"><circle cx="50" cy="50" r="38" fill="none" stroke="#22d3ee" stroke-width="1.4" stroke-dasharray="8 16"/></g></g></svg>`
     },
     {
       id: "fire",
       name: "🔥 เพลิงโลกันตร์",
+      rarity: "epic",
+      rarityLabel: "EPIC",
       reqText: "ถึง Lv.20 ขึ้นไป",
-      svg: `<svg viewBox="0 0 100 100"><g class="deco-pulse"><circle cx="50" cy="50" r="41" fill="none" stroke="#f97316" stroke-width="3.5"/><path d="M16,66 Q8,50 18,38 Q16,52 24,56 Z" fill="#ef4444"/><path d="M84,66 Q92,50 82,38 Q84,52 76,56 Z" fill="#ef4444"/><path d="M42,93 Q50,78 58,93 Z" fill="#facc15"/></g></svg>`
+      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="fireGrad" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#dc2626"/><stop offset="55%" stop-color="#f97316"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs><g class="deco-fire"><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#fireGrad)" stroke-width="4"/><path d="M12,64 Q4,46 17,32 Q14,48 23,55 Z" fill="#ef4444"/><path d="M88,64 Q96,46 83,32 Q86,48 77,55 Z" fill="#ef4444"/><path d="M38,93 Q50,76 62,93 Q50,87 38,93 Z" fill="#facc15"/><g class="deco-spin"><circle cx="22" cy="18" r="2.2" fill="#fde047"/><circle cx="78" cy="20" r="2" fill="#fb923c"/><circle cx="84" cy="74" r="2.2" fill="#fde047"/></g></g></svg>`
     },
     {
       id: "cursed",
       name: "🩸 คำสาป 1 ดาว",
+      rarity: "epic",
+      rarityLabel: "SECRET",
       reqText: "ปลดล็อกยศลับ",
-      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#dc2626" stroke-width="3.5" stroke-dasharray="8 3"/><path d="M24,83 Q24,96 27,96 Q30,96 30,83 Z" fill="#dc2626"/><path d="M72,81 Q72,98 75,98 Q78,98 78,81 Z" fill="#991b1b"/><circle cx="50" cy="9" r="4.5" fill="#ef4444" stroke="#000" stroke-width="1.5"/></svg>`
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41.5" fill="none" stroke="#991b1b" stroke-width="4"/><g class="deco-spin-rev"><circle cx="50" cy="50" r="45.5" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="10 6 3 6"/></g><path d="M22,82 Q22,98 25.5,98 Q29,98 29,82 Z" fill="#dc2626"/><path d="M72,80 Q72,99 75.5,99 Q79,99 79,80 Z" fill="#991b1b"/><ellipse cx="50" cy="9" rx="9" ry="5" fill="#090000" stroke="#ef4444" stroke-width="1.5"/><circle cx="50" cy="9" r="2.5" fill="#ef4444"/></svg>`
     },
+    // --- 🟡 ระดับ LEGENDARY: VIP ผู้สนับสนุน (ปีกทองคำ + วงแหวนศักดิ์สิทธิ์ + มงกุฎเพชร) ---
     {
       id: "celestial",
-      name: "👑 มงกุฎผู้พิทักษ์",
+      name: "👑 มงกุฎผู้พิทักษ์ VIP",
+      rarity: "legendary",
+      rarityLabel: "VIP LEGEND",
       reqText: "ผู้สนับสนุน / VIP",
-      svg: `<svg viewBox="0 0 100 100"><g class="deco-spin"><circle cx="50" cy="50" r="44" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="4 8"/></g><polygon points="33,16 39,5 50,13 61,5 67,16" fill="#facc15" stroke="#b45309" stroke-width="1.8" stroke-linejoin="round"/><circle cx="50" cy="50" r="41" fill="none" stroke="#f59e0b" stroke-width="3"/></svg>`
+      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="vipGold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="35%" stop-color="#fde047"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs><g class="deco-divine"><path d="M12,56 Q-2,44 6,28 Q12,38 18,40 Q8,30 16,20 Q18,32 24,36" fill="url(#vipGold)" stroke="#92400e" stroke-width="1.1"/><path d="M88,56 Q102,44 94,28 Q88,38 82,40 Q92,30 84,20 Q82,32 76,36" fill="url(#vipGold)" stroke="#92400e" stroke-width="1.1"/><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#vipGold)" stroke-width="3.8"/><g class="deco-spin"><circle cx="50" cy="50" r="46" fill="none" stroke="#fef08a" stroke-width="1.8" stroke-dasharray="5 7"/><polygon points="50,1 53,5 50,9 47,5" fill="#fffbeb"/><polygon points="50,91 53,95 50,99 47,95" fill="#fde047"/></g><g class="deco-float"><polygon points="31,17 37,4 45,12 50,2 55,12 63,4 69,17" fill="url(#vipGold)" stroke="#92400e" stroke-width="1.5" stroke-linejoin="round"/><circle cx="50" cy="11" r="2.6" fill="#38bdf8" stroke="#fff" stroke-width="0.8"/><circle cx="39" cy="13" r="1.8" fill="#f43f5e"/><circle cx="61" cy="13" r="1.8" fill="#f43f5e"/></g></g></svg>`
     },
+    // --- 🌸 ระดับ LIMITED EVENT: ลอยกระทง 2026 (อลังการสุดๆ!) ---
     {
       id: "krathong_supreme",
-      name: "🪷✨ มหาบัวกระทงทอง",
-      reqText: "Top 3 ลอยกระทง 2026 (Limited)",
-      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="lkGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fef08a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><g class="deco-pulse"><circle cx="50" cy="50" r="42" fill="none" stroke="url(#lkGoldGrad)" stroke-width="3.6"/></g><g class="deco-spin"><circle cx="50" cy="50" r="46" fill="none" stroke="#fde047" stroke-width="1.6" stroke-dasharray="3 6"/><path d="M50,2 Q55,10 50,15 Q45,10 50,2 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/><path d="M50,98 Q55,90 50,85 Q45,90 50,98 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/><path d="M2,50 Q10,45 15,50 Q10,55 2,50 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/><path d="M98,50 Q90,45 85,50 Q90,55 98,50 Z" fill="#f472b6" stroke="#fde047" stroke-width="0.9"/></g><g class="deco-spin-fast"><circle cx="19" cy="19" r="2.6" fill="#fef08a"/><circle cx="81" cy="19" r="2.2" fill="#38bdf8"/><circle cx="81" cy="81" r="2.6" fill="#f472b6"/><circle cx="19" cy="81" r="2.2" fill="#fef08a"/></g><path d="M32,89 Q50,98 68,89" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/><path d="M36,16 L43,9 L50,14 L57,9 L64,16 Q50,20 36,16 Z" fill="#22c55e" stroke="#fef08a" stroke-width="1.1"/><path d="M41,15 L46,7 L50,13 L54,7 L59,15 Z" fill="#f472b6"/><rect x="48.5" y="6" width="3" height="8" rx="1" fill="#fffbeb"/><path class="lk-flame" d="M50,-2 Q54,3 50,7 Q46,3 50,-2 Z" fill="#facc15"/></svg>`
+      name: "🪷✨ มหาบัวกระทงทอง 2026",
+      rarity: "limited",
+      rarityLabel: "LIMITED 2026",
+      reqText: "Top 3 ลอยกระทง 2026 (จำกัดเวลา)",
+      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="lkSuperGold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="30%" stop-color="#fde047"/><stop offset="65%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><g class="deco-divine"><circle cx="50" cy="50" r="42" fill="none" stroke="url(#lkSuperGold)" stroke-width="4.2"/><g class="deco-spin"><circle cx="50" cy="50" r="47" fill="none" stroke="#fde047" stroke-width="1.6" stroke-dasharray="4 6"/><path d="M50,0 Q56,9 50,15 Q44,9 50,0 Z" fill="#f472b6" stroke="#fef08a" stroke-width="1"/><path d="M50,100 Q56,91 50,85 Q44,91 50,100 Z" fill="#f472b6" stroke="#fef08a" stroke-width="1"/><path d="M0,50 Q9,44 15,50 Q9,56 0,50 Z" fill="#f472b6" stroke="#fef08a" stroke-width="1"/><path d="M100,50 Q91,44 85,50 Q91,56 100,50 Z" fill="#f472b6" stroke="#fef08a" stroke-width="1"/></g><g class="deco-spin-rev"><circle cx="17" cy="17" r="3" fill="#fde047"/><circle cx="83" cy="17" r="2.6" fill="#38bdf8"/><circle cx="83" cy="83" r="3" fill="#f472b6"/><circle cx="17" cy="83" r="2.6" fill="#fde047"/></g><path d="M24,87 Q50,101 76,87" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round"/><path d="M32,92 Q50,101 68,92" fill="none" stroke="#fde047" stroke-width="1.6" stroke-linecap="round"/><g class="deco-float"><path d="M33,17 L41,8 L50,14 L59,8 L67,17 Q50,22 33,17 Z" fill="#16a34a" stroke="#fef08a" stroke-width="1.2"/><path d="M39,16 L45,6 L50,13 L55,6 L61,16 Z" fill="#ec4899" stroke="#fbcfe8" stroke-width="0.9"/><rect x="48.2" y="4" width="3.6" height="10" rx="1.2" fill="#fffbeb"/><path class="lk-flame" d="M50,-4 Q55,2 50,7 Q45,2 50,-4 Z" fill="#fde047"/></g></g></svg>`
     },
+    // --- 🌌 ระดับ MYTHIC ADMIN: เฉพาะแอดมินผู้สร้างจักรวาล BGT ---
+    {
+      id: "admin_cosmic",
+      name: "🌌👑 จักรพรรดิจักรวาล BGT",
+      rarity: "mythic",
+      rarityLabel: "ADMIN ONLY",
+      reqText: "เฉพาะแอดมินผู้ดูแลสูงสุด",
+      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="admGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="33%" stop-color="#a855f7"/><stop offset="66%" stop-color="#ec4899"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs><g class="deco-cosmic"><circle cx="50" cy="50" r="42" fill="none" stroke="url(#admGrad)" stroke-width="4.5"/><g class="deco-spin-fast"><circle cx="50" cy="50" r="46.5" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="16 8 4 8"/><polygon points="50,0 53.5,5 50,10 46.5,5" fill="#fff"/><polygon points="50,90 53.5,95 50,100 46.5,95" fill="#38bdf8"/></g><g class="deco-spin-rev"><circle cx="50" cy="50" r="38" fill="none" stroke="#f472b6" stroke-width="1.6" stroke-dasharray="6 10"/><circle cx="14" cy="50" r="2.8" fill="#38bdf8"/><circle cx="86" cy="50" r="2.8" fill="#fde047"/></g><g class="deco-float"><polygon points="29,16 36,2 44,11 50,0 56,11 64,2 71,16" fill="url(#admGrad)" stroke="#fef08a" stroke-width="1.6" stroke-linejoin="round"/><circle cx="50" cy="10" r="3" fill="#ffffff" stroke="#38bdf8" stroke-width="1"/></g></g></svg>`
+    },
+    // --- ⬛ กรอบปริศนาลับ (คงเดิม) ---
     {
       id: "ac_frame_1",
       name: "🖱️ นีออนคลิกเกอร์",
+      rarity: "rare",
+      rarityLabel: "SECRET",
       reqText: "???",
       isSecret: true,
       svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="none" stroke="#22c55e" stroke-width="2.8" stroke-dasharray="10 4"/><g class="deco-spin"><circle cx="50" cy="50" r="45.5" fill="none" stroke="#4ade80" stroke-width="1.4" stroke-dasharray="4 10"/><circle cx="50" cy="4.5" r="3" fill="#4ade80"/><circle cx="50" cy="95.5" r="3" fill="#22c55e"/></g><polygon points="75,70 88,75 82,79 86,86 82,88 78,81 74,85" fill="#4ade80" stroke="#052e16" stroke-width="1.4"/></svg>`
@@ -7942,6 +8072,8 @@
     {
       id: "ac_frame_2",
       name: "🦾 พลาสมาโฮโลแกรม",
+      rarity: "epic",
+      rarityLabel: "SECRET",
       reqText: "???",
       isSecret: true,
       svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="acHoloGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient></defs><g class="deco-spin-fast"><circle cx="50" cy="50" r="42" fill="none" stroke="url(#acHoloGrad)" stroke-width="3.2" stroke-dasharray="22 8 6 8"/></g><g class="deco-spin-rev"><circle cx="50" cy="50" r="46" fill="none" stroke="#c084fc" stroke-width="1.8" stroke-dasharray="14 14"/><polygon points="50,1 53,7 47,7" fill="#38bdf8"/><polygon points="50,99 53,93 47,93" fill="#c084fc"/><polygon points="1,50 7,47 7,53" fill="#22d3ee"/><polygon points="99,50 93,47 93,53" fill="#a855f7"/></g></svg>`
@@ -7949,6 +8081,8 @@
     {
       id: "ac_frame_3",
       name: "💸 วงแหวนทองออบซิเดียน",
+      rarity: "legendary",
+      rarityLabel: "SECRET",
       reqText: "???",
       isSecret: true,
       svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="acGoldObs" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fef08a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient></defs><circle cx="50" cy="50" r="41.5" fill="none" stroke="#18181b" stroke-width="5"/><g class="deco-pulse"><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#acGoldObs)" stroke-width="2.6"/></g><g class="deco-spin"><circle cx="50" cy="50" r="46" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 7"/><polygon points="50,1 53,6 50,11 47,6" fill="#fef08a" stroke="#b45309" stroke-width="0.8"/><polygon points="50,89 53,94 50,99 47,94" fill="#fef08a" stroke="#b45309" stroke-width="0.8"/><polygon points="1,50 6,47 11,50 6,53" fill="#fbbf24"/><polygon points="89,50 94,47 99,50 94,53" fill="#fbbf24"/></g></svg>`
@@ -7956,6 +8090,8 @@
     {
       id: "ac_frame_4",
       name: "💎👑 จักรพรรดินิ้วเพชร",
+      rarity: "mythic",
+      rarityLabel: "SECRET",
       reqText: "???",
       isSecret: true,
       svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="acGodGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fef08a"/><stop offset="30%" stop-color="#ec4899"/><stop offset="65%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient></defs><g class="deco-pulse"><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#acGodGrad)" stroke-width="4"/></g><g class="deco-spin"><circle cx="50" cy="50" r="46.5" fill="none" stroke="#fef08a" stroke-width="1.6" stroke-dasharray="5 5"/><polygon points="16,16 21,18 18,23 14,20" fill="#38bdf8"/><polygon points="84,16 86,20 82,23 79,18" fill="#f472b6"/><polygon points="84,84 79,82 82,77 86,80" fill="#fef08a"/><polygon points="16,84 14,80 18,77 21,82" fill="#c084fc"/></g><g class="deco-spin-rev"><circle cx="50" cy="50" r="38" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 8" opacity="0.8"/></g><polygon points="34,15 40,4 50,12 60,4 66,15" fill="url(#acGodGrad)" stroke="#fef08a" stroke-width="1.6" stroke-linejoin="round"/><polygon points="50,-1 54,4 50,9 46,4" fill="#ffffff" stroke="#38bdf8" stroke-width="1"/></svg>`
@@ -7983,6 +8119,7 @@
     if (decoId === "fire")      return lv >= 20;
     if (decoId === "cursed")    return hasHorror;
     if (decoId === "celestial") return isVip;
+    if (decoId === "admin_cosmic") return !!(Number(u.roleTier) === 99 || (currentUser && currentUser.isVoteAdmin));
     if (decoId === "krathong_supreme") {
       const targetUid = (u && u._uid) || (currentUser ? currentUser.id : null);
       const lkInfo = getLoyKrathongRankInfo(targetUid);
@@ -8461,6 +8598,10 @@
     img.src = (typeof rawAvatar === "string" && (rawAvatar.indexOf("https://") === 0 || rawAvatar.indexOf("data:image/") === 0))
       ? rawAvatar
       : "https://cdn.discordapp.com/embed/avatars/0.png";
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = "https://cdn.discordapp.com/embed/avatars/0.png";
+    };
     avWrap.appendChild(img);
 
     const decoOverlay = document.createElement('div');
@@ -8758,7 +8899,7 @@
           div.innerHTML = `
             <div class="podium-avatar-wrap">
               ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
-              <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer">
+              <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://cdn.discordapp.com/embed/avatars/0.png';">
             </div>
             <div class="podium-name"></div>
             <div class="podium-lv"></div>
@@ -10709,9 +10850,10 @@
     const matches = Object.keys(usersCache || {})
       .map(id => ({ id, u: usersCache[id] || {} }))
       .filter(e => {
+        const custom = (e.u.customName || "").toLowerCase();
         const name = (e.u.name || "").toLowerCase();
         const uname = (e.u.username || "").toLowerCase();
-        return name.includes(q) || uname.includes(q) || e.id.includes(q);
+        return custom.includes(q) || name.includes(q) || uname.includes(q) || ("@" + uname).includes(q) || e.id.includes(q);
       })
       .slice(0, 6);
 
@@ -10728,7 +10870,9 @@
 
       const label = document.createElement('span');
       label.style.cssText = "flex:1; font-size:0.82rem; font-weight:600; color:#1e293b; min-width:110px;";
-      label.textContent = `${m.u.name || "User"} (฿${formatNum(currentAmt)})`;
+      const showN = m.u.customName || m.u.name || "User";
+      const origN = m.u.username || m.u.name || m.id;
+      label.textContent = `${showN} (@${origN}) — ฿${formatNum(currentAmt)}`;
 
       const numInput = document.createElement('input');
       numInput.type = "number";
@@ -10922,9 +11066,10 @@
     const matches = Object.keys(usersCache || {})
       .map(id => ({ id, u: usersCache[id] || {} }))
       .filter(e => {
+        const custom = (e.u.customName || "").toLowerCase();
         const name = (e.u.name || "").toLowerCase();
         const uname = (e.u.username || "").toLowerCase();
-        return name.includes(q) || uname.includes(q) || e.id.includes(q);
+        return custom.includes(q) || name.includes(q) || uname.includes(q) || ("@" + uname).includes(q) || e.id.includes(q);
       })
       .slice(0, 6);
 
@@ -10940,7 +11085,9 @@
 
       const label = document.createElement('span');
       label.style.cssText = "font-size:0.84rem; font-weight:700; color:#1e293b;";
-      label.textContent = `${m.u.name || "User"} ${m.u.username ? `(${m.u.username})` : ""}`;
+      const showN = m.u.customName || m.u.name || "User";
+      const origN = m.u.username || m.u.name || m.id;
+      label.textContent = `${showN} (@${origN})`;
 
       const isPatron = !!m.u.devSupporter;
       const patronBtn = document.createElement('button');
@@ -11960,9 +12107,11 @@
       const isSelected = draftAvatarDecoration === deco.id;
       const hideIdentity = !unlocked && deco.isSecret;
 
+      const rar = deco.rarity || "common";
       const card = document.createElement('div');
-      card.className = "deco-choice-card" + (isSelected ? " selected" : "") + (!unlocked ? " locked" : "");
+      card.className = "deco-choice-card" + (unlocked ? ` r-${rar}` : " locked") + (isSelected ? " selected" : "");
       card.innerHTML = `
+        <span class="deco-rarity-tag dr-${rar}">${hideIdentity ? "???" : (deco.rarityLabel || "COMMON")}</span>
         <div class="deco-choice-preview">
           <div class="avatar-deco-overlay">${unlocked ? deco.svg : ""}</div>
         </div>
@@ -14181,7 +14330,7 @@
         }
 
         row.innerHTML = list.map((g, idx) => {
-          const safeTitle = (g.title || '').replace(/'/g, "\\'").replace(/"/g, '"');
+          const safeTitle = (g.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
           const safeCover = (g.cover || '').replace(/'/g, "\\'");
           const safeUrl   = (g.url || '').replace(/'/g, "\\'");
           const rankHtml  = (homeShowcaseTab !== 'all' && idx < 3)
@@ -14333,6 +14482,94 @@
       }
       grid.appendChild(card); // จัดเรียงใหม่ให้ปักหมุดอยู่บนสุด
     });
+  };
+
+  // =========================================
+  // 20. ระบบกรองคำไม่เหมาะสม & ปุ่มแอดมินล้างโปรไฟล์/แบนการอัปโหลดรูป
+  // =========================================
+  const BANNED_WORDS = [
+    "ควย", "เหี้ย", "สัส", "เย็ด", "หี", "แตด", "มึง", "กู",
+    "ฆ่าตัวตาย", "ข่มขืน", "นาซี", "nazi", "porn", 
+  ];
+
+  function hasBannedText(str) {
+    const s = String(str || "").toLowerCase().replace(/\s+/g, "");
+    return BANNED_WORDS.some(w => s.includes(w.toLowerCase()));
+  }
+
+  // ดักเช็กคำต้องห้าม + เช็กสถานะโดนแบน ก่อนบันทึกโปรไฟล์
+  const _origSaveEditedProfile = saveEditedProfile;
+  saveEditedProfile = function() {
+    if (!currentUser) return;
+    const cached = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+    if (cached.profileBanned) {
+      showToast("🚫 บัญชีนี้ถูกจำกัดสิทธิ์การแก้ไขชื่อและรูปโปรไฟล์โดยแอดมิน");
+      return;
+    }
+    const nVal = document.getElementById('epNameInput')?.value || "";
+    const bVal = document.getElementById('epBioInput')?.value || "";
+    if (hasBannedText(nVal) || hasBannedText(bVal)) {
+      showToast("⚠️ พบคำไม่เหมาะสมในชื่อหรือข้อความแนะนำตัว กรุณาแก้ไขก่อนบันทึกครับ");
+      return;
+    }
+    _origSaveEditedProfile();
+  };
+
+  // แอดมินล้างชื่อ/รูป/แบนเนอร์ที่ไม่เหมาะสมกลับเป็นค่าเริ่มต้น
+  function adminResetUserProfile(uid) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    if (!confirm("ต้องการล้างชื่อปลอม รูปโปรไฟล์ แบนเนอร์ และ Bio ของผู้ใช้นี้กลับเป็นค่าเริ่มต้นใช่ไหมครับ?")) return;
+    db.ref("users/" + uid).update({
+      customName: null,
+      customAvatar: null,
+      bannerUrl: null,
+      bio: null
+    }).then(() => {
+      showToast("🧹 ล้างโปรไฟล์กลับเป็นค่าเริ่มต้นเรียบร้อยแล้ว!");
+      const card = document.getElementById('userHoverCard');
+      if (card) card.style.display = "none";
+    });
+  }
+
+  // แอดมินแบน/ปลดแบนการแต่งโปรไฟล์และอัปโหลดรูป
+  function adminToggleProfileBan(uid) {
+    if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+    const currentlyBanned = !!(usersCache[uid] && usersCache[uid].profileBanned);
+    const nextState = !currentlyBanned;
+    const updates = { profileBanned: nextState ? true : null };
+    if (nextState) {
+      updates.customName = null;
+      updates.customAvatar = null;
+      updates.bannerUrl = null;
+      updates.bio = null;
+    }
+    db.ref("users/" + uid).update(updates).then(() => {
+      showToast(nextState ? "🚫 แบนการแต่งโปรไฟล์ + ล้างรูป/ชื่อเรียบร้อยแล้ว" : "✅ ปลดแบนการแต่งโปรไฟล์แล้ว");
+      const card = document.getElementById('userHoverCard');
+      if (card) card.style.display = "none";
+    });
+  }
+
+  // เพิ่มแถบปุ่มแอดมินท้ายการ์ดโฮเวอร์อัตโนมัติ (เห็นเฉพาะแอดมิน)
+  const _origShowHover = showUserHoverCard;
+  showUserHoverCard = function(uid, anchorEl) {
+    _origShowHover(uid, anchorEl);
+    const body = document.querySelector('#userHoverCard .uhc-body');
+    if (!body) return;
+    let bar = document.getElementById('uhcAdminModBar');
+    if (bar) bar.remove();
+
+    if (currentUser && currentUser.isVoteAdmin && uid) {
+      const isBanned = !!(usersCache[uid] && usersCache[uid].profileBanned);
+      bar = document.createElement('div');
+      bar.id = 'uhcAdminModBar';
+      bar.style.cssText = "display:flex; gap:6px; margin-top:10px; padding-top:8px; border-top:1px dashed #3f4147;";
+      bar.innerHTML = `
+        <button type="button" onclick="adminResetUserProfile('${uid}')" style="flex:1; background:#f59e0b; color:#000; border:none; border-radius:8px; padding:6px; font-family:'Kanit',sans-serif; font-size:0.74rem; font-weight:700; cursor:pointer;">🧹 ล้างรูป/ชื่อ</button>
+        <button type="button" onclick="adminToggleProfileBan('${uid}')" style="flex:1; background:${isBanned ? '#16a34a' : '#dc2626'}; color:#fff; border:none; border-radius:8px; padding:6px; font-family:'Kanit',sans-serif; font-size:0.74rem; font-weight:700; cursor:pointer;">${isBanned ? '✅ ปลดแบน' : '🚫 แบนโปรไฟล์'}</button>
+      `;
+      body.appendChild(bar);
+    }
   };
 </script>
 
