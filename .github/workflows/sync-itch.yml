@@ -1,0 +1,48 @@
+name: Sync itch.io Stats to Firebase
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch itch.io & Push to Firebase
+        env:
+          ITCH_API_KEY: ${{ secrets.ITCH_API_KEY }}
+          FIREBASE_URL: "https://benzie-e1cee-default-rtdb.asia-southeast1.firebasedatabase.app/itch_stats.json"
+        run: |
+          node -e '
+            (async () => {
+              const res = await fetch(`https://itch.io/api/1/${process.env.ITCH_API_KEY}/my-games`);
+              const data = await res.json();
+              const all = Array.isArray(data.games) ? data.games : [];
+              const published = all.filter(g => g.published);
+              const totalDownloads = all.reduce((s, g) => s + (Number(g.downloads_count) || 0), 0);
+              const totalViews = all.reduce((s, g) => s + (Number(g.views_count) || 0), 0);
+              const gamesList = published.map(g => ({
+                id: g.id,
+                title: g.title,
+                url: g.url,
+                cover: g.cover_url || "",
+                downloads: Number(g.downloads_count) || 0,
+                views: Number(g.views_count) || 0,
+                publishedAt: g.published_at || g.created_at || ""
+              }));
+              const payload = {
+                totalGames: published.length,
+                totalDownloads,
+                totalViews,
+                games: gamesList,
+                updatedAt: Date.now()
+              };
+              const fbRes = await fetch(process.env.FIREBASE_URL, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+              console.log("Synced itch.io:", payload.totalGames, "games,", payload.totalDownloads, "downloads. Status:", fbRes.status);
+            })();
+          '
