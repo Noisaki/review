@@ -4029,7 +4029,297 @@
       25%  { transform: scale(1.25); opacity: 1; }
       100% { transform: scale(1.45); opacity: 1; }
     }
+    /* =========================================
+       👑👁️ ระบบราชาคำสาป (TRUE CURSE KING ROUTE)
+       ========================================= */
+    .secret-horror-pill.horror-king {
+      border-radius: 4px;
+      padding: 4px 16px;
+      background: linear-gradient(110deg, #000000 0%, #450a0a 22%, #dc2626 48%, #fbbf24 52%, #000000 78%, #7f1d1d 100%) !important;
+      background-size: 320% 320% !important;
+      animation: gradientFlow 1.6s linear infinite, creepyJitter 0.25s infinite !important;
+      color: #ffffff !important;
+      border: 1.5px solid #fde047 !important;
+      outline: 1.5px solid #dc2626;
+      outline-offset: 2px;
+      text-shadow: 2px 0 #dc2626, -2px 0 #000000, 0 0 14px #fde047 !important;
+      box-shadow: 0 0 24px rgba(220, 38, 38, 1), 0 0 12px rgba(251, 191, 36, 0.8) !important;
+    }
 
+    /* แอนิเมชันลูกตากระพริบในกรอบราชาคำสาป */
+    @keyframes curseEyeBlink {
+      0%, 88%, 100% { transform: scaleY(1); }
+      93% { transform: scaleY(0.08); }
+    }
+    .curse-king-eye {
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: curseEyeBlink 3.4s infinite ease-in-out;
+    }
+
+    /* หน้าต่างเตือน [WARNING // BGT.EXE] */
+    #curseKingWarnModal {
+      position: fixed;
+      inset: 0;
+      z-index: 99996;
+      background: rgba(5, 0, 0, 0.92);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .ck-warn-box {
+      background: #0d0202;
+      border: 2px solid #dc2626;
+      box-shadow: 0 0 40px rgba(220, 38, 38, 0.7), inset 0 0 25px rgba(127, 29, 29, 0.45);
+      border-radius: 18px;
+      padding: 28px 24px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      color: #fecaca;
+      font-family: 'Prompt', sans-serif;
+    }
+    .ck-warn-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ef4444;
+      text-shadow: 2px 0 #06b6d4, -2px 0 #7f1d1d;
+      margin: 0 0 12px;
+    }
+    .ck-warn-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .ck-btn-go {
+      background: linear-gradient(135deg, #991b1b, #dc2626);
+      color: #fff;
+      border: 1.5px solid #fca5a5;
+      padding: 11px 22px;
+      border-radius: 12px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(220, 38, 38, 0.6);
+    }
+    .ck-btn-back {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1.5px solid #64748b;
+      padding: 11px 22px;
+      border-radius: 12px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* เวทีคัตซีนราชาคำสาป (ตัวละครครึ่งตัวล่างกลางจอ + กล่องบทพูด) */
+    #curseKingStage {
+      position: fixed;
+      inset: 0;
+      z-index: 99997;
+      background: radial-gradient(circle at center, #1a0202 0%, #050000 78%, #000000 100%);
+      display: none;
+      overflow: hidden;
+    }
+    .ck-char-wrap {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(88vw, 520px);
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .ck-char-img {
+      width: 100%;
+      max-height: 76vh;
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 0 28px rgba(220, 38, 38, 0.55));
+      transition: filter 0.3s ease;
+    }
+    #curseKingStage.phase-horror .ck-char-img {
+      filter: drop-shadow(0 0 42px rgba(255, 0, 0, 0.95)) contrast(1.25);
+      animation: creepyJitter 0.16s infinite;
+    }
+    .ck-dialogue-box {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(92vw, 680px);
+      background: rgba(12, 12, 18, 0.92);
+      border: 2px solid #94a3b8;
+      border-radius: 18px;
+      padding: 18px 22px;
+      color: #f8fafc;
+      font-family: 'Kanit', sans-serif;
+      font-size: clamp(1.05rem, 2.8vw, 1.35rem);
+      font-weight: 600;
+      z-index: 6;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85);
+      min-height: 82px;
+    }
+    /* กล่องข้อความสีแดงหลอนสำหรับเฟส 2 (ภาพ 4-5) */
+    #curseKingStage.phase-horror .ck-dialogue-box {
+      background: rgba(35, 0, 0, 0.95);
+      border: 2.5px solid #ef4444;
+      color: #fee2e2;
+      text-shadow: 2px 0 #dc2626, -1.5px 0 #000;
+      box-shadow: 0 0 36px rgba(220, 38, 38, 0.9), inset 0 0 22px rgba(127, 29, 29, 0.8);
+      animation: creepyJitter 0.22s infinite;
+    }
+    .ck-speaker {
+      font-size: 0.82rem;
+      color: #fde047;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    #curseKingStage.phase-horror .ck-speaker {
+      color: #ff4d4d;
+    }
+
+    /* ข้อความระบบหลอนๆ เด้งมุมบน */
+    .ck-sys-popup {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      background: rgba(25, 0, 0, 0.94);
+      border: 1.5px solid #ef4444;
+      color: #fca5a5;
+      font-family: monospace, 'Prompt', sans-serif;
+      font-size: 0.82rem;
+      padding: 10px 14px;
+      border-radius: 10px;
+      z-index: 8;
+      box-shadow: 0 0 18px rgba(220, 38, 38, 0.7);
+      animation: popIn 0.2s ease-out;
+    }
+
+    /* ข้อความหลอนแล่นผ่านจอซ้าย-ขวา */
+    .ck-fly-text {
+      position: fixed;
+      white-space: nowrap;
+      font-family: 'Kanit', sans-serif;
+      font-weight: 800;
+      color: rgba(239, 68, 68, 0.82);
+      text-shadow: 2px 0 #06b6d4, -2px 0 #000;
+      pointer-events: none;
+      z-index: 5;
+    }
+    @keyframes ckFlyLTR {
+      from { transform: translateX(-110vw); }
+      to   { transform: translateX(110vw); }
+    }
+    @keyframes ckFlyRTL {
+      from { transform: translateX(110vw); }
+      to   { transform: translateX(-110vw); }
+    }
+
+    /* ฉากจัมป์สแกร์ปิดท้าย 1 ครั้ง */
+    #ckJumpscareFlash {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #ckJumpscareFlash img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.8) saturate(2);
+      animation: creepyJitter 0.08s infinite;
+    }
+    /* ปุ่มตัวเลือกสไตล์เกม VN (วางในกล่องบทพูด กดง่ายบนมือถือไม่ล้นจอ) */
+    .ck-choices-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 9px;
+      margin-top: 14px;
+    }
+    .ck-choice-btn {
+      width: 100%;
+      padding: 12px 16px;
+      min-height: 44px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(148, 163, 184, 0.55);
+      background: rgba(30, 41, 59, 0.92);
+      color: #f8fafc;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.14s, background 0.2s, border-color 0.2s;
+    }
+    .ck-choice-btn:hover, .ck-choice-btn:active {
+      background: #334155;
+      border-color: #fde047;
+      transform: translateX(4px);
+    }
+    #curseKingStage.phase-horror .ck-choice-btn {
+      background: rgba(69, 10, 10, 0.92);
+      border-color: #ef4444;
+      color: #fecaca;
+    }
+    #curseKingStage.phase-horror .ck-choice-btn:hover,
+    #curseKingStage.phase-horror .ck-choice-btn:active {
+      background: #991b1b;
+      color: #ffffff;
+    }
+
+    /* ฟอนต์สีแดงใหญ่หลอนตอนพูดช้าๆ */
+    .ck-red-slow-text {
+      color: #ff2a2a !important;
+      font-size: clamp(1.35rem, 5vw, 2.2rem) !important;
+      letter-spacing: 3px;
+      text-shadow: 2px 0 #000, -2px 0 #7f1d1d, 0 0 18px #dc2626 !important;
+    }
+
+    /* ซูมใบหน้าเต็มจอ + สั่นรัวสำหรับจัมป์สแกร์ curse_5.png */
+    #ckJumpscareFlash img.face-zoom {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      object-position: center 18%;
+      animation: ckFaceZoomScare 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes ckFaceZoomScare {
+      0%   { transform: scale(1.25) translate(0, 0); filter: contrast(1.5) brightness(0.9); }
+      20%  { transform: scale(1.65) translate(-8px, 6px) rotate(-1.5deg); filter: contrast(2.1) saturate(2); }
+      40%  { transform: scale(1.85) translate(9px, -6px) rotate(1.5deg); filter: contrast(2.3) saturate(2.2) brightness(1.1); }
+      60%  { transform: scale(1.92) translate(-7px, -5px) rotate(-1deg); }
+      80%  { transform: scale(1.96) translate(7px, 5px) rotate(1deg); }
+      100% { transform: scale(2.02) translate(0, 0); filter: contrast(2.4) saturate(2.4); }
+    }
+
+    /* 📱 รองรับหน้าจอมือถือโดยเฉพาะ */
+    @media (max-width: 640px) {
+      .ck-char-wrap { width: 96vw; }
+      .ck-char-img { max-height: 68vh; }
+      .ck-dialogue-box {
+        bottom: 14px;
+        width: 94vw;
+        padding: 14px 15px;
+        font-size: 1rem;
+        border-radius: 14px;
+      }
+      .ck-choice-btn { font-size: 0.92rem; padding: 11px 14px; }
+      .ck-sys-popup { top: 10px; right: 10px; left: 10px; font-size: 0.76rem; }
+    }
     /* กล่องพิธีกรรมพิมพ์คำสารภาพ (ด่าน 2) */
     .cursed-ritual-box {
       max-width: 520px;
@@ -6616,6 +6906,41 @@
   <div class="exe-scare-eye">👁️</div>
   <div class="exe-scare-msg" id="exeScareMsg">BGT.EXE // คุณทำให้ผมเจ็บครบ 4 ครั้งแล้วนะ...</div>
 </div>
+<!-- เสียงเพลงหลอน & เสียงจัมป์สแกร์ (ใส่ไฟล์ไว้ในโฟลเดอร์ images/) -->
+<audio id="curseBgmAudio" src="images/curse_bgm.mp3" loop preload="auto"></audio>
+<audio id="curseJumpscareAudio" src="images/jumpscare.mp3" preload="auto"></audio>
+
+<!-- หน้าต่างเตือนก่อนเข้าสู่ฉากราชาคำสาป -->
+<div id="curseKingWarnModal">
+  <div class="ck-warn-box">
+    <h3 class="ck-warn-title">⚠️ [WARNING // BGT.EXE]</h3>
+    <p style="margin:0; font-size:0.95rem; line-height:1.6;">
+      ตรวจพบการท้าทายระดับสูงสุด — ฉากต่อไปมี<strong>ภาพหลอนและเสียงตกใจ</strong><br>
+      แน่ใจนะว่าจะดูต่อ?
+    </p>
+    <div class="ck-warn-btns">
+      <button type="button" class="ck-btn-go" onclick="confirmCurseKingRoute()">👁️ เดินหน้าต่อ</button>
+      <button type="button" class="ck-btn-back" onclick="cancelCurseKingRoute()">🕊️ ถอยกลับ</button>
+    </div>
+  </div>
+</div>
+
+<!-- เวทีคัตซีนราชาคำสาป -->
+<div id="curseKingStage">
+  <div class="ck-char-wrap">
+    <img id="ckCharImg" class="ck-char-img" src="images/curse_1.png" alt="">
+  </div>
+  <div class="ck-dialogue-box">
+    <div class="ck-speaker" id="ckSpeaker">???</div>
+    <div id="ckDialogueText"></div>
+    <div class="ck-choices-wrap" id="ckChoicesWrap"></div>
+  </div>
+</div>
+
+<!-- ฉากจัมป์สแกร์ 1 ครั้ง (ซูมหน้าเต็มจอ) -->
+<div id="ckJumpscareFlash">
+  <img id="ckJumpscareImg" class="face-zoom" src="images/curse_5.png" alt="">
+</div>
 
 <!-- แถบควบคุมลอยมุมขวาบน -->
 <div class="floating-controls">
@@ -8337,6 +8662,17 @@
       isSecret: true,
       svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="exeRed" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#000000"/><stop offset="45%" stop-color="#dc2626"/><stop offset="75%" stop-color="#ef4444"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><g class="deco-fire"><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#exeRed)" stroke-width="4.8"/><g class="deco-spin-fast"><circle cx="50" cy="50" r="46.5" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="14 6 3 6"/></g><g class="deco-spin-rev"><circle cx="50" cy="50" r="37.5" fill="none" stroke="#06b6d4" stroke-width="1.3" stroke-dasharray="6 12"/></g><ellipse cx="50" cy="6" rx="13" ry="7" fill="#000" stroke="#ef4444" stroke-width="1.8"/><circle cx="50" cy="6" r="3.4" fill="#ff0000"/><path d="M22,82 Q22,99 25.5,99 Q29,99 29,82 Z" fill="#dc2626"/><path d="M71,82 Q71,99 74.5,99 Q78,99 78,82 Z" fill="#dc2626"/></g></svg>`
     },
+
+    {
+      id: "curse_king",
+      name: "👑👁️ ราชาคำสาป (TRUE)",
+      rarity: "mythic",
+      rarityLabel: "TRUE CURSE",
+      reqText: "???",
+      isSecret: true,
+      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="ckGoldRed" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#000000"/><stop offset="35%" stop-color="#dc2626"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/></linearGradient></defs><g class="deco-fire"><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#ckGoldRed)" stroke-width="5"/><g class="deco-spin-fast"><circle cx="50" cy="50" r="46.5" fill="none" stroke="#fde047" stroke-width="1.8" stroke-dasharray="14 6 3 6"/></g><g class="deco-spin-rev"><circle cx="50" cy="50" r="37" fill="none" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="8 10"/></g><polygon points="32,14 38,2 45,10 50,0 55,10 62,2 68,14" fill="url(#ckGoldRed)" stroke="#fde047" stroke-width="1.3"/><g class="curse-king-eye"><ellipse cx="50" cy="91" rx="13" ry="7" fill="#090000" stroke="#fde047" stroke-width="1.6"/><circle cx="50" cy="91" r="4.2" fill="#dc2626"/><circle cx="50" cy="91" r="1.8" fill="#000000"/><circle cx="51.4" cy="89.6" r="0.9" fill="#ffffff"/></g><g class="curse-king-eye"><ellipse cx="10" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.3"/><circle cx="10" cy="50" r="2.6" fill="#dc2626"/></g><g class="curse-king-eye"><ellipse cx="90" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.3"/><circle cx="90" cy="50" r="2.6" fill="#dc2626"/></g></g></svg>`
+    },
+
     // --- 🟡 ระดับ LEGENDARY: VIP ผู้สนับสนุน (ปีกทองคำ + วงแหวนศักดิ์สิทธิ์ + มงกุฎเพชร) ---
     {
       id: "celestial",
@@ -8421,6 +8757,7 @@
     if (decoId === "cursed_2") return hTier >= 2;
     if (decoId === "cursed_3") return hTier >= 3;
     if (decoId === "cursed_4") return hTier >= 4;
+    if (decoId === "curse_king") return hTier >= 5 || !!(u.unlockedCurseKing || localStorage.getItem("bgt_curse_king_unlocked") === "1");
     if (decoId === "fox_ears")  return totalDays >= 1;
     if (decoId === "sakura")    return totalDays >= 3;
     if (decoId === "xmas")      return totalDays >= 5;
@@ -15378,6 +15715,358 @@
         rolesWrap.appendChild(p);
       }
     }
+  };
+  // =========================================
+  // 22. เส้นทางลับสูงสุด: ราชาคำสาป (ช้อยส์ 2 รอบ + เสียงหลอนสังเคราะห์สำรอง + ซูมหน้า curse_5)
+  // =========================================
+  HORROR_ROLE_TIERS.push({
+    tier: 5,
+    cls: "horror-king",
+    name: "👑👁️ 『 ราชาคำสาป 』"
+  });
+
+  HORROR_FLASH_LINES.push("...หรือจะพิมพ์ว่า 'ไม่ขอโทษ!' ล่ะ?");
+
+  const CK_FLY_LINES = [
+    "โกหก... โกหก... โกหก...",
+    "BGT.EXE // CRITICAL_ERROR",
+    "👁️ ทำไมต้องโกหกผมด้วย...",
+    "ไม่ขอโทษ! ไม่ขอโทษ!",
+    "SYSTEM_CORRUPTED // 0x000004"
+  ];
+
+  let ckTalkTimer = null;
+  let ckTypeTimer = null;
+  let ckFlyInterval = null;
+  let ckSysInterval = null;
+  let ckSynthNodes = [];
+
+  // 🎵 เสียงซาวด์หลอนสังเคราะห์ (ทำงานอัตโนมัติถ้าไม่มีไฟล์ images/curse_bgm.mp3)
+  function startCreepySynthBgm(isPhase2 = false) {
+    stopCreepySynthBgm();
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      const master = audioCtx.createGain();
+      master.gain.setValueAtTime(0.01, now);
+      master.gain.linearRampToValueAtTime(isPhase2 ? 0.14 : 0.09, now + 1.2);
+      master.connect(audioCtx.destination);
+
+      // เสียงทุ้มสั่นไม่เข้าคีย์ (Dissonant Drone)
+      const freqs = isPhase2 ? [38, 41.5, 113, 615] : [46, 48.2, 138];
+      freqs.forEach((f, idx) => {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = idx === freqs.length - 1 ? 'sine' : 'sawtooth';
+        osc.frequency.setValueAtTime(f, now);
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = isPhase2 ? 320 : 180;
+
+        g.gain.value = idx === freqs.length - 1 ? 0.18 : 0.35;
+        osc.connect(filter);
+        filter.connect(g);
+        g.connect(master);
+        osc.start(now);
+        ckSynthNodes.push(osc);
+      });
+      ckSynthNodes.push(master);
+    } catch (e) {}
+  }
+
+  function stopCreepySynthBgm() {
+    ckSynthNodes.forEach(n => {
+      try { if (typeof n.stop === 'function') n.stop(); } catch (e) {}
+      try { if (typeof n.disconnect === 'function') n.disconnect(); } catch (e) {}
+    });
+    ckSynthNodes = [];
+  }
+
+  const _origCheckConfess = checkConfessInput;
+  checkConfessInput = function() {
+    const inp = document.getElementById('cursedConfessInput');
+    if (isHorrorTriggered && inp && inp.value.trim() === "ไม่ขอโทษ!") {
+      inp.blur();
+      const warnModal = document.getElementById('curseKingWarnModal');
+      if (warnModal) warnModal.style.display = 'flex';
+      return;
+    }
+    _origCheckConfess();
+  };
+
+  function cancelCurseKingRoute() {
+    const warnModal = document.getElementById('curseKingWarnModal');
+    if (warnModal) warnModal.style.display = 'none';
+    const inp = document.getElementById('cursedConfessInput');
+    if (inp) inp.value = "";
+  }
+
+  function confirmCurseKingRoute() {
+    const warnModal = document.getElementById('curseKingWarnModal');
+    if (warnModal) warnModal.style.display = 'none';
+    startCurseKingCutscene();
+  }
+
+  function playCurseVoiceBlip(isHorrorPhase, isVerySlow = false) {
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = isHorrorPhase ? 'sawtooth' : 'triangle';
+      const baseFreq = isVerySlow ? (62 + Math.random() * 18) : (isHorrorPhase ? (88 + Math.random() * 30) : (320 + Math.random() * 75));
+      const dur = isVerySlow ? 0.14 : 0.06;
+      osc.frequency.setValueAtTime(baseFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(isHorrorPhase ? baseFreq * 0.6 : baseFreq * 1.05, now + dur);
+      gain.gain.setValueAtTime(isHorrorPhase ? 0.075 : 0.045, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.01);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + dur + 0.02);
+    } catch (e) {}
+  }
+
+  function typeCurseKingLine(text, closedImg, openImg, isHorrorPhase, speedMs, onDone) {
+    clearInterval(ckTalkTimer);
+    clearInterval(ckTypeTimer);
+    const charImg = document.getElementById('ckCharImg');
+    const txtEl = document.getElementById('ckDialogueText');
+    const choicesWrap = document.getElementById('ckChoicesWrap');
+    if (choicesWrap) { choicesWrap.style.display = 'none'; choicesWrap.innerHTML = ''; }
+    if (!txtEl) return;
+
+    txtEl.textContent = "";
+    txtEl.classList.toggle('ck-red-slow-text', isHorrorPhase);
+
+    let mouthOpen = true;
+    if (charImg) charImg.src = openImg;
+
+    ckTalkTimer = setInterval(() => {
+      mouthOpen = !mouthOpen;
+      if (charImg) charImg.src = mouthOpen ? openImg : closedImg;
+    }, isHorrorPhase ? 160 : 140);
+
+    const chars = Array.from(text);
+    let idx = 0;
+    const isVerySlow = speedMs >= 200;
+    ckTypeTimer = setInterval(() => {
+      if (idx < chars.length) {
+        const ch = chars[idx++];
+        txtEl.textContent += ch;
+        if (ch.trim() !== "") playCurseVoiceBlip(isHorrorPhase, isVerySlow);
+      } else {
+        clearInterval(ckTalkTimer);
+        clearInterval(ckTypeTimer);
+        if (charImg) charImg.src = closedImg;
+        if (onDone) onDone();
+      }
+    }, speedMs);
+  }
+
+  function showCurseChoices(options) {
+    const wrap = document.getElementById('ckChoicesWrap');
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = "button";
+      btn.className = "ck-choice-btn";
+      btn.textContent = "▸ " + opt.label;
+      btn.onclick = () => {
+        playClickSound();
+        wrap.style.display = 'none';
+        opt.onPick();
+      };
+      wrap.appendChild(btn);
+    });
+    wrap.style.display = 'flex';
+  }
+
+  function spawnFlyingHorrorText() {
+    const el = document.createElement('div');
+    el.className = 'ck-fly-text';
+    el.textContent = CK_FLY_LINES[Math.floor(Math.random() * CK_FLY_LINES.length)];
+    el.style.top = (8 + Math.random() * 70) + 'vh';
+    el.style.fontSize = (1.05 + Math.random() * 1.2) + 'rem';
+    const ltr = Math.random() < 0.5;
+    const dur = (2.4 + Math.random() * 1.6).toFixed(2);
+    el.style.animation = `${ltr ? 'ckFlyLTR' : 'ckFlyRTL'} ${dur}s linear forwards`;
+    const stage = document.getElementById('curseKingStage') || document.body;
+    stage.appendChild(el);
+    setTimeout(() => el.remove(), parseFloat(dur) * 1000 + 100);
+  }
+
+  function spawnCurseSysPopup(msg) {
+    const pop = document.createElement('div');
+    pop.className = 'ck-sys-popup';
+    pop.textContent = msg;
+    const stage = document.getElementById('curseKingStage') || document.body;
+    stage.appendChild(pop);
+    setTimeout(() => pop.remove(), 2200);
+  }
+
+  function startCurseKingCutscene() {
+    clearInterval(horrorScareTimer);
+    removeCursedEye();
+    stopHorrorAmbience();
+
+    const stage = document.getElementById('curseKingStage');
+    const speaker = document.getElementById('ckSpeaker');
+    const bgm = document.getElementById('curseBgmAudio');
+    if (!stage) return;
+
+    stage.classList.remove('phase-horror');
+    stage.style.display = 'block';
+    if (speaker) speaker.textContent = "Ben";
+
+    // ลองเล่นไฟล์เพลงหลอนก่อน ถ้าไม่มีไฟล์ให้เปิดซาวด์หลอนสังเคราะห์แทนอัตโนมัติ
+    let usingSynth = false;
+    if (bgm) {
+      bgm.volume = Math.max(0.25, musicVolume);
+      bgm.currentTime = 0;
+      bgm.play().catch(() => {
+        usingSynth = true;
+        startCreepySynthBgm(false);
+      });
+      bgm.onerror = () => {
+        usingSynth = true;
+        startCreepySynthBgm(false);
+      };
+    } else {
+      usingSynth = true;
+      startCreepySynthBgm(false);
+    }
+
+    // ขั้นที่ 1: ภาพปกติถาม + ขึ้น 2 ช้อยส์
+    typeCurseKingLine(
+      "สรุปแล้วงานเกมของผมมีปัญหาอะไรหรือเปล่า?",
+      "images/curse_1.png",
+      "images/curse_3.png",
+      false,
+      50,
+      () => {
+        showCurseChoices([
+          { label: "ผมไม่ได้ตั้งใจ...", onPick: () => enterCursePhase2(usingSynth) },
+          { label: "แค่แกล้งหยอกพี่เบนเล่นๆ เท่านั้น", onPick: () => enterCursePhase2(usingSynth) }
+        ]);
+      }
+    );
+  }
+
+  function enterCursePhase2(usingSynth) {
+    const stage = document.getElementById('curseKingStage');
+    const speaker = document.getElementById('ckSpeaker');
+    const charImg = document.getElementById('ckCharImg');
+    if (charImg) charImg.src = "images/curse_2.png";
+
+    setTimeout(() => {
+      if (stage) stage.classList.add('phase-horror');
+      if (speaker) speaker.textContent = "👁️ BGT.EXE // ราชาคำสาป";
+      if (usingSynth) startCreepySynthBgm(true);
+      spawnCurseSysPopup("⚠️ [SYSTEM]: ตรวจพบคำโกหกในระบบ...");
+
+      ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
+
+      // ขั้นที่ 2: เปลี่ยนเป็นภาพหลอน พูดช้าๆ สีแดงว่า "ทำไม..." + ขึ้นช้อยส์รอบ 2
+      typeCurseKingLine(
+        "ทำไม...",
+        "images/curse_4.png",
+        "images/curse_5.png",
+        true,
+        220,
+        () => {
+          showCurseChoices([
+            { label: "ผมขอโทษจริงๆ นะ...", onPick: enterCurseFinalLie },
+            { label: "ผมไม่ได้คิดแบบนั้นเลย...", onPick: enterCurseFinalLie }
+          ]);
+        }
+      );
+    }, 450);
+  }
+
+  function enterCurseFinalLie() {
+    spawnCurseSysPopup("🩸 [ERROR]: TRUTH_NOT_FOUND // กำลังปิดระบบ");
+    ckSysInterval = setInterval(() => {
+      spawnCurseSysPopup("👁️ โกหก... คุณกำลังโกหกผมอยู่...");
+    }, 1200);
+
+    // ขั้นที่ 3: ไม่ว่าจะตอบอะไร จะพูดช้ามากว่า "โกหก......"
+    typeCurseKingLine(
+      "โกหก......",
+      "images/curse_4.png",
+      "images/curse_5.png",
+      true,
+      320,
+      () => {
+        // ขั้นที่ 4: จัมป์สแกร์ซูมใบหน้า curse_5 เต็มจอ!
+        setTimeout(() => {
+          clearInterval(ckFlyInterval);
+          clearInterval(ckSysInterval);
+          stopCreepySynthBgm();
+          const bgm = document.getElementById('curseBgmAudio');
+          if (bgm) { bgm.pause(); bgm.currentTime = 0; }
+
+          const jsBox = document.getElementById('ckJumpscareFlash');
+          const jsAudio = document.getElementById('curseJumpscareAudio');
+          if (jsBox) jsBox.style.display = 'flex';
+          if (jsAudio) {
+            jsAudio.volume = Math.min(0.65, Math.max(0.3, musicVolume));
+            jsAudio.currentTime = 0;
+            jsAudio.play().catch(() => playExeSilentScareAudio());
+          } else {
+            playExeSilentScareAudio();
+          }
+
+          // ขั้นที่ 5: ตัดจบ + ปลดล็อกราชาคำสาป + รีเซ็ตระดับ 1
+          setTimeout(() => {
+            if (jsBox) jsBox.style.display = 'none';
+            const stage = document.getElementById('curseKingStage');
+            if (stage) {
+              stage.style.display = 'none';
+              stage.classList.remove('phase-horror');
+            }
+
+            try {
+              localStorage.setItem("bgt_horror_tier", "5");
+              localStorage.setItem("bgt_curse_king_unlocked", "1");
+              localStorage.setItem(CURSE_COUNT_KEY, "0");
+            } catch (e) {}
+            curseCount = 0;
+
+            if (db && currentUser) {
+              db.ref("users/" + currentUser.id).update({
+                unlockedHorrorRole: true,
+                unlockedCurseKing: true,
+                horrorTier: 5
+              }).catch(() => {});
+            }
+
+            forgiveAndRestore(false);
+
+            const fIcon = document.getElementById('forgivenIcon');
+            const fTitle = document.getElementById('forgivenTitle');
+            const fDesc = document.getElementById('forgivenDesc');
+            if (fIcon) fIcon.textContent = "🦊✨";
+            if (fTitle) fTitle.textContent = "เกิดอะไรขึ้นนิ ชั่งเถอะ ;3";
+            if (fDesc) {
+              fDesc.textContent =
+                "เอ๊ะ เมื่อกี้เหมือนเว็บจะกระตุกนิดหน่อยนะ~ ชั่งเถอะ! ยินดีด้วยครับ คุณปลดล็อกยศและกรอบลับระดับสูงสุด [👑👁️ ราชาคำสาป] (มีลูกตากระพริบในกรอบ!) ถาวรแล้ว เข้าไปลองใส่ในหน้าแต่งโปรไฟล์ได้เลยนะ ;3";
+            }
+            if (currentUser) applyProfileToUI(currentUser);
+          }, 850);
+        }, 500);
+      }
+    );
+  }
+
+  const _origGetHorrorTier = getHorrorTierOfUser;
+  getHorrorTierOfUser = function(uData, uid) {
+    const u = uData || {};
+    if (u.unlockedCurseKing || Number(u.horrorTier) >= 5) return 5;
+    if (currentUser && uid === currentUser.id && localStorage.getItem("bgt_curse_king_unlocked") === "1") return 5;
+    return _origGetHorrorTier(uData, uid);
   };
 </script>
 
