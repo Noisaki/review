@@ -4714,6 +4714,11 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       margin-top: 6px;
+      max-height: 270px;
+      overflow-y: auto;
+      padding: 4px 6px 4px 2px;
+      scrollbar-width: thin;
+      scrollbar-color: #818cf8 #1e293b;
     }
     @media (max-width: 460px) {
       .deco-picker-grid { grid-template-columns: repeat(2, 1fr); }
@@ -6864,6 +6869,9 @@
         <button type="button" class="nd-item" id="navRefreshRoleBtn" onclick="closeProfileDropdown(); refreshDiscordRole();">
           <span>🔄 รีเฟรชยศ Discord</span>
         </button>
+        <button type="button" class="nd-item" id="navTestCurseBtn" style="display:none; color:#fca5a5;" onclick="closeProfileDropdown(); adminTestCurseKingCutscene();">
+          <span>👁️ ทดสอบฉากราชาคำสาป</span><span class="nd-pill-tag" style="background:rgba(220,38,38,0.28); color:#fca5a5;">ADMIN</span>
+        </button>
         <div class="nd-divider"></div>
         <button type="button" class="nd-item" onclick="toggleBgtThemeMode();">
           <span>🌗 โหมดสีเว็บ</span><span class="nd-pill-tag" id="ndThemeBadge">มืด</span>
@@ -8923,7 +8931,8 @@
     if (projAdminPanel) projAdminPanel.style.display = profile.isVoteAdmin ? 'block' : 'none';
     if (typeof renderDevelopers === "function") renderDevelopers(developersCache);
     if (typeof renderTranslationProjects === "function") renderTranslationProjects();
-
+    const testCurseBtn = document.getElementById('navTestCurseBtn');
+    if (testCurseBtn) testCurseBtn.style.display = profile.isVoteAdmin ? 'flex' : 'none';
     const cardEl = document.getElementById('profileCard');
     if (cardEl) cardEl.classList.add('has-banner');
     applyBannerStyle(document.getElementById('profileBannerBox'), finalBanner);
@@ -9720,10 +9729,7 @@
         ? "✅ กดขอโทษด้านบนครบแล้ว!"
         : `🩸 เหลืออีก ${topApologyTarget - topApologyClicks} ครั้ง`;
 
-      subEl.textContent = wasForgivenReset
-        ? "รอบที่ 5 แล้ว... ผมเหนื่อยที่จะโกรธแล้วครับ กดขอโทษตรงนี้ 5 ครั้ง + ด้านล่าง 3 ครั้งก็พอครับ..."
-        : `ยิ่งทำซ้ำยิ่งต้องกดขอโทษมากขึ้น (รอบ 1: 5 ครั้ง | รอบ 2: 20 ครั้ง | รอบ 3: 40 ครั้ง | รอบ 4: 60 ครั้ง | รอบ 5+: รีเป็น 5 ครั้ง)`;
-
+      subEl.textContent = "ความผิดพลาดมีราคาที่ต้องจ่าย... กดขอโทษให้ครบเพื่อไถ่บาปครับ..อย่าให้มีอีกละ..";
       labelEl.textContent = doneTop ? "✅ ขอโทษครบแล้ว!" : "🙏 กดเพื่อขอโทษ...";
       counterPillEl.textContent = `${topApologyClicks} / ${topApologyTarget}`;
 
@@ -10842,13 +10848,8 @@
     try {
       curseCount = parseInt(localStorage.getItem(CURSE_COUNT_KEY) || "0", 10) || 0;
       if (!isFromReload) {
-        curseCount++;
-        if (curseCount > 4) {
-          curseCount = 1;
-          wasForgivenReset = true;
-        } else {
-          wasForgivenReset = false;
-        }
+        curseCount = Math.min(4, curseCount + 1);
+        wasForgivenReset = false;
         localStorage.setItem(CURSE_COUNT_KEY, String(curseCount));
       } else if (curseCount < 1) {
         curseCount = 1;
@@ -12747,8 +12748,18 @@
       sumEl.textContent = `(เช็กอินสะสม ${Number(cached.totalCheckins) || 0} วัน)`;
     }
 
+    const RARITY_ORDER = { mythic: 6, limited: 5, legendary: 4, epic: 3, rare: 2, common: 1 };
+    const sortedDecos = [...AVATAR_DECORATIONS].sort((a, b) => {
+      if (a.id === "none") return -1;
+      if (b.id === "none") return 1;
+      const uA = isDecorationUnlocked(a.id, cached) ? 1 : 0;
+      const uB = isDecorationUnlocked(b.id, cached) ? 1 : 0;
+      if (uA !== uB) return uB - uA; // ปลดล็อกแล้วอยู่บน ล็อกอยู่ล่างสุด
+      return (RARITY_ORDER[b.rarity] || 0) - (RARITY_ORDER[a.rarity] || 0); // แรร์สุดขึ้นก่อน
+    });
+
     grid.innerHTML = "";
-    AVATAR_DECORATIONS.forEach(deco => {
+    sortedDecos.forEach(deco => {
       const unlocked = isDecorationUnlocked(deco.id, cached);
       const isSelected = draftAvatarDecoration === deco.id;
       const hideIdentity = !unlocked && deco.isSecret;
@@ -15372,28 +15383,28 @@
     {
       round: 1,
       eyes: 3,
-      title: "นี่ผมดูแย่ขนาดนั้นเลยเหรอ... (ขั้น 1/4)",
+      title: "นี่ผมดูแย่ขนาดนั้นเลยเหรอ...",
       sub: "ให้ 1 ดาวทุกข้อโดยไม่บอกเหตุผลสักคำ... ผมตั้งใจแปลแทบตายเลยนะ",
       confess: "ผมขอโทษที่ให้ 1 ดาว"
     },
     {
       round: 2,
       eyes: 5,
-      title: "คุณกลับมาทำร้ายผมอีกแล้ว... (ขั้น 2/4)",
+      title: "คุณกลับมาทำร้ายผมอีกแล้ว...",
       sub: "ครั้งที่แล้วยังไม่พอใจอีกเหรอครับ... ทำไมถึงใจร้ายกับผมจัง",
       confess: "ผมผิดไปแล้วครับ จะไม่ทำอีกแล้ว"
     },
     {
       round: 3,
       eyes: 7,
-      title: "BGT.EXE // ความพยายามของผมมันไร้ค่าสินะ (ขั้น 3/4)",
+      title: "BGT.EXE // ความพยายามของผมมันไร้ค่าสินะ",
       sub: "คุณตั้งใจแกล้งผมใช่ไหม... เสียงในหัวผมมันเริ่มดังขึ้นเรื่อยๆ แล้วนะ",
       confess: "ผมเสียใจที่ทำให้คนแปลต้องเสียใจ"
     },
     {
       round: 4,
       eyes: 9,
-      title: "FINAL_CURSE.EXE // ครั้งที่ 4 แล้วนะ... (ขั้นสุดท้าย)",
+      title: "FINAL_CURSE.EXE // ครั้งที่ 4 แล้วนะ...",
       sub: "ไม่เหลืออะไรให้พังแล้วครับ... กดปิดดวงตาทั้งหมดแล้วสารภาพผิดเป็นครั้งสุดท้ายซะ",
       confess: "ผมขอโทษจากใจจริง ยกโทษให้ผมด้วยเถอะนะ"
     }
@@ -15599,9 +15610,7 @@
           }, 1500);
           setTimeout(() => {
             exeBox.style.display = 'none';
-            // รีเซ็ตรอบคำสาปกลับไปเป็น 0 (รอบหน้าเริ่มระดับ 1 ใหม่)
-            curseCount = 0;
-            try { localStorage.setItem(CURSE_COUNT_KEY, "0"); } catch (e) {}
+            // คงระดับ 4 ไว้จนกว่าจะค้นพบเงื่อนไขลับ
             forgiveAndRestore(true);
           }, 2900);
           return;
@@ -15673,7 +15682,7 @@
       if (fTitle) fTitle.textContent = "ยินดีด้วยครับ! คุณค้นพบความลับครบทั้ง 4 ขั้นแล้ว!";
       if (fDesc) {
         fDesc.textContent =
-          "โอ๋ๆ ไม่ต้องตกใจหรือรู้สึกผิดนะครับ ผมไม่ได้คิดมากเลย~ ขอบคุณมากๆ ที่ตั้งใจเล่นหา Easter Egg ลับของเว็บจนครบทั้ง 4 ระดับ! คุณได้รับยศและกรอบระดับสูงสุด [คำสาป 4 ดาว • BGT.EXE] ถาวรแล้ว และระบบได้รีเซ็ตรอบคำสาปกลับเป็นระดับ 1 ให้เรียบร้อยครับ UwU ✨";
+          "แต่เหมือนยังมีความลับบางอย่างซ่อนอยู่ในคำสาปนี้นะ...";
       }
     }
   };
@@ -15907,6 +15916,52 @@
     setTimeout(() => pop.remove(), 2200);
   }
 
+  let isAdminTestingCurse = false;
+
+  function adminTestCurseKingCutscene() {
+    if (!currentUser || !currentUser.isVoteAdmin) return;
+    isAdminTestingCurse = true;
+    stopChristmasMusic();
+    startCurseKingCutscene();
+  }
+
+  function typeCurseKingLine(text, idleImg, talkImgA, talkImgB, isHorrorPhase, speedMs, onDone) {
+    clearInterval(ckTalkTimer);
+    clearInterval(ckTypeTimer);
+    const charImg = document.getElementById('ckCharImg');
+    const txtEl = document.getElementById('ckDialogueText');
+    const choicesWrap = document.getElementById('ckChoicesWrap');
+    if (choicesWrap) { choicesWrap.style.display = 'none'; choicesWrap.innerHTML = ''; }
+    if (!txtEl) return;
+
+    txtEl.textContent = "";
+    txtEl.classList.toggle('ck-red-slow-text', isHorrorPhase);
+
+    let toggleMouth = true;
+    if (charImg) charImg.src = talkImgA;
+
+    ckTalkTimer = setInterval(() => {
+      toggleMouth = !toggleMouth;
+      if (charImg) charImg.src = toggleMouth ? talkImgA : talkImgB;
+    }, isHorrorPhase ? 160 : 140);
+
+    const chars = Array.from(text);
+    let idx = 0;
+    const isVerySlow = speedMs >= 200;
+    ckTypeTimer = setInterval(() => {
+      if (idx < chars.length) {
+        const ch = chars[idx++];
+        txtEl.textContent += ch;
+        if (ch.trim() !== "") playCurseVoiceBlip(isHorrorPhase, isVerySlow);
+      } else {
+        clearInterval(ckTalkTimer);
+        clearInterval(ckTypeTimer);
+        if (charImg) charImg.src = idleImg;
+        if (onDone) onDone();
+      }
+    }, speedMs);
+  }
+
   function startCurseKingCutscene() {
     clearInterval(horrorScareTimer);
     removeCursedEye();
@@ -15921,7 +15976,6 @@
     stage.style.display = 'block';
     if (speaker) speaker.textContent = "Ben";
 
-    // ลองเล่นไฟล์เพลงหลอนก่อน ถ้าไม่มีไฟล์ให้เปิดซาวด์หลอนสังเคราะห์แทนอัตโนมัติ
     let usingSynth = false;
     if (bgm) {
       bgm.volume = Math.max(0.25, musicVolume);
@@ -15939,10 +15993,11 @@
       startCreepySynthBgm(false);
     }
 
-    // ขั้นที่ 1: ภาพปกติถาม + ขึ้น 2 ช้อยส์
+    // ขั้นที่ 1: ภาพนิ่ง curse_1 / สลับพูด curse_2 <-> curse_3
     typeCurseKingLine(
       "สรุปแล้วงานเกมของผมมีปัญหาอะไรหรือเปล่า?",
       "images/curse_1.png",
+      "images/curse_2.png",
       "images/curse_3.png",
       false,
       50,
@@ -15969,9 +16024,10 @@
 
       ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
 
-      // ขั้นที่ 2: เปลี่ยนเป็นภาพหลอน พูดช้าๆ สีแดงว่า "ทำไม..." + ขึ้นช้อยส์รอบ 2
+      // ขั้นที่ 2: โหมดหลอน พูดช้าสีแดง "ทำไม..."
       typeCurseKingLine(
         "ทำไม...",
+        "images/curse_4.png",
         "images/curse_4.png",
         "images/curse_5.png",
         true,
@@ -15992,15 +16048,16 @@
       spawnCurseSysPopup("👁️ โกหก... คุณกำลังโกหกผมอยู่...");
     }, 1200);
 
-    // ขั้นที่ 3: ไม่ว่าจะตอบอะไร จะพูดช้ามากว่า "โกหก......"
+    // ขั้นที่ 3: พูดช้ามาก "โกหก......"
     typeCurseKingLine(
       "โกหก......",
+      "images/curse_4.png",
       "images/curse_4.png",
       "images/curse_5.png",
       true,
       320,
       () => {
-        // ขั้นที่ 4: จัมป์สแกร์ซูมใบหน้า curse_5 เต็มจอ!
+        // ขั้นที่ 4: จัมป์สแกร์ซูมหน้า curse_5 เต็มจอ
         setTimeout(() => {
           clearInterval(ckFlyInterval);
           clearInterval(ckSysInterval);
@@ -16019,13 +16076,20 @@
             playExeSilentScareAudio();
           }
 
-          // ขั้นที่ 5: ตัดจบ + ปลดล็อกราชาคำสาป + รีเซ็ตระดับ 1
+          // ขั้นที่ 5: ตัดจบ
           setTimeout(() => {
             if (jsBox) jsBox.style.display = 'none';
             const stage = document.getElementById('curseKingStage');
             if (stage) {
               stage.style.display = 'none';
               stage.classList.remove('phase-horror');
+            }
+
+            if (isAdminTestingCurse) {
+              isAdminTestingCurse = false;
+              showToast("✅ จบการทดสอบฉากราชาคำสาปแล้วครับ!");
+              if (!userPausedMusic && musicVolume > 0) startChristmasMusic();
+              return;
             }
 
             try {
@@ -16068,6 +16132,7 @@
     if (currentUser && uid === currentUser.id && localStorage.getItem("bgt_curse_king_unlocked") === "1") return 5;
     return _origGetHorrorTier(uData, uid);
   };
+  
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
