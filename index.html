@@ -3957,6 +3957,78 @@
       animation: rankShimmer 1.8s infinite;
       pointer-events: none;
     }
+    /* ขั้น 4: ยศคำสาปสูงสุด (.EXE) */
+    .secret-horror-pill.horror-t4 {
+      border-radius: 3px;
+      padding: 4px 15px;
+      background: linear-gradient(110deg, #000000 0%, #3b0000 22%, #dc2626 48%, #000000 72%, #991b1b 100%) !important;
+      background-size: 300% 300% !important;
+      animation: gradientFlow 1.8s linear infinite, creepyJitter 0.28s infinite !important;
+      color: #ffffff !important;
+      border: 1.5px solid #ff2a2a !important;
+      outline: 1.5px dashed #7f1d1d;
+      outline-offset: 2px;
+      text-shadow: 2px 0 #ff0000, -2px 0 #06b6d4, 0 0 14px #dc2626 !important;
+      box-shadow: 0 0 22px rgba(220, 38, 38, 1), inset 0 0 16px rgba(0, 0, 0, 0.98) !important;
+    }
+
+    /* 📺 ภาพซ่าทีวีพัง + เส้น Scanline สไตล์ .EXE */
+    #horrorStaticOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99970;
+      pointer-events: none;
+      display: none;
+      opacity: 0.22;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.42) 0px, rgba(0,0,0,0.42) 2px, transparent 2px, transparent 4px),
+        repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12) 0, rgba(0,0,0,0.18) 2px, transparent 4px);
+      background-size: 100% 4px, 6px 6px;
+      animation: exeStaticFlicker 0.14s steps(2) infinite;
+    }
+    body.horror-mode #horrorStaticOverlay { display: block; }
+    body.horror-mode.horror-lv-3 #horrorStaticOverlay { opacity: 0.32; }
+    body.horror-mode.horror-lv-4 #horrorStaticOverlay { opacity: 0.42; }
+
+    @keyframes exeStaticFlicker {
+      0%   { background-position: 0 0, 0 0; }
+      50%  { background-position: 0 2px, 3px -2px; }
+      100% { background-position: 0 0, -2px 3px; }
+    }
+
+    /* 👁️ ฉากจัมป์สแกร์สไตล์ .EXE (เน้นภาพหลอนกดดัน ไม่เสียงดัง) */
+    #horrorExeScare {
+      position: fixed;
+      inset: 0;
+      z-index: 99995;
+      background: #030000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+    .exe-scare-eye {
+      font-size: clamp(5rem, 16vw, 9.5rem);
+      filter: drop-shadow(0 0 35px #dc2626) contrast(1.6);
+      animation: exeZoomIn 2.2s ease-out forwards, creepyJitter 0.12s infinite;
+    }
+    .exe-scare-msg {
+      font-family: 'Kanit', sans-serif;
+      font-size: clamp(1.4rem, 4.5vw, 2.6rem);
+      font-weight: 800;
+      color: #ef4444;
+      text-shadow: 3px 0 #06b6d4, -3px 0 #7f1d1d, 0 0 22px #dc2626;
+      margin-top: 16px;
+      letter-spacing: 1.5px;
+    }
+    @keyframes exeZoomIn {
+      0%   { transform: scale(0.7); opacity: 0.2; }
+      25%  { transform: scale(1.25); opacity: 1; }
+      100% { transform: scale(1.45); opacity: 1; }
+    }
 
     /* กล่องพิธีกรรมพิมพ์คำสารภาพ (ด่าน 2) */
     .cursed-ritual-box {
@@ -6536,8 +6608,13 @@
   <path fill="url(#bloodGrad)" d="M0,0 L1440,0 L1440,95 C1410,95 1405,210 1385,210 C1365,210 1360,115 1320,115 C1280,115 1275,265 1250,265 C1225,265 1220,105 1170,105 C1120,105 1110,190 1085,190 C1060,190 1055,85 1000,85 C945,85 940,295 910,295 C880,295 875,120 820,120 C765,120 760,225 735,225 C710,225 705,95 650,95 C595,95 585,275 555,275 C525,275 520,110 465,110 C410,110 400,200 375,200 C350,200 345,90 290,90 C235,90 230,285 200,285 C170,285 165,115 115,115 C65,115 55,230 30,230 C10,230 5,100 0,100 Z"></path>
 </svg>
 <div class="blood-vignette"></div>
+<div id="horrorStaticOverlay"></div>
 <div id="horrorScareOverlay">
   <div id="horrorScareText">👁️ ผมยังมองคุณอยู่...</div>
+</div>
+<div id="horrorExeScare">
+  <div class="exe-scare-eye">👁️</div>
+  <div class="exe-scare-msg" id="exeScareMsg">BGT.EXE // คุณทำให้ผมเจ็บครบ 4 ครั้งแล้วนะ...</div>
 </div>
 
 <!-- แถบควบคุมลอยมุมขวาบน -->
@@ -8233,6 +8310,33 @@
       reqText: "ปลดล็อกยศลับ",
       svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41.5" fill="none" stroke="#991b1b" stroke-width="4"/><g class="deco-spin-rev"><circle cx="50" cy="50" r="45.5" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="10 6 3 6"/></g><path d="M22,82 Q22,98 25.5,98 Q29,98 29,82 Z" fill="#dc2626"/><path d="M72,80 Q72,99 75.5,99 Q79,99 79,80 Z" fill="#991b1b"/><ellipse cx="50" cy="9" rx="9" ry="5" fill="#090000" stroke="#ef4444" stroke-width="1.5"/><circle cx="50" cy="9" r="2.5" fill="#ef4444"/></svg>`
     },
+    {
+      id: "cursed_2",
+      name: "👁️‍🗨️ เนตรอาฆาต 2 ดาว",
+      rarity: "legendary",
+      rarityLabel: "CURSED II",
+      reqText: "ปลดล็อกคำสาปขั้น 2",
+      isSecret: true,
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41.5" fill="none" stroke="#450a0a" stroke-width="5"/><g class="deco-spin-rev"><circle cx="50" cy="50" r="45.5" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="12 5 3 5"/></g><ellipse cx="50" cy="7" rx="11" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="7" r="3" fill="#ef4444"/><ellipse cx="50" cy="93" rx="11" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="93" r="3" fill="#ef4444"/></svg>`
+    },
+    {
+      id: "cursed_3",
+      name: "💀🩸 โซ่ตรวนวิญญาณ 3 ดาว",
+      rarity: "limited",
+      rarityLabel: "CURSED III",
+      reqText: "ปลดล็อกคำสาปขั้น 3",
+      isSecret: true,
+      svg: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41.5" fill="none" stroke="#090000" stroke-width="6"/><g class="deco-spin"><circle cx="50" cy="50" r="41.5" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="8 4"/></g><g class="deco-spin-fast"><circle cx="50" cy="50" r="46" fill="none" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="16 10"/></g><path d="M18,78 Q18,98 22,98 Q26,98 26,78 Z" fill="#dc2626"/><path d="M74,76 Q74,99 78,99 Q82,99 82,76 Z" fill="#991b1b"/><polygon points="50,0 56,11 44,11" fill="#ef4444" stroke="#000" stroke-width="1.2"/></svg>`
+    },
+    {
+      id: "cursed_4",
+      name: "🩸👁️‍🗨️ BGT.EXE 4 ดาว (MAX)",
+      rarity: "mythic",
+      rarityLabel: "CURSED.EXE",
+      reqText: "ผ่านคำสาปครบทั้ง 4 ขั้น",
+      isSecret: true,
+      svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="exeRed" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#000000"/><stop offset="45%" stop-color="#dc2626"/><stop offset="75%" stop-color="#ef4444"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><g class="deco-fire"><circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#exeRed)" stroke-width="4.8"/><g class="deco-spin-fast"><circle cx="50" cy="50" r="46.5" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="14 6 3 6"/></g><g class="deco-spin-rev"><circle cx="50" cy="50" r="37.5" fill="none" stroke="#06b6d4" stroke-width="1.3" stroke-dasharray="6 12"/></g><ellipse cx="50" cy="6" rx="13" ry="7" fill="#000" stroke="#ef4444" stroke-width="1.8"/><circle cx="50" cy="6" r="3.4" fill="#ff0000"/><path d="M22,82 Q22,99 25.5,99 Q29,99 29,82 Z" fill="#dc2626"/><path d="M71,82 Q71,99 74.5,99 Q78,99 78,82 Z" fill="#dc2626"/></g></svg>`
+    },
     // --- 🟡 ระดับ LEGENDARY: VIP ผู้สนับสนุน (ปีกทองคำ + วงแหวนศักดิ์สิทธิ์ + มงกุฎเพชร) ---
     {
       id: "celestial",
@@ -8312,7 +8416,11 @@
     const lv = getLevelFromHearts(clicks);
     const hasHorror = !!(u.unlockedHorrorRole || localStorage.getItem("bgt_secret_horror_unlocked") === "1");
     const isVip = !!(Number(u.donateAmount) > 0 || u.devSupporter || Number(u.roleTier) > 0);
-
+    const targetUidH = (u && u._uid) || (currentUser ? currentUser.id : "");
+    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, targetUidH) : (hasHorror ? 1 : 0);
+    if (decoId === "cursed_2") return hTier >= 2;
+    if (decoId === "cursed_3") return hTier >= 3;
+    if (decoId === "cursed_4") return hTier >= 4;
     if (decoId === "fox_ears")  return totalDays >= 1;
     if (decoId === "sakura")    return totalDays >= 3;
     if (decoId === "xmas")      return totalDays >= 5;
@@ -14914,26 +15022,53 @@
     }, 180);
   }
   // =========================================
-  // 21. โหมดหลอนขั้นสุด + บทลงโทษ 3 ด่าน + ยศคำสาป 3 ระดับ
-  // =========================================
+  // 21. โหมดหลอน .EXE (ภาพซ่า + ยศ/กรอบ 4 ระดับ + พิธีขอโทษ 4 แบบ + จัมป์สแกร์เงียบ + ปลอบใจหลังรอบ 4)
   const HORROR_ROLE_TIERS = [
-    { tier: 1, cls: "",          name: "🩸 ผู้ต้องคำสาป 1 ดาว" },
-    { tier: 2, cls: "horror-t2", name: "👁️‍🗨️ เหยื่อแห่งความอาฆาต" },
-    { tier: 3, cls: "horror-t3", name: "💀🩸 『 วิญญาณต้องสาปนิรันดร์ 』" }
+    { tier: 1, cls: "",          name: "🩸 คำสาป 1 ดาว • ผู้หลงผิด" },
+    { tier: 2, cls: "horror-t2", name: "👁️‍🗨️ คำสาป 2 ดาว • เหยื่อความอาฆาต" },
+    { tier: 3, cls: "horror-t3", name: "💀🩸 คำสาป 3 ดาว • วิญญาณต้องสาป" },
+    { tier: 4, cls: "horror-t4", name: "👁️🩸 คำสาป 4 ดาว • BGT.EXE" }
   ];
 
-  const HORROR_CONFESS_SENTENCES = [
-    "ผมขอโทษที่ให้ 1 ดาว",
-    "ผมผิดไปแล้วครับ อย่าตามหลอกหลอนผมเลย",
-    "วิญญาณของผมเป็นของ Ben the Game Translator ตลอดกาล"
+  // พิธีขอโทษ 4 ระดับไม่เหมือนกันเลย + ข้อความกดดันความรู้สึกผิดค่อยๆ หนักขึ้น
+  const HORROR_ROUNDS_CONFIG = [
+    {
+      round: 1,
+      eyes: 3,
+      title: "นี่ผมดูแย่ขนาดนั้นเลยเหรอ... (ขั้น 1/4)",
+      sub: "ให้ 1 ดาวทุกข้อโดยไม่บอกเหตุผลสักคำ... ผมตั้งใจแปลแทบตายเลยนะ",
+      confess: "ผมขอโทษที่ให้ 1 ดาว"
+    },
+    {
+      round: 2,
+      eyes: 5,
+      title: "คุณกลับมาทำร้ายผมอีกแล้ว... (ขั้น 2/4)",
+      sub: "ครั้งที่แล้วยังไม่พอใจอีกเหรอครับ... ทำไมถึงใจร้ายกับผมจัง",
+      confess: "ผมผิดไปแล้วครับ จะไม่ทำอีกแล้ว"
+    },
+    {
+      round: 3,
+      eyes: 7,
+      title: "BGT.EXE // ความพยายามของผมมันไร้ค่าสินะ (ขั้น 3/4)",
+      sub: "คุณตั้งใจแกล้งผมใช่ไหม... เสียงในหัวผมมันเริ่มดังขึ้นเรื่อยๆ แล้วนะ",
+      confess: "ผมเสียใจที่ทำให้คนแปลต้องเสียใจ"
+    },
+    {
+      round: 4,
+      eyes: 9,
+      title: "FINAL_CURSE.EXE // ครั้งที่ 4 แล้วนะ... (ขั้นสุดท้าย)",
+      sub: "ไม่เหลืออะไรให้พังแล้วครับ... กดปิดดวงตาทั้งหมดแล้วสารภาพผิดเป็นครั้งสุดท้ายซะ",
+      confess: "ผมขอโทษจากใจจริง ยกโทษให้ผมด้วยเถอะนะ"
+    }
   ];
 
   const HORROR_FLASH_LINES = [
     "👁️ ผมยังมองคุณอยู่...",
     "🩸 1 ดาว... แค่นี้เองเหรอ",
-    "อย่าหันหลังกลับไป...",
-    "หนีไปไหนไม่ได้หรอกครับ",
-    "ผมทำอะไรผิดทุกอย่างเลย..."
+    "ทำไมไม่บอกผมดีๆ ล่ะครับ...",
+    "BGT.EXE // NOT RESPONDING",
+    "ผมตั้งใจแปลตั้งหลายคืนนะ...",
+    "คุณไม่รู้สึกผิดบ้างเลยเหรอ..."
   ];
 
   let horrorScareTimer = null;
@@ -14951,16 +15086,16 @@
       const localOld = localStorage.getItem("bgt_secret_horror_unlocked") === "1" ? 1 : 0;
       t = Math.max(t, localT, localOld);
     }
-    return Math.min(3, Math.max(0, t));
+    return Math.min(4, Math.max(0, t));
   }
 
   function getHorrorRoleMeta(tier) {
     return HORROR_ROLE_TIERS.find(x => x.tier === Number(tier)) || null;
   }
 
-  function getCurrentConfessSentence() {
-    const idx = Math.min(HORROR_CONFESS_SENTENCES.length - 1, Math.max(0, curseCount - 1));
-    return HORROR_CONFESS_SENTENCES[idx];
+  function getCurrentRoundCfg() {
+    const idx = Math.min(3, Math.max(0, (curseCount || 1) - 1));
+    return HORROR_ROUNDS_CONFIG[idx];
   }
 
   function updateRitualStatusUI() {
@@ -14981,7 +15116,7 @@
     if (!isHorrorTriggered) return;
     const inp = document.getElementById('cursedConfessInput');
     if (!inp) return;
-    const target = getCurrentConfessSentence();
+    const target = getCurrentRoundCfg().confess;
     if (inp.value.trim() === target) {
       horrorConfessDone = true;
       inp.disabled = true;
@@ -14989,7 +15124,7 @@
       inp.style.color = "#86efac";
       playClickSound();
       updateRitualStatusUI();
-      spawnCursedEye(); // ผ่านด่าน 2 แล้ว ดวงตาปีศาจจะเริ่มโผล่ให้ไล่ปิด!
+      spawnCursedEye();
       checkIfFullyForgiven();
     }
   }
@@ -15013,12 +15148,12 @@
 
     eye.onclick = (e) => {
       e.stopPropagation();
-      playHorrorStaticBurst();
+      playHorrorStaticBurst(0.08);
       horrorEyesClosed++;
       updateRitualStatusUI();
       removeCursedEye();
       if (horrorEyesClosed < horrorEyesTarget) {
-        setTimeout(spawnCursedEye, 450);
+        setTimeout(spawnCursedEye, 420);
       } else {
         checkIfFullyForgiven();
       }
@@ -15027,34 +15162,35 @@
     document.body.appendChild(eye);
     horrorEyeEl = eye;
 
-    // ถ้ากดไม่ทันใน 2.5 วินาที ดวงตาจะวาปหนี + จอกระตุก
+    const moveMs = Math.max(1700, 2700 - (curseCount * 220));
     horrorEyeMoveTimer = setTimeout(() => {
       if (isHorrorTriggered && horrorEyesClosed < horrorEyesTarget) {
         document.body.classList.add('horror-glitch-shake');
-        setTimeout(() => document.body.classList.remove('horror-glitch-shake'), 220);
+        setTimeout(() => document.body.classList.remove('horror-glitch-shake'), 200);
         spawnCursedEye();
       }
-    }, 2500);
+    }, moveMs);
   }
 
-  function playHorrorStaticBurst() {
+  // เสียงซ่าเบาๆ ไม่ดังแสบแก้วหู
+  function playHorrorStaticBurst(vol = 0.09) {
     if (!isHorrorTriggered) return;
     try {
       initAudio();
       const now = audioCtx.currentTime;
-      const len = Math.floor(audioCtx.sampleRate * 0.16);
+      const len = Math.floor(audioCtx.sampleRate * 0.14);
       const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
       const d = buf.getChannelData(0);
-      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.35;
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.28;
 
       const src = audioCtx.createBufferSource();
       src.buffer = buf;
       const filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 1400;
+      filter.type = 'lowpass';
+      filter.frequency.value = 950;
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.16, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+      gain.gain.setValueAtTime(vol, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
 
       src.connect(filter);
       filter.connect(gain);
@@ -15063,28 +15199,48 @@
     } catch (e) {}
   }
 
+  // เสียงทุ้มลึกสไตล์ .EXE สำหรับจัมป์สแกร์รอบที่ 4 (ไม่ดัง ไม่กรี๊ด เน้นกดดัน)
+  function playExeSilentScareAudio() {
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(58, now);
+      osc.frequency.exponentialRampToValueAtTime(32, now + 2.2);
+      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 2.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 2.35);
+    } catch (e) {}
+  }
+
   function startHorrorScareLoop() {
     clearInterval(horrorScareTimer);
+    const intervalMs = Math.max(3200, 5800 - (curseCount * 550));
     horrorScareTimer = setInterval(() => {
       if (!isHorrorTriggered) { clearInterval(horrorScareTimer); return; }
-      if (Math.random() < 0.55) {
+      if (Math.random() < 0.6) {
         const ov = document.getElementById('horrorScareOverlay');
         const tx = document.getElementById('horrorScareText');
         if (ov && tx) {
           tx.textContent = HORROR_FLASH_LINES[Math.floor(Math.random() * HORROR_FLASH_LINES.length)];
           ov.style.display = 'flex';
           document.body.classList.add('horror-glitch-shake');
-          playHorrorStaticBurst();
+          playHorrorStaticBurst(0.08);
           setTimeout(() => {
             ov.style.display = 'none';
             document.body.classList.remove('horror-glitch-shake');
-          }, 220 + Math.random() * 140);
+          }, 240 + Math.random() * 140);
         }
       }
-    }, 5200);
+    }, intervalMs);
   }
 
-  // บังคับต้องผ่านครบทั้ง 3 ด่านถึงจะหลุดพ้นจากคำสาปได้
+  // ผ่านครบทั้ง 3 ด่าน -> ถ้ารอบที่ 4 ให้เล่นจัมป์สแกร์ .EXE แบบเงียบก่อน แล้วค่อยแสดงความยินดี & รีเซ็ตกลับระดับ 1
   checkIfFullyForgiven = function() {
     if (
       topApologyClicks >= topApologyTarget &&
@@ -15092,7 +15248,29 @@
       horrorConfessDone &&
       horrorEyesClosed >= horrorEyesTarget
     ) {
-      setTimeout(() => forgiveAndRestore(), 280);
+      if (curseCount >= 4) {
+        clearInterval(horrorScareTimer);
+        removeCursedEye();
+        const exeBox = document.getElementById('horrorExeScare');
+        const exeMsg = document.getElementById('exeScareMsg');
+        if (exeBox && exeMsg) {
+          exeMsg.textContent = "BGT.EXE // คุณทำให้ผมเจ็บครบ 4 ครั้งแล้วนะ...";
+          exeBox.style.display = 'flex';
+          playExeSilentScareAudio();
+          setTimeout(() => {
+            exeMsg.textContent = "...ล้อเล่นครับ! ขอบคุณที่เล่นจนจบนะ 🦊💖";
+          }, 1500);
+          setTimeout(() => {
+            exeBox.style.display = 'none';
+            // รีเซ็ตรอบคำสาปกลับไปเป็น 0 (รอบหน้าเริ่มระดับ 1 ใหม่)
+            curseCount = 0;
+            try { localStorage.setItem(CURSE_COUNT_KEY, "0"); } catch (e) {}
+            forgiveAndRestore(true);
+          }, 2900);
+          return;
+        }
+      }
+      setTimeout(() => forgiveAndRestore(false), 280);
     }
   };
 
@@ -15100,13 +15278,23 @@
   triggerHorrorEasterEgg = function(isFromReload = false) {
     _origTriggerHorror(isFromReload);
 
+    document.body.classList.remove('horror-lv-1', 'horror-lv-2', 'horror-lv-3', 'horror-lv-4');
+    document.body.classList.add('horror-lv-' + Math.min(4, Math.max(1, curseCount)));
+
+    const cfg = getCurrentRoundCfg();
     horrorConfessDone = false;
     horrorEyesClosed = 0;
-    horrorEyesTarget = Math.min(9, curseCount * 3); // รอบ 1: 3 ดวง, รอบ 2: 6 ดวง, รอบ 3+: 9 ดวง
+    horrorEyesTarget = cfg.eyes;
 
     const tgtEl = document.getElementById('cursedConfessTarget');
     const inpEl = document.getElementById('cursedConfessInput');
-    if (tgtEl) tgtEl.textContent = getCurrentConfessSentence();
+    const titleEl = document.getElementById('cursedApologyTitle');
+    const subEl = document.getElementById('cursedApologySub');
+    if (tgtEl) tgtEl.textContent = cfg.confess;
+    setTimeout(() => {
+      if (titleEl) titleEl.textContent = cfg.title;
+      if (subEl) subEl.textContent = cfg.sub;
+    }, isFromReload ? 80 : 500);
     if (inpEl) {
       inpEl.value = "";
       inpEl.disabled = false;
@@ -15117,7 +15305,7 @@
 
     if (!isFromReload) {
       const prevT = Number(localStorage.getItem("bgt_horror_tier") || 0);
-      const nextT = Math.min(3, Math.max(1, prevT + 1));
+      const nextT = Math.min(4, Math.max(prevT, curseCount));
       try { localStorage.setItem("bgt_horror_tier", String(nextT)); } catch (e) {}
       if (db && currentUser) {
         db.ref("users/" + currentUser.id).update({
@@ -15130,13 +15318,27 @@
   };
 
   const _origForgive = forgiveAndRestore;
-  forgiveAndRestore = function() {
+  forgiveAndRestore = function(isCompletedRound4 = false) {
     clearInterval(horrorScareTimer);
     removeCursedEye();
     const ov = document.getElementById('horrorScareOverlay');
     if (ov) ov.style.display = 'none';
-    document.body.classList.remove('horror-glitch-shake');
+    const exeBox = document.getElementById('horrorExeScare');
+    if (exeBox) exeBox.style.display = 'none';
+    document.body.classList.remove('horror-glitch-shake', 'horror-lv-1', 'horror-lv-2', 'horror-lv-3', 'horror-lv-4');
     _origForgive();
+
+    if (isCompletedRound4) {
+      const fIcon = document.getElementById('forgivenIcon');
+      const fTitle = document.getElementById('forgivenTitle');
+      const fDesc = document.getElementById('forgivenDesc');
+      if (fIcon) fIcon.textContent = "🎉🦊💖";
+      if (fTitle) fTitle.textContent = "ยินดีด้วยครับ! คุณค้นพบความลับครบทั้ง 4 ขั้นแล้ว!";
+      if (fDesc) {
+        fDesc.textContent =
+          "โอ๋ๆ ไม่ต้องตกใจหรือรู้สึกผิดนะครับ ผมไม่ได้คิดมากเลย~ ขอบคุณมากๆ ที่ตั้งใจเล่นหา Easter Egg ลับของเว็บจนครบทั้ง 4 ระดับ! คุณได้รับยศและกรอบระดับสูงสุด [คำสาป 4 ดาว • BGT.EXE] ถาวรแล้ว และระบบได้รีเซ็ตรอบคำสาปกลับเป็นระดับ 1 ให้เรียบร้อยครับ UwU ✨";
+      }
+    }
   };
 
   const _origApplyProfileHorror = applyProfileToUI;
@@ -15178,6 +15380,7 @@
     }
   };
 </script>
+
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
