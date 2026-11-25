@@ -5881,6 +5881,156 @@
       font-size: 0.78rem;
       color: #64748b;
     }
+
+    /* =========================================
+       ✨🌙 ปุ่มเปิด/ปิดเอฟเฟค + สลับขาว/ดำ + พื้นหลังเทศกาลหน้าล็อกอิน
+       ========================================= */
+    .lg-top-controls {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lg-fx-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(24, 24, 38, 0.92);
+      color: #f8fafc;
+      border: 1.5px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
+    }
+    .lg-fx-pill:hover {
+      transform: translateY(-2px);
+      border-color: #38bdf8;
+    }
+    .lg-fx-pill.off {
+      opacity: 0.72;
+      color: #94a3b8;
+    }
+    .lg-theme-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(24, 24, 38, 0.92);
+      color: #f8fafc;
+      border: 2px solid #f472b6;
+      box-shadow: 0 0 12px rgba(244, 114, 182, 0.45);
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .lg-theme-circle:hover {
+      transform: scale(1.08) rotate(12deg);
+    }
+
+    /* แคนวาสเอฟเฟกต์เทศกาลบนหน้าล็อกอิน */
+    .lg-fx-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .lg-season-moon {
+      display: none;
+      position: absolute;
+      top: 44px;
+      right: 10%;
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fffbeb 0%, #fef08a 55%, #f59e0b 100%);
+      box-shadow: 0 0 40px rgba(254, 240, 138, 0.85), 0 0 85px rgba(245, 158, 11, 0.45);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* พื้นหลังหน้าล็อกอินตามเทศกาล */
+    body.loy-krathong-mode .lg-left {
+      background:
+        radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.25), transparent 45%),
+        radial-gradient(circle at 20% 85%, rgba(59, 130, 246, 0.28), transparent 55%),
+        linear-gradient(180deg, #06091f 0%, #101942 48%, #1e1b4b 82%, #091229 100%) !important;
+    }
+    body.loy-krathong-mode .lg-season-moon { display: block; }
+
+    body.xmas-mode .lg-left {
+      background:
+        radial-gradient(circle at 78% 22%, rgba(245, 158, 11, 0.28), transparent 46%),
+        radial-gradient(circle at 18% 82%, rgba(220, 38, 38, 0.32), transparent 52%),
+        linear-gradient(135deg, #052e16 0%, #0f3d2e 48%, #450a0a 100%) !important;
+    }
+
+    /* โหมดสีสว่าง (ขาว) สำหรับหน้าล็อกอิน */
+    body:not(.bgt-dark-mode) .lg-right {
+      background:
+        radial-gradient(circle at 80% 15%, rgba(56, 189, 248, 0.16), transparent 45%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%) !important;
+      border-left-color: #e2e8f0;
+    }
+    body:not(.bgt-dark-mode) .lg-login-box {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1) !important;
+    }
+    body:not(.bgt-dark-mode) .lg-login-box h2 { color: #0f172a !important; }
+    body:not(.bgt-dark-mode) .lg-login-sub { color: #475569 !important; }
+    body:not(.bgt-dark-mode) .lg-notice-box {
+      background: #eff6ff !important;
+      border-color: #93c5fd !important;
+      color: #1e3a8a !important;
+    }
+    body:not(.bgt-dark-mode) .lg-btn-google {
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+    }
+    body:not(.bgt-dark-mode) .lg-guest-btn {
+      color: #475569 !important;
+      border-color: #cbd5e1 !important;
+    }
+    body:not(.bgt-dark-mode) .lg-guest-btn:hover {
+      background: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+    body:not(.bgt-dark-mode) .lg-fx-pill {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+    }
+    body:not(.bgt-dark-mode) .lg-theme-circle {
+      background: #ffffff;
+      color: #f59e0b;
+      border-color: #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+    }
+
+    /* เมื่อกดปิดเอฟเฟค -> ซ่อนหิมะ/โคมลอย และหยุดแอนิเมชันลอยทั้งหมด */
+    body.bgt-no-fx #snowCanvas,
+    body.bgt-no-fx #lgFxCanvas,
+    body.bgt-no-fx .bg-effects,
+    body.bgt-no-fx .lk-krathong {
+      display: none !important;
+    }
+    body.bgt-no-fx .lg-mascot-img,
+    body.bgt-no-fx .lg-speech-bubble {
+      animation: none !important;
+    }
   </style>
 </head>
 <body>
@@ -5893,6 +6043,8 @@
     <!-- ฝั่งซ้าย: โชว์แบรนด์ + เกมล่าสุด + น้องจิ้งจอก Idle Animation -->
     <div class="lg-left">
       <img src="images/login_bg.jpg" alt="" class="lg-bg-photo" onerror="this.style.display='none';">
+      <div class="lg-season-moon" aria-hidden="true"></div>
+      <canvas id="lgFxCanvas" class="lg-fx-canvas"></canvas>
 
       <div class="lg-left-content">
         <div class="lg-brand-row">
@@ -5933,6 +6085,15 @@
 
     <!-- ฝั่งขวา: กล่องเข้าสู่ระบบ -->
     <div class="lg-right">
+      <div class="lg-top-controls">
+        <button type="button" class="lg-fx-pill" id="lgFxToggleBtn" onclick="toggleGenkiFx()">
+          <span id="lgFxIcon">✨</span>
+          <span id="lgFxText">เอฟเฟค: เปิด</span>
+        </button>
+        <button type="button" class="lg-theme-circle" id="lgThemeToggleBtn" onclick="toggleBgtThemeMode()" title="สลับโหมดมืด / สว่าง">
+          <span id="lgThemeIcon">🌙</span>
+        </button>
+      </div>
       <div class="lg-login-box">
         <div class="lg-login-tag">🎮 LOGIN</div>
         <h2>เข้าสู่ระบบ</h2>
@@ -8826,7 +8987,11 @@
   // 🎵 ใส่เฉพาะไฟล์เพลงที่มีจริง (ถ้ามีเพลงเดียวใส่แค่ 1 บรรทัดได้เลยครับ มันจะวนซ้ำให้เอง)
   // 🌕 เช็กช่วงเทศกาลลอยกระทง (วันนี้ 24 พ.ย. ถึงสิ้นวันที่ 26 พ.ย. 2026 -> วันที่ 27 พ.ย. กลับเป็นคริสต์มาสอัตโนมัติ)
   const LOY_KRATHONG_END_MS = new Date("2026-11-26T23:59:59+07:00").getTime();
+  const XMAS_START_MS       = new Date("2026-11-27T00:00:00+07:00").getTime();
+  const XMAS_END_MS         = new Date("2027-01-05T23:59:59+07:00").getTime();
+
   const isLoyKrathongActive = Date.now() <= LOY_KRATHONG_END_MS;
+  const isXmasActive = Date.now() >= XMAS_START_MS && Date.now() <= XMAS_END_MS;
 
   const BGM_PLAYLIST = isLoyKrathongActive
     ? [{ name: "เพลงลอยกระทง 🌕", src: "images/loykrathong.mp3" }]
@@ -12470,7 +12635,7 @@
     const fxLabel = document.getElementById('genkiFxLabel');
     if (fxIcon) fxIcon.textContent = genkiFxEnabled ? '🌌' : '🚫';
     if (fxLabel) fxLabel.textContent = genkiFxEnabled ? 'เอฟเฟกต์: เปิด' : 'เอฟเฟกต์: ปิด';
-
+    if (typeof syncLoginGateControlsUI === "function") syncLoginGateControlsUI();
     const sfxIcon = document.getElementById('genkiSfxIcon');
     const sfxLabel = document.getElementById('genkiSfxLabel');
     if (sfxIcon) sfxIcon.textContent = genkiSfxEnabled ? '⚡' : '🔇';
@@ -12478,7 +12643,7 @@
     const ndFx = document.getElementById('ndFxBadge');
     if (ndFx) ndFx.textContent = genkiFxEnabled ? 'เปิด' : 'ปิด';
   }
-  updateGenkiToggleUI();
+  
 
   function toggleGenkiFx() {
     playClickSound();
@@ -13383,27 +13548,10 @@
     if (!gate) return;
     gate.style.display = 'block';
     document.body.classList.add('login-gate-open');
-    startLoginGateShowcase();
-  }
-
-  function hideLoginGate() {
-    const gate = document.getElementById('bgtLoginGate');
-    if (gate) gate.style.display = 'none';
-    document.body.classList.remove('login-gate-open');
-    clearInterval(lgSlideTimer); lgSlideTimer = null;
-    clearInterval(lgTypeTimer);  lgTypeTimer = null;
-    clearInterval(lgTalkTimer);  lgTalkTimer = null;
-    clearTimeout(lgBlinkTimer);  lgBlinkTimer = null;
-    lgIsTalking = false;
-  }
-  function showLoginGate() {
-    if (lgGuestDismissed || currentUser || isHorrorTriggered) return;
-    const gate = document.getElementById('bgtLoginGate');
-    if (!gate) return;
-    gate.style.display = 'block';
-    document.body.classList.add('login-gate-open');
     stopChristmasMusic(); // ปิดเพลงด้านในทันทีเมื่ออยู่หน้าล็อกอิน
     startLoginGateShowcase();
+    startLoginGateFxCanvas();
+    syncLoginGateControlsUI();
   }
 
   function hideLoginGate() {
@@ -13488,6 +13636,8 @@
     if (tb) tb.textContent = bgtDarkMode ? 'มืด' : 'สว่าง';
     const fb = document.getElementById('ndFxBadge');
     if (fb) fb.textContent = genkiFxEnabled ? 'เปิด' : 'ปิด';
+    if (typeof syncLoginGateControlsUI === "function") syncLoginGateControlsUI();
+    
   }
 
   function toggleBgtThemeMode() {
@@ -13736,8 +13886,101 @@
 
   function initBgtHubUpgrade() {
     applyBgtThemeUI();
+    updateGenkiToggleUI();
     initItchStatsAndCarousel();
     initWishBoardSystem();
+  }
+
+  // --- ระบบพื้นหลังเทศกาล + ปุ่มเอฟเฟค & ขาว/ดำ บนหน้าล็อกอิน ---
+  let lgFxAnimId = null;
+  let lgFxItems = [];
+
+  function syncLoginGateControlsUI() {
+    // 1. ซิงก์ปุ่มเปิด/ปิดเอฟเฟค
+    document.body.classList.toggle('bgt-no-fx', !genkiFxEnabled);
+    const fxBtn = document.getElementById('lgFxToggleBtn');
+    const fxTxt = document.getElementById('lgFxText');
+    const fxIco = document.getElementById('lgFxIcon');
+    if (fxBtn) fxBtn.classList.toggle('off', !genkiFxEnabled);
+    if (fxTxt) fxTxt.textContent = genkiFxEnabled ? 'เอฟเฟค: เปิด' : 'เอฟเฟค: ปิด';
+    if (fxIco) fxIco.textContent = genkiFxEnabled ? '✨' : '🚫';
+
+    // 2. ซิงก์ปุ่มสลับธีมมืด/สว่าง (ขาว/ดำ)
+    const thIco = document.getElementById('lgThemeIcon');
+    if (thIco) thIco.textContent = bgtDarkMode ? '🌙' : '☀️';
+
+    // 3. ใส่คลาสเทศกาลคริสต์มาสอัตโนมัติเมื่อถึงช่วงเวลา
+    document.body.classList.toggle('xmas-mode', isXmasActive && !isLoyKrathongActive);
+  }
+
+  function startLoginGateFxCanvas() {
+    const c = document.getElementById('lgFxCanvas');
+    if (!c) return;
+    const c2 = c.getContext('2d');
+    const resize = () => {
+      c.width = c.parentElement ? c.parentElement.clientWidth : window.innerWidth;
+      c.height = c.parentElement ? c.parentElement.clientHeight : window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    lgFxItems = [];
+    const count = window.innerWidth < 768 ? 18 : 42;
+    for (let i = 0; i < count; i++) {
+      lgFxItems.push({
+        x: Math.random() * c.width,
+        y: Math.random() * c.height,
+        r: Math.random() * 3.2 + 1.5,
+        vy: Math.random() * 0.9 + 0.35,
+        ang: Math.random() * Math.PI * 2,
+        gold: Math.random() < 0.3
+      });
+    }
+
+    if (lgFxAnimId) cancelAnimationFrame(lgFxAnimId);
+    const loop = () => {
+      const gate = document.getElementById('bgtLoginGate');
+      if (!gate || gate.style.display === 'none') {
+        lgFxAnimId = null;
+        return;
+      }
+      c2.clearRect(0, 0, c.width, c.height);
+      if (genkiFxEnabled) {
+        for (const p of lgFxItems) {
+          p.ang += 0.015;
+          if (isLoyKrathongActive) {
+            // โคมลอยสีทองลอยขึ้น
+            p.y -= p.vy * 0.7;
+            p.x += Math.sin(p.ang) * 0.4;
+            if (p.y < -15) { p.y = c.height + 15; p.x = Math.random() * c.width; }
+            c2.beginPath();
+            c2.ellipse(p.x, p.y, p.r * 1.4, p.r * 2.1, 0, 0, Math.PI * 2);
+            c2.fillStyle = p.gold ? 'rgba(254, 240, 138, 0.9)' : 'rgba(251, 146, 60, 0.75)';
+            c2.fill();
+          } else if (isXmasActive) {
+            // หิมะคริสต์มาสโปรยลง
+            p.y += p.vy * 1.1;
+            p.x += Math.sin(p.ang) * 0.5;
+            if (p.y > c.height + 15) { p.y = -15; p.x = Math.random() * c.width; }
+            c2.beginPath();
+            c2.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            c2.fillStyle = p.gold ? 'rgba(253, 224, 71, 0.85)' : 'rgba(255, 255, 255, 0.85)';
+            c2.fill();
+          } else {
+            // ละอองดาวโทน BGT ปกติ
+            p.y -= p.vy * 0.4;
+            p.x += Math.sin(p.ang) * 0.3;
+            if (p.y < -15) { p.y = c.height + 15; p.x = Math.random() * c.width; }
+            c2.beginPath();
+            c2.arc(p.x, p.y, p.r * 0.9, 0, Math.PI * 2);
+            c2.fillStyle = p.gold ? 'rgba(253, 224, 71, 0.75)' : 'rgba(56, 189, 248, 0.75)';
+            c2.fill();
+          }
+        }
+      }
+      lgFxAnimId = requestAnimationFrame(loop);
+    };
+    lgFxAnimId = requestAnimationFrame(loop);
   }
 </script>
 
