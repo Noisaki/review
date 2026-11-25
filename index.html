@@ -8874,7 +8874,7 @@
   }
 
   function startChristmasMusic() {
-    if (isHorrorTriggered || BGM_PLAYLIST.length === 0) return;
+    if (isHorrorTriggered || BGM_PLAYLIST.length === 0 || document.body.classList.contains('login-gate-open')) return;
     const bgmEl = document.getElementById('bgmAudio');
     if (!bgmEl) return;
 
@@ -8992,9 +8992,11 @@
 
   function tryAutoPlayBgm(e) {
     if (e && e.target && e.target.closest && e.target.closest('#musicToggleBtn, #nextSongBtn, #loopSongBtn')) return;
-    if (userPausedMusic || musicVolume <= 0) return;
+    try { initAudio(); } catch (err) {} // ปลดล็อกเสียงพูดน้องกับเสียงปุ่มไว้ก่อน
 
-    try { initAudio(); } catch (err) {}
+    // ถ้ายังอยู่หน้าล็อกอิน ห้ามเปิดเพลงพื้นหลังด้านในจนกว่าจะเข้าสู่ระบบเสร็จ
+    if (document.body.classList.contains('login-gate-open')) return;
+    if (userPausedMusic || musicVolume <= 0) return;
 
     if (isHorrorTriggered) {
       playRealCryingAudio();
@@ -13306,41 +13308,49 @@
     } catch (e) {}
   }
 
+  let lgTalkDelayTimer = null;
+
   function playMascotSpeech(text) {
     const speechEl = document.getElementById('lgSpeechText');
     if (!speechEl) return;
 
     clearInterval(lgTypeTimer);
     clearInterval(lgTalkTimer);
+    clearTimeout(lgTalkDelayTimer);
     lgIsTalking = true;
 
-    let idx = 0;
-    let mouthOpen = true;
     speechEl.textContent = "";
-    setMascotSprite('talk');
+    // 1. เริ่มพูด: หลับตาก่อน
+    setMascotSprite('blink');
 
-    // สลับปากอ้า-หุบทุก 130ms ระหว่างพูด
-    lgTalkTimer = setInterval(() => {
-      mouthOpen = !mouthOpen;
-      setMascotSprite(mouthOpen ? 'talk' : 'idle');
-    }, 130);
+    // 2. หน่วง 150ms แล้วเริ่มหลับตาพูด (สลับ talk <-> blink ตลอดประโยค)
+    lgTalkDelayTimer = setTimeout(() => {
+      let idx = 0;
+      let mouthOpen = true;
+      setMascotSprite('talk');
 
-    // พิมพ์ข้อความทีละตัวอักษร + มีเสียงพูดน่ารักๆ ทุก 2 ตัวอักษร (เว้นช่องว่าง)
-    const chars = Array.from(text);
-    lgTypeTimer = setInterval(() => {
-      if (idx < chars.length) {
-        const ch = chars[idx++];
-        speechEl.textContent += ch;
-        if (ch.trim() !== "" && idx % 2 === 1) {
-          playMascotTalkBlip();
+      lgTalkTimer = setInterval(() => {
+        mouthOpen = !mouthOpen;
+        setMascotSprite(mouthOpen ? 'talk' : 'blink');
+      }, 130);
+
+      const chars = Array.from(text);
+      lgTypeTimer = setInterval(() => {
+        if (idx < chars.length) {
+          const ch = chars[idx++];
+          speechEl.textContent += ch;
+          if (ch.trim() !== "" && idx % 2 === 1) {
+            playMascotTalkBlip();
+          }
+        } else {
+          clearInterval(lgTypeTimer);
+          clearInterval(lgTalkTimer);
+          lgIsTalking = false;
+          // 3. พูดจบแล้วค่อยลืมตา
+          setMascotSprite('idle');
         }
-      } else {
-        clearInterval(lgTypeTimer);
-        clearInterval(lgTalkTimer);
-        lgIsTalking = false;
-        setMascotSprite('idle');
-      }
-    }, 45);
+      }, 45);
+    }, 150);
   }
 
   function scheduleMascotBlink() {
@@ -13385,6 +13395,31 @@
     clearInterval(lgTalkTimer);  lgTalkTimer = null;
     clearTimeout(lgBlinkTimer);  lgBlinkTimer = null;
     lgIsTalking = false;
+  }
+  function showLoginGate() {
+    if (lgGuestDismissed || currentUser || isHorrorTriggered) return;
+    const gate = document.getElementById('bgtLoginGate');
+    if (!gate) return;
+    gate.style.display = 'block';
+    document.body.classList.add('login-gate-open');
+    stopChristmasMusic(); // ปิดเพลงด้านในทันทีเมื่ออยู่หน้าล็อกอิน
+    startLoginGateShowcase();
+  }
+
+  function hideLoginGate() {
+    const gate = document.getElementById('bgtLoginGate');
+    if (gate) gate.style.display = 'none';
+    document.body.classList.remove('login-gate-open');
+    clearInterval(lgSlideTimer); lgSlideTimer = null;
+    clearInterval(lgTypeTimer);  lgTypeTimer = null;
+    clearInterval(lgTalkTimer);  lgTalkTimer = null;
+    clearTimeout(lgBlinkTimer);  lgBlinkTimer = null;
+    clearTimeout(lgTalkDelayTimer); lgTalkDelayTimer = null;
+    lgIsTalking = false;
+    // เข้าสู่ระบบ/เข้าเว็บเสร็จแล้ว ค่อยเริ่มเปิดเพลงด้านใน
+    if (!userPausedMusic && musicVolume > 0 && !isHorrorTriggered) {
+      setTimeout(() => tryAutoPlayBgm(), 200);
+    }
   }
 
   function dismissLoginGateGuest() {
