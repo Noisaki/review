@@ -3897,7 +3897,9 @@
     .provider-pill.facebook { background: #dbeafe; color: #1e40af; border: 1px solid #60a5fa; }
     .provider-pill.google   { background: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }
 
-    /* ยศลับ Easter Egg สยองขวัญ */
+    /* =========================================
+       🩸 ยศคำสาป 3 ระดับ (ป้ายหลอน + Glitch + หายยาก)
+       ========================================= */
     .secret-horror-pill {
       position: relative;
       overflow: hidden;
@@ -3905,17 +3907,155 @@
       align-items: center;
       gap: 5px;
       font-family: 'Kanit', sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 800;
-      padding: 3px 11px;
-      border-radius: 999px;
+      padding: 3px 12px;
+      border-radius: 6px;
       margin-top: 3px;
       margin-left: 4px;
-      background: linear-gradient(135deg, #090000 0%, #450a0a 50%, #991b1b 100%) !important;
+      background: linear-gradient(135deg, #1a0000 0%, #5c0606 60%, #991b1b 100%) !important;
       color: #fca5a5 !important;
-      border: 1.5px solid #ef4444 !important;
-      box-shadow: 0 0 12px rgba(220, 38, 38, 0.75) !important;
+      border: 1.5px solid #dc2626 !important;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.75), inset 0 0 8px rgba(0, 0, 0, 0.85) !important;
       text-shadow: 0 0 6px #ef4444;
+      letter-spacing: 0.4px;
+    }
+
+    /* ขั้น 2: เหยื่อแห่งความอาฆาต (Glitch แยกสี + สั่นเป็นระยะ) */
+    .secret-horror-pill.horror-t2 {
+      border-radius: 4px;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      padding: 3px 15px;
+      background: linear-gradient(135deg, #050000 0%, #3b0404 50%, #b91c1c 100%) !important;
+      color: #fee2e2 !important;
+      border: none !important;
+      text-shadow: 1.5px 0 #ef4444, -1.5px 0 #06b6d4, 0 0 8px #dc2626 !important;
+      filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.9));
+      animation: creepyJitter 1.2s infinite;
+    }
+
+    /* ขั้น 3: วิญญาณต้องสาปนิรันดร์ (ดำสนิท-เลือดไหล + แสงเลือดวิ่ง + สั่นถี่) */
+    .secret-horror-pill.horror-t3 {
+      border-radius: 4px;
+      padding: 4px 14px;
+      background: linear-gradient(110deg, #000000 0%, #450a0a 25%, #dc2626 50%, #000000 75%, #7f1d1d 100%) !important;
+      background-size: 280% 280% !important;
+      animation: gradientFlow 2.2s linear infinite, creepyJitter 0.45s infinite !important;
+      color: #ffffff !important;
+      border: 1.5px solid #ef4444 !important;
+      outline: 1px solid #000000;
+      text-shadow: 2px 0 #dc2626, -2px 0 #000000, 0 0 12px #ef4444 !important;
+      box-shadow: 0 0 18px rgba(220, 38, 38, 1), inset 0 0 12px rgba(0, 0, 0, 0.95) !important;
+    }
+    .secret-horror-pill.horror-t3::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -120%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(254, 202, 202, 0.8), transparent);
+      transform: skewX(-25deg);
+      animation: rankShimmer 1.8s infinite;
+      pointer-events: none;
+    }
+
+    /* กล่องพิธีกรรมพิมพ์คำสารภาพ (ด่าน 2) */
+    .cursed-ritual-box {
+      max-width: 520px;
+      margin: 16px auto 18px;
+      background: rgba(10, 0, 0, 0.88);
+      border: 1.5px solid #dc2626;
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-align: left;
+      box-shadow: 0 0 20px rgba(185, 28, 28, 0.45);
+    }
+    .cursed-ritual-target {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fde047;
+      background: #2b0505;
+      border: 1px dashed #ef4444;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin: 6px 0 10px;
+      user-select: none; /* ห้ามคลุมดำก๊อปปี้ */
+    }
+    .cursed-ritual-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #991b1b;
+      background: #090000;
+      color: #fecaca;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.92rem;
+      outline: none;
+    }
+    .cursed-ritual-input:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+    }
+
+    /* ดวงตาปีศาจที่ต้องไล่กดปิด (ด่าน 3) */
+    .cursed-eye-target {
+      position: fixed;
+      z-index: 99980;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #dc2626 0%, #450a0a 60%, #000000 100%);
+      border: 2.5px solid #ef4444;
+      box-shadow: 0 0 24px #dc2626, 0 0 42px #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      animation: creepyJitter 0.18s infinite;
+      user-select: none;
+    }
+
+    /* ล็อกแถบเมนูด้านบนไม่ให้หนีตอนติดคำสาป */
+    body.horror-mode .top-navbar {
+      pointer-events: none;
+      opacity: 0.45;
+      filter: grayscale(0.6);
+    }
+
+    /* เอฟเฟกต์ไฟดับวูบ + ข้อความหลอนแวบกลางจอ + จอสั่น */
+    #horrorScareOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99990;
+      background: rgba(5, 0, 0, 0.94);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      pointer-events: none;
+      text-align: center;
+      padding: 20px;
+    }
+    #horrorScareText {
+      font-family: 'Kanit', sans-serif;
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      font-weight: 900;
+      color: #ef4444;
+      text-shadow: 3px 0 #06b6d4, -3px 0 #7f1d1d, 0 0 28px #dc2626;
+      letter-spacing: 2px;
+      animation: creepyJitter 0.12s infinite;
+    }
+    body.horror-glitch-shake {
+      animation: horrorScreenShake 0.22s linear;
+      filter: contrast(1.45) saturate(1.8);
+    }
+    @keyframes horrorScreenShake {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(-6px, 4px) skewX(-2deg); }
+      50%  { transform: translate(6px, -4px) skewX(2deg); }
+      75%  { transform: translate(-4px, -3px); }
+      100% { transform: translate(0, 0); }
     }
 
     /* การ์ดลอยโฮเวอร์ดูโปรไฟล์คนอื่นสไตล์ Discord */
@@ -6188,6 +6328,33 @@
     body {
       top: 0px !important;
     }
+
+    /* หน้าจอโหลดระหว่างแปลภาษา */
+    #langLoadingOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(11, 14, 26, 0.92);
+      backdrop-filter: blur(8px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: #ffffff;
+      font-family: 'Kanit', sans-serif;
+    }
+    .lang-spinner {
+      width: 46px;
+      height: 46px;
+      border: 4px solid rgba(56, 189, 248, 0.25);
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: langSpin 0.8s linear infinite;
+    }
+    @keyframes langSpin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -6243,6 +6410,10 @@
     <!-- ฝั่งขวา: กล่องเข้าสู่ระบบ -->
     <div class="lg-right">
       <div class="lg-top-controls">
+        <button type="button" class="lg-fx-pill notranslate" id="lgLangToggleBtn" onclick="toggleSiteLanguage()">
+          <span>🌐</span>
+          <span id="lgLangText">EN</span>
+        </button>
         <button type="button" class="lg-fx-pill" id="lgFxToggleBtn" onclick="toggleGenkiFx()">
           <span id="lgFxIcon">✨</span>
           <span id="lgFxText">เอฟเฟค: เปิด</span>
@@ -6365,6 +6536,9 @@
   <path fill="url(#bloodGrad)" d="M0,0 L1440,0 L1440,95 C1410,95 1405,210 1385,210 C1365,210 1360,115 1320,115 C1280,115 1275,265 1250,265 C1225,265 1220,105 1170,105 C1120,105 1110,190 1085,190 C1060,190 1055,85 1000,85 C945,85 940,295 910,295 C880,295 875,120 820,120 C765,120 760,225 735,225 C710,225 705,95 650,95 C595,95 585,275 555,275 C525,275 520,110 465,110 C410,110 400,200 375,200 C350,200 345,90 290,90 C235,90 230,285 200,285 C170,285 165,115 115,115 C65,115 55,230 30,230 C10,230 5,100 0,100 Z"></path>
 </svg>
 <div class="blood-vignette"></div>
+<div id="horrorScareOverlay">
+  <div id="horrorScareText">👁️ ผมยังมองคุณอยู่...</div>
+</div>
 
 <!-- แถบควบคุมลอยมุมขวาบน -->
 <div class="floating-controls">
@@ -7129,8 +7303,17 @@
       </p>
 
       <div class="apology-checklist-box">
-        <span id="checkTopStatus">⬜ 1. กดปุ่มขอโทษ (ตรงปุ่มกดใจด้านบน): 0 / 5 ครั้ง</span>
-        <span id="checkBottomStatus">⬜ 2. กดปุ่มขอโทษด้านล่างนี้: 0 / 3 ครั้ง</span>
+        <span id="checkTopStatus">⬜ ด่าน 1.1 กดปุ่มขอโทษด้านบน: 0 / 5 ครั้ง</span>
+        <span id="checkBottomStatus">⬜ ด่าน 1.2 กดปุ่มขอโทษด้านล่าง: 0 / 3 ครั้ง</span>
+        <span id="checkConfessStatus">⬜ ด่าน 2 พิมพ์คำสารภาพผิด (ห้ามก๊อปวาง): ยังไม่ผ่าน</span>
+        <span id="checkEyeStatus">⬜ ด่าน 3 ไล่ปิดดวงตาสีเลือด 👁️: 0 / 3 ดวง</span>
+      </div>
+
+      <!-- ด่าน 2: กล่องพิมพ์คำสารภาพผิด -->
+      <div class="cursed-ritual-box" id="cursedConfessBox">
+        <div style="font-size:0.84rem; color:#fca5a5; font-weight:700;">🩸 ด่าน 2: พิมพ์ประโยคด้านล่างให้ตรงทุกตัวอักษร (ห้ามก๊อปวาง!)</div>
+        <div class="cursed-ritual-target" id="cursedConfessTarget">ผมขอโทษที่ให้ 1 ดาว</div>
+        <input type="text" id="cursedConfessInput" class="cursed-ritual-input" placeholder="พิมพ์คำสารภาพตรงนี้..." onpaste="return false;" oninput="checkConfessInput()">
       </div>
 
       <div>
@@ -14374,46 +14557,81 @@
     }
   };
 
-  // แอดมินกด 1 คลิก: ดึงทุกเกมจาก itch.io มาใส่ในหน้างานแปลเป็น 100% (ไม่ทับของเดิมที่แก้ไว้แล้ว)
+  // แอดมินกด 1 คลิก: ดึงทุกเกมจาก itch.io + เกมที่เหลือจากรายการหลักมาลงเป็น 100% ครบทุกเกม
   function adminSyncItchToProjects() {
     if (!db || !currentUser || !currentUser.isVoteAdmin) return;
-    if (!itchStatsCache || !Array.isArray(itchStatsCache.games) || itchStatsCache.games.length === 0) {
-      showToast("⚠️ ยังไม่มีข้อมูลเกมจาก itch.io ครับ");
-      return;
-    }
     playClickSound();
+
     const updates = {};
     let added = 0;
+    const existingTitles = Object.values(projectsCache || {}).map(p => (p.title || "").toLowerCase());
 
-    itchStatsCache.games.forEach(g => {
-      const key = "itch_" + g.id;
-      const existing = projectsCache[key];
-      if (!existing) {
-        added++;
-        updates[`translation_projects/${key}`] = {
-          title: g.title || "Untitled",
-          genre: "Visual Novel",
-          status: "released",
-          percent: 100,
-          translators: "Ben",
-          licenseStatus: "approved",
-          coverImg: g.cover || "",
-          downloadUrl: g.url || "",
-          hypeCount: 0,
-          pinned: false,
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        };
-      } else {
-        // อัปเดตเฉพาะปกและลิงก์ให้สดใหม่ (ไม่ทับสถานะอัปเดตหรือปักหมุดที่แอดมินตั้งไว้)
-        updates[`translation_projects/${key}/coverImg`] = g.cover || existing.coverImg || "";
-        updates[`translation_projects/${key}/downloadUrl`] = g.url || existing.downloadUrl || "";
-      }
-    });
+    // 1. ดึงจาก itch_stats (ถ้ามี)
+    if (itchStatsCache && Array.isArray(itchStatsCache.games)) {
+      itchStatsCache.games.forEach(g => {
+        const key = "itch_" + g.id;
+        const existing = projectsCache[key];
+        if (!existing) {
+          added++;
+          existingTitles.push((g.title || "").toLowerCase());
+          updates[`translation_projects/${key}`] = {
+            title: g.title || "Untitled",
+            genre: "Visual Novel",
+            status: "released",
+            percent: 100,
+            translators: "Ben",
+            licenseStatus: "approved",
+            coverImg: g.cover || "",
+            downloadUrl: g.url || "",
+            hypeCount: 0,
+            pinned: false,
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+          };
+        } else {
+          updates[`translation_projects/${key}/coverImg`] = g.cover || existing.coverImg || "";
+          updates[`translation_projects/${key}/downloadUrl`] = g.url || existing.downloadUrl || "";
+        }
+      });
+    }
+
+    // 2. เติมเกมที่ยังขาดจากรายการ 12 เกมหลักในหน้าเว็บให้อัตโนมัติ (ไม่ซ้ำกับของเดิม)
+    if (Array.isArray(games)) {
+      games.forEach((g, idx) => {
+        const cleanName = (g.name || "").replace(/^\[.*?\]\s*/, "").trim();
+        const keyWord = cleanName.toLowerCase().split(" ")[0];
+        const alreadyHave = existingTitles.some(t => t.includes(cleanName.toLowerCase()) || (keyWord.length >= 4 && t.includes(keyWord)));
+        const key = "local_game_" + idx;
+
+        if (!alreadyHave && !projectsCache[key]) {
+          added++;
+          existingTitles.push(cleanName.toLowerCase());
+          updates[`translation_projects/${key}`] = {
+            title: cleanName + " (Thai Ver.)",
+            genre: g.tag === "RPG" ? "RPG Maker" : "Visual Novel",
+            status: "released",
+            percent: 100,
+            translators: "Ben",
+            licenseStatus: "approved",
+            coverImg: g.img || "",
+            downloadUrl: "https://ben-the-game-translator.itch.io/",
+            hypeCount: 0,
+            pinned: false,
+            createdAt: Date.now() - (idx * 1000),
+            updatedAt: Date.now()
+          };
+        }
+      });
+    }
+
+    if (Object.keys(updates).length === 0) {
+      showToast("✅ เกมทั้งหมดถูกดึงมาแสดงครบแล้วครับ");
+      return;
+    }
 
     db.ref().update(updates).then(() => {
       playSuccessSound();
-      showToast(`✅ ดึงเกมจาก itch.io เรียบร้อย! (เพิ่มใหม่ ${added} เกม • ปรับเป็น 100% แล้ว)`);
+      showToast(`✅ ดึงเกมครบทั้งหมดเรียบร้อย! (เพิ่มใหม่ ${added} เกม • ปรับเป็น 100% แล้ว)`);
     }).catch(() => showToast("⚠️ ดึงข้อมูลไม่สำเร็จ"));
   }
 
@@ -14591,10 +14809,80 @@
   };
 </script>
 
+<!-- หน้าจอโหลดระหว่างสลับภาษา -->
+<div id="langLoadingOverlay" class="notranslate">
+  <div class="lang-spinner"></div>
+  <div id="langLoadingText" style="font-size:1.1rem; font-weight:700; color:#fde68a;">กำลังเปลี่ยนภาษา... / Switching language...</div>
+</div>
+
 <script>
   // =========================================
-  // 🌐 ระบบสลับภาษาอัตโนมัติ TH <-> EN (Google Translate)
+  // 🌐 ระบบสลับภาษาเสถียร 100% (ล็อกภาษาไทยเริ่มต้น + หน้าจอโหลดรอแปลเสร็จ)
   // =========================================
+  const LANG_PREF_KEY = 'bgt_site_lang_v1';
+
+  function setGoogTransCookie(val) {
+    if (!val) {
+      // ลบคุกกี้ทิ้งทั้งหมดเพื่อล็อกกลับภาษาไทย
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname};`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${location.hostname};`;
+    } else {
+      document.cookie = `googtrans=${val}; path=/;`;
+      document.cookie = `googtrans=${val}; path=/; domain=${location.hostname};`;
+    }
+  }
+
+  function isEnglishActive() {
+    try {
+      return localStorage.getItem(LANG_PREF_KEY) === 'en';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function updateLangButtonLabel() {
+    const isEn = isEnglishActive();
+    const labelText = isEn ? 'TH' : 'EN';
+    const lbl1 = document.getElementById('langToggleLabel');
+    const lbl2 = document.getElementById('lgLangText');
+    if (lbl1) lbl1.textContent = labelText;
+    if (lbl2) lbl2.textContent = labelText;
+  }
+
+  function showLangLoader(msg) {
+    const ov = document.getElementById('langLoadingOverlay');
+    const tx = document.getElementById('langLoadingText');
+    if (tx && msg) tx.textContent = msg;
+    if (ov) ov.style.display = 'flex';
+  }
+
+  function hideLangLoader() {
+    const ov = document.getElementById('langLoadingOverlay');
+    if (ov) ov.style.display = 'none';
+  }
+
+  // 1. ล็อกภาษาไทยเป็นค่าเริ่มต้นสำหรับคนเข้าใหม่ทุกคน
+  (function initLanguageLock() {
+    if (isEnglishActive()) {
+      setGoogTransCookie('/th/en');
+      // แสดงหน้าจอโหลดสั้นๆ รอให้ Google แปลหน้าเว็บเสร็จก่อนค่อยเปิดให้ดู
+      showLangLoader('Translating to English... 🌐');
+      let waited = 0;
+      const checkDone = setInterval(() => {
+        waited += 150;
+        const translated = document.documentElement.classList.contains('translated-ltr');
+        if (translated || waited >= 2200) {
+          clearInterval(checkDone);
+          setTimeout(hideLangLoader, 200);
+        }
+      }, 150);
+    } else {
+      setGoogTransCookie('');
+    }
+    updateLangButtonLabel();
+  })();
+
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'th',
@@ -14604,33 +14892,291 @@
     updateLangButtonLabel();
   }
 
-  function isEnglishActive() {
-    return document.cookie.includes('googtrans=/th/en');
-  }
-
-  function updateLangButtonLabel() {
-    const lbl = document.getElementById('langToggleLabel');
-    if (lbl) lbl.textContent = isEnglishActive() ? 'TH' : 'EN';
-  }
-
+  // 2. กดปุ่มสลับภาษา -> ขึ้นหน้าโหลด -> บันทึกค่า -> รีโหลดให้แปลครบทั้งเว็บในคลิกเดียว
   function toggleSiteLanguage() {
     if (typeof playClickSound === 'function') playClickSound();
     const toEn = !isEnglishActive();
-    const targetLang = toEn ? 'en' : 'th';
-    const cookieVal = toEn ? '/th/en' : '/th/th';
 
-    document.cookie = `googtrans=${cookieVal}; path=/;`;
-    document.cookie = `googtrans=${cookieVal}; path=/; domain=${location.hostname};`;
+    try {
+      localStorage.setItem(LANG_PREF_KEY, toEn ? 'en' : 'th');
+    } catch (e) {}
 
-    const combo = document.querySelector('.goog-te-combo');
-    if (combo) {
-      combo.value = targetLang;
-      combo.dispatchEvent(new Event('change'));
-      updateLangButtonLabel();
+    if (toEn) {
+      setGoogTransCookie('/th/en');
+      showLangLoader('Switching to English... 🌐');
     } else {
+      setGoogTransCookie('');
+      showLangLoader('กำลังเปลี่ยนเป็นภาษาไทย... 🇹🇭');
+    }
+
+    setTimeout(() => {
       location.reload();
+    }, 180);
+  }
+  // =========================================
+  // 21. โหมดหลอนขั้นสุด + บทลงโทษ 3 ด่าน + ยศคำสาป 3 ระดับ
+  // =========================================
+  const HORROR_ROLE_TIERS = [
+    { tier: 1, cls: "",          name: "🩸 ผู้ต้องคำสาป 1 ดาว" },
+    { tier: 2, cls: "horror-t2", name: "👁️‍🗨️ เหยื่อแห่งความอาฆาต" },
+    { tier: 3, cls: "horror-t3", name: "💀🩸 『 วิญญาณต้องสาปนิรันดร์ 』" }
+  ];
+
+  const HORROR_CONFESS_SENTENCES = [
+    "ผมขอโทษที่ให้ 1 ดาว",
+    "ผมผิดไปแล้วครับ อย่าตามหลอกหลอนผมเลย",
+    "วิญญาณของผมเป็นของ Ben the Game Translator ตลอดกาล"
+  ];
+
+  const HORROR_FLASH_LINES = [
+    "👁️ ผมยังมองคุณอยู่...",
+    "🩸 1 ดาว... แค่นี้เองเหรอ",
+    "อย่าหันหลังกลับไป...",
+    "หนีไปไหนไม่ได้หรอกครับ",
+    "ผมทำอะไรผิดทุกอย่างเลย..."
+  ];
+
+  let horrorScareTimer = null;
+  let horrorConfessDone = false;
+  let horrorEyesClosed = 0;
+  let horrorEyesTarget = 3;
+  let horrorEyeEl = null;
+  let horrorEyeMoveTimer = null;
+
+  function getHorrorTierOfUser(uData, uid) {
+    const u = uData || {};
+    let t = Number(u.horrorTier) || (u.unlockedHorrorRole ? 1 : 0);
+    if (currentUser && uid === currentUser.id) {
+      const localT = Number(localStorage.getItem("bgt_horror_tier") || 0);
+      const localOld = localStorage.getItem("bgt_secret_horror_unlocked") === "1" ? 1 : 0;
+      t = Math.max(t, localT, localOld);
+    }
+    return Math.min(3, Math.max(0, t));
+  }
+
+  function getHorrorRoleMeta(tier) {
+    return HORROR_ROLE_TIERS.find(x => x.tier === Number(tier)) || null;
+  }
+
+  function getCurrentConfessSentence() {
+    const idx = Math.min(HORROR_CONFESS_SENTENCES.length - 1, Math.max(0, curseCount - 1));
+    return HORROR_CONFESS_SENTENCES[idx];
+  }
+
+  function updateRitualStatusUI() {
+    const cEl = document.getElementById('checkConfessStatus');
+    const eEl = document.getElementById('checkEyeStatus');
+    if (cEl) {
+      cEl.textContent = horrorConfessDone
+        ? "✅ ด่าน 2 พิมพ์คำสารภาพผิด: ผ่านแล้ว!"
+        : "⬜ ด่าน 2 พิมพ์คำสารภาพผิด (ห้ามก๊อปวาง): ยังไม่ผ่าน";
+    }
+    if (eEl) {
+      const doneEye = horrorEyesClosed >= horrorEyesTarget;
+      eEl.textContent = `${doneEye ? '✅' : '⬜'} ด่าน 3 ไล่ปิดดวงตาสีเลือด 👁️: ${horrorEyesClosed} / ${horrorEyesTarget} ดวง`;
     }
   }
+
+  function checkConfessInput() {
+    if (!isHorrorTriggered) return;
+    const inp = document.getElementById('cursedConfessInput');
+    if (!inp) return;
+    const target = getCurrentConfessSentence();
+    if (inp.value.trim() === target) {
+      horrorConfessDone = true;
+      inp.disabled = true;
+      inp.style.borderColor = "#4ade80";
+      inp.style.color = "#86efac";
+      playClickSound();
+      updateRitualStatusUI();
+      spawnCursedEye(); // ผ่านด่าน 2 แล้ว ดวงตาปีศาจจะเริ่มโผล่ให้ไล่ปิด!
+      checkIfFullyForgiven();
+    }
+  }
+
+  function removeCursedEye() {
+    clearTimeout(horrorEyeMoveTimer);
+    if (horrorEyeEl) { horrorEyeEl.remove(); horrorEyeEl = null; }
+  }
+
+  function spawnCursedEye() {
+    removeCursedEye();
+    if (!isHorrorTriggered || horrorEyesClosed >= horrorEyesTarget) return;
+
+    const eye = document.createElement('div');
+    eye.className = 'cursed-eye-target';
+    eye.textContent = '👁️';
+    const x = Math.max(20, Math.random() * (window.innerWidth - 90));
+    const y = Math.max(85, Math.random() * (window.innerHeight - 110));
+    eye.style.left = x + 'px';
+    eye.style.top = y + 'px';
+
+    eye.onclick = (e) => {
+      e.stopPropagation();
+      playHorrorStaticBurst();
+      horrorEyesClosed++;
+      updateRitualStatusUI();
+      removeCursedEye();
+      if (horrorEyesClosed < horrorEyesTarget) {
+        setTimeout(spawnCursedEye, 450);
+      } else {
+        checkIfFullyForgiven();
+      }
+    };
+
+    document.body.appendChild(eye);
+    horrorEyeEl = eye;
+
+    // ถ้ากดไม่ทันใน 2.5 วินาที ดวงตาจะวาปหนี + จอกระตุก
+    horrorEyeMoveTimer = setTimeout(() => {
+      if (isHorrorTriggered && horrorEyesClosed < horrorEyesTarget) {
+        document.body.classList.add('horror-glitch-shake');
+        setTimeout(() => document.body.classList.remove('horror-glitch-shake'), 220);
+        spawnCursedEye();
+      }
+    }, 2500);
+  }
+
+  function playHorrorStaticBurst() {
+    if (!isHorrorTriggered) return;
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      const len = Math.floor(audioCtx.sampleRate * 0.16);
+      const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.35;
+
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1400;
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.16, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+      src.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      src.start(now);
+    } catch (e) {}
+  }
+
+  function startHorrorScareLoop() {
+    clearInterval(horrorScareTimer);
+    horrorScareTimer = setInterval(() => {
+      if (!isHorrorTriggered) { clearInterval(horrorScareTimer); return; }
+      if (Math.random() < 0.55) {
+        const ov = document.getElementById('horrorScareOverlay');
+        const tx = document.getElementById('horrorScareText');
+        if (ov && tx) {
+          tx.textContent = HORROR_FLASH_LINES[Math.floor(Math.random() * HORROR_FLASH_LINES.length)];
+          ov.style.display = 'flex';
+          document.body.classList.add('horror-glitch-shake');
+          playHorrorStaticBurst();
+          setTimeout(() => {
+            ov.style.display = 'none';
+            document.body.classList.remove('horror-glitch-shake');
+          }, 220 + Math.random() * 140);
+        }
+      }
+    }, 5200);
+  }
+
+  // บังคับต้องผ่านครบทั้ง 3 ด่านถึงจะหลุดพ้นจากคำสาปได้
+  checkIfFullyForgiven = function() {
+    if (
+      topApologyClicks >= topApologyTarget &&
+      bottomApologyClicks >= BOTTOM_APOLOGY_TARGET &&
+      horrorConfessDone &&
+      horrorEyesClosed >= horrorEyesTarget
+    ) {
+      setTimeout(() => forgiveAndRestore(), 280);
+    }
+  };
+
+  const _origTriggerHorror = triggerHorrorEasterEgg;
+  triggerHorrorEasterEgg = function(isFromReload = false) {
+    _origTriggerHorror(isFromReload);
+
+    horrorConfessDone = false;
+    horrorEyesClosed = 0;
+    horrorEyesTarget = Math.min(9, curseCount * 3); // รอบ 1: 3 ดวง, รอบ 2: 6 ดวง, รอบ 3+: 9 ดวง
+
+    const tgtEl = document.getElementById('cursedConfessTarget');
+    const inpEl = document.getElementById('cursedConfessInput');
+    if (tgtEl) tgtEl.textContent = getCurrentConfessSentence();
+    if (inpEl) {
+      inpEl.value = "";
+      inpEl.disabled = false;
+      inpEl.style.borderColor = "#991b1b";
+      inpEl.style.color = "#fecaca";
+    }
+    updateRitualStatusUI();
+
+    if (!isFromReload) {
+      const prevT = Number(localStorage.getItem("bgt_horror_tier") || 0);
+      const nextT = Math.min(3, Math.max(1, prevT + 1));
+      try { localStorage.setItem("bgt_horror_tier", String(nextT)); } catch (e) {}
+      if (db && currentUser) {
+        db.ref("users/" + currentUser.id).update({
+          unlockedHorrorRole: true,
+          horrorTier: nextT
+        }).catch(() => {});
+      }
+    }
+    startHorrorScareLoop();
+  };
+
+  const _origForgive = forgiveAndRestore;
+  forgiveAndRestore = function() {
+    clearInterval(horrorScareTimer);
+    removeCursedEye();
+    const ov = document.getElementById('horrorScareOverlay');
+    if (ov) ov.style.display = 'none';
+    document.body.classList.remove('horror-glitch-shake');
+    _origForgive();
+  };
+
+  const _origApplyProfileHorror = applyProfileToUI;
+  applyProfileToUI = function(profile) {
+    _origApplyProfileHorror(profile);
+    const pill = document.getElementById('profileHorrorPill');
+    if (!pill || !profile) return;
+    const cached = (usersCache && usersCache[profile.id]) ? usersCache[profile.id] : {};
+    const t = getHorrorTierOfUser(cached, profile.id);
+    const meta = getHorrorRoleMeta(t);
+    if (meta) {
+      pill.className = "secret-horror-pill " + meta.cls;
+      pill.textContent = meta.name;
+      pill.style.display = 'inline-flex';
+    } else {
+      pill.style.display = 'none';
+    }
+  };
+
+  const _origShowHoverHorror = showUserHoverCard;
+  showUserHoverCard = function(uid, anchorEl) {
+    _origShowHoverHorror(uid, anchorEl);
+    const rolesWrap = document.getElementById('uhcRoles');
+    if (!rolesWrap || !uid) return;
+    const u = (usersCache && usersCache[uid]) ? usersCache[uid] : {};
+    const t = getHorrorTierOfUser(u, uid);
+    const meta = getHorrorRoleMeta(t);
+    const oldPill = rolesWrap.querySelector('.secret-horror-pill');
+    if (meta) {
+      if (oldPill) {
+        oldPill.className = "secret-horror-pill " + meta.cls;
+        oldPill.textContent = meta.name;
+      } else {
+        const p = document.createElement('span');
+        p.className = "secret-horror-pill " + meta.cls;
+        p.textContent = meta.name;
+        rolesWrap.appendChild(p);
+      }
+    }
+  };
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
