@@ -7118,6 +7118,42 @@
       background: linear-gradient(135deg, #dc2626, #15803d, #f59e0b) !important;
       box-shadow: 0 0 24px rgba(253, 224, 71, 0.6) !important;
     }
+    /* ===== จัดระเบียบช่องอวดอชีฟเม้นบนโปรไฟล์ & กระดานจัดอันดับ ===== */
+    .bgt-ach-showcase:not(:empty) {
+      background: rgba(15, 23, 42, 0.35);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 12px;
+      padding: 6px 8px;
+      margin-top: 8px;
+    }
+    .lb-ach-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .bgt-ach-pin-badge.lb-mini {
+      font-size: 0.64rem;
+      padding: 1px 7px;
+      border-radius: 6px;
+      border-width: 1px;
+      opacity: 0.95;
+    }
+    .ach-rarity-pill {
+      display: inline-block;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: 999px;
+      margin-bottom: 4px;
+      letter-spacing: 0.4px;
+      background: #334155;
+      color: #cbd5e1;
+    }
+    .ach-rarity-pill.r-rare   { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; }
+    .ach-rarity-pill.r-epic   { background: linear-gradient(135deg, #7e22ce, #c084fc); color: #fff; }
+    .ach-rarity-pill.r-secret { background: linear-gradient(135deg, #991b1b, #ef4444); color: #fff; }
   </style>
 </head>
 <body>
@@ -17057,20 +17093,34 @@
   const POINT_NAME = "ผลึก BGT";
 
   const BGT_ACHIEVEMENTS = [
-    { id: "first_checkin",    icon: "🐾", title: "ก้าวแรกสู่บ้าน BGT",      desc: "เช็กอินรายวันครบ 1 วัน",                         reward: 100, rarity: "common", secret: false },
-    { id: "streak_7",         icon: "🌟", title: "แฟนพันธุ์แท้ 7 วัน",       desc: "เช็กอินสะสมครบ 7 วัน",                           reward: 300, rarity: "rare",   secret: false },
-    { id: "first_eval",       icon: "📝", title: "นักวิจารณ์มือใหม่",        desc: "ส่งแบบประเมินคุณภาพเกมแปลไทยครั้งแรก",           reward: 150, rarity: "common", secret: false },
-    { id: "first_vote",       icon: "🔥", title: "เสียงนี้เพื่อเกมที่รัก",    desc: "ใช้ผลึก BGT โหวตเกมหรือขอเกมครั้งแรก",        reward: 100, rarity: "common", secret: false },
-    { id: "dev_supporter",    icon: "🤝", title: "ผู้ส่งพลังใจผู้สร้าง",     desc: "ส่งกำลังใจหรือคอมเมนต์ให้ผู้พัฒนาต้นฉบับ",        reward: 150, rarity: "common", secret: false },
-    { id: "over_quota_vote",  icon: "💎", title: "สายเปย์แต้มตัวจริง",      desc: "ทุ่มโหวตเกมเกินโควต้าราคาปกติในวันเดียว (6+)",    reward: 150, rarity: "rare",   secret: false },
-    { id: "softcap_farmer",   icon: "⚡", title: "ฟาร์มจนนิ้วล็อก",         desc: "ฟาร์มแต้มกดหัวใจแตะขีดจำกัดสูงสุดของวัน (350+)", reward: 200, rarity: "epic",   secret: false },
-    { id: "secret_curse_1",   icon: "🩸", title: "ผู้ต้องคำสาป 1 ดาว",      desc: "ค้นพบความลับต้องห้ามในแบบประเมิน",                reward: 200, rarity: "secret", secret: true  },
-    { id: "secret_reload_5",  icon: "👁️", title: "หนีไม่พ้นหรอกนะ...",      desc: "พยายามกดรีเฟรชหนีราชาคำสาปครบ 5 รอบ",            reward: 300, rarity: "secret", secret: true  },
-    { id: "secret_curse_king",icon: "👑", title: "ผู้พิชิตราชาคำสาป",       desc: "เล่นเส้นทางลับราชาคำสาปจนจบ",                    reward: 500, rarity: "secret", secret: true  }
+    // 🌟 สายเช็กอิน & ขยัน
+    { id: "first_checkin",     icon: "🐾", title: "ก้าวแรกสู่บ้าน BGT",      desc: "เช็กอินรายวันครบ 1 วัน",                         reward: 100, rarity: "common", secret: false },
+    { id: "streak_7",          icon: "🌟", title: "แฟนพันธุ์แท้ 7 วัน",       desc: "เช็กอินสะสมครบ 7 วัน",                           reward: 300, rarity: "rare",   secret: false },
+    { id: "streak_30",         icon: "🗓️", title: "ตำนานผู้เฝ้าบ้าน 30 วัน",  desc: "เช็กอินสะสมครบ 30 วัน",                          reward: 800, rarity: "epic",   secret: false },
+    // ❤️ สายเลเวล & ฟาร์ม
+    { id: "lv_20",             icon: "🕯️", title: "ผู้จุดไฟแห่งแรงบันดาลใจ",  desc: "สะสมหัวใจจนถึง Lv.20 ขึ้นไป",                    reward: 150, rarity: "common", secret: false },
+    { id: "lv_50",             icon: "🎖️", title: "แม่ทัพกองกำลังหัวใจ",     desc: "สะสมหัวใจจนถึง Lv.50 ขึ้นไป",                    reward: 300, rarity: "rare",   secret: false },
+    { id: "lv_100",            icon: "👑", title: "ราชวงศ์แห่งกำลังใจ",       desc: "สะสมหัวใจจนถึง Lv.100 ขึ้นไป",                   reward: 600, rarity: "epic",   secret: false },
+    { id: "softcap_farmer",    icon: "⚡", title: "ฟาร์มจนนิ้วล็อก",          desc: "ฟาร์มแต้มกดหัวใจแตะขีดจำกัดสูงสุดของวัน (350+)", reward: 200, rarity: "epic",   secret: false },
+    // 🔥 สายชุมชน โหวต & ผู้พัฒนา
+    { id: "first_eval",        icon: "📝", title: "นักวิจารณ์มือใหม่",        desc: "ส่งแบบประเมินคุณภาพเกมแปลไทยครั้งแรก",           reward: 150, rarity: "common", secret: false },
+    { id: "first_vote",        icon: "🔥", title: "เสียงนี้เพื่อเกมที่รัก",    desc: "ใช้ผลึก BGT โหวตเกมหรือขอเกมครั้งแรก",          reward: 100, rarity: "common", secret: false },
+    { id: "wish_maker",        icon: "✨", title: "นักล่าเกมแปลไทย",          desc: "เสนอชื่อเกมที่อยากให้แปลใน Wish Board",          reward: 150, rarity: "common", secret: false },
+    { id: "dev_supporter",     icon: "🤝", title: "ผู้ส่งพลังใจผู้สร้าง",     desc: "ส่งกำลังใจหรือคอมเมนต์ให้ผู้พัฒนาต้นฉบับ",        reward: 150, rarity: "common", secret: false },
+    { id: "over_quota_vote",   icon: "💎", title: "สายเปย์แต้มตัวจริง",       desc: "ทุ่มโหวตเกมเกินโควต้าราคาปกติในวันเดียว (6+)",    reward: 150, rarity: "rare",   secret: false },
+    // 🎉 สายกิจกรรม & สนับสนุน
+    { id: "event_loykrathong", icon: "🪷", title: "ผู้ร่วมลอยกระทง 2026",     desc: "เข้าร่วมกิจกรรมลอยกระทง 2026",                   reward: 200, rarity: "rare",   secret: false },
+    { id: "event_xmas",        icon: "🎄", title: "ซานต้าแห่ง BGT 2026",      desc: "เข้าร่วมกิจกรรมคริสต์มาส 2026",                  reward: 200, rarity: "rare",   secret: false },
+    { id: "vip_patron",        icon: "🎁", title: "ผู้พิทักษ์แห่ง BGT",       desc: "สนับสนุนทีมแปลหรือผู้พัฒนาต้นฉบับ",               reward: 500, rarity: "epic",   secret: false },
+    // 🩸 สายอชีฟเม้นลับ (ซ่อนเป็น ???)
+    { id: "secret_curse_1",    icon: "🩸", title: "ผู้ต้องคำสาป 1 ดาว",       desc: "ค้นพบความลับต้องห้ามในแบบประเมิน",                reward: 200, rarity: "secret", secret: true  },
+    { id: "secret_reload_5",   icon: "👁️", title: "หนีไม่พ้นหรอกนะ...",       desc: "พยายามกดรีเฟรชหนีราชาคำสาปครบ 5 รอบ",            reward: 300, rarity: "secret", secret: true  },
+    { id: "secret_curse_king", icon: "👑", title: "ผู้พิชิตราชาคำสาป",        desc: "เล่นเส้นทางลับราชาคำสาปจนจบ",                    reward: 500, rarity: "secret", secret: true  }
   ];
 
   let _farmClickBuf = 0;
   let _pendingFarmPts = 0;
+  let _flushingFarmPts = 0;
   let _farmFlushTimer = null;
   let _localPtsSpendLock = 0;
   let _achPopupTimer = null;
@@ -17082,9 +17132,11 @@
     const u = (uid && usersCache && usersCache[uid]) ? usersCache[uid] : {};
     const today = getBangkokDateStr(0);
     const sameDay = u.ecoDate === today;
+    const isMe = !!(currentUser && uid === currentUser.id);
+    const extraPts = isMe ? (_pendingFarmPts + _flushingFarmPts) : 0;
     return {
-      points: Math.max(0, Number(u.pawPoints) || 0),
-      farmedToday: sameDay ? (Number(u.ecoFarmToday) || 0) : 0,
+      points: Math.max(0, (Number(u.pawPoints) || 0) + extraPts),
+      farmedToday: (sameDay ? (Number(u.ecoFarmToday) || 0) : 0) + extraPts,
       votesToday: sameDay ? (Number(u.ecoVotesToday) || 0) : 0,
       commentBonusToday: sameDay && !!u.ecoCommentBonus,
       evalBonusToday: sameDay && !!u.ecoEvalBonus,
@@ -17136,13 +17188,20 @@
     const uid = currentUser.id;
     const batch = _pendingFarmPts;
     _pendingFarmPts = 0;
+    _flushingFarmPts += batch;
 
+    const today = getBangkokDateStr(0);
+    const isNewDay = !usersCache[uid] || usersCache[uid].ecoDate !== today;
     const updates = {};
-    const u = prepareEcoDayUpdates(uid, updates);
+    prepareEcoDayUpdates(uid, updates);
     updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(batch);
-    updates[`users/${uid}/ecoFarmToday`] = Number(u.ecoFarmToday) || batch;
+    updates[`users/${uid}/ecoFarmToday`] = isNewDay ? batch : firebase.database.ServerValue.increment(batch);
 
-    db.ref().update(updates).catch(() => {
+    db.ref().update(updates).then(() => {
+      _flushingFarmPts = Math.max(0, _flushingFarmPts - batch);
+      updateProfileEcoUI();
+    }).catch(() => {
+      _flushingFarmPts = Math.max(0, _flushingFarmPts - batch);
       _pendingFarmPts += batch;
     });
   }
@@ -17260,11 +17319,22 @@
     if (!currentUser || !usersCache[currentUser.id]) return;
     const u = usersCache[currentUser.id];
     const eco = getUserEcoData(currentUser.id);
+    const totalDays = Number(u.totalCheckins) || 0;
+    const lv = getLevelFromHearts(Number(u.heartsClicked) || 0);
 
-    if ((Number(u.totalCheckins) || 0) >= 1) unlockAchievement("first_checkin");
-    if ((Number(u.totalCheckins) || 0) >= 7) unlockAchievement("streak_7");
+    if (totalDays >= 1)  unlockAchievement("first_checkin");
+    if (totalDays >= 7)  unlockAchievement("streak_7");
+    if (totalDays >= 30) unlockAchievement("streak_30");
+
+    if (lv >= 20)  unlockAchievement("lv_20");
+    if (lv >= 50)  unlockAchievement("lv_50");
+    if (lv >= 100) unlockAchievement("lv_100");
     if (eco.farmedToday >= 350) unlockAchievement("softcap_farmer");
-    if (eco.votesToday >= 6) unlockAchievement("over_quota_vote");
+    if (eco.votesToday >= 6)    unlockAchievement("over_quota_vote");
+
+    if ((Number(u.krathongCount) || 0) > 0) unlockAchievement("event_loykrathong");
+    if ((Number(u.xmasGiftCount) || 0) > 0) unlockAchievement("event_xmas");
+    if ((Number(u.donateAmount) || 0) > 0 || u.devSupporter) unlockAchievement("vip_patron");
 
     const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, currentUser.id) : 0;
     if (hTier >= 1) unlockAchievement("secret_curse_1");
@@ -17293,8 +17363,23 @@
     document.getElementById('achPinnedText').textContent = `📌 ปักหมุดอวดบนโปรไฟล์: ${eco.achPinned.length} / 3`;
     document.getElementById('achSummaryFill').style.width = `${pct}%`;
 
+    // จัดเรียงให้อัตโนมัติ: รอกดรับแต้ม -> ปักหมุด -> ปลดล็อกแล้ว -> ยังไม่ปลดล็อก -> ลับ
+    const getSortScore = (a) => {
+      const isUnl = !!eco.achUnlocked[a.id];
+      const isClm = !!eco.achClaimed[a.id];
+      const isPin = eco.achPinned.includes(a.id);
+      if (isUnl && !isClm) return 1;
+      if (isUnl && isPin)  return 2;
+      if (isUnl)           return 3;
+      if (!a.secret)       return 4;
+      return 5;
+    };
+    const sortedAch = [...BGT_ACHIEVEMENTS].sort((a, b) => getSortScore(a) - getSortScore(b));
+
+    const rarityNames = { common: "COMMON", rare: "RARE", epic: "EPIC", secret: "SECRET" };
+
     grid.innerHTML = "";
-    BGT_ACHIEVEMENTS.forEach(a => {
+    sortedAch.forEach(a => {
       const isUnl = !!eco.achUnlocked[a.id];
       const isClm = !!eco.achClaimed[a.id];
       const isPin = eco.achPinned.includes(a.id);
@@ -17318,6 +17403,7 @@
       card.innerHTML = `
         <div class="ach-icon-box">${hideSecret ? '❓' : a.icon}</div>
         <div class="ach-info">
+          <span class="ach-rarity-pill r-${a.rarity}">${hideSecret ? '???' : (rarityNames[a.rarity] || 'COMMON')}</span>
           <div class="ach-title">${hideSecret ? '??? (อชีฟเม้นลับ)' : a.title}</div>
           <div class="ach-desc">${hideSecret ? 'เงื่อนไขถูกซ่อนไว้... ลองสำรวจความลับในเว็บดูสิ' : a.desc}</div>
           <div class="ach-actions">${actionHtml}</div>
@@ -17379,9 +17465,16 @@
       nextPinned.push(achId);
     }
 
+    if (!usersCache[currentUser.id]) usersCache[currentUser.id] = {};
+    if (!usersCache[currentUser.id].achievements) usersCache[currentUser.id].achievements = { unlocked: {}, claimed: {}, pinned: [] };
+    usersCache[currentUser.id].achievements.pinned = nextPinned;
+
     db.ref(`users/${currentUser.id}/achievements/pinned`).set(nextPinned).then(() => {
+      const lkList = document.getElementById('lkEventTopList');
+      if (lkList) lkList.dataset.lkSig = "";
       renderAchievementModal();
       updateProfileEcoUI();
+      renderLeaderboards(true);
     });
   }
 
@@ -17463,18 +17556,13 @@
     _farmClickBuf++;
     if (_farmClickBuf >= step.clicksPerPt) {
       _farmClickBuf = 0;
-      const dummyUpdates = {};
-      const u = prepareEcoDayUpdates(uid, dummyUpdates);
-      const nextFarm = (Number(u.ecoFarmToday) || 0) + 1;
-      u.ecoFarmToday = nextFarm;
-      u.pawPoints = (Number(u.pawPoints) || 0) + 1;
       _pendingFarmPts += 1;
 
       clearTimeout(_farmFlushTimer);
       _farmFlushTimer = setTimeout(flushPendingFarmPoints, 1000);
 
       updateProfileEcoUI();
-      if (nextFarm === 350) unlockAchievement("softcap_farmer");
+      if (eco.farmedToday + 1 === 350) unlockAchievement("softcap_farmer");
     }
   };
 
@@ -17677,17 +17765,12 @@
     _farmClickBuf++;
     if (_farmClickBuf >= step.clicksPerPt) {
       _farmClickBuf = 0;
-      const dummyUpdates = {};
-      const u = prepareEcoDayUpdates(uid, dummyUpdates);
-      const nextFarm = (Number(u.ecoFarmToday) || 0) + 1;
-      u.ecoFarmToday = nextFarm;
-      u.pawPoints = (Number(u.pawPoints) || 0) + 1;
       _pendingFarmPts += 1;
 
       clearTimeout(_farmFlushTimer);
       _farmFlushTimer = setTimeout(flushPendingFarmPoints, 1000);
       updateProfileEcoUI();
-      if (nextFarm === 350) unlockAchievement("softcap_farmer");
+      if (eco.farmedToday + 1 === 350) unlockAchievement("softcap_farmer");
     }
   }
 
@@ -17858,6 +17941,38 @@
   setInterval(() => {
     if (isChristmasEventNow()) renderLoyKrathongEvent();
   }, 1000);
+  // 📌 แสดงอชีฟเม้นที่ปักหมุดไว้บนกระดานจัดอันดับทุกตารางอย่างเป็นระเบียบ
+  const _origBuildLbRowAch = buildLbRow;
+  buildLbRow = function(rank, id, u, scoreText) {
+    const row = _origBuildLbRowAch(rank, id, u, scoreText);
+    const meta = row.querySelector('.lb-meta');
+    if (meta && id) {
+      const eco = getUserEcoData(id);
+      const pinnedIds = eco.achPinned.filter(aid => eco.achUnlocked[aid]).slice(0, 3);
+      if (pinnedIds.length > 0) {
+        const achRow = document.createElement('div');
+        achRow.className = 'lb-ach-row';
+        pinnedIds.forEach(aid => {
+          const m = BGT_ACHIEVEMENTS.find(x => x.id === aid);
+          if (!m) return;
+          const sp = document.createElement('span');
+          sp.className = `bgt-ach-pin-badge lb-mini r-${m.rarity}`;
+          sp.textContent = `${m.icon} ${m.title}`;
+          achRow.appendChild(sp);
+        });
+        meta.appendChild(achRow);
+      }
+    }
+    return row;
+  };
+
+  // ✨ ปลดล็อกอชีฟเม้นเมื่อเสนอขอเกมใหม่
+  const _origSubmitWishAch = submitGameWish;
+  submitGameWish = function() {
+    const title = document.getElementById('wishTitleInput')?.value.trim();
+    _origSubmitWishAch();
+    if (title && currentUser && db) unlockAchievement("wish_maker");
+  };
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
