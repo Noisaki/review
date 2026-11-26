@@ -7201,7 +7201,8 @@
 
     <button type="button" class="nav-purple-btn" id="navLoginBtn" onclick="playClickSound(); openLoginInfo('');">ล็อกอิน</button>
 
-    <div class="nav-profile-dropdown-wrap" id="navQuickActions" style="display:none;">
+    <div class="nav-profile-dropdown-wrap" id="navQuickActions" style="display:none; align-items:center; gap:8px;">
+      <button type="button" id="navTopPointsPill" class="bgt-pt-chip" style="cursor:pointer; margin:0; padding:5px 11px; font-size:0.8rem; white-space:nowrap;" onclick="playClickSound(); openAchievementModal();" title="แต้มอุ้งเท้าคงเหลือ (คลิกเปิดหน้าอชีฟเม้น)">🐾 0</button>
       <button type="button" class="nav-profile-pill" id="navUserWrap" onmouseenter="playHoverSound()" onclick="toggleProfileDropdown(event)">
         <span class="nav-avatar-frame" id="navAvatarFrame">
           <img id="navAvatarImg" src="" alt="Avatar" referrerpolicy="no-referrer">
@@ -17155,6 +17156,8 @@
     if (fmEl) fmEl.textContent = `⚡ ฟาร์มวันนี้: ${eco.farmedToday}/350 (เรท ${step.rateText})`;
     if (vtEl) vtEl.textContent = `🔥 โหวตวันนี้: ${eco.votesToday}/5 (ครั้งต่อไป ${vInfo.cost} ${POINT_UNIT})`;
     if (ndPt) ndPt.textContent = `${POINT_UNIT} ${formatCompact(eco.points)}`;
+    const navTopPt = document.getElementById('navTopPointsPill');
+    if (navTopPt) navTopPt.textContent = `${POINT_UNIT} ${formatCompact(eco.points)}`;
 
     const unclaimed = Object.keys(eco.achUnlocked).filter(id => eco.achUnlocked[id] && !eco.achClaimed[id]).length;
     const dot = document.getElementById('achUnreadDot');
@@ -17379,6 +17382,15 @@
     renderAchShowcaseInto('uhcAchShowcase', uid);
   };
 
+  function getDonateDailyPointBonus(tier) {
+    const t = Number(tier) || 0;
+    if (t >= 4) return 500; // 👑 ภาคีผู้พิทักษ์นิรันดร์ (1,000฿+) & Admin
+    if (t === 3) return 350; // 💖 ผู้พิทักษ์หัวใจ (500฿)
+    if (t === 2) return 200; // 📜 ผู้ร่วมจารึก (300฿)
+    if (t === 1) return 100; // 🦴 ผู้สนับสนุนทั่วไป
+    return 0;
+  }
+
   const _origClaimDailyCheckin = claimDailyCheckin;
   claimDailyCheckin = function() {
     const uid = currentUser ? currentUser.id : null;
@@ -17387,10 +17399,15 @@
     _origClaimDailyCheckin();
     if (uid && db && !alreadyDone) {
       const streak = (Number(cached.checkinStreak) || 0) + 1;
-      const ptBonus = 200 + Math.min(streak, 10) * 10;
-      db.ref(`users/${uid}/pawPoints`).set(firebase.database.ServerValue.increment(ptBonus)).catch(() => {});
+      const baseBonus = 200 + Math.min(streak, 10) * 10;
+      const effTier = getEffectiveRoleTier(currentUser.roleTier, cached.donateAmount);
+      const donateBonus = getDonateDailyPointBonus(effTier);
+      const totalPts = baseBonus + donateBonus;
+
+      db.ref(`users/${uid}/pawPoints`).set(firebase.database.ServerValue.increment(totalPts)).catch(() => {});
       setTimeout(() => {
-        showToast(`🐾 เช็กอินรับโบนัสเพิ่ม +${ptBonus} ${POINT_NAME}!`);
+        const extraTxt = donateBonus > 0 ? ` (รวมโบนัสยศโดเนท +${donateBonus} 🎁)` : "";
+        showToast(`🐾 เช็กอินรับ +${totalPts} ${POINT_NAME}!${extraTxt}`);
         checkAutoAchievements();
       }, 650);
     }
