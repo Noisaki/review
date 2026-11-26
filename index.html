@@ -34,6 +34,13 @@
       max-width: 100%;
       overflow-x: hidden;
     }
+    img {
+      -webkit-user-drag: none;
+      user-drag: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
 
     body {
       font-family: 'Prompt', sans-serif;
@@ -7893,7 +7900,7 @@
       position: fixed;
       right: 18px;
       bottom: 18px;
-      width: 245px;
+      width: 275px;
       z-index: 190;
       display: none;
       user-select: none;
@@ -7980,17 +7987,17 @@
     .bgt-proto-stage {
       position: relative;
       width: 100%;
-      height: 188px;
+      height: 215px;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       overflow: hidden;
       border-radius: 14px;
-      margin-bottom: -14px; /* ให้กล่องข้อความขาวซ้อนทับช่วงล่างเหมือนภาพที่ 2 */
+      margin-bottom: -14px;
     }
     .bgt-proto-img {
-      width: 198px;
-      height: 198px;
+      width: 226px;
+      height: 226px;
       object-fit: contain;
       object-position: center bottom;
       cursor: pointer;
@@ -8098,19 +8105,19 @@
       .bgt-proto-widget {
         right: 10px;
         bottom: 12px;
-        width: 176px;
+        width: 192px;
       }
       .bgt-proto-card {
-        padding: 8px 7px 7px;
+        padding: 9px 8px 8px;
         border-radius: 18px;
       }
       .bgt-proto-stage {
-        height: 122px;
+        height: 136px;
         margin-bottom: -10px;
       }
       .bgt-proto-img {
-        width: 132px;
-        height: 132px;
+        width: 146px;
+        height: 146px;
       }
       .bgt-proto-name-pill { font-size: 0.66rem; padding: 1px 8px; }
       .bgt-proto-role-pill { font-size: 0.58rem; padding: 1px 7px; }
@@ -19671,8 +19678,8 @@
       filter.frequency.setValueAtTime(1450, now);
       filter.Q.setValueAtTime(2.6, now);
 
-      gain.gain.setValueAtTime(0.032, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+      gain.gain.setValueAtTime(0.22, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
 
       mod.connect(modGain);
       modGain.connect(osc.frequency);
@@ -19739,7 +19746,7 @@
     setGlobalProtoSprite('talk');
     _protoCtrl.talkT = setInterval(() => {
       mouthOpen = !mouthOpen;
-      setGlobalProtoSprite(mouthOpen ? 'talk' : 'idle');
+      setGlobalProtoSprite(mouthOpen ? 'talk' : 'blink');
     }, 125);
 
     const chars = Array.from(text);
@@ -19784,7 +19791,8 @@
     clearInterval(_protoCtrl.talkT);
     clearTimeout(_protoCtrl.blushT);
     _protoCtrl.busy = true;
-    w.classList.remove('is-talking');
+    w.classList.remove('is-talking', 'is-blushing');
+    void w.offsetWidth; // รีเซ็ตแอนิเมชันให้เด้งใหม่ทุกรอบที่จิ้ม
     w.classList.add('is-blushing');
     setGlobalProtoSprite('blush');
 
@@ -19797,6 +19805,10 @@
       setGlobalProtoSprite('idle');
     }, 2600);
   }
+
+  document.addEventListener('dragstart', (e) => {
+    if (e.target && e.target.tagName === 'IMG') e.preventDefault();
+  });
 
   // เชื่อมเข้ากับ switchPage ทุกครั้งที่เปลี่ยนหมวดหมู่ -> เปลี่ยนป้ายและพูดแนะนำหน้าใหม่ทันที
   const _origSwitchPageProto = switchPage;
