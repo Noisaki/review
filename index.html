@@ -19885,9 +19885,10 @@
   };
   const _origHideGateProto = hideLoginGate;
   hideLoginGate = function() {
+    const wasOpen = document.body.classList.contains('login-gate-open');
     _origHideGateProto();
     updateGlobalProtoVisibility();
-    if (!_protoCtrl.minimized) nextProtoSpeech(false);
+    if (wasOpen && !_protoCtrl.minimized) nextProtoSpeech(false);
   };
 
   // กะพริบตาอัตโนมัติทุก 2.5 - 5 วินาที + พูดวนไปเรื่อยๆ ทุก 9 วินาที
