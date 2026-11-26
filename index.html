@@ -4128,6 +4128,14 @@
       background: radial-gradient(circle at center, #1a0202 0%, #050000 78%, #000000 100%);
       display: none;
       overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #curseKingStage img {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
     }
     .ck-char-wrap {
       position: fixed;
@@ -4155,9 +4163,11 @@
     .ck-dialogue-box {
       position: fixed;
       bottom: 26px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      right: 0;
+      margin: 0 auto;
       width: min(92vw, 680px);
+      box-sizing: border-box;
       background: rgba(12, 12, 18, 0.92);
       border: 2px solid #94a3b8;
       border-radius: 18px;
@@ -4284,8 +4294,8 @@
     /* ฟอนต์สีแดงใหญ่หลอนตอนพูดช้าๆ */
     .ck-red-slow-text {
       color: #ff2a2a !important;
-      font-size: clamp(1.35rem, 5vw, 2.2rem) !important;
-      letter-spacing: 3px;
+      font-size: clamp(1.05rem, 3.8vw, 1.85rem) !important;
+      letter-spacing: 1.5px;
       text-shadow: 2px 0 #000, -2px 0 #7f1d1d, 0 0 18px #dc2626 !important;
     }
 
@@ -6926,8 +6936,9 @@
   <div class="exe-scare-eye">👁️</div>
   <div class="exe-scare-msg" id="exeScareMsg">BGT.EXE // คุณทำให้ผมเจ็บครบ 4 ครั้งแล้วนะ...</div>
 </div>
-<!-- เสียงเพลงหลอน & เสียงจัมป์สแกร์ (ใส่ไฟล์ไว้ในโฟลเดอร์ images/) -->
+<!-- เสียงเพลงหลอน (เฟส 1 / เฟส 2) & เสียงจัมป์สแกร์ (ใส่ไฟล์ไว้ในโฟลเดอร์ images/) -->
 <audio id="curseBgmAudio" src="images/curse_bgm.mp3" loop preload="auto"></audio>
+<audio id="curseBgmPhase2Audio" src="images/curse_bgm2.mp3" loop preload="auto"></audio>
 <audio id="curseJumpscareAudio" src="images/jumpscare.mp3" preload="auto"></audio>
 
 <!-- หน้าต่างเตือนก่อนเข้าสู่ฉากราชาคำสาป -->
@@ -9956,8 +9967,26 @@
     };
   }
 
+  function isCurseSceneBlockingBgm() {
+    if (isHorrorTriggered) return true;
+    const ckStage = document.getElementById('curseKingStage');
+    const ckWarn  = document.getElementById('curseKingWarnModal');
+    const ckFlash = document.getElementById('ckJumpscareFlash');
+    if (ckStage && ckStage.style.display === 'block') return true;
+    if (ckWarn && ckWarn.style.display === 'flex') return true;
+    if (ckFlash && ckFlash.style.display === 'flex') return true;
+    try {
+      const p = localStorage.getItem("bgt_ck_active_phase_v1");
+      if (p === "1" || p === "2") return true;
+    } catch (e) {}
+    return false;
+  }
+
   function startChristmasMusic() {
-    if (isHorrorTriggered || BGM_PLAYLIST.length === 0 || document.body.classList.contains('login-gate-open')) return;
+    if (isCurseSceneBlockingBgm() || BGM_PLAYLIST.length === 0 || document.body.classList.contains('login-gate-open')) {
+      stopChristmasMusic();
+      return;
+    }
     const bgmEl = document.getElementById('bgmAudio');
     if (!bgmEl) return;
 
@@ -10077,8 +10106,12 @@
     if (e && e.target && e.target.closest && e.target.closest('#musicToggleBtn, #nextSongBtn, #loopSongBtn')) return;
     try { initAudio(); } catch (err) {} // ปลดล็อกเสียงพูดน้องกับเสียงปุ่มไว้ก่อน
 
-    // ถ้ายังอยู่หน้าล็อกอิน ห้ามเปิดเพลงพื้นหลังด้านในจนกว่าจะเข้าสู่ระบบเสร็จ
+    // ถ้ายังอยู่หน้าล็อกอิน หรืออยู่ในฉากหลอน/ราชาคำสาปทุกระยะ ห้ามเปิดเพลงพื้นหลังเด็ดขาด!
     if (document.body.classList.contains('login-gate-open')) return;
+    if (isCurseSceneBlockingBgm()) {
+      stopChristmasMusic();
+      return;
+    }
     if (userPausedMusic || musicVolume <= 0) return;
 
     if (isHorrorTriggered) {
@@ -15469,7 +15502,9 @@
     }
     if (eEl) {
       const doneEye = horrorEyesClosed >= horrorEyesTarget;
-      eEl.textContent = `${doneEye ? '✅' : '⬜'} ด่าน 3 ไล่ปิดดวงตาสีเลือด 👁️: ${horrorEyesClosed} / ${horrorEyesTarget} ดวง`;
+      eEl.textContent = horrorConfessDone
+        ? `${doneEye ? '✅' : '⬜'} ด่าน 3 ไล่กดดวงตาสีเลือด 👁️ ที่ลอยบนจอ: ${horrorEyesClosed} / ${horrorEyesTarget} ดวง`
+        : `🔒 ด่าน 3 ดวงตาสีเลือด 👁️ (ผ่านด่าน 2 ก่อนถึงจะโผล่): 0 / ${horrorEyesTarget} ดวง`;
     }
   }
 
@@ -15480,12 +15515,14 @@
     const target = getCurrentRoundCfg().confess;
     if (inp.value.trim() === target) {
       horrorConfessDone = true;
+      inp.blur(); // พับคีย์บอร์ดมือถือทันที ไม่ให้บังดวงตา!
       inp.disabled = true;
       inp.style.borderColor = "#4ade80";
       inp.style.color = "#86efac";
       playClickSound();
       updateRitualStatusUI();
-      spawnCursedEye();
+      showToast("👁️ ผ่านด่าน 2 แล้ว! ไล่กดปิดดวงตาสีเลือดที่โผล่บนจอเลย!");
+      setTimeout(spawnCursedEye, 450); // รอคีย์บอร์ดพับลงก่อนค่อยโผล่
       checkIfFullyForgiven();
     }
   }
@@ -15502,8 +15539,11 @@
     const eye = document.createElement('div');
     eye.className = 'cursed-eye-target';
     eye.textContent = '👁️';
-    const x = Math.max(20, Math.random() * (window.innerWidth - 90));
-    const y = Math.max(85, Math.random() * (window.innerHeight - 110));
+    // ล็อกให้อยู่ในโซนกลางจอมือถือ (ไม่หลุดขอบ ไม่โดนแถบข้างบน/ล่างบัง)
+    const safeW = Math.max(120, window.innerWidth - 110);
+    const safeH = Math.max(180, window.innerHeight - 220);
+    const x = 25 + Math.random() * safeW;
+    const y = 95 + Math.random() * safeH;
     eye.style.left = x + 'px';
     eye.style.top = y + 'px';
 
@@ -16072,10 +16112,35 @@
     runNext();
   }
 
-  function startCurseKingCutscene() {
+  const CK_PHASE_KEY = "bgt_ck_active_phase_v1";
+
+  function stopAllCurseMusic() {
+    stopCreepySynthBgm();
+    ['curseBgmAudio', 'curseBgmPhase2Audio'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.pause(); el.currentTime = 0; }
+    });
+  }
+
+  function playCursePhaseMusic(phaseNum) {
+    stopAllCurseMusic();
+    const isPhase2 = (phaseNum === 2);
+    const el = document.getElementById(isPhase2 ? 'curseBgmPhase2Audio' : 'curseBgmAudio');
+    if (el) {
+      el.volume = Math.max(0.25, musicVolume);
+      el.currentTime = 0;
+      el.play().catch(() => startCreepySynthBgm(isPhase2));
+      el.onerror = () => startCreepySynthBgm(isPhase2);
+    } else {
+      startCreepySynthBgm(isPhase2);
+    }
+  }
+
+  function startCurseKingCutscene(resumePhase = null) {
     clearInterval(horrorScareTimer);
     removeCursedEye();
     stopHorrorAmbience();
+    stopChristmasMusic();
 
     const stage = document.getElementById('curseKingStage');
     const bgm = document.getElementById('curseBgmAudio');
@@ -16084,38 +16149,81 @@
     stage.classList.remove('phase-horror');
     stage.style.display = 'block';
 
+    // บันทึกเฟสปัจจุบันลงเครื่อง (รีเฟรชหนีไม่ได้!)
+    const startPhase = resumePhase || "1";
+    try { localStorage.setItem(CK_PHASE_KEY, startPhase); } catch (e) {}
+
     let usingSynth = false;
-    if (bgm) {
-      bgm.volume = Math.max(0.25, musicVolume);
-      bgm.currentTime = 0;
-      bgm.play().catch(() => { usingSynth = true; startCreepySynthBgm(false); });
-      bgm.onerror = () => { usingSynth = true; startCreepySynthBgm(false); };
-    } else {
-      usingSynth = true;
-      startCreepySynthBgm(false);
+    const playCurseBgm = (isPhase2) => playCursePhaseMusic(isPhase2 ? 2 : 1);
+
+    // 🔴 กรณีแอบรีเฟรชตอนอยู่ใน "เฟสหลอน (Phase 2)" -> ดักกลับเข้ามาดุทันที!
+    if (resumePhase === "2") {
+      playCurseBgm(true);
+      stage.classList.add('phase-horror');
+      spawnCurseSysPopup("⚠️ [SYSTEM]: ตรวจพบการพยายามหลบหนี (RELOAD_BLOCKED)");
+      ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
+
+      playCurseSequence([
+        {
+          speaker: "👁️ BGT.EXE // ราชาคำสาป",
+          text: "มึงจะหนีไปไหน... มาคุยให้จบก่อนดิ! คิดว่ากดรีเฟรชหน้าเว็บแล้วจะหนีพ้นเหรอ...?",
+          idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+          horror: true, speed: 115
+        },
+        {
+          speaker: "👁️ BGT.EXE // ราชาคำสาป",
+          text: "เมื่อกี้กูถามว่า... ตอนที่เห็นหน้าเว็บพัง เห็นกูร้องไห้ มึงกำลังนั่งยิ้มอยู่หน้าจอหรือเปล่า? ตอบมา!",
+          idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+          horror: true, speed: 105, autoNext: true, autoDelay: 300
+        }
+      ], () => {
+        showCurseChoices([
+          { label: "ผมขอโทษจริงๆ นะ... ปล่อยผมไปเถอะ", onPick: enterCurseFinalLie },
+          { label: "ผมไม่ได้คิดแบบนั้นเลย...", onPick: enterCurseFinalLie }
+        ]);
+      });
+      return;
     }
 
-    // ช่วงที่ 1: นิ่งๆ น้อยใจ ค่อยๆ ถามทีละประโยค (คลิกอ่านต่อเอง)
-    playCurseSequence([
-      {
-        speaker: "Ben",
-        text: "...อ้าว พิมพ์คำว่า 'ไม่ขอโทษ!' เข้ามาจริงๆ ด้วยสินะครับ ทั้งที่ระบบก็เตือนไปแล้วแท้ๆ...",
-        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-        horror: false, speed: 78
-      },
-      {
-        speaker: "Ben",
-        text: "ผมก็อุตส่าห์นั่งแปลเกมพวกนี้ทีละบรรทัด แก้บั๊ก ตรวจสระลอยจนดึกดื่นแทบไม่ได้นอน... เพื่อให้ทุกคนได้เล่นกันฟรีๆ โดยไม่คิดเงินสักบาท",
-        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-        horror: false, speed: 75
-      },
-      {
-        speaker: "Ben",
-        text: "แต่คุณกลับกดให้ 1 ดาวรัวๆ ทุกข้อ ไม่แม้แต่จะพิมพ์บอกเหตุผลสักคำ... ช่วยบอกผมทีเถอะครับ สรุปแล้วงานแปลของผมมันมีปัญหาอะไรหรือเปล่า?",
-        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-        horror: false, speed: 78, autoNext: true, autoDelay: 250
-      }
-    ], () => {
+    // 🟡 กรณีแอบรีเฟรชตอนอยู่ใน "เฟสปกติ (Phase 1)" -> สีหน้าปกติแต่ดักไว้ก่อน!
+    playCurseBgm(false);
+    const phase1Lines = resumePhase === "1"
+      ? [
+          {
+            speaker: "Ben",
+            text: "เอ๊ะ... คิดจะหนีไปไหนครับ? มาคุยกันให้จบก่อนสิ...",
+            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+            horror: false, speed: 80
+          },
+          {
+            speaker: "Ben",
+            text: "...ว่าแต่เมื่อกี้เราคุยกันถึงไหนแล้วนะ? อ๋อใช่... สรุปแล้วงานแปลของผมมันมีปัญหาอะไรหรือเปล่าครับ?",
+            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+            horror: false, speed: 78, autoNext: true, autoDelay: 250
+          }
+        ]
+      : [
+          {
+            speaker: "Ben",
+            text: "...อ้าว พิมพ์คำว่า 'ไม่ขอโทษ!' เข้ามาจริงๆ ด้วยสินะครับ ทั้งที่ระบบก็เตือนไปแล้วแท้ๆ...",
+            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+            horror: false, speed: 78
+          },
+          {
+            speaker: "Ben",
+            text: "ผมก็อุตส่าห์นั่งแปลเกมพวกนี้ทีละบรรทัด แก้บั๊ก ตรวจสระลอยจนดึกดื่นแทบไม่ได้นอน... เพื่อให้ทุกคนได้เล่นกันฟรีๆ โดยไม่คิดเงินสักบาท",
+            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+            horror: false, speed: 75
+          },
+          {
+            speaker: "Ben",
+            text: "แต่คุณกลับกดให้ 1 ดาวรัวๆ ทุกข้อ ไม่แม้แต่จะพิมพ์บอกเหตุผลสักคำ... ช่วยบอกผมทีเถอะครับ สรุปแล้วงานแปลของผมมันมีปัญหาอะไรหรือเปล่า?",
+            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+            horror: false, speed: 78, autoNext: true, autoDelay: 250
+          }
+        ];
+
+    playCurseSequence(phase1Lines, () => {
       showCurseChoices([
         {
           label: "ผมไม่ได้ตั้งใจจริงๆ นะ...",
@@ -16136,7 +16244,6 @@
   function enterCursePhase2(usingSynth, replyLine) {
     const stage = document.getElementById('curseKingStage');
 
-    // ตอบกลับตามช้อยส์ 1 ประโยคก่อน แล้วค่อยตัดเข้าโหมดหลอน .EXE
     playCurseSequence([
       {
         speaker: "Ben",
@@ -16150,8 +16257,9 @@
         idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
         horror: true, speed: 120,
         onStart: () => {
+          try { localStorage.setItem(CK_PHASE_KEY, "2"); } catch (e) {}
           if (stage) stage.classList.add('phase-horror');
-          if (usingSynth) startCreepySynthBgm(true);
+          playCursePhaseMusic(2);
           spawnCurseSysPopup("⚠️ [SYSTEM]: ตรวจพบคำโกหกในระบบ...");
           ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
         }
@@ -16171,6 +16279,9 @@
   }
 
   function enterCurseFinalLie() {
+    // 🔇 ตัดเสียงเพลงเงียบสนิททันทีหลังตอบครั้งที่ 2 (เพิ่มความหลอนก่อนจัมป์สแกร์!)
+    stopAllCurseMusic();
+
     spawnCurseSysPopup("🩸 [ERROR]: TRUTH_NOT_FOUND // กำลังปิดระบบ");
     ckSysInterval = setInterval(() => {
       spawnCurseSysPopup("👁️ โกหก... คุณกำลังโกหกผมอยู่...");
@@ -16193,9 +16304,6 @@
       // จัมป์สแกร์ซูมหน้า curse_5 เต็มจอ
       clearInterval(ckFlyInterval);
       clearInterval(ckSysInterval);
-      stopCreepySynthBgm();
-      const bgm = document.getElementById('curseBgmAudio');
-      if (bgm) { bgm.pause(); bgm.currentTime = 0; }
 
       const jsBox = document.getElementById('ckJumpscareFlash');
       const jsAudio = document.getElementById('curseJumpscareAudio');
@@ -16208,8 +16316,9 @@
         playExeSilentScareAudio();
       }
 
-      // ตัดจบและมอบยศราชาคำสาป
+      // ตัดจบและปลดล็อก (ล้างสถานะดักรีเฟรชออก)
       setTimeout(() => {
+        try { localStorage.removeItem(CK_PHASE_KEY); } catch (e) {}
         if (jsBox) jsBox.style.display = 'none';
         const stage = document.getElementById('curseKingStage');
         if (stage) {
@@ -16254,6 +16363,16 @@
       }, 850);
     });
   }
+
+  // 👁️ เช็กทันทีตอนเปิดเว็บ/รีเฟรช: ถ้าแอบรีเฟรชหนีค้างอยู่ ให้ดึงกลับมาคุยต่อทันที!
+  window.addEventListener("load", () => {
+    try {
+      const savedPhase = localStorage.getItem(CK_PHASE_KEY);
+      if (savedPhase === "1" || savedPhase === "2") {
+        setTimeout(() => startCurseKingCutscene(savedPhase), 350);
+      }
+    } catch (e) {}
+  });
   const _origGetHorrorTier = getHorrorTierOfUser;
   getHorrorTierOfUser = function(uData, uid) {
     const u = uData || {};
