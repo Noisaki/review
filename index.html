@@ -6816,35 +6816,64 @@
       100% { opacity: 0.95; }
     }
 
-    /* ===== เอฟเฟกต์รอยข่วน 3 ขีดยักษ์เต็มจอ + ดาเมจ 99999 ทะลักจอ ===== */
+    /* ===== เอฟเฟกต์จัมป์สแกร์ + รอยข่วน 3 ขีดยักษ์กลางจอ + ดาเมจ 99999 (ล็อกตรงจอ 100% ทั้งคอม & มือถือ) ===== */
+    #ckJumpscareFlash {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      z-index: 99999;
+      background: #000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #ckJumpscareFlash img.face-zoom {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+
     #ckClawOverlay {
       position: fixed;
       inset: 0;
-      z-index: 100000;
+      width: 100vw;
+      height: 100dvh;
+      z-index: 100002;
       pointer-events: none;
       display: none;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle, rgba(220, 0, 0, 0.45) 0%, rgba(15, 0, 0, 0.78) 100%);
+      overflow: hidden;
+      opacity: 1;
+      transition: opacity 0.65s ease-out;
+      background: radial-gradient(circle, rgba(220, 0, 0, 0.42) 0%, rgba(15, 0, 0, 0.78) 100%);
       animation: ckClawBgFlash 0.45s ease-out;
+    }
+    #ckClawOverlay.fade-out {
+      opacity: 0;
     }
     @keyframes ckClawBgFlash {
       0% { background: rgba(255, 255, 255, 0.85); }
       25% { background: rgba(220, 0, 0, 0.65); }
-      100% { background: radial-gradient(circle, rgba(180, 0, 0, 0.4) 0%, rgba(10, 0, 0, 0.85) 100%); }
+      100% { background: radial-gradient(circle, rgba(180, 0, 0, 0.4) 0%, rgba(10, 0, 0, 0.82) 100%); }
     }
     #ckClawOverlay svg {
-      width: 100vw;
-      height: 100vh;
-      filter: drop-shadow(0 0 24px #ff0000) drop-shadow(0 0 48px #991b1b);
+      width: min(96vw, 96dvh);
+      height: min(96vw, 96dvh);
+      display: block;
+      filter: drop-shadow(0 0 22px #ff0000) drop-shadow(0 0 42px #991b1b);
+      animation: ckDmgViolentShake 0.14s ease-in-out 3;
     }
     .ck-claw-path {
       stroke-dasharray: 1600;
       stroke-dashoffset: 1600;
-      animation: ckSlashDraw 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: ckSlashDraw 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .ck-claw-delay-2 { animation-delay: 0.05s; }
-    .ck-claw-delay-3 { animation-delay: 0.1s; }
+    .ck-claw-delay-2 { animation-delay: 0.07s; }
+    .ck-claw-delay-3 { animation-delay: 0.14s; }
     @keyframes ckSlashDraw {
       to { stroke-dashoffset: 0; }
     }
@@ -6852,50 +6881,53 @@
     #ckDamageOverlay {
       position: fixed;
       inset: 0;
+      width: 100vw;
+      height: 100dvh;
       z-index: 100001;
       pointer-events: none;
       display: none;
       overflow: hidden;
       background: #080000;
-      animation: ckDmgViolentShake 0.09s infinite;
     }
     @keyframes ckDmgViolentShake {
       0%   { transform: translate(0, 0); }
-      25%  { transform: translate(-8px, 6px); }
-      50%  { transform: translate(8px, -6px); }
-      75%  { transform: translate(-6px, -5px); }
-      100% { transform: translate(6px, 5px); }
+      25%  { transform: translate(-6px, 5px); }
+      50%  { transform: translate(6px, -5px); }
+      75%  { transform: translate(-5px, -4px); }
+      100% { transform: translate(5px, 4px); }
     }
     .ck-dmg-wall {
       position: absolute;
-      inset: -12px;
+      inset: -6px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       font-family: 'Kanit', monospace, sans-serif;
       font-weight: 900;
-      font-size: clamp(2rem, 6.5vw, 4.2rem);
-      line-height: 0.92;
+      font-size: clamp(1.4rem, 5.2vw, 3.6rem);
+      line-height: 0.96;
       color: #dc2626;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       word-break: break-all;
       text-shadow: 3px 3px 0 #000, 0 0 18px #ff0000;
       opacity: 0.92;
       user-select: none;
+      animation: ckDmgViolentShake 0.1s infinite;
     }
     .ck-dmg-num {
       position: absolute;
       font-family: 'Kanit', monospace, sans-serif;
       font-weight: 900;
       color: #ff2a2a;
-      text-shadow: 4px 4px 0 #000, -3px -3px 0 #7f1d1d, 0 0 24px #ff0000;
+      text-shadow: 3px 3px 0 #000, -2px -2px 0 #7f1d1d, 0 0 20px #ff0000;
       animation: ckDmgPop 0.14s ease-out forwards;
       user-select: none;
       white-space: nowrap;
+      transform: translate(-50%, -50%);
     }
     @keyframes ckDmgPop {
-      0% { transform: scale(2.1); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+      0% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
     /* =========================================
        🐾 ระบบแต้มอุ้งเท้า (Soft Cap + Progressive Vote) & 🏆 อชีฟเม้น BGT
@@ -16349,8 +16381,49 @@
     const inp = document.getElementById('cursedConfessInput');
     if (inp) inp.value = "";
   }
+  let ckJumpscareActive = false;
 
+  // โหลดและปลดล็อกเสียง jumpscare.mp3 ไว้ล่วงหน้าตั้งแต่ตอนกดเริ่มคัตซีน (กันดีเลย์บนมือถือ)
+  function primeCurseJumpscareAudio() {
+    const jsAudio = document.getElementById('curseJumpscareAudio');
+    if (!jsAudio || jsAudio.dataset.primed === "1") return;
+    jsAudio.dataset.primed = "1";
+    try {
+      jsAudio.muted = true;
+      jsAudio.load();
+      const p = jsAudio.play();
+      if (p && typeof p.then === "function") {
+        p.then(() => {
+          jsAudio.pause();
+          jsAudio.currentTime = 0;
+          jsAudio.muted = false;
+        }).catch(() => {
+          jsAudio.muted = false;
+          jsAudio.dataset.primed = "0";
+        });
+      } else {
+        jsAudio.pause();
+        jsAudio.currentTime = 0;
+        jsAudio.muted = false;
+      }
+    } catch (e) {
+      jsAudio.muted = false;
+    }
+  }
+
+  // ปิดเสียงหลอนและเสียงจัมป์สแกร์ทั้งหมดทันที (กันเสียงหลุดมาดังหลังจบฉาก)
+  function stopAllScareAndJumpscareAudio() {
+    ckJumpscareActive = false;
+    const jsAudio = document.getElementById('curseJumpscareAudio');
+    if (jsAudio) {
+      jsAudio.pause();
+      jsAudio.currentTime = 0;
+    }
+    if (typeof stopRealCryingAudio === "function") stopRealCryingAudio();
+    if (typeof stopAllCurseMusic === "function") stopAllCurseMusic();
+  }
   function confirmCurseKingRoute() {
+    primeCurseJumpscareAudio();
     const warnModal = document.getElementById('curseKingWarnModal');
     if (warnModal) warnModal.style.display = 'none';
     startCurseKingCutscene();
@@ -16519,10 +16592,12 @@
 
   function adminTestCurseKingCutscene() {
     if (!currentUser || !currentUser.isVoteAdmin) return;
+    primeCurseJumpscareAudio();
     isAdminTestingCurse = true;
     stopChristmasMusic();
     startCurseKingCutscene();
   }
+  
 
   function typeCurseKingLine(text, idleImg, talkImgA, talkImgB, isHorrorPhase, speedMs, onDone) {
     clearInterval(ckTalkTimer);
@@ -16570,6 +16645,7 @@
     if (!stage || stage.dataset.clickBound) return;
     stage.dataset.clickBound = "1";
     stage.addEventListener('click', (e) => {
+      primeCurseJumpscareAudio();
       if (e.target.closest('.ck-choice-btn')) return;
       if (ckForceFinishLine) {
         ckForceFinishLine();
@@ -16690,11 +16766,13 @@
     }
   }
 
-  // เสียงฟันฉัวะ (รอยข่วนยักษ์เต็มจอ) + กำแพงเลข 99999 ทะลักล้นจอแบบ Chara
+  // เสียงฟันฉัวะ (รอยข่วนยักษ์กลางจอ ค่อยๆ จางหายช้าๆ) + กำแพงเลข 99999 พอดีจอทั้งคอม & มือถือ
   function playClawAndDamage99999(onFinish) {
     const clawEl = document.getElementById('ckClawOverlay');
     const dmgEl  = document.getElementById('ckDamageOverlay');
+
     if (clawEl) {
+      clawEl.classList.remove('fade-out');
       clawEl.style.display = 'flex';
       clawEl.querySelectorAll('.ck-claw-path').forEach(p => {
         p.style.animation = 'none';
@@ -16703,57 +16781,67 @@
       });
     }
     playButtonDestroySound();
-    document.body.classList.add('horror-glitch-shake');
 
-    // โชว์รอยกรงเล็บชัดๆ 480ms แล้วระเบิดเลข 99999 ล้นจอ!
+    // ค้างรอยกรงเล็บไว้ชัดๆ 750ms แล้วค่อยๆ จางหายช้าๆ (650ms) พร้อมเลข 99999 ที่โผล่ขึ้นมา
     setTimeout(() => {
-      if (clawEl) clawEl.style.display = 'none';
+      if (clawEl) {
+        clawEl.classList.add('fade-out');
+        setTimeout(() => {
+          clawEl.style.display = 'none';
+          clawEl.classList.remove('fade-out');
+        }, 680);
+      }
+
       if (dmgEl) {
         dmgEl.innerHTML = '';
         dmgEl.style.display = 'block';
 
-        // 1. กำแพงเลข 99999 ปูเต็มทุกแถวของหน้าจอทีละบรรทัด
+        const isMobile = window.innerWidth < 640;
+
+        // 1. กำแพงเลข 99999 ปูเต็มทุกแถวพอดีหน้าจอ
         const wall = document.createElement('div');
         wall.className = 'ck-dmg-wall';
         dmgEl.appendChild(wall);
 
         let rowCount = 0;
-        const totalRows = 16;
+        const totalRows = isMobile ? 14 : 16;
         const wallTimer = setInterval(() => {
           const line = document.createElement('div');
           line.textContent = '999999999999999999999999999999';
           wall.appendChild(line);
           rowCount++;
           if (rowCount >= totalRows) clearInterval(wallTimer);
-        }, 28);
+        }, 30);
 
-        // 2. เด้งเลข 99999 ขนาดยักษ์ซ้อนทับกระจายเต็มจออีก 55 ตัว
+        // 2. เด้งเลข 99999 กระจายพอดีกรอบจอ (ไม่ตกขอบซ้าย-ขวา-ล่าง)
         let popCount = 0;
+        const maxPop = isMobile ? 36 : 56;
         const spam = setInterval(() => {
           for (let k = 0; k < 2; k++) {
             const n = document.createElement('div');
             n.className = 'ck-dmg-num';
-            n.textContent = Math.random() < 0.35 ? '999999999' : '99999';
-            n.style.left = (Math.random() * 88 - 8) + 'vw';
-            n.style.top  = (Math.random() * 90 - 4) + 'vh';
-            n.style.fontSize = (2.0 + Math.random() * 3.2) + 'rem';
+            n.textContent = Math.random() < 0.3 ? '9999999' : '99999';
+            n.style.left = (12 + Math.random() * 76) + '%';
+            n.style.top  = (10 + Math.random() * 80) + '%';
+            n.style.fontSize = isMobile
+              ? (1.5 + Math.random() * 1.6) + 'rem'
+              : (2.0 + Math.random() * 2.8) + 'rem';
             dmgEl.appendChild(n);
             popCount++;
           }
-          if (popCount >= 56) {
+          if (popCount >= maxPop) {
             clearInterval(spam);
             setTimeout(() => {
               dmgEl.style.display = 'none';
               dmgEl.innerHTML = '';
-              document.body.classList.remove('horror-glitch-shake');
               if (onFinish) onFinish();
-            }, 800);
+            }, 850);
           }
-        }, 26);
+        }, 28);
       } else if (onFinish) {
         onFinish();
       }
-    }, 480);
+    }, 750);
   }
 
   function getReloadScoldLine(reloadCount, isHorrorPhase) {
@@ -17003,22 +17091,37 @@
   function triggerCurseKingJumpscareAndFinish(from5Reloads = false) {
     clearInterval(ckFlyInterval);
     clearInterval(ckSysInterval);
+    ckJumpscareActive = true;
 
     const jsBox = document.getElementById('ckJumpscareFlash');
     const jsImg = document.getElementById('ckJumpscareImg');
     const jsAudio = document.getElementById('curseJumpscareAudio');
     if (jsImg) jsImg.src = "images/curse_10.png";
     if (jsBox) jsBox.style.display = 'flex';
+
     if (jsAudio) {
+      jsAudio.muted = false;
       jsAudio.volume = Math.min(0.65, Math.max(0.3, musicVolume));
       jsAudio.currentTime = 0;
-      jsAudio.play().catch(() => playExeSilentScareAudio());
+      const playPromise = jsAudio.play();
+      if (playPromise && typeof playPromise.then === "function") {
+        playPromise.then(() => {
+          // ถ้าเน็ตช้าจนเสียงเพิ่งโหลดเสร็จหลังจบฉากไปแล้ว ให้ตัดเสียงทิ้งทันที!
+          if (!ckJumpscareActive) {
+            jsAudio.pause();
+            jsAudio.currentTime = 0;
+          }
+        }).catch(() => {
+          if (ckJumpscareActive) playExeSilentScareAudio();
+        });
+      }
     } else {
       playExeSilentScareAudio();
     }
 
     setTimeout(() => {
       playClawAndDamage99999(() => {
+        stopAllScareAndJumpscareAudio(); // ตัดเสียงจัมป์สแกร์ทันทีเมื่อจบฉาก
         try {
           localStorage.removeItem(CK_PHASE_KEY);
           localStorage.removeItem(CK_LINE_KEY);
