@@ -6897,6 +6897,190 @@
       0% { transform: scale(2.1); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+    /* =========================================
+       🐾 ระบบแต้มอุ้งเท้า (Soft Cap + Progressive Vote) & 🏆 อชีฟเม้น BGT
+       ========================================= */
+    .bgt-points-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0 6px;
+    }
+    .bgt-pt-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      color: #92400e;
+      border: 1.5px solid #f59e0b;
+    }
+    .bgt-pt-chip.farm {
+      background: #eff6ff;
+      color: #1e40af;
+      border-color: #93c5fd;
+    }
+    .bgt-pt-chip.vote {
+      background: #fff1f2;
+      color: #9f1239;
+      border-color: #fda4af;
+    }
+    body.bgt-dark-mode .bgt-pt-chip {
+      background: rgba(245, 158, 11, 0.16);
+      color: #fde68a;
+      border-color: rgba(245, 158, 11, 0.55);
+    }
+    body.bgt-dark-mode .bgt-pt-chip.farm {
+      background: rgba(56, 189, 248, 0.14);
+      color: #7dd3fc;
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+    body.bgt-dark-mode .bgt-pt-chip.vote {
+      background: rgba(244, 63, 94, 0.16);
+      color: #fda4af;
+      border-color: rgba(244, 63, 94, 0.45);
+    }
+
+    /* ช่องอวดอชีฟเม้น 3 ช่องบนโปรไฟล์ */
+    .bgt-ach-showcase {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .bgt-ach-pin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 8px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1.5px solid #64748b;
+      cursor: pointer;
+    }
+    .bgt-ach-pin-badge.r-rare   { border-color: #38bdf8; color: #bae6fd; background: #0c4a6e; }
+    .bgt-ach-pin-badge.r-epic   { border-color: #c084fc; color: #f3e8ff; background: #3b0764; }
+    .bgt-ach-pin-badge.r-secret { border-color: #ef4444; color: #fecaca; background: #450a0a; box-shadow: 0 0 8px rgba(239,68,68,0.5); }
+
+    /* หน้าต่างหอเกียรติยศอชีฟเม้น */
+    .ach-modal-box {
+      background: #0f172a;
+      color: #f8fafc;
+      border: 2px solid #fbbf24;
+      border-radius: 24px;
+      padding: 22px 20px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      text-align: left;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+      animation: popIn 0.25s ease-out;
+    }
+    .ach-summary-bar {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin: 10px 0 14px;
+    }
+    .ach-list-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 620px) {
+      .ach-list-grid { grid-template-columns: 1fr; }
+    }
+    .ach-card {
+      background: #1e293b;
+      border: 1.5px solid #334155;
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      position: relative;
+      transition: transform 0.18s;
+    }
+    .ach-card.unlocked { background: linear-gradient(145deg, #1e293b, #0f172a); border-color: #94a3b8; }
+    .ach-card.unlocked.r-rare   { border-color: #38bdf8; box-shadow: 0 0 12px rgba(56,189,248,0.22); }
+    .ach-card.unlocked.r-epic   { border-color: #a855f7; box-shadow: 0 0 14px rgba(168,85,247,0.28); }
+    .ach-card.unlocked.r-secret { border-color: #ef4444; background: linear-gradient(145deg, #2a0606, #090000); box-shadow: 0 0 14px rgba(239,68,68,0.35); }
+    .ach-card.locked { opacity: 0.62; }
+    .ach-card.locked.r-secret { background: #09090b; border-color: #27272a; opacity: 0.85; }
+    .ach-icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.55rem;
+      flex-shrink: 0;
+    }
+    .ach-info { flex: 1; min-width: 0; }
+    .ach-title { font-family: 'Kanit', sans-serif; font-size: 0.92rem; font-weight: 700; color: #ffffff; margin: 0 0 2px; }
+    .ach-desc  { font-size: 0.75rem; color: #94a3b8; margin: 0 0 8px; line-height: 1.4; }
+    .ach-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .ach-btn-claim {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 4px 11px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .ach-btn-pin {
+      background: rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    .ach-btn-pin.pinned { background: #38bdf8; color: #0f172a; border-color: #38bdf8; font-weight: 700; }
+
+    /* ป้ายเด้งปลดล็อกอชีฟเม้นสไตล์การ์ดเกม BGT */
+    #bgtAchUnlockPopup {
+      position: fixed;
+      top: 76px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-130px);
+      z-index: 100010;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #0f172a 100%);
+      border: 2px solid #fde047;
+      border-radius: 18px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #ffffff;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.6), 0 0 22px rgba(251,191,36,0.45);
+      max-width: 92vw;
+      pointer-events: none;
+      opacity: 0;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+    }
+    #bgtAchUnlockPopup.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -7040,6 +7224,9 @@
         </button>
         <button type="button" class="nd-item" onclick="closeProfileDropdown(); openEditProfileModal();">
           <span>✏️ แต่งโปรไฟล์ & กรอบ</span>
+        </button>
+        <button type="button" class="nd-item" onclick="closeProfileDropdown(); openAchievementModal();">
+          <span>🏆 หอเกียรติยศอชีฟเม้น</span><span class="nd-pill-tag" id="ndPointsBadge">🐾 0</span>
         </button>
         <button type="button" class="nd-item" id="navRefreshRoleBtn" onclick="closeProfileDropdown(); refreshDiscordRole();">
           <span>🔄 รีเฟรชยศ Discord</span>
@@ -7323,10 +7510,18 @@
             <span class="title-pill" id="profileTitlePill" style="display:none; font-size:0.85rem; padding:4px 12px;">-</span>
           </div>
           <div class="profile-bio-box" id="profileBioText" style="display:none;"></div>
+          <!-- แถบสถานะแต้มอุ้งเท้า + ขีดจำกัดรายวัน + ช่องอวดอชีฟเม้น -->
+          <div class="bgt-points-bar" id="profilePointsBar">
+            <span class="bgt-pt-chip" id="profilePointsChip">🐾 0 แต้ม</span>
+            <span class="bgt-pt-chip farm" id="profileFarmChip">⚡ ฟาร์มวันนี้: 0/350 (100%)</span>
+            <span class="bgt-pt-chip vote" id="profileVoteQuotaChip">🔥 โหวตปกติ: 0/5</span>
+          </div>
+          <div class="bgt-ach-showcase" id="profileAchShowcase"></div>
           <p class="profile-desc" id="profileDesc"></p>
         </div>
         <div class="profile-actions">
           <button type="button" class="profile-btn checkin-btn" id="dailyCheckinBtn" onmouseenter="playHoverSound()" onclick="claimDailyCheckin();">📅 เช็กอินรายวัน</button>
+          <button type="button" class="profile-btn" style="background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff; border-color:#fde68a;" onmouseenter="playHoverSound()" onclick="playClickSound(); openAchievementModal();">🏆 อชีฟเม้น <span id="achUnreadDot" style="display:none; background:#dc2626; color:#fff; border-radius:999px; padding:0 6px; font-size:0.72rem; margin-left:3px;">!</span></button>
           <button type="button" class="profile-btn" style="background:linear-gradient(135deg,#5865F2,#4338ca); color:#fff; border-color:#818cf8;" onmouseenter="playHoverSound()" onclick="playClickSound(); openEditProfileModal();">✏️ แต่งโปรไฟล์ & กรอบ</button>
           <button type="button" class="profile-btn" id="refreshRoleBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); refreshDiscordRole();">🔄 รีเฟรชยศ</button>
           <button type="button" class="profile-btn logout" id="logoutBtn" onmouseenter="playHoverSound()" onclick="playClickSound(); discordLogout();">🚪 ออกจากระบบ</button>
@@ -8243,6 +8438,35 @@
       <button type="button" id="wishSubmitBtn" class="modal-discord-btn" onclick="submitGameWish()">🚀 โพสต์คำขอ</button>
       <button type="button" class="modal-cancel-btn" onclick="document.getElementById('wishSubmitModal').style.display='none';">ยกเลิก</button>
     </div>
+  </div>
+</div>
+<!-- 🏆 หน้าต่างหอเกียรติยศอชีฟเม้น BGT -->
+<div class="modal-overlay" id="bgtAchModal" onclick="if(event.target===this) this.style.display='none';">
+  <div class="ach-modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <h2 style="font-family:'Kanit',sans-serif; margin:0; color:#fde047; font-size:1.3rem;">🏆 หอเกียรติยศอชีฟเม้น BGT</h2>
+      <button type="button" class="modal-cancel-btn" style="padding:5px 12px; font-size:0.84rem;" onclick="document.getElementById('bgtAchModal').style.display='none';">✕ ปิด</button>
+    </div>
+    <div class="ach-summary-bar">
+      <div style="display:flex; justify-content:space-between; font-size:0.84rem; font-weight:700; margin-bottom:6px;">
+        <span id="achSummaryText">ปลดล็อกแล้ว 0 / 10 (0%)</span>
+        <span id="achPinnedText" style="color:#38bdf8;">📌 ปักหมุดอวดบนโปรไฟล์: 0 / 3</span>
+      </div>
+      <div class="cheer-bar-track" style="height:10px; background:#0f172a;">
+        <div class="cheer-bar-fill" id="achSummaryFill" style="width:0%;"></div>
+      </div>
+    </div>
+    <div class="ach-list-grid" id="bgtAchListGrid"></div>
+  </div>
+</div>
+
+<!-- ✨ ป้ายเด้งปลดล็อกอชีฟเม้น -->
+<div id="bgtAchUnlockPopup">
+  <div id="achPopIcon" style="font-size:2rem;">🏆</div>
+  <div>
+    <div style="font-size:0.72rem; color:#fde047; font-weight:700; letter-spacing:0.5px;">✨ ปลดล็อกอชีฟเม้นใหม่!</div>
+    <div id="achPopTitle" style="font-family:'Kanit',sans-serif; font-size:1rem; font-weight:800;">-</div>
+    <div id="achPopReward" style="font-size:0.76rem; color:#7dd3fc;">เข้าไปกดรับรางวัลในหน้าอชีฟเม้นได้เลย!</div>
   </div>
 </div>
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
@@ -16788,7 +17012,594 @@
     if (currentUser && uid === currentUser.id && localStorage.getItem("bgt_curse_king_unlocked") === "1") return 5;
     return _origGetHorrorTier(uData, uid);
   };
-  
+  // =========================================================================
+  // 23. ระบบเศรษฐกิจแต้มอุ้งเท้า (Soft Cap + Progressive Vote) & 🏆 อชีฟเม้น BGT (Safe Edition)
+  // =========================================================================
+  const POINT_UNIT = "🐾";
+  const POINT_NAME = "แต้มอุ้งเท้า";
+
+  const BGT_ACHIEVEMENTS = [
+    { id: "first_checkin",    icon: "🐾", title: "ก้าวแรกสู่บ้าน BGT",      desc: "เช็กอินรายวันครบ 1 วัน",                         reward: 100, rarity: "common", secret: false },
+    { id: "streak_7",         icon: "🌟", title: "แฟนพันธุ์แท้ 7 วัน",       desc: "เช็กอินสะสมครบ 7 วัน",                           reward: 300, rarity: "rare",   secret: false },
+    { id: "first_eval",       icon: "📝", title: "นักวิจารณ์มือใหม่",        desc: "ส่งแบบประเมินคุณภาพเกมแปลไทยครั้งแรก",           reward: 150, rarity: "common", secret: false },
+    { id: "first_vote",       icon: "🔥", title: "เสียงนี้เพื่อเกมที่รัก",    desc: "ใช้แต้มอุ้งเท้าโหวตเกมหรือขอเกมครั้งแรก",        reward: 100, rarity: "common", secret: false },
+    { id: "dev_supporter",    icon: "🤝", title: "ผู้ส่งพลังใจผู้สร้าง",     desc: "ส่งกำลังใจหรือคอมเมนต์ให้ผู้พัฒนาต้นฉบับ",        reward: 150, rarity: "common", secret: false },
+    { id: "over_quota_vote",  icon: "💎", title: "สายเปย์แต้มตัวจริง",      desc: "ทุ่มโหวตเกมเกินโควต้าราคาปกติในวันเดียว (6+)",    reward: 150, rarity: "rare",   secret: false },
+    { id: "softcap_farmer",   icon: "⚡", title: "ฟาร์มจนนิ้วล็อก",         desc: "ฟาร์มแต้มกดหัวใจแตะขีดจำกัดสูงสุดของวัน (350+)", reward: 200, rarity: "epic",   secret: false },
+    { id: "secret_curse_1",   icon: "🩸", title: "ผู้ต้องคำสาป 1 ดาว",      desc: "ค้นพบความลับต้องห้ามในแบบประเมิน",                reward: 200, rarity: "secret", secret: true  },
+    { id: "secret_reload_5",  icon: "👁️", title: "หนีไม่พ้นหรอกนะ...",      desc: "พยายามกดรีเฟรชหนีราชาคำสาปครบ 5 รอบ",            reward: 300, rarity: "secret", secret: true  },
+    { id: "secret_curse_king",icon: "👑", title: "ผู้พิชิตราชาคำสาป",       desc: "เล่นเส้นทางลับราชาคำสาปจนจบ",                    reward: 500, rarity: "secret", secret: true  }
+  ];
+
+  let _farmClickBuf = 0;
+  let _pendingFarmPts = 0;
+  let _farmFlushTimer = null;
+  let _localPtsSpendLock = 0;
+  let _achPopupTimer = null;
+  const _migrationDoneUids = new Set();
+  const _claimingAchSet = new Set();
+  const _localUnlockedAch = new Set();
+
+  function getUserEcoData(uid) {
+    const u = (uid && usersCache && usersCache[uid]) ? usersCache[uid] : {};
+    const today = getBangkokDateStr(0);
+    const sameDay = u.ecoDate === today;
+    return {
+      points: Math.max(0, Number(u.pawPoints) || 0),
+      farmedToday: sameDay ? (Number(u.ecoFarmToday) || 0) : 0,
+      votesToday: sameDay ? (Number(u.ecoVotesToday) || 0) : 0,
+      commentBonusToday: sameDay && !!u.ecoCommentBonus,
+      evalBonusToday: sameDay && !!u.ecoEvalBonus,
+      migrated: !!u.ecoMigrated,
+      achUnlocked: (u.achievements && u.achievements.unlocked) ? u.achievements.unlocked : {},
+      achClaimed:  (u.achievements && u.achievements.claimed)  ? u.achievements.claimed  : {},
+      achPinned:   Array.isArray(u.achievements && u.achievements.pinned) ? u.achievements.pinned : []
+    };
+  }
+
+  // ตัวช่วยรีเซ็ตค่าทุกช่องพร้อมกันเมื่อขึ้นวันใหม่ (กันโควต้าเมื่อวานค้าง!)
+  function prepareEcoDayUpdates(uid, updates) {
+    const today = getBangkokDateStr(0);
+    if (!usersCache[uid]) usersCache[uid] = {};
+    const u = usersCache[uid];
+    if (u.ecoDate !== today) {
+      u.ecoDate = today;
+      u.ecoFarmToday = 0;
+      u.ecoVotesToday = 0;
+      u.ecoCommentBonus = false;
+      u.ecoEvalBonus = false;
+
+      updates[`users/${uid}/ecoDate`] = today;
+      updates[`users/${uid}/ecoFarmToday`] = 0;
+      updates[`users/${uid}/ecoVotesToday`] = 0;
+      updates[`users/${uid}/ecoCommentBonus`] = false;
+      updates[`users/${uid}/ecoEvalBonus`] = false;
+    }
+    return u;
+  }
+
+  function getFarmStepInfo(farmedToday) {
+    if (farmedToday < 150) return { clicksPerPt: 1,  rateText: "100%" };
+    if (farmedToday < 250) return { clicksPerPt: 3,  rateText: "33%"  };
+    if (farmedToday < 350) return { clicksPerPt: 10, rateText: "10%"  };
+    return                        { clicksPerPt: 50, rateText: "2%"   };
+  }
+
+  function getNextVoteCost(votesToday) {
+    if (votesToday < 5)  return { cost: 50,  tierLabel: "ราคาปกติ" };
+    if (votesToday < 10) return { cost: 100, tierLabel: "เกินโควต้า x2" };
+    if (votesToday < 15) return { cost: 250, tierLabel: "ทุ่มหนัก x5" };
+    return                      { cost: 500, tierLabel: "โซนสุลต่าน x10" };
+  }
+
+  // ส่งแต้มที่ฟาร์มไว้ขึ้น Firebase เป็นก้อนทุก 1 วิ (ลดอาการหน่วง & ประหยัดโควต้า)
+  function flushPendingFarmPoints() {
+    if (!db || !currentUser || _pendingFarmPts <= 0) return;
+    const uid = currentUser.id;
+    const batch = _pendingFarmPts;
+    _pendingFarmPts = 0;
+
+    const updates = {};
+    const u = prepareEcoDayUpdates(uid, updates);
+    updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(batch);
+    updates[`users/${uid}/ecoFarmToday`] = Number(u.ecoFarmToday) || batch;
+
+    db.ref().update(updates).catch(() => {
+      _pendingFarmPts += batch;
+    });
+  }
+  window.addEventListener("beforeunload", flushPendingFarmPoints);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flushPendingFarmPoints();
+  });
+
+  // แปลงเลเวลเดิมเป็นโบนัสแต้มตั้งต้น (ล็อกกันยิงเบิ้ล 100%)
+  function ensureLegacyPointsMigration() {
+    if (!db || !currentUser) return;
+    const uid = currentUser.id;
+    if (_migrationDoneUids.has(uid)) return;
+    const u = usersCache[uid];
+    if (!u || u.ecoMigrated) {
+      if (u && u.ecoMigrated) _migrationDoneUids.add(uid);
+      return;
+    }
+
+    _migrationDoneUids.add(uid);
+    const lv = getLevelFromHearts(Number(u.heartsClicked) || 0);
+    const bonus = Math.min(5000, Math.max(100, lv * 50));
+    u.ecoMigrated = true;
+    u.pawPoints = (Number(u.pawPoints) || 0) + bonus;
+
+    db.ref("users/" + uid).update({
+      ecoMigrated: true,
+      pawPoints: firebase.database.ServerValue.increment(bonus)
+    }).then(() => {
+      showToast(`🎁 โบนัสต้อนรับระบบแต้มใหม่! รับทุนตั้งตัว +${formatNum(bonus)} ${POINT_UNIT} (เลเวลเดิมอยู่ครบ!)`);
+      updateProfileEcoUI();
+    }).catch(() => {
+      _migrationDoneUids.delete(uid);
+    });
+  }
+
+  function updateProfileEcoUI() {
+    if (!currentUser) return;
+    const eco = getUserEcoData(currentUser.id);
+    const step = getFarmStepInfo(eco.farmedToday);
+    const vInfo = getNextVoteCost(eco.votesToday);
+
+    const ptEl = document.getElementById('profilePointsChip');
+    const fmEl = document.getElementById('profileFarmChip');
+    const vtEl = document.getElementById('profileVoteQuotaChip');
+    const ndPt = document.getElementById('ndPointsBadge');
+    if (ptEl) ptEl.textContent = `${POINT_UNIT} ${formatNum(eco.points)} ${POINT_NAME}`;
+    if (fmEl) fmEl.textContent = `⚡ ฟาร์มวันนี้: ${eco.farmedToday}/350 (เรท ${step.rateText})`;
+    if (vtEl) vtEl.textContent = `🔥 โหวตวันนี้: ${eco.votesToday}/5 (ครั้งต่อไป ${vInfo.cost} ${POINT_UNIT})`;
+    if (ndPt) ndPt.textContent = `${POINT_UNIT} ${formatCompact(eco.points)}`;
+
+    const unclaimed = Object.keys(eco.achUnlocked).filter(id => eco.achUnlocked[id] && !eco.achClaimed[id]).length;
+    const dot = document.getElementById('achUnreadDot');
+    if (dot) {
+      dot.style.display = unclaimed > 0 ? 'inline-block' : 'none';
+      dot.textContent = unclaimed;
+    }
+
+    renderAchShowcaseInto('profileAchShowcase', currentUser.id);
+  }
+
+  function renderAchShowcaseInto(elId, uid) {
+    const box = document.getElementById(elId);
+    if (!box) return;
+    const eco = getUserEcoData(uid);
+    const pinnedIds = eco.achPinned.filter(id => eco.achUnlocked[id]).slice(0, 3);
+    box.innerHTML = "";
+    pinnedIds.forEach(id => {
+      const meta = BGT_ACHIEVEMENTS.find(a => a.id === id);
+      if (!meta) return;
+      const sp = document.createElement('span');
+      sp.className = `bgt-ach-pin-badge r-${meta.rarity}`;
+      sp.textContent = `${meta.icon} ${meta.title}`;
+      sp.title = meta.desc;
+      sp.onclick = () => { if (currentUser && uid === currentUser.id) openAchievementModal(); };
+      box.appendChild(sp);
+    });
+  }
+
+  function unlockAchievement(achId) {
+    if (!db || !currentUser) return;
+    const lockKey = currentUser.id + ":" + achId;
+    const eco = getUserEcoData(currentUser.id);
+    if (eco.achUnlocked[achId] || _localUnlockedAch.has(lockKey)) return;
+
+    const meta = BGT_ACHIEVEMENTS.find(a => a.id === achId);
+    if (!meta) return;
+
+    _localUnlockedAch.add(lockKey);
+    if (!usersCache[currentUser.id]) usersCache[currentUser.id] = {};
+    if (!usersCache[currentUser.id].achievements) usersCache[currentUser.id].achievements = { unlocked: {}, claimed: {}, pinned: [] };
+    if (!usersCache[currentUser.id].achievements.unlocked) usersCache[currentUser.id].achievements.unlocked = {};
+    usersCache[currentUser.id].achievements.unlocked[achId] = Date.now();
+
+    db.ref(`users/${currentUser.id}/achievements/unlocked/${achId}`).set(Date.now()).catch(() => {});
+    showAchUnlockBanner(meta);
+    updateProfileEcoUI();
+  }
+
+  function showAchUnlockBanner(meta) {
+    playMilestoneFanfare();
+    const pop = document.getElementById('bgtAchUnlockPopup');
+    if (!pop) return;
+    document.getElementById('achPopIcon').textContent = meta.icon;
+    document.getElementById('achPopTitle').textContent = meta.title;
+    document.getElementById('achPopReward').textContent = `🎁 กดรับรางวัล +${meta.reward} ${POINT_UNIT} ได้ในหน้าอชีฟเม้น!`;
+    pop.classList.add('show');
+    clearTimeout(_achPopupTimer);
+    _achPopupTimer = setTimeout(() => pop.classList.remove('show'), 4200);
+  }
+
+  function checkAutoAchievements() {
+    if (!currentUser || !usersCache[currentUser.id]) return;
+    const u = usersCache[currentUser.id];
+    const eco = getUserEcoData(currentUser.id);
+
+    if ((Number(u.totalCheckins) || 0) >= 1) unlockAchievement("first_checkin");
+    if ((Number(u.totalCheckins) || 0) >= 7) unlockAchievement("streak_7");
+    if (eco.farmedToday >= 350) unlockAchievement("softcap_farmer");
+    if (eco.votesToday >= 6) unlockAchievement("over_quota_vote");
+
+    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, currentUser.id) : 0;
+    if (hTier >= 1) unlockAchievement("secret_curse_1");
+    if (hTier >= 5 || u.unlockedCurseKing) unlockAchievement("secret_curse_king");
+  }
+
+  function openAchievementModal() {
+    if (!currentUser) {
+      openLoginInfo("🔐 เข้าสู่ระบบก่อนเพื่อดูและกดรับรางวัลอชีฟเม้นนะครับ");
+      return;
+    }
+    checkAutoAchievements();
+    renderAchievementModal();
+    document.getElementById('bgtAchModal').style.display = 'flex';
+  }
+
+  function renderAchievementModal() {
+    if (!currentUser) return;
+    const grid = document.getElementById('bgtAchListGrid');
+    if (!grid) return;
+    const eco = getUserEcoData(currentUser.id);
+
+    const unlockedCnt = BGT_ACHIEVEMENTS.filter(a => eco.achUnlocked[a.id]).length;
+    const pct = Math.round((unlockedCnt / BGT_ACHIEVEMENTS.length) * 100);
+    document.getElementById('achSummaryText').textContent = `ปลดล็อกแล้ว ${unlockedCnt} / ${BGT_ACHIEVEMENTS.length} (${pct}%)`;
+    document.getElementById('achPinnedText').textContent = `📌 ปักหมุดอวดบนโปรไฟล์: ${eco.achPinned.length} / 3`;
+    document.getElementById('achSummaryFill').style.width = `${pct}%`;
+
+    grid.innerHTML = "";
+    BGT_ACHIEVEMENTS.forEach(a => {
+      const isUnl = !!eco.achUnlocked[a.id];
+      const isClm = !!eco.achClaimed[a.id];
+      const isPin = eco.achPinned.includes(a.id);
+      const hideSecret = a.secret && !isUnl;
+
+      const card = document.createElement('div');
+      card.className = `ach-card r-${a.rarity} ${isUnl ? 'unlocked' : 'locked'}`;
+
+      let actionHtml = "";
+      if (isUnl) {
+        if (!isClm) {
+          actionHtml += `<button type="button" class="ach-btn-claim" onclick="claimAchReward('${a.id}')">🎁 รับ +${a.reward} ${POINT_UNIT}</button>`;
+        } else {
+          actionHtml += `<span style="font-size:0.72rem; color:#4ade80; font-weight:700;">✅ รับรางวัลแล้ว</span>`;
+        }
+        actionHtml += `<button type="button" class="ach-btn-pin ${isPin ? 'pinned' : ''}" onclick="togglePinAch('${a.id}')">${isPin ? '📌 ปักหมุดอยู่' : '📌 อวดบนโปรไฟล์'}</button>`;
+      } else {
+        actionHtml = `<span style="font-size:0.72rem; color:#64748b;">🔒 รางวัล: +${a.reward} ${POINT_UNIT}</span>`;
+      }
+
+      card.innerHTML = `
+        <div class="ach-icon-box">${hideSecret ? '❓' : a.icon}</div>
+        <div class="ach-info">
+          <div class="ach-title">${hideSecret ? '??? (อชีฟเม้นลับ)' : a.title}</div>
+          <div class="ach-desc">${hideSecret ? 'เงื่อนไขถูกซ่อนไว้... ลองสำรวจความลับในเว็บดูสิ' : a.desc}</div>
+          <div class="ach-actions">${actionHtml}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // ล็อกกันกดรับรางวัลเบิ้ล 100%
+  function claimAchReward(achId) {
+    if (!db || !currentUser) return;
+    const uid = currentUser.id;
+    const claimKey = uid + ":" + achId;
+    if (_claimingAchSet.has(claimKey)) return;
+
+    const eco = getUserEcoData(uid);
+    const meta = BGT_ACHIEVEMENTS.find(a => a.id === achId);
+    if (!meta || !eco.achUnlocked[achId] || eco.achClaimed[achId]) return;
+
+    _claimingAchSet.add(claimKey);
+    if (!usersCache[uid].achievements) usersCache[uid].achievements = { unlocked: {}, claimed: {}, pinned: [] };
+    if (!usersCache[uid].achievements.claimed) usersCache[uid].achievements.claimed = {};
+    usersCache[uid].achievements.claimed[achId] = true;
+    usersCache[uid].pawPoints = (Number(usersCache[uid].pawPoints) || 0) + meta.reward;
+
+    playCoinSound();
+    renderAchievementModal();
+    updateProfileEcoUI();
+
+    const updates = {};
+    updates[`users/${uid}/achievements/claimed/${achId}`] = true;
+    updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(meta.reward);
+
+    db.ref().update(updates).then(() => {
+      showToast(`🎉 รับรางวัลอชีฟเม้น "${meta.title}" +${meta.reward} ${POINT_UNIT} เรียบร้อย!`);
+    }).catch(() => {
+      _claimingAchSet.delete(claimKey);
+      usersCache[uid].achievements.claimed[achId] = false;
+      showToast("⚠️ รับรางวัลไม่สำเร็จ กรุณาลองใหม่");
+      renderAchievementModal();
+    });
+  }
+
+  function togglePinAch(achId) {
+    if (!db || !currentUser) return;
+    playClickSound();
+    const eco = getUserEcoData(currentUser.id);
+    if (!eco.achUnlocked[achId]) return;
+
+    let nextPinned = [...eco.achPinned];
+    if (nextPinned.includes(achId)) {
+      nextPinned = nextPinned.filter(x => x !== achId);
+    } else {
+      if (nextPinned.length >= 3) {
+        showToast("📌 ปักหมุดอวดได้สูงสุด 3 อันครับ (กดถอดอันเก่าออกก่อนนะ)");
+        return;
+      }
+      nextPinned.push(achId);
+    }
+
+    db.ref(`users/${currentUser.id}/achievements/pinned`).set(nextPinned).then(() => {
+      renderAchievementModal();
+      updateProfileEcoUI();
+    });
+  }
+
+  // --- 🔗 เชื่อมระบบแต้มเข้ากับโปรไฟล์ + การ์ดโฮเวอร์ + กิจกรรมทั้งหมด ---
+
+  const _origApplyProfileEco = applyProfileToUI;
+  applyProfileToUI = function(profile) {
+    _origApplyProfileEco(profile);
+    ensureLegacyPointsMigration();
+    updateProfileEcoUI();
+    checkAutoAchievements();
+  };
+
+  const _origShowHoverEco = showUserHoverCard;
+  showUserHoverCard = function(uid, anchorEl) {
+    _origShowHoverEco(uid, anchorEl);
+    const body = document.querySelector('#userHoverCard .uhc-body');
+    if (!body || !uid) return;
+    const eco = getUserEcoData(uid);
+
+    let extra = document.getElementById('uhcEcoExtra');
+    if (extra) extra.remove();
+    extra = document.createElement('div');
+    extra.id = 'uhcEcoExtra';
+    extra.style.marginTop = "8px";
+    extra.innerHTML = `
+      <div style="font-size:0.78rem; color:#fde047; font-weight:700; margin-bottom:5px;">
+        ${POINT_UNIT} คงเหลือ: ${formatNum(eco.points)} • ⚡ ฟาร์มวันนี้: ${eco.farmedToday}/350
+      </div>
+      <div class="bgt-ach-showcase" id="uhcAchShowcase"></div>
+    `;
+    const statsRow = body.querySelector('.uhc-stats-row');
+    if (statsRow) body.insertBefore(extra, statsRow);
+    else body.appendChild(extra);
+    renderAchShowcaseInto('uhcAchShowcase', uid);
+  };
+
+  const _origClaimDailyCheckin = claimDailyCheckin;
+  claimDailyCheckin = function() {
+    const uid = currentUser ? currentUser.id : null;
+    const cached = (uid && usersCache[uid]) ? usersCache[uid] : {};
+    const alreadyDone = cached.lastCheckinDate === getBangkokDateStr(0);
+    _origClaimDailyCheckin();
+    if (uid && db && !alreadyDone) {
+      const streak = (Number(cached.checkinStreak) || 0) + 1;
+      const ptBonus = 200 + Math.min(streak, 10) * 10;
+      db.ref(`users/${uid}/pawPoints`).set(firebase.database.ServerValue.increment(ptBonus)).catch(() => {});
+      setTimeout(() => {
+        showToast(`🐾 เช็กอินรับโบนัสเพิ่ม +${ptBonus} ${POINT_NAME}!`);
+        checkAutoAchievements();
+      }, 650);
+    }
+  };
+
+  // กดหัวใจหน้าหลัก -> Soft Cap + กัน Auto-Clicker + รวมส่งเป็นก้อนไม่หน่วงเครื่อง
+  const _origMegaCheer = handleMegaCheerOrApology;
+  handleMegaCheerOrApology = function(e) {
+    _origMegaCheer(e);
+    if (isHorrorTriggered || !currentUser || !db) return;
+    if (!checkStealthAntiAutoClick('paw_farm')) return;
+
+    const uid = currentUser.id;
+    const eco = getUserEcoData(uid);
+    const step = getFarmStepInfo(eco.farmedToday);
+    _farmClickBuf++;
+    if (_farmClickBuf >= step.clicksPerPt) {
+      _farmClickBuf = 0;
+      const dummyUpdates = {};
+      const u = prepareEcoDayUpdates(uid, dummyUpdates);
+      const nextFarm = (Number(u.ecoFarmToday) || 0) + 1;
+      u.ecoFarmToday = nextFarm;
+      u.pawPoints = (Number(u.pawPoints) || 0) + 1;
+      _pendingFarmPts += 1;
+
+      clearTimeout(_farmFlushTimer);
+      _farmFlushTimer = setTimeout(flushPendingFarmPoints, 1000);
+
+      updateProfileEcoUI();
+      if (nextFarm === 350) unlockAchievement("softcap_farmer");
+    }
+  };
+
+  voteHeartClick = function(gameId, e) {
+    if (!currentUser) {
+      openLoginInfo("🔐 ล็อกอินก่อนจึงจะใช้แต้มโหวตเกมได้นะครับ");
+      return;
+    }
+    if (!voteData || !voteData.endTime || Date.now() >= voteData.endTime) return;
+    if (Date.now() - _localPtsSpendLock < 220) return;
+
+    const uid = currentUser.id;
+    const eco = getUserEcoData(uid);
+    const vInfo = getNextVoteCost(eco.votesToday);
+    if (eco.points < vInfo.cost) {
+      showToast(`⚠️ แต้มไม่พอ! โหวตนี้ใช้ ${vInfo.cost} ${POINT_UNIT} (${vInfo.tierLabel}) — คุณมี ${formatNum(eco.points)} ${POINT_UNIT}`);
+      return;
+    }
+
+    _localPtsSpendLock = Date.now();
+    playClickSound();
+    feedGenkidama(e ? e.clientX : null, e ? e.clientY : null);
+
+    const updates = {};
+    const u = prepareEcoDayUpdates(uid, updates);
+    const nextVotes = (Number(u.ecoVotesToday) || 0) + 1;
+    u.pawPoints = Math.max(0, eco.points - vInfo.cost);
+    u.ecoVotesToday = nextVotes;
+
+    updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(-vInfo.cost);
+    updates[`users/${uid}/ecoVotesToday`] = nextVotes;
+    updates[`game_vote/games/${gameId}/hearts`] = firebase.database.ServerValue.increment(1);
+    updates[`game_vote/games/${gameId}/voters/${uid}/name`] = currentUser.displayName || currentUser.name;
+    updates[`game_vote/games/${gameId}/voters/${uid}/count`] = firebase.database.ServerValue.increment(1);
+    db.ref().update(updates).catch(() => {});
+
+    unlockAchievement("first_vote");
+    if (nextVotes >= 6) unlockAchievement("over_quota_vote");
+    updateProfileEcoUI();
+
+    if (e) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = `🔥 +1 โหวต (-${vInfo.cost}${POINT_UNIT})`;
+      el.style.left = (e.clientX - 40) + 'px';
+      el.style.top = (e.clientY - 14) + 'px';
+      el.style.fontSize = '0.95rem';
+      el.style.fontWeight = '800';
+      el.style.color = '#fbbf24';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 950);
+    }
+  };
+
+  voteWishItem = function(key, e) {
+    if (!currentUser) {
+      openLoginInfo("🔐 ล็อกอินก่อนจึงจะใช้แต้มโหวตขอเกมได้นะครับ");
+      return;
+    }
+    if (!db || Date.now() - _localPtsSpendLock < 220) return;
+
+    const uid = currentUser.id;
+    const eco = getUserEcoData(uid);
+    const vInfo = getNextVoteCost(eco.votesToday);
+    if (eco.points < vInfo.cost) {
+      showToast(`⚠️ แต้มไม่พอ! โหวตขอเกมใช้ ${vInfo.cost} ${POINT_UNIT} (${vInfo.tierLabel}) — คุณมี ${formatNum(eco.points)} ${POINT_UNIT}`);
+      return;
+    }
+
+    _localPtsSpendLock = Date.now();
+    playClickSound();
+
+    const updates = {};
+    const u = prepareEcoDayUpdates(uid, updates);
+    const nextVotes = (Number(u.ecoVotesToday) || 0) + 1;
+    u.pawPoints = Math.max(0, eco.points - vInfo.cost);
+    u.ecoVotesToday = nextVotes;
+
+    updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(-vInfo.cost);
+    updates[`users/${uid}/ecoVotesToday`] = nextVotes;
+    updates[`game_requests/${key}/votes`] = firebase.database.ServerValue.increment(1);
+    db.ref().update(updates).catch(() => {});
+
+    unlockAchievement("first_vote");
+    if (nextVotes >= 6) unlockAchievement("over_quota_vote");
+    updateProfileEcoUI();
+    showToast(`❤️ โหวตขอเกมสำเร็จ! (-${vInfo.cost} ${POINT_UNIT})`);
+  };
+
+  devHeartClick = function(key, e) {
+    if (!currentUser) {
+      openLoginInfo("🔐 ล็อกอินก่อนจึงจะส่งกำลังใจให้ผู้พัฒนาได้นะครับ");
+      return;
+    }
+    if (!db || Date.now() - _localPtsSpendLock < 220) return;
+
+    const uid = currentUser.id;
+    const DEV_GIFT_COST = 25;
+    const eco = getUserEcoData(uid);
+    if (eco.points < DEV_GIFT_COST) {
+      showToast(`⚠️ ต้องใช้ ${DEV_GIFT_COST} ${POINT_UNIT} เพื่อส่งกำลังใจให้ผู้พัฒนา (คุณมี ${formatNum(eco.points)} ${POINT_UNIT})`);
+      return;
+    }
+
+    _localPtsSpendLock = Date.now();
+    playClickSound();
+    const u = usersCache[uid] || {};
+    u.pawPoints = Math.max(0, eco.points - DEV_GIFT_COST);
+
+    const updates = {};
+    updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(-DEV_GIFT_COST);
+    updates[`developers/${key}/hearts`] = firebase.database.ServerValue.increment(1);
+    updates[`users/${uid}/devHeartsClicked`] = firebase.database.ServerValue.increment(1);
+    db.ref().update(updates).catch(() => {});
+
+    unlockAchievement("dev_supporter");
+    updateProfileEcoUI();
+
+    if (e) {
+      const el = document.createElement('div');
+      el.className = 'floating-heart';
+      el.textContent = `💖 +1 (-${DEV_GIFT_COST}${POINT_UNIT})`;
+      el.style.left = (e.clientX - 30) + 'px';
+      el.style.top = (e.clientY - 12) + 'px';
+      el.style.fontSize = '0.95rem';
+      el.style.fontWeight = '800';
+      el.style.color = '#fb7185';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 950);
+    }
+  };
+
+  const _origSubmitDevComment = submitDevComment;
+  submitDevComment = function(key) {
+    const inp = document.getElementById(`dev-comment-input-${key}`);
+    const hasText = inp && inp.value.trim().length > 0;
+    _origSubmitDevComment(key);
+    if (hasText && currentUser && db) {
+      const uid = currentUser.id;
+      unlockAchievement("dev_supporter");
+      const eco = getUserEcoData(uid);
+      if (!eco.commentBonusToday) {
+        const updates = {};
+        const u = prepareEcoDayUpdates(uid, updates);
+        u.ecoCommentBonus = true;
+        updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(100);
+        updates[`users/${uid}/ecoCommentBonus`] = true;
+        db.ref().update(updates).catch(() => {});
+        setTimeout(() => showToast(`💬 ขอบคุณที่ให้กำลังใจผู้พัฒนา! รับ +100 ${POINT_UNIT}`), 500);
+      }
+    }
+  };
+
+  const _origOnIframeLoad = onIframeLoad;
+  onIframeLoad = function() {
+    const wasSub = submitted && !isHorrorTriggered;
+    _origOnIframeLoad();
+    if (wasSub && currentUser && db) {
+      const uid = currentUser.id;
+      unlockAchievement("first_eval");
+      const eco = getUserEcoData(uid);
+      if (!eco.evalBonusToday) {
+        const updates = {};
+        const u = prepareEcoDayUpdates(uid, updates);
+        u.ecoEvalBonus = true;
+        updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(100);
+        updates[`users/${uid}/ecoEvalBonus`] = true;
+        db.ref().update(updates).catch(() => {});
+        showToast(`📝 ขอบคุณที่ประเมินเกม! รับ +100 ${POINT_UNIT}`);
+      }
+    }
+  };
+
+  const _origFinishCK = triggerCurseKingJumpscareAndFinish;
+  triggerCurseKingJumpscareAndFinish = function(from5Reloads = false) {
+    if (from5Reloads) unlockAchievement("secret_reload_5");
+    unlockAchievement("secret_curse_king");
+    _origFinishCK(from5Reloads);
+  };
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
