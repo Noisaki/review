@@ -16311,10 +16311,66 @@
     reader.readAsDataURL(file);
   }
 
+  // 🛡️ กรองเฉพาะลิงก์เว็บเกมที่เชื่อถือได้ (Whitelist) กันลิงก์หลอก/ไวรัส 100%
+  function sanitizeTrustedGameUrl(raw) {
+    const trimmed = String(raw || "").trim();
+    if (!trimmed) return { ok: true, url: "", hostLabel: "" };
+
+    let candidate = trimmed;
+    if (!/^https?:\/\//i.test(candidate)) {
+      candidate = "https://" + candidate;
+    }
+
+    try {
+      const parsed = new URL(candidate);
+      // 1. บังคับ https/http และห้ามมี user:pass@ (กันมุก https://itch.io@evil.com)
+      if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+        return { ok: false, url: "", hostLabel: "" };
+      }
+      if (parsed.username || parsed.password) {
+        return { ok: false, url: "", hostLabel: "" };
+      }
+
+      const host = parsed.hostname.toLowerCase();
+
+      // 2. รายชื่อโดเมนเว็บเกมที่อนุญาต (เพิ่ม-ลดได้ตรงนี้)
+      const isItch      = host === "itch.io" || /^[a-z0-9-]+\.itch\.io$/.test(host);
+      const isSteam     = host === "store.steampowered.com" || host === "steamcommunity.com";
+      const isVndb      = host === "vndb.org";
+      const isBooth     = host === "booth.pm" || /^[a-z0-9-]+\.booth\.pm$/.test(host);
+      const isDlsite    = host === "www.dlsite.com" || host === "dlsite.com";
+      const isGameJolt  = host === "gamejolt.com" || host === "www.gamejolt.com";
+
+      if (!isItch && !isSteam && !isVndb && !isBooth && !isDlsite && !isGameJolt) {
+        return { ok: false, url: "", hostLabel: "" };
+      }
+
+      parsed.protocol = "https:";
+      const hostLabel = isItch ? "itch.io"
+        : isSteam ? "Steam"
+        : isVndb ? "VNDB"
+        : isBooth ? "BOOTH"
+        : isDlsite ? "DLsite"
+        : "Game Jolt";
+
+      return { ok: true, url: parsed.href, hostLabel };
+    } catch (e) {
+      return { ok: false, url: "", hostLabel: "" };
+    }
+  }
+
   function submitGameWish() {
     if (!db || !currentUser) return;
     const title = document.getElementById('wishTitleInput').value.trim();
     if (!title) { showToast("⚠️ กรุณากรอกชื่อเกมก่อนนะครับ"); return; }
+
+    // ตรวจลิงก์ก่อนบันทึกเข้าฐานข้อมูล
+    const rawLink = document.getElementById('wishLinkInput').value.trim();
+    const checkedLink = sanitizeTrustedGameUrl(rawLink);
+    if (!checkedLink.ok) {
+      showToast("🚫 ไม่อนุญาตลิงก์นี้! กรุณาใส่เฉพาะลิงก์แท้จาก itch.io, Steam, VNDB, BOOTH หรือ DLsite เท่านั้น");
+      return;
+    }
 
     const btn = document.getElementById('wishSubmitBtn');
     if (btn) btn.disabled = true;
@@ -16323,7 +16379,7 @@
       title: title,
       genre: document.getElementById('wishGenreInput').value || "Visual Novel",
       cover: draftWishCover || "",
-      link: normalizeDevUrl(document.getElementById('wishLinkInput').value),
+      link: checkedLink.url,
       authorId: currentUser.id,
       authorName: currentUser.displayName || currentUser.name || "User",
       votes: 1,
@@ -19899,6 +19955,13 @@
       const fb = `https://placehold.co/480x300/1e1b4b/fde68a?text=${encodeURIComponent(item.title || 'Game')}`;
       const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) : '';
 
+      const safeLinkInfo = sanitizeTrustedGameUrl(item.link);
+      const escHtml = (s) => {
+        const d = document.createElement('div');
+        d.textContent = String(s || "");
+        return d.innerHTML;
+      };
+
       card.innerHTML = `
         <div class="wish-thumb">
           <img src="${item.cover || fb}" alt="" onerror="this.src='${fb}';">
@@ -19906,11 +19969,11 @@
           <span class="wish-score-tag">💠 ${formatCompact(item.votes || 0)} คะแนน</span>
         </div>
         <div class="wish-body">
-          <div class="wish-title">${item.title}</div>
-          <div class="wish-meta">โดย ${item.authorName || 'สมาชิก'}${dateStr ? ' • ' + dateStr : ''}</div>
+          <div class="wish-title">${escHtml(item.title)}</div>
+          <div class="wish-meta">โดย ${escHtml(item.authorName || 'สมาชิก')}${dateStr ? ' • ' + dateStr : ''}</div>
           <div class="wish-tags">
-            <span class="wish-tag">${item.genre || 'Visual Novel'}</span>
-            ${item.link ? `<a href="${item.link}" target="_blank" rel="noopener" class="wish-tag" style="text-decoration:none; color:#fde047;">🔗 หน้าเกม</a>` : ''}
+            <span class="wish-tag">${escHtml(item.genre || 'Visual Novel')}</span>
+            ${(safeLinkInfo.ok && safeLinkInfo.url) ? `<a href="${safeLinkInfo.url}" target="_blank" rel="noopener noreferrer" class="wish-tag" style="text-decoration:none; color:#fde047;" title="${safeLinkInfo.url}">🔗 ${safeLinkInfo.hostLabel}</a>` : ''}
           </div>
         </div>
         <div class="wish-actions-dual">
