@@ -7516,6 +7516,360 @@
     body.xmas-mode.bgt-dark-mode:not(.horror-mode) {
       background: linear-gradient(135deg, #042211 0%, #0b2e22 48%, #360808 100%) !important;
     }
+    /* =========================================
+       ✨🎮 ดีไซน์ใหม่หน้า ขอเกมที่อยากเล่น (BGT REQUEST BOARD)
+       ========================================= */
+    .bgt-req-hero {
+      position: relative;
+      border-radius: 24px;
+      padding: 26px 28px;
+      margin-bottom: 22px;
+      background:
+        radial-gradient(circle at 82% 25%, rgba(56, 189, 248, 0.28), transparent 48%),
+        radial-gradient(circle at 18% 85%, rgba(244, 63, 94, 0.24), transparent 50%),
+        linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #172554 100%);
+      border: 2px solid rgba(56, 189, 248, 0.55);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.42);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      overflow: hidden;
+    }
+    .bgt-req-hero-card {
+      position: relative;
+      z-index: 2;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1.5px solid rgba(253, 230, 138, 0.45);
+      border-radius: 20px;
+      padding: 20px 22px;
+      max-width: 470px;
+      width: 100%;
+      color: #f8fafc;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38);
+    }
+    .bgt-req-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(251, 191, 36, 0.16);
+      border: 1px solid rgba(253, 224, 71, 0.65);
+      color: #fde047;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .bgt-req-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+      font-weight: 800;
+      margin: 0 0 6px;
+      color: #ffffff;
+    }
+    .bgt-req-title span {
+      background: linear-gradient(90deg, #38bdf8, #f472b6, #fde047);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .bgt-req-sub {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      margin: 0 0 14px;
+      line-height: 1.55;
+    }
+    .bgt-req-new-btn {
+      background: linear-gradient(90deg, #f43f5e, #fb923c);
+      color: #ffffff;
+      border: none;
+      border-radius: 14px;
+      padding: 11px 22px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(244, 63, 94, 0.42);
+      transition: transform 0.16s, filter 0.2s;
+    }
+    .bgt-req-new-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    .bgt-req-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 0.8rem;
+    }
+    .bgt-req-pt-pill {
+      background: rgba(56, 189, 248, 0.16);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #7dd3fc;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+    }
+    .bgt-req-how-link {
+      background: none;
+      border: none;
+      color: #fde047;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .bgt-req-hero-art {
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+      width: 240px;
+      display: flex;
+      justify-content: center;
+    }
+    .bgt-req-hero-art img {
+      width: 100%;
+      max-height: 215px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 24px rgba(56, 189, 248, 0.45));
+      animation: lgMascotIdle 4s ease-in-out infinite;
+    }
+    @media (max-width: 760px) {
+      .bgt-req-hero { flex-direction: column; padding: 18px 16px; }
+      .bgt-req-hero-art { width: 170px; }
+    }
+
+    /* โซน 2 คอลัมน์: กระดานเกมซ้าย + การ์ด AI พูดขวา */
+    .bgt-board-split {
+      display: grid;
+      grid-template-columns: 1fr 250px;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 860px) {
+      .bgt-board-split { grid-template-columns: 1fr; }
+    }
+
+    /* กล่อง Top 3 ดาวเด่นของกระดาน */
+    .bgt-top3-wrap {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.94), rgba(30, 27, 75, 0.9));
+      border: 2px solid rgba(251, 191, 36, 0.65);
+      border-radius: 22px;
+      padding: 18px;
+    }
+    .bgt-top3-head {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(251, 191, 36, 0.16);
+      border: 1.5px solid #fbbf24;
+      color: #fde047;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 5px 15px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .bgt-top3-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    @media (max-width: 680px) {
+      .bgt-top3-grid { grid-template-columns: 1fr; }
+    }
+
+    /* การ์ด AI ตัวละครพูดได้ด้านขวา */
+    .bgt-ai-card {
+      background: linear-gradient(180deg, #131629 0%, #0b0e1a 100%);
+      border: 2px solid rgba(56, 189, 248, 0.55);
+      border-radius: 20px;
+      padding: 14px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+    .bgt-ai-name-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid #38bdf8;
+      color: #7dd3fc;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+    .bgt-ai-card img {
+      width: 155px;
+      height: 155px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin: 14px auto 10px;
+      display: block;
+      border: 2px solid rgba(56, 189, 248, 0.45);
+      background: #0f172a;
+    }
+    .bgt-ai-bubble {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: 1.48;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    /* ปุ่มโหวต + ดันด้วยแต้ม บนการ์ดเกม */
+    .wish-actions-dual {
+      padding: 10px 12px 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      gap: 6px;
+    }
+    .wish-btn-free {
+      flex: 1;
+      background: rgba(56, 189, 248, 0.16);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 10px;
+      padding: 7px 8px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .wish-btn-free:hover { background: #0284c7; color: #fff; }
+    .wish-btn-boost {
+      flex: 1;
+      background: linear-gradient(135deg, #f43f5e, #f59e0b);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 7px 8px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* โซน How It Works (ขอเกมทำงานยังไง 4 ขั้น + Accordion) */
+    .bgt-how-section {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1.5px dashed rgba(148, 163, 184, 0.3);
+    }
+    .bgt-how-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 760px) {
+      .bgt-how-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .bgt-how-card {
+      background: #131625;
+      border: 1.5px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 16px 14px;
+      color: #f8fafc;
+      position: relative;
+    }
+    .bgt-how-num {
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f43f5e, #f59e0b);
+      color: #fff;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bgt-how-card h4 {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.96rem;
+      margin: 8px 0 4px;
+      color: #fde047;
+    }
+    .bgt-how-card p {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      margin: 0;
+      line-height: 1.48;
+    }
+    .bgt-acc-item {
+      background: #131625;
+      border: 1.5px solid rgba(148, 163, 184, 0.25);
+      border-radius: 14px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .bgt-acc-head {
+      width: 100%;
+      background: none;
+      border: none;
+      color: #f8fafc;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      text-align: left;
+    }
+    .bgt-acc-body {
+      display: none;
+      padding: 0 16px 14px 32px;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.65;
+      border-top: 1px dashed rgba(148, 163, 184, 0.2);
+    }
+    .bgt-acc-item.open .bgt-acc-body { display: block; padding-top: 10px; }
+
+    /* อัปเกรด Modal ขอเกมใหม่สไตล์ดาร์กโมเดิร์น */
+    #wishSubmitModal .modal-box {
+      background: #131625;
+      color: #f8fafc;
+      border: 2px solid #f472b6;
+      text-align: left;
+    }
+    #wishSubmitModal h2 { color: #ffffff; }
+    #wishSubmitModal .ep-field-group label { color: #e2e8f0; }
+    #wishSubmitModal .ep-input {
+      background: #0b0e1a;
+      color: #ffffff;
+      border-color: rgba(244, 114, 182, 0.55);
+    }
+    .wish-dropzone {
+      border: 2px dashed rgba(244, 114, 182, 0.65);
+      background: rgba(244, 114, 182, 0.06);
+      border-radius: 16px;
+      padding: 20px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .wish-dropzone:hover { background: rgba(244, 114, 182, 0.14); }
   </style>
 </head>
 <body>
@@ -8120,17 +8474,145 @@
     </div>
   </div>
   <!-- =========================================
-       ✨ กระดานขอเกมที่อยากให้แปล (ใช้หัวใจโหวต • ฟรี 100% ไม่มี VIP)
+       ✨ กระดานขอเกมที่อยากเล่น (BGT REQUEST BOARD) + แข่งกดใจโหวตเกม
        ========================================= -->
   <div class="section-card" id="gameVoteSection" style="display:none;">
-    <!-- 🔥 ระบบแข่งกดใจโหวตเกมรอบปัจจุบัน -->
-    <div id="liveVoteWrapper" style="margin-bottom:28px; padding-bottom:24px; border-bottom:2px dashed rgba(251,191,36,0.45);">
+
+    <!-- 1. Hero ขอเกมที่อยากเล่น (อยู่บนสุด) -->
+    <div class="bgt-req-hero">
+      <div class="bgt-req-hero-card">
+        <div class="bgt-req-pill">✨ REQUEST BOARD • ขอเกมแปลไทย</div>
+        <h2 class="bgt-req-title">ขอเกม<span>ที่อยากเล่น</span></h2>
+        <p class="bgt-req-sub">
+          โพสต์เกมที่อยากให้แปล ชวนเพื่อนมาโหวต หรือใช้ <strong>💠 ผลึก BGT</strong> ดันอันดับ คำขอคะแนนสูงมีโอกาสได้แปลก่อนครับ!
+        </p>
+        <button type="button" class="bgt-req-new-btn" onclick="playClickSound(); openWishModal();">
+          + ขอเกมใหม่
+        </button>
+        <div class="bgt-req-meta-row">
+          <span class="bgt-req-pt-pill" id="wishHeroPoints">💠 แต้มของคุณ: 0</span>
+          <button type="button" class="bgt-req-how-link" onclick="document.getElementById('wishHowItWorks').scrollIntoView({behavior:'smooth'});">
+            ⓘ วิธีขอเกม
+          </button>
+        </div>
+      </div>
+
+      <!-- รูปตัวละคร AI ประจำหน้า (เอาไฟล์ Protogen มาวางชื่อ images/proto_ai.png ได้เลย) -->
+      <div class="bgt-req-hero-art">
+        <img id="wishProtoHeroImg" class="proto-poke-img" src="images/proto_idle.png" alt="BGT AI" onclick="pokeProtoAi('hero')" style="cursor:pointer;" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
+    </div>
+    </div>
+
+    <!-- 2. TOP 3 ดาวเด่นของกระดาน + AI พูดได้ตัวที่ 1 -->
+    <div class="bgt-board-split">
+      <div class="bgt-top3-wrap">
+        <div class="bgt-top3-head">🏆 TOP 3 • ดาวเด่นของกระดาน</div>
+        <div class="bgt-top3-grid" id="wishTop3Grid">
+          <div class="lb-empty" style="grid-column:1/-1; color:#94a3b8;">กำลังโหลด Top 3...</div>
+        </div>
+      </div>
+
+      <div class="bgt-ai-card">
+      <span class="bgt-ai-name-tag">🤖 PROTO-AI • พิธีกรกระดาน</span>
+      <img id="wishProtoImg1" class="proto-poke-img" src="images/proto_idle.png" alt="PROTO-AI" onclick="pokeProtoAi(1)" style="cursor:pointer;" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
+      <div class="bgt-ai-bubble" id="wishAiBubble1" onclick="cycleWishAiSpeech(1)">
+        ชวนเพื่อนมาโหวตเยอะๆ นะ! คำขออันดับสูงมีโอกาสได้แปลก่อนเลย~ 💙
+      </div>
+    </div>
+    </div>
+
+    <!-- 3. กระดานคำขอ (WISH BOARD อันดับ #4 เป็นต้นไป) + AI พูดได้ตัวที่ 2 -->
+    <div class="bgt-board-split">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div>
+            <div style="font-size:0.72rem; color:#38bdf8; font-weight:700; letter-spacing:0.6px;">WISH BOARD</div>
+            <h3 style="font-family:'Kanit',sans-serif; font-size:1.35rem; margin:0;">📋 กระดานคำขอ</h3>
+          </div>
+          <span class="step-pill" id="wishPageIndicator">หน้า 1 / 1</span>
+        </div>
+
+        <div class="wish-grid" id="wishBoardGrid">
+          <div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีคำขอเกมเพิ่มเติม — เป็นคนแรกที่เสนอเกมได้เลย! ✨</div>
+        </div>
+        <div class="lb-pagination" id="wishBoardPager" style="display:none;"></div>
+      </div>
+
+      <div class="bgt-ai-card" style="position:sticky; top:82px;">
+        <span class="bgt-ai-name-tag">🐾 PROTO-AI • ฝ่ายรับคำขอ</span>
+        <img id="wishProtoImg2" class="proto-poke-img" src="images/proto_idle.png" alt="PROTO-AI" onclick="pokeProtoAi(2)" style="cursor:pointer;" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
+        <div class="bgt-ai-bubble" id="wishAiBubble2" onclick="cycleWishAiSpeech(2)">
+          ไม่เจอเกมที่ตามหา กด "+ ขอเกมใหม่" ได้เลย เดี๋ยวรับเรื่องให้เองครับ! ✨
+        </div>
+      </div>
+    </div> 
+   
+
+    <!-- 4. HOW IT WORKS: ขอเกมทำงานยังไง -->
+    <div class="bgt-how-section" id="wishHowItWorks">
+      <div style="font-size:0.72rem; color:#38bdf8; font-weight:700; letter-spacing:0.6px;">HOW IT WORKS</div>
+      <h3 style="font-family:'Kanit',sans-serif; font-size:1.35rem; margin:0 0 16px;">📌 ขอเกมทำงานยังไง</h3>
+
+      <div class="bgt-how-grid">
+        <div class="bgt-how-card">
+          <span class="bgt-how-num">1</span>
+          <h4>📝 โพสต์คำขอ</h4>
+          <p>ใส่แค่ชื่อเกมกับรูปปกก็โพสต์ได้เลย จะใส่ลิงก์หรือแนวเกมเพิ่มทีหลังก็ได้</p>
+        </div>
+        <div class="bgt-how-card">
+          <span class="bgt-how-num">2</span>
+          <h4>⭐ ชวนเพื่อนโหวต</h4>
+          <p>โหวตดันอันดับเกมที่อยากเล่น ยิ่งคะแนนรวมเยอะ ยิ่งขึ้นไปติด Top 3 ดาวเด่น</p>
+        </div>
+        <div class="bgt-how-card">
+          <span class="bgt-how-num">3</span>
+          <h4>💠 ดันด้วยผลึก BGT</h4>
+          <p>ใช้ผลึก BGT จากการเช็กอิน/กดหัวใจ มาโหวตดันเกมที่รักได้ทุกวัน</p>
+        </div>
+        <div class="bgt-how-card" style="border-color:rgba(52,211,153,0.55);">
+          <span class="bgt-how-num" style="background:#10b981;">4</span>
+          <h4 style="color:#34d399;">🎉 ผลลัพธ์</h4>
+          <p>เกมคะแนนสูงสุดจะถูกนำไปขออนุญาตผู้พัฒนาต้นฉบับและเริ่มแปลไทยฟรี 100%</p>
+        </div>
+      </div>
+
+      <div class="bgt-acc-item">
+        <button type="button" class="bgt-acc-head" onclick="this.parentElement.classList.toggle('open')">
+          <span>📋 โพสต์คำขอ ใส่อะไรได้บ้าง</span><span>▾</span>
+        </button>
+        <div class="bgt-acc-body">
+          • ชื่อเกม ไม่เกิน 100 ตัวอักษร (ภาษาอังกฤษหรือญี่ปุ่น)<br>
+          • รูปปกเกม JPG / PNG / WEBP ระบบย่อขนาดให้อัตโนมัติ<br>
+          • แนวเกม (Visual Novel / RPG Maker) และลิงก์หน้าเกมต้นฉบับ
+        </div>
+      </div>
+      <div class="bgt-acc-item">
+        <button type="button" class="bgt-acc-head" onclick="this.parentElement.classList.toggle('open')">
+          <span>💠 ดันอันดับ ใช้แต้มยังไง</span><span>▾</span>
+        </button>
+        <div class="bgt-acc-body">
+          • โหวต 5 ครั้งแรกต่อวัน ใช้เพียง 50 💠 ผลึก BGT ต่อครั้ง<br>
+          • เกินโควต้าราคาปกติสามารถทุ่มแต้มดันต่อได้เรื่อยๆ ตามแต้มที่มี
+        </div>
+      </div>
+      <div class="bgt-acc-item">
+        <button type="button" class="bgt-acc-head" onclick="this.parentElement.classList.toggle('open')">
+          <span>🔒 กฎการขอเกม & การพิจารณา</span><span>▾</span>
+        </button>
+        <div class="bgt-acc-body">
+          • ทุกโปรเจกต์จะขออนุญาตผู้พัฒนาต้นฉบับก่อนเสมอ และแจกฟรี 100% บน itch.io<br>
+          • หากเป็นเกมที่ผิดกฎหรือขออนุญาตไม่ได้ แอดมินขอสงวนสิทธิ์ในการจัดการคำขอครับ
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. โซนกิจกรรมพิเศษ: แข่งกดใจโหวตเกมรอบปัจจุบัน (เก็บไว้ด้านล่างไม่ให้ระบบเดิมพัง) -->
+    <div id="liveVoteWrapper" style="margin-top:28px; padding-top:24px; border-top:2px dashed rgba(251,191,36,0.45);">
       <div class="section-header">
-        <h2 class="section-title" id="voteMainTitle">🔥 แข่งกดใจโหวตเกม (กดรัวๆ แข่งกัน!)</h2>
+        <h2 class="section-title" id="voteMainTitle">🔥 รอบโหวตพิเศษจากแอดมิน</h2>
         <span class="step-pill" id="voteCountdownText">⏳ กำลังโหลดเวลา...</span>
       </div>
 
-      <!-- แผงแอดมินตั้งรอบโหวต -->
       <div id="voteAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:14px; margin-bottom:16px;">
         <h3 style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินจัดการรอบโหวตเกม</h3>
         <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; margin-bottom:10px;">
@@ -8156,7 +8638,6 @@
       </div>
 
       <div id="voteTopicBanner" style="display:none; text-align:center; font-family:'Kanit',sans-serif; font-size:1.15rem; font-weight:700; color:#fde047; background:rgba(15,23,42,0.8); border:1.5px solid #fbbf24; border-radius:14px; padding:10px; margin-bottom:14px;"></div>
-
       <div class="game-grid" id="voteGamesGrid"></div>
 
       <div id="voteTopVotersBox" style="display:none; margin-top:20px;">
@@ -8168,35 +8649,6 @@
         <h3 class="lb-col-title">🏆 ประวัติเกมที่ชนะการโหวต</h3>
         <div class="vote-history-scroll">
           <div class="vote-history-grid" id="voteHistoryGrid"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="wish-hero-banner">
-      <div style="flex:1; min-width:240px;">
-        <div class="lg-welcome-pill" style="margin:0 0 8px;">✨ WISH BOARD • ขอเกมแปลไทย</div>
-        <h2 style="font-family:'Kanit',sans-serif; font-size:1.65rem; margin:0 0 6px;">ขอเกมที่อยากให้แปล</h2>
-        <p style="font-size:0.86rem; color:#cbd5e1; margin:0; line-height:1.55;">
-          เสนอชื่อเกม Visual Novel หรือ RPG Maker ที่อยากให้แปลไทยได้เลย! ชวนเพื่อนมากด <strong>❤️ โหวต</strong> ฟรีๆ เพื่อดันอันดับ (ทุกโปรเจกต์จะขออนุญาตผู้พัฒนาก่อนแปลครับ)
-        </p>
-      </div>
-      <button type="button" class="lg-auth-btn lg-btn-discord" style="width:auto; padding:12px 22px; background:linear-gradient(135deg,#f43f5e,#f59e0b);" onclick="playClickSound(); openWishModal();">
-        ➕ เสนอขอเกมใหม่
-      </button>
-    </div>
-
-    <div class="wish-layout">
-      <div>
-        <div class="wish-grid" id="wishBoardGrid">
-          <div class="lb-empty" style="grid-column:1/-1;">ยังไม่มีคำขอเกม — เป็นคนแรกที่เสนอเกมได้เลย! ✨</div>
-        </div>
-        <div class="lb-pagination" id="wishBoardPager" style="display:none;"></div>
-      </div>
-
-      <div class="wish-mascot-card">
-        <img src="images/mascot.png" alt="BGT Mascot" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='mascot.png';}else{this.style.display='none';}">
-        <div class="wish-mascot-bubble">
-          อยากเล่นเกมไหนเป็นภาษาไทย กดเสนอชื่อแล้วชวนเพื่อนมาโหวตได้เลยนะฮะ~ UwU 💙
         </div>
       </div>
     </div>
@@ -8855,34 +9307,52 @@
 
 <!-- หน้าต่างเสนอขอเกมใหม่ -->
 <div class="modal-overlay" id="wishSubmitModal" onclick="if(event.target===this) this.style.display='none';">
-  <div class="modal-box" style="max-width:460px;">
-    <h2 style="margin-bottom:8px;">✨ ขอเกมที่อยากให้แปล</h2>
-    <p style="font-size:0.82rem; margin-bottom:14px;">โพสต์ขึ้นกระดานทันที! รูปปกจะถูกย่อขนาดอัตโนมัติครับ</p>
+  <div class="modal-box" style="max-width:480px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h2 style="margin:0; font-size:1.25rem;">✨ ขอเกมใหม่</h2>
+      <button type="button" class="modal-cancel-btn" style="padding:4px 10px; border-radius:50%;" onclick="document.getElementById('wishSubmitModal').style.display='none';">✕</button>
+    </div>
+
+    <div style="background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.4); border-radius:12px; padding:9px 12px; font-size:0.8rem; color:#bae6fd; margin-bottom:14px;">
+      🤖 ใส่แค่ชื่อเกมกับรูปปกก็โพสต์ได้แล้ว ที่เหลือเติมทีหลังได้ครับ!
+    </div>
 
     <div class="ep-field-group">
-      <label>🎮 ชื่อเกมที่อยากให้แปล *:</label>
-      <input type="text" id="wishTitleInput" class="ep-input" maxlength="100" placeholder="เช่นชื่อเกมภาษาอังกฤษ / ญี่ปุ่น">
+      <label>ชื่อเกม *</label>
+      <input type="text" id="wishTitleInput" class="ep-input" maxlength="100" placeholder="ชื่อเกมที่อยากให้แปล">
     </div>
+
     <div class="ep-field-group">
-      <label>🏷️ แนวเกม:</label>
-      <select id="wishGenreInput" class="ep-input">
-        <option value="Visual Novel">📖 Visual Novel</option>
-        <option value="RPG Maker">⚔️ RPG Maker</option>
-      </select>
+      <label>รูปปกเกม</label>
+      <div class="wish-dropzone" onclick="document.getElementById('wishCoverFile').click()">
+        <div style="font-size:1.8rem; margin-bottom:4px;">☁️🖼️</div>
+        <div style="font-family:'Kanit',sans-serif; font-weight:700; font-size:0.9rem;">คลิกเพื่อเลือกรูปปกเกม</div>
+        <div style="font-size:0.72rem; color:#94a3b8; margin-top:2px;">JPG / PNG / WEBP — ระบบย่อขนาดให้อัตโนมัติ</div>
+        <input type="file" id="wishCoverFile" accept="image/*" style="display:none;" onchange="handleWishCoverSelect(this)">
+        <img id="wishCoverPreview" src="" alt="" style="display:none; width:100%; max-height:160px; object-fit:cover; border-radius:10px; margin-top:10px;">
+      </div>
     </div>
-    <div class="ep-field-group">
-      <label>🖼️ อัปโหลดรูปปกเกม (ย่อขนาดอัตโนมัติ):</label>
-      <input type="file" id="wishCoverFile" accept="image/*" style="font-size:0.82rem; width:100%;" onchange="handleWishCoverSelect(this)">
-      <img id="wishCoverPreview" src="" alt="" style="display:none; width:100%; max-height:160px; object-fit:cover; border-radius:10px; margin-top:8px;">
-    </div>
-    <div class="ep-field-group">
-      <label>🔗 ลิงก์หน้าเกมต้นฉบับ (itch.io / Steam — ไม่บังคับ):</label>
-      <input type="text" id="wishLinkInput" class="ep-input" placeholder="https://...">
-    </div>
-    <div class="modal-btns">
-      <button type="button" id="wishSubmitBtn" class="modal-discord-btn" onclick="submitGameWish()">🚀 โพสต์คำขอ</button>
-      <button type="button" class="modal-cancel-btn" onclick="document.getElementById('wishSubmitModal').style.display='none';">ยกเลิก</button>
-    </div>
+
+    <details style="background:rgba(255,255,255,0.04); border:1px solid rgba(148,163,184,0.25); border-radius:12px; padding:10px 12px; margin-bottom:16px;">
+      <summary style="cursor:pointer; font-family:'Kanit',sans-serif; font-size:0.86rem; font-weight:600; color:#e2e8f0;">
+        ข้อมูลเพิ่ม (ไม่ใส่ก็ได้) — แนวเกม • ลิงก์
+      </summary>
+      <div style="margin-top:10px;">
+        <div class="ep-field-group">
+          <label>🏷️ แนวเกม:</label>
+          <select id="wishGenreInput" class="ep-input">
+            <option value="Visual Novel">📖 Visual Novel</option>
+            <option value="RPG Maker">⚔️ RPG Maker</option>
+          </select>
+        </div>
+        <div class="ep-field-group" style="margin-bottom:0;">
+          <label>🔗 ลิงก์หน้าเกมต้นฉบับ (itch.io / Steam):</label>
+          <input type="text" id="wishLinkInput" class="ep-input" placeholder="https://...">
+        </div>
+      </div>
+    </details>
+
+    <button type="button" id="wishSubmitBtn" class="bgt-req-new-btn" style="width:100%;" onclick="submitGameWish()">🚀 โพสต์คำขอ</button>
   </div>
 </div>
 <!-- 🏆 หน้าต่างหอเกียรติยศอชีฟเม้น BGT -->
@@ -18819,6 +19289,267 @@
       applyLiveChristmasTransition();
     }
   }, 1000);
+  // =========================================================================
+  // 26. อัปเกรดหน้า ขอเกมที่อยากเล่น (Top 3 ดาวเด่น + กระดาน #4+ + AI พูดได้)
+  // =========================================================================
+  const PROTO_SPRITES = {
+    idle:  "images/proto_idle.png",
+    blink: "images/proto_blink.png",
+    talk:  "images/proto_talk.png",
+    blush: "images/proto_blush.png"
+  };
+
+  // โหลดรูปล่วงหน้าทั้ง 4 ท่า (กันภาพกระพริบตอนสลับ)
+  const _protoReady = { idle: false, blink: false, talk: false, blush: false };
+  Object.keys(PROTO_SPRITES).forEach(k => {
+    const im = new Image();
+    im.onload = () => { _protoReady[k] = true; };
+    im.src = PROTO_SPRITES[k];
+  });
+
+  const WISH_AI_LINES_1 = [
+    "ชวนเพื่อนมาโหวตเยอะๆ นะ! คำขออันดับสูงมีโอกาสได้แปลก่อนเลย~ 💙",
+    "กดปุ่ม ⚡ โหวต / ดันอันดับ ด้วยผลึก BGT เพื่อส่งเกมที่รักขึ้น Top 3 ได้เลย!",
+    "ทุกเกมจะขออนุญาตผู้พัฒนาต้นฉบับและเปิดให้เล่นฟรี 100% ครับ ✨"
+  ];
+  const WISH_AI_LINES_2 = [
+    "ไม่เจอเกมที่ตามหา กด '+ ขอเกมใหม่' ได้เลย เดี๋ยวรับเรื่องให้เองครับ! ✨",
+    "ใส่แค่ชื่อเกมกับรูปปกก็โพสต์ขึ้นกระดานได้ทันทีเลยนะ 🤖",
+    "เช็กอินรายวันหรือกดหัวใจหน้าหลัก เพื่อสะสม 💠 ผลึก BGT มาโหวตได้ฟรี!"
+  ];
+  const PROTO_BLUSH_LINES = [
+    "อ๊าา! จิ้มทำไมอะ เขินนะ >///< 💙",
+    "งื้ออ~ อย่าจิ้มแก้มสิ หน้าจอจะร้อนแล้วนะ! 😳✨",
+    "ฮะๆ จักจี้นะครับ! ไปกดโหวตเกมก่อนเร็ว~ ///>///<///"
+  ];
+
+  let _aiIdx1 = 0, _aiIdx2 = 0;
+  const _protoState = {
+    hero: { busy: false, blushT: null },
+    1:    { busy: false, typeT: null, talkT: null, blushT: null },
+    2:    { busy: false, typeT: null, talkT: null, blushT: null }
+  };
+
+  function getProtoImgEl(slot) {
+    if (slot === 'hero') return document.getElementById('wishProtoHeroImg');
+    return document.getElementById(slot === 1 ? 'wishProtoImg1' : 'wishProtoImg2');
+  }
+
+  function setProtoSprite(slot, mode) {
+    const img = getProtoImgEl(slot);
+    if (!img) return;
+    const useMode = _protoReady[mode] ? mode : (_protoReady.idle ? 'idle' : null);
+    if (!useMode) return; // ถ้ายังไม่ได้ใส่รูป 4 ภาพ ให้คง mascot.png ไว้ก่อน
+    if (img.dataset.mode !== useMode) {
+      img.dataset.mode = useMode;
+      img.src = PROTO_SPRITES[useMode];
+    }
+  }
+
+  // พิมพ์คำพูดทีละตัว + สลับปากอ้า (talk) <-> ปิดปาก (idle)
+  function speakProtoAi(slot, text) {
+    const st = _protoState[slot];
+    const bubble = document.getElementById(slot === 1 ? 'wishAiBubble1' : 'wishAiBubble2');
+    if (!st || !bubble) return;
+
+    clearInterval(st.typeT);
+    clearInterval(st.talkT);
+    clearTimeout(st.blushT);
+    st.busy = true;
+    bubble.textContent = "";
+
+    let mouthOpen = true;
+    setProtoSprite(slot, 'talk');
+    st.talkT = setInterval(() => {
+      mouthOpen = !mouthOpen;
+      setProtoSprite(slot, mouthOpen ? 'talk' : 'idle');
+    }, 135);
+
+    const chars = Array.from(text);
+    let idx = 0;
+    st.typeT = setInterval(() => {
+      if (idx < chars.length) {
+        const ch = chars[idx++];
+        bubble.textContent += ch;
+        if (ch.trim() !== "" && idx % 2 === 1 && typeof playMascotTalkBlip === "function") {
+          playMascotTalkBlip();
+        }
+      } else {
+        clearInterval(st.typeT);
+        clearInterval(st.talkT);
+        st.busy = false;
+        setProtoSprite(slot, 'idle');
+      }
+    }, 42);
+  }
+
+  // จิ้มตัวละคร -> หน้าเขิน (proto_blush.png) + เด้งประโยคเขิน 2.5 วิ แล้วกลับมายืนปกติ
+  function pokeProtoAi(slot) {
+    playClickSound();
+    const st = _protoState[slot];
+    if (!st) return;
+
+    clearInterval(st.typeT);
+    clearInterval(st.talkT);
+    clearTimeout(st.blushT);
+    st.busy = true;
+    setProtoSprite(slot, 'blush');
+
+    const img = getProtoImgEl(slot);
+    if (img) {
+      img.style.transform = 'scale(1.07)';
+      setTimeout(() => { img.style.transform = ''; }, 160);
+    }
+
+    const line = PROTO_BLUSH_LINES[Math.floor(Math.random() * PROTO_BLUSH_LINES.length)];
+    if (slot === 1 || slot === 2) {
+      const bubble = document.getElementById(slot === 1 ? 'wishAiBubble1' : 'wishAiBubble2');
+      if (bubble) bubble.textContent = line;
+    } else {
+      showToast(line);
+    }
+
+    st.blushT = setTimeout(() => {
+      st.busy = false;
+      setProtoSprite(slot, 'idle');
+    }, 2500);
+  }
+
+  // สุ่มกะพริบตาอัตโนมัติ (proto_blink.png) ทุก 2.5 - 5 วินาที ตอนยืนนิ่งๆ
+  ['hero', 1, 2].forEach(slot => {
+    const loopBlink = () => {
+      const delay = 2500 + Math.random() * 2500;
+      setTimeout(() => {
+        const st = _protoState[slot];
+        if (currentPage === 'vote' && st && !st.busy) {
+          setProtoSprite(slot, 'blink');
+          setTimeout(() => {
+            if (!st.busy) setProtoSprite(slot, 'idle');
+          }, 170);
+        }
+        loopBlink();
+      }, delay);
+    };
+    loopBlink();
+  });
+
+  function cycleWishAiSpeech(slot) {
+    playClickSound();
+    if (slot === 1) {
+      _aiIdx1 = (_aiIdx1 + 1) % WISH_AI_LINES_1.length;
+      speakProtoAi(1, WISH_AI_LINES_1[_aiIdx1]);
+    } else {
+      _aiIdx2 = (_aiIdx2 + 1) % WISH_AI_LINES_2.length;
+      speakProtoAi(2, WISH_AI_LINES_2[_aiIdx2]);
+    }
+  }
+
+  // ซิงก์แต้มผลึก BGT บน Hero ของหน้าขอเกม
+  const _origUpdateEcoForWish = updateProfileEcoUI;
+  updateProfileEcoUI = function() {
+    _origUpdateEcoForWish();
+    const hp = document.getElementById('wishHeroPoints');
+    if (hp && currentUser) {
+      const eco = getUserEcoData(currentUser.id);
+      hp.textContent = `💠 แต้มของคุณ: ${formatNum(eco.points)}`;
+    }
+  };
+
+  // แยกการแสดงผลเป็น Top 3 ดาวเด่น + กระดานคำขอ (#4 ขึ้นไป)
+  renderWishBoard = function(searchQuery = "") {
+    const top3Grid = document.getElementById('wishTop3Grid');
+    const grid = document.getElementById('wishBoardGrid');
+    const pager = document.getElementById('wishBoardPager');
+    const pageInd = document.getElementById('wishPageIndicator');
+    if (!grid) return;
+
+    let items = Object.keys(wishListCache || {})
+      .map(k => ({ key: k, ...wishListCache[k] }))
+      .sort((a, b) => (Number(b.votes) || 0) - (Number(a.votes) || 0) || (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0));
+
+    if (searchQuery) {
+      items = items.filter(x => (x.title || "").toLowerCase().includes(searchQuery));
+    }
+
+    const isAdmin = currentUser && currentUser.isVoteAdmin;
+    const makeCard = (item, rank) => {
+      const card = document.createElement('div');
+      card.className = "wish-card" + (rank <= 3 ? " rank-top" : "");
+      const fb = `https://placehold.co/480x300/1e1b4b/fde68a?text=${encodeURIComponent(item.title || 'Game')}`;
+      const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) : '';
+
+      card.innerHTML = `
+        <div class="wish-thumb">
+          <img src="${item.cover || fb}" alt="" onerror="this.src='${fb}';">
+          <span class="wish-rank-tag">${rank === 1 ? '🥇 #1' : rank === 2 ? '🥈 #2' : rank === 3 ? '🥉 #3' : '#' + rank}</span>
+          <span class="wish-score-tag">💠 ${formatCompact(item.votes || 0)} คะแนน</span>
+        </div>
+        <div class="wish-body">
+          <div class="wish-title">${item.title}</div>
+          <div class="wish-meta">โดย ${item.authorName || 'สมาชิก'}${dateStr ? ' • ' + dateStr : ''}</div>
+          <div class="wish-tags">
+            <span class="wish-tag">${item.genre || 'Visual Novel'}</span>
+            ${item.link ? `<a href="${item.link}" target="_blank" rel="noopener" class="wish-tag" style="text-decoration:none; color:#fde047;">🔗 หน้าเกม</a>` : ''}
+          </div>
+        </div>
+        <div class="wish-actions-dual">
+          <button type="button" class="wish-btn-boost" onclick="voteWishItem('${item.key}', event)">⚡ โหวต / ดันอันดับ</button>
+          ${isAdmin ? `<button type="button" class="dev-card-btn del" onclick="deleteWishItem('${item.key}')">🗑️</button>` : ''}
+        </div>
+      `;
+      return card;
+    };
+
+    // 1. วาด Top 3 ดาวเด่น
+    const top3 = searchQuery ? [] : items.slice(0, 3);
+    if (top3Grid) {
+      top3Grid.innerHTML = "";
+      if (top3.length === 0) {
+        top3Grid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1; color:#94a3b8;">ยังไม่มีคำขอเกมใน Top 3 ✨</div>`;
+      } else {
+        top3.forEach((item, idx) => top3Grid.appendChild(makeCard(item, idx + 1)));
+      }
+    }
+
+    // 2. วาดกระดานคำขอ (#4 เป็นต้นไป หรือผลการค้นหา)
+    const rest = searchQuery ? items : items.slice(3);
+    grid.innerHTML = "";
+    if (rest.length === 0) {
+      grid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1;">${items.length > 0 ? 'คำขอทั้งหมดอยู่ใน Top 3 ด้านบนแล้ว! 🏆' : 'ยังไม่มีคำขอเกม — กด "+ ขอเกมใหม่" เป็นคนแรกเลย! ✨'}</div>`;
+      if (pager) pager.style.display = 'none';
+      if (pageInd) pageInd.textContent = "หน้า 1 / 1";
+      return;
+    }
+
+    const perPage = 9;
+    const totalPages = Math.max(1, Math.ceil(rest.length / perPage));
+    if (wishPage > totalPages) wishPage = totalPages;
+    const start = (wishPage - 1) * perPage;
+    const pageList = rest.slice(start, start + perPage);
+
+    if (pageInd) pageInd.textContent = `หน้า ${wishPage} / ${totalPages}`;
+    pageList.forEach((item, idx) => {
+      const realRank = (searchQuery ? 0 : 3) + start + idx + 1;
+      grid.appendChild(makeCard(item, realRank));
+    });
+
+    if (pager) {
+      if (totalPages <= 1) {
+        pager.style.display = 'none';
+      } else {
+        pager.style.display = 'flex';
+        pager.innerHTML = "";
+        for (let p = 1; p <= totalPages; p++) {
+          const b = document.createElement('button');
+          b.type = "button";
+          b.className = "lb-page-btn" + (p === wishPage ? " active" : "");
+          b.textContent = String(p);
+          b.onclick = () => { wishPage = p; renderWishBoard(searchQuery); };
+          pager.appendChild(b);
+        }
+      }
+    }
+  };
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
