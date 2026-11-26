@@ -6718,7 +6718,7 @@
     .deco-choice-card.r-legendary { border-color: #f59e0b; background: linear-gradient(180deg, #fffbeb, #fef3c7); }
     .deco-choice-card.r-limited   { border-color: #ec4899; background: linear-gradient(180deg, #fdf2f8, #fef3c7); }
     .deco-choice-card.r-mythic    { border-color: #a855f7; background: linear-gradient(180deg, #f5f3ff, #eff6ff); }
-
+    
     /* ซ่อนแถบแจ้งเตือนของ Google Translate ไม่ให้ดันหน้าเว็บลง */
     .goog-te-banner-frame.skiptranslate,
     iframe.goog-te-banner-frame,
@@ -7186,6 +7186,243 @@
     .ach-rarity-pill.r-rare   { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; }
     .ach-rarity-pill.r-epic   { background: linear-gradient(135deg, #7e22ce, #c084fc); color: #fff; }
     .ach-rarity-pill.r-secret { background: linear-gradient(135deg, #991b1b, #ef4444); color: #fff; }
+    /* =========================================
+       🎨 แยกโซน ยศ vs แผงแต้ม HUD vs ตู้โชว์อชีฟเม้น (Trophy Showcase)
+       ========================================= */
+
+    /* 1. โซนยศ & ฉายา (คงความเด่นทรงแคปซูล แต่จัดกรอบให้เป็นระเบียบ) */
+    .bgt-roles-zone {
+      position: relative;
+      padding-top: 2px;
+      margin-bottom: 10px;
+    }
+    .bgt-zone-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    body.bgt-dark-mode .bgt-zone-label {
+      color: #94a3b8;
+    }
+    .bgt-zone-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(148, 163, 184, 0.35), transparent);
+    }
+
+    /* 2. แผงแต้มผลึก BGT & โควต้า -> เปลี่ยนจากทรงแคปซูล เป็นแถบ HUD ทรงเหลี่ยมเรียบ */
+    .bgt-points-bar {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px !important;
+      margin: 10px 0 !important;
+    }
+    @media (max-width: 640px) {
+      .bgt-points-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+    .bgt-points-bar .bgt-pt-chip {
+      border-radius: 10px !important;
+      padding: 7px 11px !important;
+      font-size: 0.78rem !important;
+      justify-content: flex-start;
+      background: rgba(15, 23, 42, 0.06) !important;
+      color: #0f172a !important;
+      border: 1px solid rgba(148, 163, 184, 0.35) !important;
+      border-left: 4px solid #0ea5e9 !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+    .bgt-points-bar .bgt-pt-chip.farm {
+      border-left-color: #10b981 !important;
+      color: #065f46 !important;
+    }
+    .bgt-points-bar .bgt-pt-chip.vote {
+      border-left-color: #f43f5e !important;
+      color: #9f1239 !important;
+    }
+    body.bgt-dark-mode .bgt-points-bar .bgt-pt-chip {
+      background: rgba(15, 23, 42, 0.65) !important;
+      color: #e0f2fe !important;
+      border-color: rgba(148, 163, 184, 0.2) !important;
+      border-left-color: #38bdf8 !important;
+    }
+    body.bgt-dark-mode .bgt-points-bar .bgt-pt-chip.farm {
+      color: #a7f3d0 !important;
+      border-left-color: #10b981 !important;
+    }
+    body.bgt-dark-mode .bgt-points-bar .bgt-pt-chip.vote {
+      color: #fecdd3 !important;
+      border-left-color: #f43f5e !important;
+    }
+
+    /* 3. ตู้โชว์อชีฟเม้น (Trophy Showcase) แยกขาดจากยศด้วยดีไซน์เหรียญหกเหลี่ยม */
+    .bgt-ach-showcase:not(:empty) {
+      display: block !important;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.92), rgba(30, 27, 75, 0.72)) !important;
+      border: 1.5px solid rgba(251, 191, 36, 0.4) !important;
+      border-radius: 16px !important;
+      padding: 10px 12px 12px !important;
+      margin-top: 10px !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.22);
+    }
+    .bgt-ach-shelf-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #fde68a;
+      letter-spacing: 0.4px;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed rgba(251, 191, 36, 0.3);
+    }
+    .bgt-ach-shelf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+      gap: 8px;
+    }
+    /* โหมดกะทัดรัดในการ์ดโฮเวอร์ (Hover Card) */
+    #uhcAchShowcase .bgt-ach-shelf-grid {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    /* ตัวการ์ดเหรียญอชีฟเม้นแต่ละอัน (ทรงเหลี่ยมตัดมุม + เหรียญหกเหลี่ยม) */
+    .bgt-trophy-tile {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 10px;
+      padding: 7px 9px;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.2s, box-shadow 0.2s;
+      text-align: left;
+    }
+    .bgt-trophy-tile:hover {
+      transform: translateY(-2px);
+      border-color: #fde047;
+    }
+    .bgt-trophy-tile.r-common { border-color: rgba(148, 163, 184, 0.4); }
+    .bgt-trophy-tile.r-rare   { border-color: rgba(56, 189, 248, 0.65); background: linear-gradient(135deg, rgba(12, 74, 110, 0.55), rgba(15, 23, 42, 0.92)); }
+    .bgt-trophy-tile.r-epic   { border-color: rgba(192, 132, 252, 0.75); background: linear-gradient(135deg, rgba(88, 28, 135, 0.55), rgba(15, 23, 42, 0.92)); }
+    .bgt-trophy-tile.r-secret { border-color: rgba(239, 68, 68, 0.8); background: linear-gradient(135deg, rgba(127, 29, 29, 0.65), rgba(9, 0, 0, 0.95)); box-shadow: 0 0 10px rgba(239, 68, 68, 0.25); }
+
+    /* เหรียญหกเหลี่ยม (เอกลักษณ์เฉพาะอชีฟเม้น!) */
+    .bgt-hex-medal {
+      width: 34px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      clip-path: polygon(50% 0%, 96% 25%, 96% 75%, 50% 100%, 4% 75%, 4% 25%);
+      background: linear-gradient(145deg, #475569, #1e293b);
+    }
+    .bgt-trophy-tile.r-rare   .bgt-hex-medal { background: linear-gradient(145deg, #38bdf8, #0369a1); }
+    .bgt-trophy-tile.r-epic   .bgt-hex-medal { background: linear-gradient(145deg, #e879f9, #6b21a8); }
+    .bgt-trophy-tile.r-secret .bgt-hex-medal { background: linear-gradient(145deg, #f87171, #7f1d1d); }
+
+    .bgt-trophy-meta {
+      min-width: 0;
+      flex: 1;
+      line-height: 1.25;
+    }
+    .bgt-trophy-tier {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: #94a3b8;
+      display: block;
+    }
+    .bgt-trophy-tile.r-rare   .bgt-trophy-tier { color: #7dd3fc; }
+    .bgt-trophy-tile.r-epic   .bgt-trophy-tier { color: #e9d5ff; }
+    .bgt-trophy-tile.r-secret .bgt-trophy-tier { color: #fca5a5; }
+
+    .bgt-trophy-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    /* อัปเกรดช่องไอคอนในหน้าต่างหอเกียรติยศให้เป็นเหรียญหกเหลี่ยมตรงกัน */
+    .ach-card .ach-icon-box {
+      clip-path: polygon(50% 0%, 96% 25%, 96% 75%, 50% 100%, 4% 75%, 4% 25%);
+      border: none !important;
+      background: linear-gradient(145deg, #334155, #0f172a);
+      width: 48px;
+      height: 52px;
+    }
+    .ach-card.unlocked.r-rare   .ach-icon-box { background: linear-gradient(145deg, #0ea5e9, #0c4a6e); }
+    .ach-card.unlocked.r-epic   .ach-icon-box { background: linear-gradient(145deg, #c084fc, #581c87); }
+    .ach-card.unlocked.r-secret .ach-icon-box { background: linear-gradient(145deg, #ef4444, #450a0a); }
+
+    /* 4. อชีฟเม้นบนกระดานจัดอันดับ -> แถวเหรียญหกเหลี่ยมจิ๋ว แยกจากยศชัดเจน */
+    .lb-ach-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 5px;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.28);
+    }
+    .lb-ach-prefix {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #f59e0b;
+    }
+    .lb-medal-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 6px;
+      padding: 1px 7px 1px 3px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.66rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .lb-medal-chip.r-rare   { border-color: rgba(56, 189, 248, 0.65); color: #bae6fd; }
+    .lb-medal-chip.r-epic   { border-color: rgba(192, 132, 252, 0.7); color: #f3e8ff; }
+    .lb-medal-chip.r-secret { border-color: rgba(239, 68, 68, 0.75); color: #fecaca; }
+
+    .lb-hex-mini {
+      width: 17px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      clip-path: polygon(50% 0%, 96% 25%, 96% 75%, 50% 100%, 4% 75%, 4% 25%);
+      background: #475569;
+    }
+    .lb-medal-chip.r-rare   .lb-hex-mini { background: #0284c7; }
+    .lb-medal-chip.r-epic   .lb-hex-mini { background: #9333ea; }
+    .lb-medal-chip.r-secret .lb-hex-mini { background: #dc2626; }
   </style>
 </head>
 <body>
@@ -15834,6 +16071,7 @@
   <div id="langLoadingText" style="font-size:1.1rem; font-weight:700; color:#fde68a;">กำลังเปลี่ยนภาษา... / Switching language...</div>
 </div>
 
+  
 <script>
   // =========================================
   // 🌐 ระบบสลับภาษาเสถียร 100% (ล็อกภาษาไทยเริ่มต้น + หน้าจอโหลดรอแปลเสร็จ)
@@ -18075,6 +18313,104 @@
     const title = document.getElementById('wishTitleInput')?.value.trim();
     _origSubmitWishAch();
     if (title && currentUser && db) unlockAchievement("wish_maker");
+  };
+
+  // =========================================
+  // 🏆 อัปเกรดการจัดเรียง & แยกดีไซน์ ยศ vs ตู้โชว์อชีฟเม้น
+  // =========================================
+  (function setupProfileZoneHeaders() {
+    const rolePill = document.getElementById('profileRolePill');
+    const rolesWrap = rolePill ? rolePill.parentElement : null;
+    if (rolesWrap && !rolesWrap.classList.contains('bgt-roles-zone')) {
+      rolesWrap.classList.add('bgt-roles-zone');
+      const lbl = document.createElement('div');
+      lbl.className = 'bgt-zone-label';
+      lbl.style.width = '100%';
+      lbl.textContent = '🎖️ ยศ & ฉายาที่ครอบครอง';
+      rolesWrap.prepend(lbl);
+    }
+  })();
+
+  const ACH_RARITY_LABELS = {
+    common: '★ COMMON',
+    rare:   '◆ RARE',
+    epic:   '✦ EPIC',
+    secret: '🩸 SECRET'
+  };
+
+  // เปลี่ยนการวาดอชีฟเม้นบนโปรไฟล์ & การ์ดโฮเวอร์ เป็นตู้โชว์เหรียญหกเหลี่ยม
+  renderAchShowcaseInto = function(elId, uid) {
+    const box = document.getElementById(elId);
+    if (!box) return;
+    const eco = getUserEcoData(uid);
+    const pinnedIds = eco.achPinned.filter(id => eco.achUnlocked[id]).slice(0, 3);
+    box.innerHTML = "";
+    if (pinnedIds.length === 0) return;
+
+    const head = document.createElement('div');
+    head.className = 'bgt-ach-shelf-head';
+    head.innerHTML = `<span>🏆 ตู้โชว์อชีฟเม้น (TROPHY CASE)</span><span>${pinnedIds.length} / 3</span>`;
+    box.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'bgt-ach-shelf-grid';
+
+    pinnedIds.forEach(id => {
+      const meta = BGT_ACHIEVEMENTS.find(a => a.id === id);
+      if (!meta) return;
+
+      const tile = document.createElement('div');
+      tile.className = `bgt-trophy-tile r-${meta.rarity}`;
+      tile.title = `${meta.title} — ${meta.desc}`;
+      tile.innerHTML = `
+        <div class="bgt-hex-medal">${meta.icon}</div>
+        <div class="bgt-trophy-meta">
+          <span class="bgt-trophy-tier">${ACH_RARITY_LABELS[meta.rarity] || '★ COMMON'}</span>
+          <span class="bgt-trophy-name">${meta.title}</span>
+        </div>
+      `;
+      tile.onclick = () => {
+        if (currentUser && uid === currentUser.id) openAchievementModal();
+      };
+      grid.appendChild(tile);
+    });
+
+    box.appendChild(grid);
+  };
+
+  // เปลี่ยนการแสดงอชีฟเม้นบนกระดานจัดอันดับ เป็นแถวเหรียญหกเหลี่ยมจิ๋ว (ไม่ซ้ำกับป้ายยศ)
+  const _prevBuildLbRowForTrophy = buildLbRow;
+  buildLbRow = function(rank, id, u, scoreText) {
+    const row = _prevBuildLbRowForTrophy(rank, id, u, scoreText);
+    const meta = row.querySelector('.lb-meta');
+    if (meta && id) {
+      const oldAch = meta.querySelector('.lb-ach-row');
+      if (oldAch) oldAch.remove();
+
+      const eco = getUserEcoData(id);
+      const pinnedIds = eco.achPinned.filter(aid => eco.achUnlocked[aid]).slice(0, 3);
+      if (pinnedIds.length > 0) {
+        const achRow = document.createElement('div');
+        achRow.className = 'lb-ach-row';
+
+        const prefix = document.createElement('span');
+        prefix.className = 'lb-ach-prefix';
+        prefix.textContent = '🏆';
+        achRow.appendChild(prefix);
+
+        pinnedIds.forEach(aid => {
+          const m = BGT_ACHIEVEMENTS.find(x => x.id === aid);
+          if (!m) return;
+          const chip = document.createElement('span');
+          chip.className = `lb-medal-chip r-${m.rarity}`;
+          chip.title = `${m.title}: ${m.desc}`;
+          chip.innerHTML = `<span class="lb-hex-mini">${m.icon}</span><span>${m.title}</span>`;
+          achRow.appendChild(chip);
+        });
+        meta.appendChild(achRow);
+      }
+    }
+    return row;
   };
 </script>
 
