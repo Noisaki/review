@@ -7081,6 +7081,43 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+    /* ===== ป้ายแต้มสไตล์ผลึกคริสตัลนีออนเรืองแสง (เท่กว่าเดิม!) ===== */
+    .bgt-pt-chip {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #0c4a6e 100%) !important;
+      color: #7dd3fc !important;
+      border: 1.5px solid #38bdf8 !important;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.45), inset 0 0 8px rgba(56, 189, 248, 0.2) !important;
+      text-shadow: 0 0 8px rgba(56, 189, 248, 0.85);
+      letter-spacing: 0.3px;
+    }
+    .bgt-pt-chip.farm {
+      background: linear-gradient(135deg, #052e16, #064e3b) !important;
+      color: #6ee7b7 !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.35) !important;
+      text-shadow: none;
+    }
+    .bgt-pt-chip.vote {
+      background: linear-gradient(135deg, #4c0519, #881337) !important;
+      color: #fda4af !important;
+      border-color: #f43f5e !important;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.35) !important;
+      text-shadow: none;
+    }
+
+    /* ===== ธีมการ์ดกิจกรรมคริสต์มาส 2026 ===== */
+    .lk-event-card.xmas-event-theme {
+      background: linear-gradient(145deg, rgba(20, 83, 45, 0.96), rgba(127, 29, 29, 0.95)) !important;
+      border-color: #fde047 !important;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.48), 0 0 28px rgba(220, 38, 38, 0.45) !important;
+    }
+    .lk-event-card.xmas-event-theme .lk-event-badge-tag {
+      background: linear-gradient(90deg, #dc2626, #16a34a, #f59e0b) !important;
+    }
+    .lk-event-card.xmas-event-theme .lk-float-btn {
+      background: linear-gradient(135deg, #dc2626, #15803d, #f59e0b) !important;
+      box-shadow: 0 0 24px rgba(253, 224, 71, 0.6) !important;
+    }
   </style>
 </head>
 <body>
@@ -7202,7 +7239,7 @@
     <button type="button" class="nav-purple-btn" id="navLoginBtn" onclick="playClickSound(); openLoginInfo('');">ล็อกอิน</button>
 
     <div class="nav-profile-dropdown-wrap" id="navQuickActions" style="display:none; align-items:center; gap:8px;">
-      <button type="button" id="navTopPointsPill" class="bgt-pt-chip" style="cursor:pointer; margin:0; padding:5px 11px; font-size:0.8rem; white-space:nowrap;" onclick="playClickSound(); openAchievementModal();" title="แต้มอุ้งเท้าคงเหลือ (คลิกเปิดหน้าอชีฟเม้น)">🐾 0</button>
+      <button type="button" id="navTopPointsPill" class="bgt-pt-chip" style="cursor:pointer; margin:0; padding:5px 11px; font-size:0.8rem; white-space:nowrap;" onclick="playClickSound(); openAchievementModal();" title="ผลึก BGT คงเหลือ (คลิกเปิดหน้าอชีฟเม้น)">💠 0</button>
       <button type="button" class="nav-profile-pill" id="navUserWrap" onmouseenter="playHoverSound()" onclick="toggleProfileDropdown(event)">
         <span class="nav-avatar-frame" id="navAvatarFrame">
           <img id="navAvatarImg" src="" alt="Avatar" referrerpolicy="no-referrer">
@@ -11710,7 +11747,7 @@
     }
 
     const lkCard = document.getElementById('loyKrathongEventCard');
-    const lkRunningNow = Date.now() <= LOY_KRATHONG_END_MS;
+    const lkRunningNow = (Date.now() <= LOY_KRATHONG_END_MS) || (Date.now() >= XMAS_START_MS && Date.now() <= XMAS_END_MS);
 
     const pageMap = {
       home:     lkRunningNow
@@ -17016,14 +17053,14 @@
   // =========================================================================
   // 23. ระบบเศรษฐกิจแต้มอุ้งเท้า (Soft Cap + Progressive Vote) & 🏆 อชีฟเม้น BGT (Safe Edition)
   // =========================================================================
-  const POINT_UNIT = "🐾";
-  const POINT_NAME = "แต้มอุ้งเท้า";
+  const POINT_UNIT = "💠";
+  const POINT_NAME = "ผลึก BGT";
 
   const BGT_ACHIEVEMENTS = [
     { id: "first_checkin",    icon: "🐾", title: "ก้าวแรกสู่บ้าน BGT",      desc: "เช็กอินรายวันครบ 1 วัน",                         reward: 100, rarity: "common", secret: false },
     { id: "streak_7",         icon: "🌟", title: "แฟนพันธุ์แท้ 7 วัน",       desc: "เช็กอินสะสมครบ 7 วัน",                           reward: 300, rarity: "rare",   secret: false },
     { id: "first_eval",       icon: "📝", title: "นักวิจารณ์มือใหม่",        desc: "ส่งแบบประเมินคุณภาพเกมแปลไทยครั้งแรก",           reward: 150, rarity: "common", secret: false },
-    { id: "first_vote",       icon: "🔥", title: "เสียงนี้เพื่อเกมที่รัก",    desc: "ใช้แต้มอุ้งเท้าโหวตเกมหรือขอเกมครั้งแรก",        reward: 100, rarity: "common", secret: false },
+    { id: "first_vote",       icon: "🔥", title: "เสียงนี้เพื่อเกมที่รัก",    desc: "ใช้ผลึก BGT โหวตเกมหรือขอเกมครั้งแรก",        reward: 100, rarity: "common", secret: false },
     { id: "dev_supporter",    icon: "🤝", title: "ผู้ส่งพลังใจผู้สร้าง",     desc: "ส่งกำลังใจหรือคอมเมนต์ให้ผู้พัฒนาต้นฉบับ",        reward: 150, rarity: "common", secret: false },
     { id: "over_quota_vote",  icon: "💎", title: "สายเปย์แต้มตัวจริง",      desc: "ทุ่มโหวตเกมเกินโควต้าราคาปกติในวันเดียว (6+)",    reward: 150, rarity: "rare",   secret: false },
     { id: "softcap_farmer",   icon: "⚡", title: "ฟาร์มจนนิ้วล็อก",         desc: "ฟาร์มแต้มกดหัวใจแตะขีดจำกัดสูงสุดของวัน (350+)", reward: 200, rarity: "epic",   secret: false },
@@ -17407,7 +17444,7 @@
       db.ref(`users/${uid}/pawPoints`).set(firebase.database.ServerValue.increment(totalPts)).catch(() => {});
       setTimeout(() => {
         const extraTxt = donateBonus > 0 ? ` (รวมโบนัสยศโดเนท +${donateBonus} 🎁)` : "";
-        showToast(`🐾 เช็กอินรับ +${totalPts} ${POINT_NAME}!${extraTxt}`);
+        showToast(`${POINT_UNIT} เช็กอินรับ +${totalPts} ${POINT_NAME}!${extraTxt}`);
         checkAutoAchievements();
       }, 650);
     }
@@ -17617,6 +17654,210 @@
     unlockAchievement("secret_curse_king");
     _origFinishCK(from5Reloads);
   };
+  // =========================================================================
+  // 24. ระบบกิจกรรมคริสต์มาส 2026 + กดกิจกรรมได้ผลึก BGT + แจกรางวัลจบอันดับอัตโนมัติ
+  // =========================================================================
+  function isChristmasEventNow() {
+    const now = Date.now();
+    return now >= XMAS_START_MS && now <= XMAS_END_MS;
+  }
+
+  function getXmasSortedUsers() {
+    return Object.keys(usersCache || {})
+      .map(id => ({ id, u: usersCache[id] || {}, count: Number((usersCache[id] || {}).xmasGiftCount) || 0 }))
+      .filter(e => e.count > 0)
+      .sort((a, b) => b.count - a.count || a.id.localeCompare(b.id));
+  }
+
+  // ตัวช่วยแจกผลึก BGT แบบ Soft Cap เวลาคนกดกิจกรรม
+  function earnEventSoftCapPoint(uid) {
+    if (!uid || !db) return;
+    const eco = getUserEcoData(uid);
+    const step = getFarmStepInfo(eco.farmedToday);
+    _farmClickBuf++;
+    if (_farmClickBuf >= step.clicksPerPt) {
+      _farmClickBuf = 0;
+      const dummyUpdates = {};
+      const u = prepareEcoDayUpdates(uid, dummyUpdates);
+      const nextFarm = (Number(u.ecoFarmToday) || 0) + 1;
+      u.ecoFarmToday = nextFarm;
+      u.pawPoints = (Number(u.pawPoints) || 0) + 1;
+      _pendingFarmPts += 1;
+
+      clearTimeout(_farmFlushTimer);
+      _farmFlushTimer = setTimeout(flushPendingFarmPoints, 1000);
+      updateProfileEcoUI();
+      if (nextFarm === 350) unlockAchievement("softcap_farmer");
+    }
+  }
+
+  // อัปเกรดปุ่มกดกิจกรรม: รองรับทั้งลอยกระทง & คริสต์มาส + กดแล้วได้ผลึก BGT ด้วย!
+  const _origLoyKrathongClick = loyKrathongClick;
+  loyKrathongClick = function(e) {
+    if (isChristmasEventNow()) {
+      if (!currentUser) {
+        openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนกดส่งของขวัญคริสต์มาสเพื่อสะสมอันดับและรับผลึก BGT นะครับ 🎄");
+        return;
+      }
+      if (!db) return;
+
+      playClickSound();
+      feedGenkidama(e ? e.clientX : null, e ? e.clientY : null);
+
+      if (checkStealthAntiAutoClick('xmas_event')) {
+        const pts = getGenkiPointsToAdd('xmas_event');
+        if (pts > 0) {
+          db.ref(`users/${currentUser.id}/xmasGiftCount`).set(firebase.database.ServerValue.increment(pts)).catch(() => {});
+        }
+        earnEventSoftCapPoint(currentUser.id);
+      }
+
+      if (e) {
+        const icons = ['🎁', '🎄', '❄️', '⭐', '💠'];
+        for (let i = 0; i < 3; i++) {
+          const el = document.createElement('div');
+          el.className = 'floating-heart';
+          el.textContent = icons[Math.floor(Math.random() * icons.length)];
+          el.style.left = (e.clientX + (Math.random() - 0.5) * 80) + 'px';
+          el.style.top = (e.clientY - 12) + 'px';
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 1200);
+        }
+      }
+      return;
+    }
+
+    // ช่วงลอยกระทง: ทำงานเหมือนเดิม + แถมผลึก BGT แบบ Soft Cap ด้วย!
+    _origLoyKrathongClick(e);
+    if (Date.now() <= LOY_KRATHONG_END_MS && currentUser && db) {
+      if (checkStealthAntiAutoClick('lk_paw_pts')) {
+        earnEventSoftCapPoint(currentUser.id);
+      }
+    }
+  };
+
+  // อัปเกรดการแสดงผลการ์ดกิจกรรม: สลับเป็นคริสต์มาสอัตโนมัติเมื่อถึงวันที่ 27 พ.ย.
+  const _origRenderLkEvent = renderLoyKrathongEvent;
+  renderLoyKrathongEvent = function() {
+    if (!isChristmasEventNow()) {
+      _origRenderLkEvent();
+      return;
+    }
+
+    const card = document.getElementById('loyKrathongEventCard');
+    const countdownEl = document.getElementById('lkEventCountdown');
+    const totalEl = document.getElementById('lkTotalCounter');
+    const myLineEl = document.getElementById('lkMyCountLine');
+    const listEl = document.getElementById('lkEventTopList');
+
+    document.body.classList.remove('loy-krathong-mode');
+    if (card) {
+      card.classList.add('xmas-event-theme');
+      const titleEl = card.querySelector('.lk-event-title');
+      const descEl  = card.querySelector('.lk-event-desc');
+      const btnSpan = card.querySelector('#lkFloatBtn > span:first-child');
+      const lbHead  = card.querySelector('.lk-event-lb-box span:first-child');
+      if (titleEl) titleEl.textContent = "🎄🎁 กิจกรรมคริสต์มาส Ben the Game Translator 2026";
+      if (descEl)  descEl.innerHTML = `ร่วมกดส่งกล่องของขวัญสะสมอันดับ & รับ <strong>${POINT_UNIT} ${POINT_NAME}</strong>! จบกิจกรรมรับรางวัลใหญ่: <strong>🥇 อันดับ 1 (+3,000 ${POINT_UNIT})</strong> • <strong>🥈 อันดับ 2 (+1,500 ${POINT_UNIT})</strong> • <strong>🥉 อันดับ 3 (+800 ${POINT_UNIT})</strong> • ผู้เข้าร่วมทุกคนรับ <strong>+300 ${POINT_UNIT}</strong>!`;
+      if (btnSpan) btnSpan.textContent = "🎁 กดส่งกล่องของขวัญ!";
+      if (lbHead)  lbHead.textContent = "🏆 Top 5 ซานต้าสายเปย์ของขวัญ (จบกิจกรรมรับผลึก BGT!)";
+    }
+
+    const diff = Math.max(0, XMAS_END_MS - Date.now());
+    if (countdownEl) {
+      const days = Math.floor(diff / 86400000);
+      const hrs  = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      countdownEl.textContent = `เหลือเวลา ${days} วัน ${hrs} ชม. ${mins} น. ${secs} วิ`;
+    }
+
+    const sorted = getXmasSortedUsers();
+    const totalGifts = sorted.reduce((sum, e) => sum + e.count, 0);
+    if (totalEl) totalEl.textContent = formatCompact(totalGifts) + " กล่อง";
+
+    if (myLineEl) {
+      if (!currentUser) {
+        myLineEl.textContent = `🔐 ล็อกอินเพื่อร่วมส่งของขวัญคริสต์มาสและรับ ${POINT_UNIT} ${POINT_NAME} 🎄`;
+      } else {
+        const myEntry = sorted.find(e => e.id === currentUser.id);
+        const myCnt = myEntry ? myEntry.count : 0;
+        const myRankIdx = sorted.findIndex(e => e.id === currentUser.id);
+        myLineEl.textContent = myCnt > 0
+          ? `🎁 คุณส่งของขวัญไปแล้ว: ${formatCompact(myCnt)} กล่อง (อันดับ #${myRankIdx + 1})`
+          : `🎁 กดส่งของขวัญอย่างน้อย 1 กล่อง เพื่อรับสิทธิ์รับรางวัล +300 ${POINT_UNIT} เมื่อจบกิจกรรม!`;
+      }
+    }
+
+    if (listEl) {
+      const top5 = sorted.slice(0, 5);
+      const sig = "xmas|" + top5.map(e => `${e.id}:${e.count}:${e.u.customName || e.u.name || ""}`).join("|") + "|" + (currentUser ? currentUser.id : "");
+      if (listEl.dataset.lkSig !== sig) {
+        listEl.dataset.lkSig = sig;
+        listEl.textContent = "";
+        if (top5.length === 0) {
+          listEl.innerHTML = `<div class="lb-empty" style="color:#cbd5e1;">ยังไม่มีผู้ส่งของขวัญ — เป็นซานต้าคนแรกเลยสิ! 🎁</div>`;
+        } else {
+          top5.forEach((e, i) => {
+            listEl.appendChild(buildLbRow(i + 1, e.id, e.u, "🎁 " + formatCompact(e.count) + " กล่อง"));
+          });
+        }
+      }
+    }
+  };
+
+  // 🏆 แจกรางวัลผลึก BGT อัตโนมัติเมื่อจบกิจกรรม (อันดับ 1: +3,000 / อันดับ 2: +1,500 / อันดับ 3: +800 / เข้าร่วม: +300)
+  const _eventRewardLock = new Set();
+  function checkAndClaimEventRewards() {
+    if (!db || !currentUser || !usersCache || Object.keys(usersCache).length === 0) return;
+    const uid = currentUser.id;
+    const u = usersCache[uid];
+    if (!u) return;
+
+    const grantByRank = (eventKey, flagField, sortedList, eventTitle) => {
+      if (u[flagField] || _eventRewardLock.has(uid + ":" + eventKey)) return;
+      const idx = sortedList.findIndex(e => e.id === uid);
+      if (idx === -1) return; // ไม่ได้เข้าร่วม
+
+      _eventRewardLock.add(uid + ":" + eventKey);
+      const rank = idx + 1;
+      const reward = rank === 1 ? 3000 : rank === 2 ? 1500 : rank === 3 ? 800 : 300;
+
+      u[flagField] = true;
+      u.pawPoints = (Number(u.pawPoints) || 0) + reward;
+
+      const updates = {};
+      updates[`users/${uid}/${flagField}`] = true;
+      updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(reward);
+      db.ref().update(updates).then(() => {
+        playMilestoneFanfare();
+        showToast(`🏆 รางวัลจบกิจกรรม ${eventTitle} (อันดับ #${rank}) รับ +${formatNum(reward)} ${POINT_UNIT} ${POINT_NAME}!`);
+        updateProfileEcoUI();
+      }).catch(() => {
+        _eventRewardLock.delete(uid + ":" + eventKey);
+        u[flagField] = false;
+      });
+    };
+
+    if (Date.now() > LOY_KRATHONG_END_MS) {
+      grantByRank("lk2026", "claimedLk2026Reward", getLoyKrathongSortedUsers(), "ลอยกระทง 2026");
+    }
+    if (Date.now() > XMAS_END_MS) {
+      grantByRank("xmas2026", "claimedXmas2026Reward", getXmasSortedUsers(), "คริสต์มาส 2026");
+    }
+  }
+
+  // เรียกตรวจรางวัลจบกิจกรรมทันทีเมื่อโหลดโปรไฟล์
+  const _origApplyProfileEv = applyProfileToUI;
+  applyProfileToUI = function(profile) {
+    _origApplyProfileEv(profile);
+    checkAndClaimEventRewards();
+  };
+
+  // ให้อัปเดตเวลานับถอยหลังช่วงคริสต์มาสทุกวินาทีด้วย
+  setInterval(() => {
+    if (isChristmasEventNow()) renderLoyKrathongEvent();
+  }, 1000);
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
