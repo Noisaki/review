@@ -7870,6 +7870,262 @@
       transition: background 0.2s;
     }
     .wish-dropzone:hover { background: rgba(244, 114, 182, 0.14); }
+
+    /* =========================================
+       🤖✨ PROTO-AI ตัวละครผู้ช่วยลอยตามจอทุกหน้า (สไตล์ภาพตัวอย่าง)
+       ========================================= */
+    .bgt-board-split {
+      grid-template-columns: 1fr !important; /* ขยายกระดานขอเกมเต็มจอ ไม่ต้องมีตัวซ้ำด้านข้าง */
+    }
+    .bgt-req-hero-card {
+      max-width: 100% !important;
+    }
+
+    /* เลื่อนป้ายโฆษณาโหวตไปฝั่งซ้ายบนคอม เพื่อไม่ให้ชนกับตัวละครฝั่งขวา */
+    @media (min-width: 781px) {
+      .vote-promo-ad {
+        right: auto !important;
+        left: 18px !important;
+      }
+    }
+
+    .bgt-proto-widget {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 245px;
+      z-index: 190;
+      display: none;
+      user-select: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .bgt-proto-widget.visible {
+      display: block;
+      animation: fadeSlideUp 0.35s ease-out;
+    }
+
+    /* ตัวการ์ดพื้นหลังน้ำเงินเข้มเรืองแสงแบบภาพที่ 2 */
+    .bgt-proto-card {
+      position: relative;
+      border-radius: 22px;
+      padding: 12px 10px 10px;
+      background:
+        radial-gradient(circle at 50% 34%, rgba(56, 189, 248, 0.32), rgba(30, 41, 82, 0.94) 62%, #0f172a 100%);
+      border: 2px solid rgba(56, 189, 248, 0.55);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.55), inset 0 0 24px rgba(56, 189, 248, 0.16);
+      overflow: visible;
+    }
+
+    /* ป้ายชื่อ + ป้ายหมวดหมู่มุมซ้ายบน */
+    .bgt-proto-badges {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      pointer-events: none;
+    }
+    .bgt-proto-name-pill {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #0b1120;
+      border: 2px solid #0f172a;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 2px 11px;
+      border-radius: 999px;
+      box-shadow: 0 3px 10px rgba(56, 189, 248, 0.45);
+    }
+    .bgt-proto-role-pill {
+      background: rgba(15, 23, 42, 0.86);
+      color: #f8fafc;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+
+    /* ปุ่มพับเก็บมุมขวาบน */
+    .bgt-proto-min-btn {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      z-index: 5;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(15, 23, 42, 0.75);
+      color: #e2e8f0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, transform 0.15s;
+    }
+    .bgt-proto-min-btn:hover {
+      background: #0284c7;
+      color: #ffffff;
+      transform: scale(1.08);
+    }
+
+    /* พื้นที่วางตัวละคร 1:1 + ขยับมีชีวิตชีวา */
+    .bgt-proto-stage {
+      position: relative;
+      width: 100%;
+      height: 188px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 14px;
+      margin-bottom: -14px; /* ให้กล่องข้อความขาวซ้อนทับช่วงล่างเหมือนภาพที่ 2 */
+    }
+    .bgt-proto-img {
+      width: 198px;
+      height: 198px;
+      object-fit: contain;
+      object-position: center bottom;
+      cursor: pointer;
+      transform-origin: bottom center;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+      animation: protoAliveIdle 3.4s ease-in-out infinite;
+      will-change: transform;
+      transition: filter 0.2s;
+    }
+    .bgt-proto-img:hover {
+      filter: drop-shadow(0 8px 20px rgba(56, 189, 248, 0.65));
+    }
+    .bgt-proto-widget.is-talking .bgt-proto-img {
+      animation: protoTalkBounce 0.48s ease-in-out infinite;
+    }
+    .bgt-proto-widget.is-blushing .bgt-proto-img {
+      animation: protoBlushWiggle 0.42s ease-in-out 2;
+    }
+
+    @keyframes protoAliveIdle {
+      0%, 100% { transform: translateY(0px) scaleX(1) scaleY(1) rotate(0deg); }
+      25%      { transform: translateY(-4px) scaleX(0.985) scaleY(1.022) rotate(-1.4deg); }
+      50%      { transform: translateY(-1px) scaleX(1.012) scaleY(0.992) rotate(0.6deg); }
+      75%      { transform: translateY(-5px) scaleX(0.988) scaleY(1.02) rotate(1.3deg); }
+    }
+    @keyframes protoTalkBounce {
+      0%, 100% { transform: translateY(0px) scaleY(1) rotate(-0.6deg); }
+      50%      { transform: translateY(-6px) scaleY(1.03) rotate(0.8deg); }
+    }
+    @keyframes protoBlushWiggle {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25%      { transform: scale(1.06, 0.95) rotate(-4deg); }
+      75%      { transform: scale(1.06, 0.95) rotate(4deg); }
+    }
+
+    /* กล่องข้อความสีขาว + หางชี้ขึ้นตรงกลางเหมือนภาพที่ 2 */
+    .bgt-proto-bubble {
+      position: relative;
+      z-index: 4;
+      background: #ffffff;
+      color: #0f172a;
+      border: 2.5px solid #1e293b;
+      border-radius: 16px;
+      padding: 10px 12px;
+      min-height: 58px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.79rem;
+      font-weight: 600;
+      line-height: 1.48;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      transition: transform 0.14s ease;
+    }
+    .bgt-proto-bubble:active { transform: scale(0.97); }
+    .bgt-proto-bubble::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 2.5px solid #1e293b;
+      border-top: 2.5px solid #1e293b;
+    }
+    .bgt-proto-bubble-hint {
+      display: block;
+      font-size: 0.64rem;
+      color: #64748b;
+      text-align: right;
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    /* ปุ่มกลมจิ๋วตอนพับเก็บ */
+    .bgt-proto-mini-fab {
+      display: none;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      padding: 3px;
+      border: 2.5px solid #38bdf8;
+      background: radial-gradient(circle, #1e293b, #0b1120);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 14px rgba(56, 189, 248, 0.55);
+      cursor: pointer;
+      overflow: hidden;
+      margin-left: auto;
+      transition: transform 0.18s;
+    }
+    .bgt-proto-mini-fab:hover { transform: scale(1.08); }
+    .bgt-proto-mini-fab img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .bgt-proto-widget.minimized { width: auto; }
+    .bgt-proto-widget.minimized .bgt-proto-card { display: none; }
+    .bgt-proto-widget.minimized .bgt-proto-mini-fab { display: flex; }
+
+    /* 📱 สมดุลบนมือถือ: จัดเป็นแถบกะทัดรัดไม่บังเนื้อหา + พับเก็บเป็นปุ่มกลมได้ */
+    @media (max-width: 780px) {
+      .bgt-proto-widget {
+        right: 10px;
+        bottom: 12px;
+        width: 176px;
+      }
+      .bgt-proto-card {
+        padding: 8px 7px 7px;
+        border-radius: 18px;
+      }
+      .bgt-proto-stage {
+        height: 122px;
+        margin-bottom: -10px;
+      }
+      .bgt-proto-img {
+        width: 132px;
+        height: 132px;
+      }
+      .bgt-proto-name-pill { font-size: 0.66rem; padding: 1px 8px; }
+      .bgt-proto-role-pill { font-size: 0.58rem; padding: 1px 7px; }
+      .bgt-proto-min-btn { width: 22px; height: 22px; font-size: 0.7rem; top: 6px; right: 6px; }
+      .bgt-proto-bubble {
+        padding: 7px 9px;
+        min-height: 46px;
+        font-size: 0.7rem;
+        line-height: 1.4;
+        border-radius: 12px;
+      }
+      .bgt-proto-bubble-hint { display: none; }
+      .bgt-proto-mini-fab { width: 52px; height: 52px; }
+    }
+    body.bgt-no-fx .bgt-proto-img { animation: none !important; }
   </style>
 </head>
 <body>
@@ -8497,13 +8753,9 @@
         </div>
       </div>
 
-      <!-- รูปตัวละคร AI ประจำหน้า (เอาไฟล์ Protogen มาวางชื่อ images/proto_ai.png ได้เลย) -->
-      <div class="bgt-req-hero-art">
-        <img id="wishProtoHeroImg" class="proto-poke-img" src="images/proto_idle.png" alt="BGT AI" onclick="pokeProtoAi('hero')" style="cursor:pointer;" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
-    </div>
-    </div>
+      </div>
 
-    <!-- 2. TOP 3 ดาวเด่นของกระดาน + AI พูดได้ตัวที่ 1 -->
+    <!-- 2. TOP 3 ดาวเด่นของกระดาน -->
     <div class="bgt-board-split">
       <div class="bgt-top3-wrap">
         <div class="bgt-top3-head">🏆 TOP 3 • ดาวเด่นของกระดาน</div>
@@ -8511,17 +8763,9 @@
           <div class="lb-empty" style="grid-column:1/-1; color:#94a3b8;">กำลังโหลด Top 3...</div>
         </div>
       </div>
-
-      <div class="bgt-ai-card">
-      <span class="bgt-ai-name-tag">🤖 PROTO-AI • พิธีกรกระดาน</span>
-      <img id="wishProtoImg1" class="proto-poke-img" src="images/proto_idle.png" alt="PROTO-AI" onclick="pokeProtoAi(1)" style="cursor:pointer;" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
-      <div class="bgt-ai-bubble" id="wishAiBubble1" onclick="cycleWishAiSpeech(1)">
-        ชวนเพื่อนมาโหวตเยอะๆ นะ! คำขออันดับสูงมีโอกาสได้แปลก่อนเลย~ 💙
-      </div>
-    </div>
     </div>
 
-    <!-- 3. กระดานคำขอ (WISH BOARD อันดับ #4 เป็นต้นไป) + AI พูดได้ตัวที่ 2 -->
+    <!-- 3. กระดานคำขอ (WISH BOARD อันดับ #4 เป็นต้นไป) -->
     <div class="bgt-board-split">
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -8537,15 +8781,7 @@
         </div>
         <div class="lb-pagination" id="wishBoardPager" style="display:none;"></div>
       </div>
-
-      <div class="bgt-ai-card" style="position:sticky; top:82px;">
-        <span class="bgt-ai-name-tag">🐾 PROTO-AI • ฝ่ายรับคำขอ</span>
-        <img id="wishProtoImg2" class="proto-poke-img" src="images/proto_idle.png" alt="PROTO-AI" onclick="pokeProtoAi(2)" style="cursor:pointer;" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
-        <div class="bgt-ai-bubble" id="wishAiBubble2" onclick="cycleWishAiSpeech(2)">
-          ไม่เจอเกมที่ตามหา กด "+ ขอเกมใหม่" ได้เลย เดี๋ยวรับเรื่องให้เองครับ! ✨
-        </div>
-      </div>
-    </div> 
+    </div>
    
 
     <!-- 4. HOW IT WORKS: ขอเกมทำงานยังไง -->
@@ -9049,6 +9285,30 @@
       <span>สำหรับผู้ที่ไม่ได้เล่น Discord สามารถใช้งานทุกอย่างผ่านหน้าเว็บนี้ได้ทันที ✨</span>
     </div>
   </footer>
+</div>
+
+<!-- 🤖✨ ตัวละครผู้ช่วย PROTO-AI ลอยตามจอทุกหน้า -->
+<div class="bgt-proto-widget" id="bgtProtoWidget">
+  <div class="bgt-proto-card">
+    <div class="bgt-proto-badges">
+      <span class="bgt-proto-name-pill">PROTO-AI</span>
+      <span class="bgt-proto-role-pill" id="protoRoleBadge">ผู้ช่วยประจำเว็บ</span>
+    </div>
+    <button type="button" class="bgt-proto-min-btn" onclick="toggleProtoMinimize(true)" title="พับเก็บ">−</button>
+    <div class="bgt-proto-stage">
+      <img id="globalProtoImg" class="bgt-proto-img" src="images/proto_idle.png" alt="PROTO-AI"
+           onclick="pokeGlobalProto()"
+           onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
+    </div>
+    <div class="bgt-proto-bubble" id="globalProtoBubble" onclick="nextProtoSpeech(true)">
+      <span id="globalProtoText">ระบบพร้อมทำงานแล้วครับ! ยินดีต้อนรับสู่ BGT นะ~ 🤖💙</span>
+      <span class="bgt-proto-bubble-hint">แตะเพื่อฟังต่อ ▸</span>
+    </div>
+  </div>
+  <button type="button" class="bgt-proto-mini-fab" onclick="toggleProtoMinimize(false)" title="เรียก PROTO-AI ออกมา">
+    <img id="globalProtoMiniImg" src="images/proto_idle.png" alt="PROTO-AI"
+         onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
+  </button>
 </div>
 
 <!-- ป้ายแจ้งเตือนเล็ก -->
@@ -19290,7 +19550,7 @@
     }
   }, 1000);
   // =========================================================================
-  // 26. อัปเกรดหน้า ขอเกมที่อยากเล่น (Top 3 ดาวเด่น + กระดาน #4+ + AI พูดได้)
+  // 26. 🤖 PROTO-AI ผู้ช่วยลอยตามจอทุกหน้า + เสียงหุ่นยนต์ + พูดแนะนำอัตโนมัติ
   // =========================================================================
   const PROTO_SPRITES = {
     idle:  "images/proto_idle.png",
@@ -19299,7 +19559,6 @@
     blush: "images/proto_blush.png"
   };
 
-  // โหลดรูปล่วงหน้าทั้ง 4 ท่า (กันภาพกระพริบตอนสลับ)
   const _protoReady = { idle: false, blink: false, talk: false, blush: false };
   Object.keys(PROTO_SPRITES).forEach(k => {
     const im = new Image();
@@ -19307,142 +19566,292 @@
     im.src = PROTO_SPRITES[k];
   });
 
-  const WISH_AI_LINES_1 = [
-    "ชวนเพื่อนมาโหวตเยอะๆ นะ! คำขออันดับสูงมีโอกาสได้แปลก่อนเลย~ 💙",
-    "กดปุ่ม ⚡ โหวต / ดันอันดับ ด้วยผลึก BGT เพื่อส่งเกมที่รักขึ้น Top 3 ได้เลย!",
-    "ทุกเกมจะขออนุญาตผู้พัฒนาต้นฉบับและเปิดให้เล่นฟรี 100% ครับ ✨"
-  ];
-  const WISH_AI_LINES_2 = [
-    "ไม่เจอเกมที่ตามหา กด '+ ขอเกมใหม่' ได้เลย เดี๋ยวรับเรื่องให้เองครับ! ✨",
-    "ใส่แค่ชื่อเกมกับรูปปกก็โพสต์ขึ้นกระดานได้ทันทีเลยนะ 🤖",
-    "เช็กอินรายวันหรือกดหัวใจหน้าหลัก เพื่อสะสม 💠 ผลึก BGT มาโหวตได้ฟรี!"
-  ];
-  const PROTO_BLUSH_LINES = [
-    "อ๊าา! จิ้มทำไมอะ เขินนะ >///< 💙",
-    "งื้ออ~ อย่าจิ้มแก้มสิ หน้าจอจะร้อนแล้วนะ! 😳✨",
-    "ฮะๆ จักจี้นะครับ! ไปกดโหวตเกมก่อนเร็ว~ ///>///<///"
-  ];
-
-  let _aiIdx1 = 0, _aiIdx2 = 0;
-  const _protoState = {
-    hero: { busy: false, blushT: null },
-    1:    { busy: false, typeT: null, talkT: null, blushT: null },
-    2:    { busy: false, typeT: null, talkT: null, blushT: null }
+  // บทพูดแนะนำแยกตามหมวดหมู่ของแต่ละหน้า (พูดวนไปเรื่อยๆ อัตโนมัติ)
+  const PROTO_PAGE_SCRIPTS = {
+    home: {
+      role: "ผู้ช่วยหน้าหลัก",
+      lines: [
+        "ยินดีต้อนรับสู่ BGT ครับ! เลื่อนลงไปกดเช็กอินรายวันและกดหัวใจสะสม 💠 ผลึก BGT ได้เลย~",
+        "ด้านบนมีคลังเกมแปลไทยฟรีบน itch.io กดสลับแท็บดูเกมยอดนิยมหรือกดถูกใจได้เลยนะ!",
+        "ลองดูแท่นเกียรติยศ Top 3 ด้านล่างสิครับ ใครจะเป็นอันดับ 1 ประจำเว็บกันนะ~ 🤖✨",
+        "จิ้มที่ตัวผมได้นะ แต่... อย่าจิ้มบ่อยล่ะ เดี๋ยวระบบระบายความร้อนทำงานหนัก! 💙"
+      ]
+    },
+    projects: {
+      role: "ฝ่ายติดตามงานแปล",
+      lines: [
+        "หน้านี้คือสถานะงานแปลไทยทั้งหมดครับ ดูเปอร์เซ็นต์ความคืบหน้าได้แบบเรียลไทม์เลย!",
+        "กดปุ่ม '🔥 รอเล่น!' เพื่อส่งกำลังใจให้ทีมแปล หรือกดดูตัวอย่างคำแปลกับใบอนุญาตได้นะ",
+        "ใช้ช่องค้นหาหรือปุ่มกรองด้านบนเพื่อหาเกมที่ปล่อยแล้ว (100%) ได้ทันทีครับ 📚✨"
+      ]
+    },
+    vote: {
+      role: "พิธีกรกระดานขอเกม",
+      lines: [
+        "เกมพวกนี้คะแนนนำอยู่ครับ~! อยากให้เกมไหนขึ้นมาติด Top 3 กดโหวตดันอันดับได้เลย!",
+        "ไม่เจอเกมที่อยากเล่น กดปุ่ม '+ ขอเกมใหม่' ด้านบนได้เลย ใส่แค่ชื่อกับรูปปกก็โพสต์ได้แล้ว",
+        "ด้านล่างสุดมีรอบโหวตพิเศษจากแอดมินด้วยนะ อย่าลืมเลื่อนลงไปเช็กกันล่ะ! 🔥🤖"
+      ]
+    },
+    rank: {
+      role: "ผู้ประกาศอันดับ",
+      lines: [
+        "ยินดีต้อนรับสู่กระดานจัดอันดับ Real-time! รวมสุดยอดผู้สนับสนุนและนักส่งหัวใจไว้ที่นี่ครับ",
+        "ลองเอาเมาส์ชี้หรือแตะที่ชื่อเพื่อนๆ เพื่อดูการ์ดโปรไฟล์ กรอบรูป และตู้โชว์อชีฟเม้นได้นะ!",
+        "มีบันทึกผลอันดับกิจกรรมลอยกระทง 2026 เก็บไว้เป็นเกียรติยศถาวรด้วยครับ 🏆✨"
+      ]
+    },
+    eval: {
+      role: "ฝ่ายรับแบบประเมิน",
+      lines: [
+        "เล่นเกมแปลไทยจบแล้ว มาให้คะแนนและติชมได้ที่หน้านี้เลยครับ ทุกความเห็นมีค่ามาก!",
+        "ส่งแบบประเมินครั้งแรกปลดล็อกอชีฟเม้นและรับโบนัส +100 💠 ผลึก BGT ด้วยนะ 📝",
+        "กระซิบเบาๆ... อย่าเผลอกด 1 ดาวทุกข้อโดยไม่พิมพ์เหตุผลล่ะ เดี๋ยวระบบจะแปลกๆ นะ... 👀"
+      ]
+    },
+    donate: {
+      role: "ฝ่ายดูแลผู้สนับสนุน",
+      lines: [
+        "เกมแปลไทยทุกเกมเปิดให้เล่นฟรี 100% ครับ หากอยากเลี้ยงกาแฟทีมแปลสแกน QR ด้านข้างได้เลย",
+        "ไม่ต้องมี Discord ก็รับยศได้! แค่กดปุ่มแนบสลิปหน้าเว็บ แอดมินตรวจแล้วรับยศอัตโนมัติทันที 🎁",
+        "ยอดโดเนทสะสมทบกันได้เรื่อยๆ เพื่อเลื่อนยศถาวรและรับโบนัสผลึก BGT รายวันเพิ่มด้วยนะ!"
+      ]
+    },
+    dev: {
+      role: "ทูตสัมพันธ์ผู้พัฒนา",
+      lines: [
+        "หน้านี้รวมรายชื่อผู้พัฒนาเกมต้นฉบับที่อนุญาตให้แปลไทยครับ แวะไปกดใจหรือคอมเมนต์ให้กำลังใจได้นะ!",
+        "คอมเมนต์ให้กำลังใจผู้พัฒนาครั้งแรกของวัน รับโบนัส +100 💠 ผลึก BGT ฟรีเลยครับ 🤝",
+        "ถ้าโดเนทสนับสนุนผู้พัฒนาต้นฉบับแล้วส่งสลิปใน Discord จะได้รับยศพิเศษสุดอลังการด้วยนะ ✨"
+      ]
+    }
   };
 
-  function getProtoImgEl(slot) {
-    if (slot === 'hero') return document.getElementById('wishProtoHeroImg');
-    return document.getElementById(slot === 1 ? 'wishProtoImg1' : 'wishProtoImg2');
+  const PROTO_BLUSH_LINES = [
+    "บี๊บ—! จิ้มทำไมครับ เขินนะ เซ็นเซอร์ร้อนหมดแล้ว >///< 💙",
+    "งื้ออ~ อย่าจิ้มแก้มสิครับ หน้าจอผมขึ้นสีชมพูแล้วนะ! 😳✨",
+    "ระบบตรวจพบการแกล้ง! ฮะๆ จักจี้นะครับ ไปดูเนื้อหาต่อเร็ว~ ///>///<///"
+  ];
+
+  const _protoCtrl = {
+    busy: false,
+    minimized: (window.innerWidth < 780) ? false : false,
+    lineIdx: 0,
+    typeT: null,
+    talkT: null,
+    blushT: null,
+    autoT: null
+  };
+
+  // 🤖 เสียงพูดสไตล์หุ่นยนต์ Protogen (สังเคราะห์ด้วย Web Audio API • นุ่มใสไม่แสบหู)
+  function playProtoRobotBlip() {
+    if (!soundEnabled || isHorrorTriggered) return;
+    try {
+      if (!audioCtx || audioCtx.state !== 'running') return;
+      const now = audioCtx.currentTime;
+
+      const osc = audioCtx.createOscillator();
+      const mod = audioCtx.createOscillator();
+      const modGain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+
+      // คลื่น square ผสม FM เบาๆ + กรอง bandpass ให้ได้โทนเสียงบี๊บหุ่นยนต์น่ารัก
+      const pitches = [440, 523.25, 587.33, 659.25, 740, 880];
+      const baseFreq = pitches[Math.floor(Math.random() * pitches.length)];
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(baseFreq, now);
+      osc.frequency.setValueAtTime(baseFreq * (Math.random() < 0.5 ? 1.12 : 0.92), now + 0.025);
+
+      mod.type = 'sine';
+      mod.frequency.setValueAtTime(58, now);
+      modGain.gain.setValueAtTime(32, now);
+
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1450, now);
+      filter.Q.setValueAtTime(2.6, now);
+
+      gain.gain.setValueAtTime(0.032, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+
+      mod.connect(modGain);
+      modGain.connect(osc.frequency);
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now);
+      mod.start(now);
+      osc.stop(now + 0.06);
+      mod.stop(now + 0.06);
+    } catch (e) {}
   }
 
-  function setProtoSprite(slot, mode) {
-    const img = getProtoImgEl(slot);
+  function setGlobalProtoSprite(mode) {
+    const img = document.getElementById('globalProtoImg');
     if (!img) return;
     const useMode = _protoReady[mode] ? mode : (_protoReady.idle ? 'idle' : null);
-    if (!useMode) return; // ถ้ายังไม่ได้ใส่รูป 4 ภาพ ให้คง mascot.png ไว้ก่อน
+    if (!useMode) return;
     if (img.dataset.mode !== useMode) {
       img.dataset.mode = useMode;
       img.src = PROTO_SPRITES[useMode];
     }
   }
 
-  // พิมพ์คำพูดทีละตัว + สลับปากอ้า (talk) <-> ปิดปาก (idle)
-  function speakProtoAi(slot, text) {
-    const st = _protoState[slot];
-    const bubble = document.getElementById(slot === 1 ? 'wishAiBubble1' : 'wishAiBubble2');
-    if (!st || !bubble) return;
+  function isProtoAllowedVisible() {
+    if (isHorrorTriggered) return false;
+    if (document.body.classList.contains('login-gate-open')) return false;
+    const ck = document.getElementById('curseKingStage');
+    if (ck && ck.style.display === 'block') return false;
+    return true;
+  }
 
-    clearInterval(st.typeT);
-    clearInterval(st.talkT);
-    clearTimeout(st.blushT);
-    st.busy = true;
-    bubble.textContent = "";
+  function updateGlobalProtoVisibility() {
+    const w = document.getElementById('bgtProtoWidget');
+    if (!w) return;
+    w.classList.toggle('visible', isProtoAllowedVisible());
+  }
+
+  function toggleProtoMinimize(minState) {
+    playClickSound();
+    _protoCtrl.minimized = !!minState;
+    const w = document.getElementById('bgtProtoWidget');
+    if (w) w.classList.toggle('minimized', _protoCtrl.minimized);
+    if (!_protoCtrl.minimized) {
+      nextProtoSpeech(false);
+    }
+  }
+
+  function speakGlobalProto(text) {
+    const w = document.getElementById('bgtProtoWidget');
+    const txtEl = document.getElementById('globalProtoText');
+    if (!w || !txtEl) return;
+
+    clearInterval(_protoCtrl.typeT);
+    clearInterval(_protoCtrl.talkT);
+    clearTimeout(_protoCtrl.blushT);
+    _protoCtrl.busy = true;
+    w.classList.remove('is-blushing');
+    w.classList.add('is-talking');
+    txtEl.textContent = "";
 
     let mouthOpen = true;
-    setProtoSprite(slot, 'talk');
-    st.talkT = setInterval(() => {
+    setGlobalProtoSprite('talk');
+    _protoCtrl.talkT = setInterval(() => {
       mouthOpen = !mouthOpen;
-      setProtoSprite(slot, mouthOpen ? 'talk' : 'idle');
-    }, 135);
+      setGlobalProtoSprite(mouthOpen ? 'talk' : 'idle');
+    }, 125);
 
     const chars = Array.from(text);
     let idx = 0;
-    st.typeT = setInterval(() => {
+    _protoCtrl.typeT = setInterval(() => {
       if (idx < chars.length) {
         const ch = chars[idx++];
-        bubble.textContent += ch;
-        if (ch.trim() !== "" && idx % 2 === 1 && typeof playMascotTalkBlip === "function") {
-          playMascotTalkBlip();
+        txtEl.textContent += ch;
+        if (ch.trim() !== "" && idx % 2 === 1 && !_protoCtrl.minimized && isProtoAllowedVisible()) {
+          playProtoRobotBlip();
         }
       } else {
-        clearInterval(st.typeT);
-        clearInterval(st.talkT);
-        st.busy = false;
-        setProtoSprite(slot, 'idle');
+        clearInterval(_protoCtrl.typeT);
+        clearInterval(_protoCtrl.talkT);
+        _protoCtrl.busy = false;
+        w.classList.remove('is-talking');
+        setGlobalProtoSprite('idle');
       }
-    }, 42);
+    }, 40);
   }
 
-  // จิ้มตัวละคร -> หน้าเขิน (proto_blush.png) + เด้งประโยคเขิน 2.5 วิ แล้วกลับมายืนปกติ
-  function pokeProtoAi(slot) {
-    playClickSound();
-    const st = _protoState[slot];
-    if (!st) return;
+  function nextProtoSpeech(fromClick = false) {
+    if (fromClick) playClickSound();
+    if (!isProtoAllowedVisible() || _protoCtrl.minimized) return;
 
-    clearInterval(st.typeT);
-    clearInterval(st.talkT);
-    clearTimeout(st.blushT);
-    st.busy = true;
-    setProtoSprite(slot, 'blush');
+    const cfg = PROTO_PAGE_SCRIPTS[currentPage] || PROTO_PAGE_SCRIPTS.home;
+    const roleEl = document.getElementById('protoRoleBadge');
+    if (roleEl) roleEl.textContent = cfg.role;
 
-    const img = getProtoImgEl(slot);
-    if (img) {
-      img.style.transform = 'scale(1.07)';
-      setTimeout(() => { img.style.transform = ''; }, 160);
-    }
+    const line = cfg.lines[_protoCtrl.lineIdx % cfg.lines.length];
+    _protoCtrl.lineIdx = (_protoCtrl.lineIdx + 1) % cfg.lines.length;
+    speakGlobalProto(line);
+  }
+
+  function pokeGlobalProto() {
+    playProtoRobotBlip();
+    const w = document.getElementById('bgtProtoWidget');
+    const txtEl = document.getElementById('globalProtoText');
+    if (!w) return;
+
+    clearInterval(_protoCtrl.typeT);
+    clearInterval(_protoCtrl.talkT);
+    clearTimeout(_protoCtrl.blushT);
+    _protoCtrl.busy = true;
+    w.classList.remove('is-talking');
+    w.classList.add('is-blushing');
+    setGlobalProtoSprite('blush');
 
     const line = PROTO_BLUSH_LINES[Math.floor(Math.random() * PROTO_BLUSH_LINES.length)];
-    if (slot === 1 || slot === 2) {
-      const bubble = document.getElementById(slot === 1 ? 'wishAiBubble1' : 'wishAiBubble2');
-      if (bubble) bubble.textContent = line;
-    } else {
-      showToast(line);
-    }
+    if (txtEl) txtEl.textContent = line;
 
-    st.blushT = setTimeout(() => {
-      st.busy = false;
-      setProtoSprite(slot, 'idle');
-    }, 2500);
+    _protoCtrl.blushT = setTimeout(() => {
+      _protoCtrl.busy = false;
+      w.classList.remove('is-blushing');
+      setGlobalProtoSprite('idle');
+    }, 2600);
   }
 
-  // สุ่มกะพริบตาอัตโนมัติ (proto_blink.png) ทุก 2.5 - 5 วินาที ตอนยืนนิ่งๆ
-  ['hero', 1, 2].forEach(slot => {
+  // เชื่อมเข้ากับ switchPage ทุกครั้งที่เปลี่ยนหมวดหมู่ -> เปลี่ยนป้ายและพูดแนะนำหน้าใหม่ทันที
+  const _origSwitchPageProto = switchPage;
+  switchPage = function(page, silent = false) {
+    _origSwitchPageProto(page, silent);
+    _protoCtrl.lineIdx = 0;
+    updateGlobalProtoVisibility();
+    if (isProtoAllowedVisible() && !_protoCtrl.minimized) {
+      nextProtoSpeech(false);
+    }
+  };
+
+  // ซ่อนตอนเปิดหน้าล็อกอิน / โผล่ตอนเข้าเว็บแล้ว
+  const _origShowGateProto = showLoginGate;
+  showLoginGate = function() {
+    _origShowGateProto();
+    updateGlobalProtoVisibility();
+  };
+  const _origHideGateProto = hideLoginGate;
+  hideLoginGate = function() {
+    _origHideGateProto();
+    updateGlobalProtoVisibility();
+    if (!_protoCtrl.minimized) nextProtoSpeech(false);
+  };
+
+  // กะพริบตาอัตโนมัติทุก 2.5 - 5 วินาที + พูดวนไปเรื่อยๆ ทุก 9 วินาที
+  (function startGlobalProtoLoops() {
     const loopBlink = () => {
-      const delay = 2500 + Math.random() * 2500;
       setTimeout(() => {
-        const st = _protoState[slot];
-        if (currentPage === 'vote' && st && !st.busy) {
-          setProtoSprite(slot, 'blink');
+        if (isProtoAllowedVisible() && !_protoCtrl.minimized && !_protoCtrl.busy) {
+          setGlobalProtoSprite('blink');
           setTimeout(() => {
-            if (!st.busy) setProtoSprite(slot, 'idle');
+            if (!_protoCtrl.busy) setGlobalProtoSprite('idle');
           }, 170);
         }
         loopBlink();
-      }, delay);
+      }, 2500 + Math.random() * 2500);
     };
     loopBlink();
-  });
 
-  function cycleWishAiSpeech(slot) {
-    playClickSound();
-    if (slot === 1) {
-      _aiIdx1 = (_aiIdx1 + 1) % WISH_AI_LINES_1.length;
-      speakProtoAi(1, WISH_AI_LINES_1[_aiIdx1]);
-    } else {
-      _aiIdx2 = (_aiIdx2 + 1) % WISH_AI_LINES_2.length;
-      speakProtoAi(2, WISH_AI_LINES_2[_aiIdx2]);
-    }
-  }
+    _protoCtrl.autoT = setInterval(() => {
+      if (isProtoAllowedVisible() && !_protoCtrl.minimized && !_protoCtrl.busy) {
+        nextProtoSpeech(false);
+      }
+    }, 9000);
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        updateGlobalProtoVisibility();
+        if (isProtoAllowedVisible() && !_protoCtrl.minimized) {
+          nextProtoSpeech(false);
+        }
+      }, 600);
+    });
+  })();
 
   // ซิงก์แต้มผลึก BGT บน Hero ของหน้าขอเกม
   const _origUpdateEcoForWish = updateProfileEcoUI;
