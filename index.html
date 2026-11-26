@@ -6816,7 +6816,7 @@
       100% { opacity: 0.95; }
     }
 
-    /* ===== เอฟเฟกต์รอยข่วน 3 ขีด + ดาเมจ 99999 สไตล์ Chara ===== */
+    /* ===== เอฟเฟกต์รอยข่วน 3 ขีดยักษ์เต็มจอ + ดาเมจ 99999 ทะลักจอ ===== */
     #ckClawOverlay {
       position: fixed;
       inset: 0;
@@ -6825,23 +6825,30 @@
       display: none;
       align-items: center;
       justify-content: center;
-      background: rgba(120, 0, 0, 0.25);
+      background: radial-gradient(circle, rgba(220, 0, 0, 0.45) 0%, rgba(15, 0, 0, 0.78) 100%);
+      animation: ckClawBgFlash 0.45s ease-out;
+    }
+    @keyframes ckClawBgFlash {
+      0% { background: rgba(255, 255, 255, 0.85); }
+      25% { background: rgba(220, 0, 0, 0.65); }
+      100% { background: radial-gradient(circle, rgba(180, 0, 0, 0.4) 0%, rgba(10, 0, 0, 0.85) 100%); }
     }
     #ckClawOverlay svg {
-      width: min(92vw, 620px);
-      height: auto;
-      filter: drop-shadow(0 0 18px #ff0000);
+      width: 100vw;
+      height: 100vh;
+      filter: drop-shadow(0 0 24px #ff0000) drop-shadow(0 0 48px #991b1b);
     }
     .ck-claw-path {
-      stroke-dasharray: 450;
-      stroke-dashoffset: 450;
-      animation: ckSlashDraw 0.26s ease-out forwards;
+      stroke-dasharray: 1600;
+      stroke-dashoffset: 1600;
+      animation: ckSlashDraw 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .ck-claw-path:nth-child(2) { animation-delay: 0.06s; }
-    .ck-claw-path:nth-child(3) { animation-delay: 0.12s; }
+    .ck-claw-delay-2 { animation-delay: 0.05s; }
+    .ck-claw-delay-3 { animation-delay: 0.1s; }
     @keyframes ckSlashDraw {
       to { stroke-dashoffset: 0; }
     }
+
     #ckDamageOverlay {
       position: fixed;
       inset: 0;
@@ -6849,19 +6856,45 @@
       pointer-events: none;
       display: none;
       overflow: hidden;
-      background: rgba(0, 0, 0, 0.72);
+      background: #080000;
+      animation: ckDmgViolentShake 0.09s infinite;
+    }
+    @keyframes ckDmgViolentShake {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(-8px, 6px); }
+      50%  { transform: translate(8px, -6px); }
+      75%  { transform: translate(-6px, -5px); }
+      100% { transform: translate(6px, 5px); }
+    }
+    .ck-dmg-wall {
+      position: absolute;
+      inset: -12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: 'Kanit', monospace, sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 6.5vw, 4.2rem);
+      line-height: 0.92;
+      color: #dc2626;
+      letter-spacing: 2px;
+      word-break: break-all;
+      text-shadow: 3px 3px 0 #000, 0 0 18px #ff0000;
+      opacity: 0.92;
+      user-select: none;
     }
     .ck-dmg-num {
       position: absolute;
       font-family: 'Kanit', monospace, sans-serif;
       font-weight: 900;
-      color: #ff1e1e;
-      text-shadow: 3px 3px 0 #000, -2px -2px 0 #7f1d1d, 0 0 18px #dc2626;
-      animation: ckDmgPop 0.18s ease-out forwards;
+      color: #ff2a2a;
+      text-shadow: 4px 4px 0 #000, -3px -3px 0 #7f1d1d, 0 0 24px #ff0000;
+      animation: ckDmgPop 0.14s ease-out forwards;
       user-select: none;
+      white-space: nowrap;
     }
     @keyframes ckDmgPop {
-      0% { transform: scale(1.9); opacity: 0; }
+      0% { transform: scale(2.1); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
   </style>
@@ -7093,12 +7126,17 @@
 <div id="ckJumpscareFlash">
   <img id="ckJumpscareImg" class="face-zoom" src="images/curse_10.png" alt="">
 </div>
-<!-- รอยกรงเล็บข่วน 3 ขีด + ดาเมจ 99999 -->
+<!-- รอยกรงเล็บข่วน 3 ขีดยักษ์เต็มจอ + ดาเมจ 99999 -->
 <div id="ckClawOverlay">
-  <svg viewBox="0 0 400 400">
-    <path class="ck-claw-path" d="M60,55 Q190,175 335,345" stroke="#ff1e1e" stroke-width="16" stroke-linecap="round" fill="none"/>
-    <path class="ck-claw-path" d="M125,35 Q240,165 365,300" stroke="#dc2626" stroke-width="14" stroke-linecap="round" fill="none"/>
-    <path class="ck-claw-path" d="M30,115 Q150,235 280,370" stroke="#ef4444" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+    <!-- เส้นขอบเลือดหนา -->
+    <path class="ck-claw-path" d="M80,40 Q480,460 930,960" stroke="#ff0000" stroke-width="58" stroke-linecap="round" fill="none"/>
+    <path class="ck-claw-path ck-claw-delay-2" d="M280,10 Q630,390 990,790" stroke="#dc2626" stroke-width="48" stroke-linecap="round" fill="none"/>
+    <path class="ck-claw-path ck-claw-delay-3" d="M10,230 Q360,610 730,990" stroke="#ef4444" stroke-width="46" stroke-linecap="round" fill="none"/>
+    <!-- เส้นแกนสว่างตรงกลางให้คมชัดทะลุจอ -->
+    <path class="ck-claw-path" d="M80,40 Q480,460 930,960" stroke="#fff5f5" stroke-width="18" stroke-linecap="round" fill="none"/>
+    <path class="ck-claw-path ck-claw-delay-2" d="M280,10 Q630,390 990,790" stroke="#fecaca" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <path class="ck-claw-path ck-claw-delay-3" d="M10,230 Q360,610 730,990" stroke="#fecaca" stroke-width="14" stroke-linecap="round" fill="none"/>
   </svg>
 </div>
 <div id="ckDamageOverlay"></div>
@@ -15884,7 +15922,7 @@
       if (fTitle) fTitle.textContent = "ยินดีด้วยครับ! คุณค้นพบความลับครบทั้ง 4 ขั้นแล้ว!";
       if (fDesc) {
         fDesc.textContent =
-          "แต่เหมือนยังมีความลับบางอย่างซ่อนอยู่ในคำสาปนี้นะ...";
+          "แต่เหมือนยังมีเส้นทางลับซ่อนอยู่ใน 'ช่องสารภาพผิด' นะ... ลองคิดดูสิ ถ้าคนเรามันดื้อรั้นจนเลือกทำ 'ตรงข้าม' กับคำว่ายอมรับผิด แล้ว 'ตะโกน (!)' ออกมาแทนล่ะ?";
       }
     }
   };
@@ -15936,7 +15974,8 @@
     name: "👑👁️ 『 ราชาคำสาป 』"
   });
 
-  HORROR_FLASH_LINES.push("...หรือจะพิมพ์ว่า 'ไม่ขอโทษ!' ล่ะ?");
+  HORROR_FLASH_LINES.push("...ถ้าปฏิเสธคำสารภาพ แล้วตะโกนออกมา (!)");
+  HORROR_FLASH_LINES.push("👁️ !ทษโขอไม่ ...");
 
   const CK_FLY_LINES = [
     "โกหก... โกหก... โกหก...",
@@ -16018,24 +16057,84 @@
     if (warnModal) warnModal.style.display = 'none';
     startCurseKingCutscene();
   }
-
+  // ประโยคเชื่อมก่อนกลับเข้าบทพูดเดิม (ไม่ให้ตัดห้วนๆ)
+  function getReloadBridgeLine(isHorrorPhase) {
+    return {
+      speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
+      text: isHorrorPhase
+        ? "ชั่งแม่ง... เมื่อกี้กูพูดค้างไว้ตรงนี้ใช่ไหม นั่งฟังต่อดิ..."
+        : "เอาเถอะครับ... เมื่อกี้เราคุยกันถึงไหนแล้วนะ อ๋อใช่...",
+      idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_1.png",
+      talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_2.png",
+      talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_3.png",
+      horror: isHorrorPhase,
+      speed: isHorrorPhase ? 95 : 75
+    };
+  }
   function playCurseVoiceBlip(isHorrorPhase, isVerySlow = false) {
     try {
       initAudio();
       const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = isHorrorPhase ? 'sawtooth' : 'triangle';
-      const baseFreq = isVerySlow ? (62 + Math.random() * 18) : (isHorrorPhase ? (88 + Math.random() * 30) : (320 + Math.random() * 75));
-      const dur = isVerySlow ? 0.14 : 0.06;
-      osc.frequency.setValueAtTime(baseFreq, now);
-      osc.frequency.exponentialRampToValueAtTime(isHorrorPhase ? baseFreq * 0.6 : baseFreq * 1.05, now + dur);
-      gain.gain.setValueAtTime(isHorrorPhase ? 0.075 : 0.045, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.01);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + dur + 0.02);
+
+      if (!isHorrorPhase) {
+        // เสียงปกติ (Ben)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        const baseFreq = 320 + Math.random() * 75;
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.05, now + 0.06);
+        gain.gain.setValueAtTime(0.045, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.08);
+        return;
+      }
+
+      // 👹 เสียงปีศาจทุ้มต่ำ 2 ชั้น + เสียงก้อง (Echo)
+      const dur = isVerySlow ? 0.22 : 0.11;
+      const baseFreq = isVerySlow ? (48 + Math.random() * 12) : (64 + Math.random() * 20);
+
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      osc1.type = 'sawtooth';
+      osc2.type = 'square';
+      osc1.frequency.setValueAtTime(baseFreq, now);
+      osc1.frequency.exponentialRampToValueAtTime(baseFreq * 0.55, now + dur);
+      osc2.frequency.setValueAtTime(baseFreq * 0.52, now); // เสียงต่ำซ้อนเพิ่มความหลอน
+      osc2.frequency.exponentialRampToValueAtTime(baseFreq * 0.35, now + dur);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(isVerySlow ? 260 : 380, now);
+
+      const dryGain = audioCtx.createGain();
+      dryGain.gain.setValueAtTime(0.085, now);
+      dryGain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.02);
+
+      // ตัวสร้างเสียงก้อง (Echo Delay)
+      const delay = audioCtx.createDelay();
+      delay.delayTime.value = 0.14;
+      const echoGain = audioCtx.createGain();
+      echoGain.gain.setValueAtTime(0.42, now);
+      echoGain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.35);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(dryGain);
+      dryGain.connect(audioCtx.destination);
+
+      // ส่งสัญญาณเข้าท่อเสียงก้อง
+      dryGain.connect(delay);
+      delay.connect(echoGain);
+      echoGain.connect(audioCtx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + dur + 0.03);
+      osc2.stop(now + dur + 0.03);
     } catch (e) {}
   }
 
@@ -16293,7 +16392,7 @@
     }
   }
 
-  // เสียงฟันฉัวะ + ดาเมจ 99999 เต็มจอ
+  // เสียงฟันฉัวะ (รอยข่วนยักษ์เต็มจอ) + กำแพงเลข 99999 ทะลักล้นจอแบบ Chara
   function playClawAndDamage99999(onFinish) {
     const clawEl = document.getElementById('ckClawOverlay');
     const dmgEl  = document.getElementById('ckDamageOverlay');
@@ -16308,74 +16407,107 @@
     playButtonDestroySound();
     document.body.classList.add('horror-glitch-shake');
 
+    // โชว์รอยกรงเล็บชัดๆ 480ms แล้วระเบิดเลข 99999 ล้นจอ!
     setTimeout(() => {
       if (clawEl) clawEl.style.display = 'none';
       if (dmgEl) {
         dmgEl.innerHTML = '';
         dmgEl.style.display = 'block';
-        let count = 0;
+
+        // 1. กำแพงเลข 99999 ปูเต็มทุกแถวของหน้าจอทีละบรรทัด
+        const wall = document.createElement('div');
+        wall.className = 'ck-dmg-wall';
+        dmgEl.appendChild(wall);
+
+        let rowCount = 0;
+        const totalRows = 16;
+        const wallTimer = setInterval(() => {
+          const line = document.createElement('div');
+          line.textContent = '999999999999999999999999999999';
+          wall.appendChild(line);
+          rowCount++;
+          if (rowCount >= totalRows) clearInterval(wallTimer);
+        }, 28);
+
+        // 2. เด้งเลข 99999 ขนาดยักษ์ซ้อนทับกระจายเต็มจออีก 55 ตัว
+        let popCount = 0;
         const spam = setInterval(() => {
-          const n = document.createElement('div');
-          n.className = 'ck-dmg-num';
-          n.textContent = '99999';
-          n.style.left = (Math.random() * 78) + 'vw';
-          n.style.top  = (Math.random() * 82) + 'vh';
-          n.style.fontSize = (1.6 + Math.random() * 2.4) + 'rem';
-          dmgEl.appendChild(n);
-          count++;
-          if (count >= 26) {
+          for (let k = 0; k < 2; k++) {
+            const n = document.createElement('div');
+            n.className = 'ck-dmg-num';
+            n.textContent = Math.random() < 0.35 ? '999999999' : '99999';
+            n.style.left = (Math.random() * 88 - 8) + 'vw';
+            n.style.top  = (Math.random() * 90 - 4) + 'vh';
+            n.style.fontSize = (2.0 + Math.random() * 3.2) + 'rem';
+            dmgEl.appendChild(n);
+            popCount++;
+          }
+          if (popCount >= 56) {
             clearInterval(spam);
             setTimeout(() => {
               dmgEl.style.display = 'none';
+              dmgEl.innerHTML = '';
               document.body.classList.remove('horror-glitch-shake');
               if (onFinish) onFinish();
-            }, 650);
+            }, 800);
           }
-        }, 42);
+        }, 26);
       } else if (onFinish) {
         onFinish();
       }
-    }, 380);
+    }, 480);
   }
 
   function getReloadScoldLine(reloadCount, isHorrorPhase) {
     const pName = (currentUser && (currentUser.displayName || currentUser.name)) || "คุณ";
+
+    // รอบก่อนสุดท้าย (ไม่บอกเลขรอบ แต่เตือนแบบกดดัน)
     if (reloadCount >= 4) {
-      document.title = "👁️ อย่าให้มีครั้งที่ 5...";
-      spawnCurseSysPopup(`⚠️ [ACCESS]: บันทึกการรีเฟรชครั้งที่ ${reloadCount}/5 แล้ว`);
+      document.title = "👁️ อย่าลองดี...";
+      spawnCurseSysPopup("⚠️ [ACCESS]: ตรวจพบการหลบหนีซ้ำซ้อน (SYSTEM_UNSTABLE)");
       return {
         speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
-        text: `...อย่าให้มีครั้งที่ 5 นะครับ ${pName} ผมเตือนคุณด้วยความหวังดีจริงๆ...`,
+        text: isHorrorPhase
+          ? `...กูเตือนมึงเป็นครั้งสุดท้ายแล้วนะ ${pName} ลองกดหนีอีกครั้งเดียวสิ... มึงได้เห็นดีแน่`
+          : `...ผมเริ่มจะทนไม่ไหวแล้วนะครับ ${pName} อย่ากดหนีผมอีกเลยนะ ผมเตือนคุณด้วยความหวังดีจริงๆ...`,
         idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_8.png",
         talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_8.png",
         talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_9.png",
-        horror: true, speed: 115
+        horror: isHorrorPhase, speed: isHorrorPhase ? 120 : 95
       };
     }
+
+    // รอบกลาง (เริ่มหงุดหงิด + เรียกชื่อ)
     if (reloadCount === 3) {
       document.title = "👁️ I SEE YOU";
-      spawnCurseSysPopup(`⚠️ [SYSTEM]: ตรวจพบการหลบหนีครั้งที่ 3 (${pName})`);
+      spawnCurseSysPopup(`⚠️ [SYSTEM]: RELOAD_BLOCKED // ${pName}`);
       return {
         speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
-        text: `รอบที่ 3 แล้วนะ ${pName}... สนุกมากเลยเหรอครับ ที่เห็นผมต้องเริ่มพูดใหม่ซ้ำไปซ้ำมาแบบนี้?`,
+        text: isHorrorPhase
+          ? `ยังไม่เลิกอีกเหรอวะ ${pName}?! สนุกมากเลยดิ ที่เห็นกูต้องมาพูดซ้ำไปซ้ำมาแบบนี้!`
+          : `ยังไม่เลิกกดรีเฟรชอีกเหรอครับ ${pName}... สนุกมากเลยเหรอครับ ที่เห็นผมต้องเริ่มพูดใหม่ซ้ำไปซ้ำมาแบบนี้?`,
         idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_6.png",
         talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_6.png",
         talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_7.png",
-        horror: isHorrorPhase, speed: 95
+        horror: isHorrorPhase, speed: isHorrorPhase ? 105 : 90
       };
     }
+
+    // รอบสอง
     if (reloadCount === 2) {
       return {
         speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
         text: isHorrorPhase
-          ? "กดรีเฟรชอีกแล้วเหรอ... กูบอกแล้วไงว่าหนีไม่พ้น มาฟังให้จบดิ!"
-          : "กดรีเฟรชอีกแล้วเหรอครับ... ผมบอกแล้วไงว่ามันหนีไม่พ้นหรอก เลิกกดแล้วฟังผมพูดให้จบเถอะ",
+          ? "กดรีเฟรชอีกแล้วเหรอ... กูบอกแล้วไงว่าหนีไม่พ้น เลิกกดแล้วนั่งฟังให้จบดิ!"
+          : "กดรีเฟรชอีกแล้วเหรอครับ... ผมบอกแล้วไงว่ามันหนีไม่พ้นหรอก เลิกกดแล้วฟังผมพูดให้จบเถอะนะ",
         idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_1.png",
         talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_2.png",
         talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_3.png",
         horror: isHorrorPhase, speed: 85
       };
     }
+
+    // รอบแรก
     return {
       speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
       text: isHorrorPhase
@@ -16425,15 +16557,15 @@
       playCurseSequence([
         {
           speaker: "👁️ BGT.EXE // ราชาคำสาป",
-          text: "ผมเตือนคุณแล้วนะ... เตือนตั้ง 4 รอบแล้ว แต่คุณก็ยังดื้อที่จะกดหนีผมอยู่ดี",
+          text: "กูเตือนมึงแล้วนะ... เตือนตั้งหลายรอบแล้ว แต่มึงก็ยังดื้อด้านจะหนีกูอยู่ดี",
           idle: "images/curse_6.png", talkA: "images/curse_6.png", talkB: "images/curse_7.png",
-          horror: true, speed: 105
+          horror: true, speed: 115
         },
         {
           speaker: "👁️ BGT.EXE // ราชาคำสาป",
-          text: "งั้นก็ไม่ต้องไปไหนทั้งนั้น... อยู่กับผมตรงนี้แหละ!!",
+          text: "งั้นก็ไม่ต้องไปไหนทั้งนั้น... อยู่กับกูตรงนี้แหละ!!",
           idle: "images/curse_8.png", talkA: "images/curse_8.png", talkB: "images/curse_9.png",
-          horror: true, speed: 170, autoNext: true, autoDelay: 400, noSkip: true
+          horror: true, speed: 175, autoNext: true, autoDelay: 400, noSkip: true
         }
       ], () => triggerCurseKingJumpscareAndFinish(true));
       return;
@@ -16459,7 +16591,7 @@
           horror: true, speed: 105, autoNext: true, autoDelay: 300, onStart: () => { try { localStorage.setItem(CK_LINE_KEY, "1"); } catch(e){} }
         }
       ];
-      const resumeSeq = [getReloadScoldLine(reloadCount, true), ...p2Base.slice(Math.min(savedLineIdx, p2Base.length - 1))];
+      const resumeSeq = [getReloadScoldLine(reloadCount, true), getReloadBridgeLine(true), ...p2Base.slice(Math.min(savedLineIdx, p2Base.length - 1))];
       playCurseSequence(resumeSeq, () => {
         showCurseChoices([
           { label: "ผมขอโทษจริงๆ นะ... ปล่อยผมไปเถอะ", onPick: enterCurseFinalLie },
@@ -16493,7 +16625,7 @@
     ];
 
     const phase1Seq = resumePhase === "1"
-      ? [getReloadScoldLine(reloadCount, false), ...p1Base.slice(Math.min(savedLineIdx, p1Base.length - 1))]
+      ? [getReloadScoldLine(reloadCount, false), getReloadBridgeLine(false), ...p1Base.slice(Math.min(savedLineIdx, p1Base.length - 1))]
       : p1Base;
 
     playCurseSequence(phase1Seq, () => {
