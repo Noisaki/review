@@ -8146,6 +8146,85 @@
       .bgt-proto-mini-fab { width: 52px; height: 52px; }
     }
     body.bgt-no-fx .bgt-proto-img { animation: none !important; }
+    /* =========================================
+       🔢 แถบเปลี่ยนหน้ากระดานคำขอ (PREV / 01 02 ... / NEXT + ตัวนับ)
+       ========================================= */
+    .wish-pagination-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1.5px dashed rgba(148, 163, 184, 0.25);
+    }
+    .wish-pager-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .wish-pg-btn {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 12px;
+      border-radius: 14px;
+      background: #1b1829;
+      border: 2px solid #35304a;
+      color: #ffffff;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 0 #0d0b16;
+      transition: transform 0.14s ease, border-color 0.2s, background 0.2s;
+    }
+    .wish-pg-btn.nav {
+      padding: 0 18px;
+      letter-spacing: 0.6px;
+      font-size: 0.88rem;
+    }
+    .wish-pg-btn:hover:not(:disabled):not(.active) {
+      border-color: #f472b6;
+      transform: translateY(-2px);
+    }
+    .wish-pg-btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+    .wish-pg-btn.active {
+      background: linear-gradient(135deg, #fb7185 0%, #fda4af 45%, #fdba74 100%);
+      border-color: #ffe4e6;
+      color: #181326;
+      transform: rotate(-4deg) scale(1.06);
+      box-shadow: 0 5px 16px rgba(251, 113, 133, 0.45), 0 3px 0 #0d0b16;
+    }
+    .wish-pg-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .wish-pg-dots {
+      color: #94a3b8;
+      font-family: 'Kanit', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 0 4px;
+      user-select: none;
+    }
+    .wish-pg-summary {
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.84rem;
+      color: #94a3b8;
+    }
+    .wish-pg-summary strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -8619,9 +8698,9 @@
       </div>
       <!-- แท่นที่ 3: Top 3 ผู้ร่วมโหวตเกมสูงสุด -->
       <div class="podium-box">
-        <h3 class="podium-box-title">🔥 Top 3 ผู้ร่วมโหวตเกมสูงสุด (รอบล่าสุด)</h3>
+        <h3 class="podium-box-title">💠 Top 3 สายเปย์ดันเกมสูงสุด (กระดานคำขอ)</h3>
         <div class="podium-stage" id="podiumVoteStage">
-          <div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥</div>
+          <div class="lb-empty">ยังไม่มีผู้ลงทุนดันเกมในกระดานคำขอ 💠</div>
         </div>
       </div>
 
@@ -8728,7 +8807,7 @@
       </div>
 
       <div class="lb-column">
-        <h3 class="lb-col-title">🔥 ทำเนียบผู้มีส่วนร่วมโหวตเกม (รอบล่าสุด)</h3>
+        <h3 class="lb-col-title">💠 ทำเนียบสายเปย์ดันเกม (กระดานคำขอ)</h3>
         <div class="lb-list" id="lbVoteList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
         <div class="lb-pagination" id="lbVotePager" style="display:none;"></div>
       </div>
@@ -8858,53 +8937,6 @@
         <div class="bgt-acc-body">
           • ทุกโปรเจกต์จะขออนุญาตผู้พัฒนาต้นฉบับก่อนเสมอ และแจกฟรี 100% บน itch.io<br>
           • หากเป็นเกมที่ผิดกฎหรือขออนุญาตไม่ได้ แอดมินขอสงวนสิทธิ์ในการจัดการคำขอครับ
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. โซนกิจกรรมพิเศษ: แข่งกดใจโหวตเกมรอบปัจจุบัน (เก็บไว้ด้านล่างไม่ให้ระบบเดิมพัง) -->
-    <div id="liveVoteWrapper" style="margin-top:28px; padding-top:24px; border-top:2px dashed rgba(251,191,36,0.45);">
-      <div class="section-header">
-        <h2 class="section-title" id="voteMainTitle">🔥 รอบโหวตพิเศษจากแอดมิน</h2>
-        <span class="step-pill" id="voteCountdownText">⏳ กำลังโหลดเวลา...</span>
-      </div>
-
-      <div id="voteAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:14px; margin-bottom:16px;">
-        <h3 style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินจัดการรอบโหวตเกม</h3>
-        <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; margin-bottom:10px;">
-          <input type="text" id="adminVoteTitle" placeholder="หัวข้อรอบโหวต เช่น โปรเจกต์ต่อไป..." style="padding:8px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-          <input type="number" id="adminVoteHours" value="24" min="0.1" step="0.5" placeholder="จำนวนชั่วโมง" style="padding:8px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        </div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; margin-bottom:10px;">
-          <input type="text" id="adminGameName1" placeholder="ชื่อเกม 1"><input type="text" id="adminGameImg1" placeholder="รูปเกม 1 (เช่น images/vote1.png)">
-          <input type="text" id="adminGameName2" placeholder="ชื่อเกม 2"><input type="text" id="adminGameImg2" placeholder="รูปเกม 2">
-          <input type="text" id="adminGameName3" placeholder="ชื่อเกม 3"><input type="text" id="adminGameImg3" placeholder="รูปเกม 3">
-          <input type="text" id="adminGameName4" placeholder="ชื่อเกม 4"><input type="text" id="adminGameImg4" placeholder="รูปเกม 4">
-          <input type="text" id="adminGameName5" placeholder="ชื่อเกม 5"><input type="text" id="adminGameImg5" placeholder="รูปเกม 5">
-          <input type="text" id="adminGameName6" placeholder="ชื่อเกม 6"><input type="text" id="adminGameImg6" placeholder="รูปเกม 6">
-        </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="profile-btn" style="background:#15803d; color:#fff; border:none;" onclick="adminStartVoteEvent()">🚀 เริ่มรอบโหวตใหม่</button>
-          <button type="button" class="profile-btn" onclick="adminAdjustVoteTime(60)">⏱️ +1 ชม.</button>
-          <button type="button" class="profile-btn" onclick="adminAdjustVoteTime(-60)">⏱️ -1 ชม.</button>
-          <button type="button" class="profile-btn" style="background:#f59e0b; color:#fff; border:none;" onclick="adminEndVoteNow()">🏁 ปิดโหวตทันที</button>
-          <button type="button" class="profile-btn" onclick="adminResetVoteScores()">🔄 รีคะแนนเป็น 0</button>
-          <button type="button" class="profile-btn logout" onclick="adminCancelVoteEvent()">🗑️ ล้างรอบโหวต</button>
-        </div>
-      </div>
-
-      <div id="voteTopicBanner" style="display:none; text-align:center; font-family:'Kanit',sans-serif; font-size:1.15rem; font-weight:700; color:#fde047; background:rgba(15,23,42,0.8); border:1.5px solid #fbbf24; border-radius:14px; padding:10px; margin-bottom:14px;"></div>
-      <div class="game-grid" id="voteGamesGrid"></div>
-
-      <div id="voteTopVotersBox" style="display:none; margin-top:20px;">
-        <h3 class="lb-col-title">🔥 Top 10 ผู้ร่วมโหวตสูงสุดในรอบนี้</h3>
-        <div class="lb-list" id="voteTopVotersList"></div>
-      </div>
-
-      <div style="margin-top:22px;">
-        <h3 class="lb-col-title">🏆 ประวัติเกมที่ชนะการโหวต</h3>
-        <div class="vote-history-scroll">
-          <div class="vote-history-grid" id="voteHistoryGrid"></div>
         </div>
       </div>
     </div>
@@ -11102,24 +11134,10 @@
     hearters.sort((a, b) => (Number(b.u.heartsClicked) || 0) - (Number(a.u.heartsClicked) || 0));
     renderPaginatedLb('hearts', 'lbHeartsList', 'lbHeartsPager', hearters, (u) => "❤️ " + formatCompact(u.heartsClicked), "ยังไม่มีใครส่งหัวใจ — กดปุ่มหัวใจด้านบนได้เลย! ❤️");
 
-    // 3. อันดับผู้มีส่วนร่วมโหวตเกม (รอบล่าสุด)
-    const voterTotals = {};
-    if (voteData && voteData.games) {
-      Object.values(voteData.games).forEach(g => {
-        if (!g || !g.voters) return;
-        Object.keys(g.voters).forEach(uid => {
-          const v = g.voters[uid];
-          if (!voterTotals[uid]) {
-            const cached = (usersCache && usersCache[uid]) ? usersCache[uid] : { name: v.name || "Discord User" };
-            voterTotals[uid] = { id: uid, u: { ...cached, voteCount: 0 } };
-          }
-          voterTotals[uid].u.voteCount += (Number(v.count) || 0);
-        });
-      });
-    }
-    const votersList = Object.values(voterTotals).filter(e => e.u.voteCount > 0);
-    votersList.sort((a, b) => b.u.voteCount - a.u.voteCount);
-    renderPaginatedLb('vote', 'lbVoteList', 'lbVotePager', votersList, (u) => "🔥 " + formatCompact(u.voteCount) + " โหวต", "ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥");
+    // 3. อันดับสายเปย์ดันเกม (จำนวนคะแนนที่ลงทุนไปในกระดานคำขอ)
+    const wishInvestors = entries.filter(e => (Number(e.u.wishPointsSpent) || 0) > 0);
+    wishInvestors.sort((a, b) => (Number(b.u.wishPointsSpent) || 0) - (Number(a.u.wishPointsSpent) || 0));
+    renderPaginatedLb('vote', 'lbVoteList', 'lbVotePager', wishInvestors, (u) => "💠 " + formatCompact(u.wishPointsSpent) + " คะแนน", "ยังไม่มีผู้ลงทุนดันเกมในกระดานคำขอ 💠");
     // 4. อันดับใจรักผู้พัฒนาสูงสุด
     const devHearters = entries.filter(e => (Number(e.u.devHeartsClicked) || 0) > 0);
     devHearters.sort((a, b) => (Number(b.u.devHeartsClicked) || 0) - (Number(a.u.devHeartsClicked) || 0));
@@ -13448,32 +13466,15 @@
     const stage = document.getElementById('podiumVoteStage');
     if (!stage) return;
 
-    if (!voteData || !voteData.games) {
-      stage.dataset.podiumKey = "";
-      stage.innerHTML = `<div class="lb-empty">ยังไม่มีรอบโหวตที่เปิดอยู่ 🔥</div>`;
-      return;
-    }
-
-    const voterTotals = {};
-    Object.values(voteData.games).forEach(g => {
-      if (!g || !g.voters) return;
-      Object.keys(g.voters).forEach(uid => {
-        const v = g.voters[uid];
-        if (!voterTotals[uid]) {
-          voterTotals[uid] = { id: uid, name: v.name || "Discord User", count: 0 };
-        }
-        voterTotals[uid].count += (Number(v.count) || 0);
-      });
-    });
-
-    const top3 = Object.values(voterTotals)
+    const top3 = Object.keys(usersCache || {})
+      .map(uid => ({ id: uid, u: usersCache[uid] || {}, count: Number((usersCache[uid] || {}).wishPointsSpent) || 0 }))
       .filter(v => v.count > 0)
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
 
     if (top3.length === 0) {
       stage.dataset.podiumKey = "";
-      stage.innerHTML = `<div class="lb-empty">ยังไม่มีผู้ร่วมโหวตในรอบนี้ 🔥</div>`;
+      stage.innerHTML = `<div class="lb-empty">ยังไม่มีผู้ลงทุนดันเกมในกระดานคำขอ 💠</div>`;
       return;
     }
 
@@ -13483,14 +13484,13 @@
       { rank: 3, medal: "🥉", item: top3[2] }
     ];
 
-    // เช็กว่าคนติด Top 3 เปลี่ยนหน้าไหม (กันกระตุก + รองรับรูป Gmail แล้ว!)
     const podiumKey = top3.map(x => x.id).join(",");
     if (stage.dataset.podiumKey !== podiumKey) {
       stage.dataset.podiumKey = podiumKey;
       stage.innerHTML = "";
       order.forEach(slot => {
         if (!slot.item) return;
-        const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
+        const cached = slot.item.u || {};
         const rawAv = cached.customAvatar || cached.avatarUrl;
         const avatar = (typeof rawAv === "string" && (rawAv.indexOf("https://") === 0 || rawAv.indexOf("data:image/") === 0))
           ? rawAv
@@ -13513,13 +13513,12 @@
       });
     }
 
-    // อัปเดตเฉพาะชื่อ เลเวล และยอดโหวต
     order.forEach(slot => {
       if (!slot.item) return;
       const slotEl = stage.querySelector(`.podium-slot.p-${slot.rank}`);
       if (!slotEl) return;
-      const cached = (usersCache && usersCache[slot.item.id]) ? usersCache[slot.item.id] : {};
-      const displayName = cached.customName || cached.name || slot.item.name || "Discord User";
+      const cached = slot.item.u || {};
+      const displayName = cached.customName || cached.name || "สมาชิก BGT";
       const lvInfo = getLevelData(Number(cached.heartsClicked) || 0);
       let pDeco = slotEl.querySelector('.avatar-deco-overlay');
       if (!pDeco) {
@@ -13533,7 +13532,7 @@
       const lvEl = slotEl.querySelector('.podium-lv');
       lvEl.className = `podium-lv ${lvInfo.rarityClass}`;
       lvEl.textContent = `Lv.${formatNum(lvInfo.level)}`;
-      slotEl.querySelector('.podium-score').textContent = "🔥 " + formatCompact(slot.item.count) + " โหวต";
+      slotEl.querySelector('.podium-score').textContent = "💠 " + formatCompact(slot.item.count) + " คะแนน";
     });
   }
 
@@ -18889,9 +18888,11 @@
     const nextVotes = (Number(u.ecoVotesToday) || 0) + 1;
     u.pawPoints = Math.max(0, eco.points - vInfo.cost);
     u.ecoVotesToday = nextVotes;
+    u.wishPointsSpent = (Number(u.wishPointsSpent) || 0) + vInfo.cost;
 
     updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(-vInfo.cost);
     updates[`users/${uid}/ecoVotesToday`] = nextVotes;
+    updates[`users/${uid}/wishPointsSpent`] = firebase.database.ServerValue.increment(vInfo.cost);
     updates[`game_requests/${key}/votes`] = firebase.database.ServerValue.increment(1);
     db.ref().update(updates).catch(() => {});
 
@@ -19668,7 +19669,7 @@
       lines: [
         "เกมพวกนี้คะแนนนำอยู่ครับ~! อยากให้เกมไหนขึ้นมาติด Top 3 กดโหวตดันอันดับได้เลย!",
         "ไม่เจอเกมที่อยากเล่น กดปุ่ม '+ ขอเกมใหม่' ด้านบนได้เลย ใส่แค่ชื่อกับรูปปกก็โพสต์ได้แล้ว",
-        "ด้านล่างสุดมีรอบโหวตพิเศษจากแอดมินด้วยนะ อย่าลืมเลื่อนลงไปเช็กกันล่ะ! 🔥🤖"
+        "ยิ่งลงทุน 💠 ผลึก BGT ดันเกมเยอะ ยิ่งมีสิทธิ์ขึ้นแท่น Top 3 สายเปย์ดันเกมประจำเว็บด้วยนะ! 🔥🤖"
       ]
     },
     rank: {
@@ -19935,7 +19936,6 @@
     _origFeedGenkidamaProto(clickX, clickY);
     triggerProtoComboCheer();
   };
-  
 
   document.addEventListener('dragstart', (e) => {
     if (e.target && e.target.tagName === 'IMG') e.preventDefault();
@@ -20081,9 +20081,10 @@
       return;
     }
 
-    const perPage = 9;
+    const perPage = 12;
     const totalPages = Math.max(1, Math.ceil(rest.length / perPage));
     if (wishPage > totalPages) wishPage = totalPages;
+    if (wishPage < 1) wishPage = 1;
     const start = (wishPage - 1) * perPage;
     const pageList = rest.slice(start, start + perPage);
 
@@ -20094,20 +20095,79 @@
     });
 
     if (pager) {
-      if (totalPages <= 1) {
-        pager.style.display = 'none';
+      pager.className = "wish-pagination-wrap";
+      pager.style.display = 'flex';
+      pager.innerHTML = "";
+
+      const row = document.createElement('div');
+      row.className = "wish-pager-row";
+
+      const goPage = (p) => {
+        playClickSound();
+        wishPage = p;
+        renderWishBoard(searchQuery);
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      // ปุ่ม < PREV
+      const prevBtn = document.createElement('button');
+      prevBtn.type = "button";
+      prevBtn.className = "wish-pg-btn nav";
+      prevBtn.innerHTML = "‹ PREV";
+      prevBtn.disabled = wishPage <= 1;
+      prevBtn.onclick = () => goPage(wishPage - 1);
+      row.appendChild(prevBtn);
+
+      // คำนวณเลขหน้าแบบย่อด้วย ... (เช่น 01 02 03 04 05 ... 34)
+      const pages = [];
+      if (totalPages <= 7) {
+        for (let p = 1; p <= totalPages; p++) pages.push(p);
       } else {
-        pager.style.display = 'flex';
-        pager.innerHTML = "";
-        for (let p = 1; p <= totalPages; p++) {
+        pages.push(1);
+        let left = Math.max(2, wishPage - 2);
+        let right = Math.min(totalPages - 1, wishPage + 2);
+        if (wishPage <= 4) { left = 2; right = 5; }
+        if (wishPage >= totalPages - 3) { left = totalPages - 4; right = totalPages - 1; }
+        if (left > 2) pages.push("...");
+        for (let p = left; p <= right; p++) pages.push(p);
+        if (right < totalPages - 1) pages.push("...");
+        pages.push(totalPages);
+      }
+
+      pages.forEach(p => {
+        if (p === "...") {
+          const dots = document.createElement('span');
+          dots.className = "wish-pg-dots";
+          dots.textContent = "...";
+          row.appendChild(dots);
+        } else {
           const b = document.createElement('button');
           b.type = "button";
-          b.className = "lb-page-btn" + (p === wishPage ? " active" : "");
-          b.textContent = String(p);
-          b.onclick = () => { wishPage = p; renderWishBoard(searchQuery); };
-          pager.appendChild(b);
+          b.className = "wish-pg-btn" + (p === wishPage ? " active" : "");
+          b.textContent = String(p).padStart(2, '0');
+          if (p !== wishPage) b.onclick = () => goPage(p);
+          row.appendChild(b);
         }
-      }
+      });
+
+      // ปุ่ม NEXT >
+      const nextBtn = document.createElement('button');
+      nextBtn.type = "button";
+      nextBtn.className = "wish-pg-btn nav";
+      nextBtn.innerHTML = "NEXT ›";
+      nextBtn.disabled = wishPage >= totalPages;
+      nextBtn.onclick = () => goPage(wishPage + 1);
+      row.appendChild(nextBtn);
+
+      pager.appendChild(row);
+
+      // ข้อความสรุป: คำขอ 1–12 จาก ...
+      const showFrom = start + 1;
+      const showTo = Math.min(start + pageList.length, rest.length);
+      const sum = document.createElement('div');
+      sum.className = "wish-pg-summary";
+      sum.innerHTML = `คำขอ <strong>${formatNum(showFrom)}–${formatNum(showTo)}</strong> จาก <strong>${formatNum(rest.length)}</strong>`;
+      pager.appendChild(sum);
     }
   };
 </script>
