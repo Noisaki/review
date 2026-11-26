@@ -6719,6 +6719,7 @@
     .deco-choice-card.r-limited   { border-color: #ec4899; background: linear-gradient(180deg, #fdf2f8, #fef3c7); }
     .deco-choice-card.r-mythic    { border-color: #a855f7; background: linear-gradient(180deg, #f5f3ff, #eff6ff); }
     
+    
     /* ซ่อนแถบแจ้งเตือนของ Google Translate ไม่ให้ดันหน้าเว็บลง */
     .goog-te-banner-frame.skiptranslate,
     iframe.goog-te-banner-frame,
@@ -7423,6 +7424,98 @@
     .lb-medal-chip.r-rare   .lb-hex-mini { background: #0284c7; }
     .lb-medal-chip.r-epic   .lb-hex-mini { background: #9333ea; }
     .lb-medal-chip.r-secret .lb-hex-mini { background: #dc2626; }
+    /* =========================================
+       📐 ขยายหน้ากระดานจัดอันดับ + แก้ป้ายยศไม่ให้ยืด/ตัดบรรทัด (ทั้งคอม & มือถือ)
+       ========================================= */
+    .container.rank-wide {
+      max-width: 1240px;
+      transition: max-width 0.25s ease;
+    }
+
+    /* บังคับให้ป้ายยศทุกชนิดอยู่บรรทัดเดียว ไม่ยืดเป็นก้อนหนา 2 บรรทัด */
+    .lb-badges-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      max-width: 100%;
+    }
+    .lb-meta .role-pill,
+    .lb-meta .dev-patron-pill,
+    .lb-meta .title-pill,
+    .lb-meta .lk-event-pill,
+    .lb-meta .ac-mystery-pill,
+    .lb-meta .secret-horror-pill {
+      display: inline-block !important; vertical-align: middle;
+      align-items: center;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 240px;
+      font-size: 0.72rem !important;
+      padding: 2px 10px !important;
+      line-height: 1.35 !important;
+      height: auto !important;
+      margin: 0 !important;
+    }
+
+    /* ป้ายยศบนการ์ดโปรไฟล์: ห้ามตัดบรรทัดยืดลง */
+    .bgt-roles-zone .role-pill,
+    .bgt-roles-zone .dev-patron-pill,
+    .bgt-roles-zone .title-pill,
+    .bgt-roles-zone .lk-event-pill,
+    .bgt-roles-zone .ac-mystery-pill,
+    .bgt-roles-zone .secret-horror-pill {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 100%;
+      line-height: 1.35 !important;
+    }
+
+    /* ปรับระยะบนมือถือให้ป้ายยศเรียวสวย ไม่ล้นจอ */
+    @media (max-width: 780px) {
+      .lb-meta .role-pill,
+      .lb-meta .dev-patron-pill,
+      .lb-meta .title-pill,
+      .lb-meta .lk-event-pill,
+      .lb-meta .ac-mystery-pill,
+      .lb-meta .secret-horror-pill {
+        max-width: 175px !important;
+        font-size: 0.66rem !important;
+        padding: 2px 8px !important;
+      }
+      .lb-medal-chip {
+        max-width: 165px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    /* ป้ายสถานะช่องหอเกียรติยศอีเวนต์ในกระดานจัดอันดับ */
+    .lb-event-status-tag {
+      display: inline-block;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-left: 8px;
+      vertical-align: middle;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.5);
+    }
+    .lb-event-status-tag.archived {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.5);
+    }
+    body.xmas-mode.bgt-dark-mode:not(.horror-mode) {
+      background: linear-gradient(135deg, #042211 0%, #0b2e22 48%, #360808 100%) !important;
+    }
   </style>
 </head>
 <body>
@@ -8014,6 +8107,15 @@
         <h3 class="lb-col-title">🤝 ทำเนียบใจรักผู้พัฒนาสูงสุด</h3>
         <div class="lb-list" id="lbDevHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
         <div class="lb-pagination" id="lbDevHeartsPager" style="display:none;"></div>
+      </div>
+
+      <div class="lb-column full-span" id="lbLkArchiveColumn">
+        <h3 class="lb-col-title">
+          🌕🪷 ทำเนียบกิจกรรมลอยกระทง 2026
+          <span class="lb-event-status-tag" id="lbLkArchiveStatus">🔴 กำลังแข่งขัน</span>
+        </h3>
+        <div class="lb-list" id="lbLkArchiveList"><div class="lb-empty">กำลังโหลดผลอันดับกิจกรรม...</div></div>
+        <div class="lb-pagination" id="lbLkArchivePager" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -10651,16 +10753,16 @@
   // 🎵 ใส่รายชื่อไฟล์เพลงของเจ้านายตรงนี้เลย! (มีเพลงเดียวก็ใส่แค่ 1 บรรทัดได้ครับ)
   // 🎵 ใส่เฉพาะไฟล์เพลงที่มีจริง (ถ้ามีเพลงเดียวใส่แค่ 1 บรรทัดได้เลยครับ มันจะวนซ้ำให้เอง)
   // 🌕 เช็กช่วงเทศกาลลอยกระทง (วันนี้ 24 พ.ย. ถึงสิ้นวันที่ 26 พ.ย. 2026 -> วันที่ 27 พ.ย. กลับเป็นคริสต์มาสอัตโนมัติ)
-  const LOY_KRATHONG_END_MS = new Date("2026-11-26T23:59:59+07:00").getTime();
-  const XMAS_START_MS       = new Date("2026-11-27T00:00:00+07:00").getTime();
+  const LOY_KRATHONG_END_MS = new Date("2026-11-26T23:59:59.999+07:00").getTime();
+  const XMAS_START_MS       = LOY_KRATHONG_END_MS + 1;
   const XMAS_END_MS         = new Date("2027-01-05T23:59:59+07:00").getTime();
 
-  const isLoyKrathongActive = Date.now() <= LOY_KRATHONG_END_MS;
-  const isXmasActive = Date.now() >= XMAS_START_MS && Date.now() <= XMAS_END_MS;
+  let isLoyKrathongActive = Date.now() <= LOY_KRATHONG_END_MS;
+  let isXmasActive = Date.now() >= XMAS_START_MS && Date.now() <= XMAS_END_MS;
 
-  const BGM_PLAYLIST = isLoyKrathongActive
+  let BGM_PLAYLIST = isLoyKrathongActive
     ? [{ name: "เพลงลอยกระทง 🌕", src: "images/loykrathong.mp3" }]
-    : [{ name: "เพลงที่ 1", src: "images/bgm1.mp3" }];
+    : [{ name: "เพลงคริสต์มาส 🎄", src: "images/bgm1.mp3" }];
 
   let currentTrackIndex = 0;
   let isLoopOne = false;
@@ -18412,6 +18514,311 @@
     }
     return row;
   };
+  // =========================================================================
+  // 25. ขยายกระดานอันดับ + ปรับสมดุลเสียง .EXE + บันทึกผลลอยกระทง & เข้าคริสต์มาสอัตโนมัติ
+  // =========================================================================
+
+  // 1) ขยายความกว้างหน้ากระดานจัดอันดับ (1240px) ไม่ให้ยศโดนบีบจนยืด
+  const _origSwitchPageWide = switchPage;
+  switchPage = function(page, silent = false) {
+    _origSwitchPageWide(page, silent);
+    const cont = document.querySelector('.container');
+    if (cont) cont.classList.toggle('rank-wide', page === 'rank' && !isHorrorTriggered);
+  };
+
+  // 2) ปรับสมดุลเสียงโหมด .EXE (ลดเสียงซาวด์/เพลงหลอนลง + ดันเสียงพูดให้ชัดเท่ากัน)
+  playCursePhaseMusic = function(phaseNum) {
+    stopAllCurseMusic();
+    const isPhase2 = (phaseNum === 2);
+    const el = document.getElementById(isPhase2 ? 'curseBgmPhase2Audio' : 'curseBgmAudio');
+    if (el) {
+      el.volume = Math.min(0.18, Math.max(0.08, musicVolume * 0.35));
+      el.currentTime = 0;
+      el.play().catch(() => startCreepySynthBgm(isPhase2));
+      el.onerror = () => startCreepySynthBgm(isPhase2);
+    } else {
+      startCreepySynthBgm(isPhase2);
+    }
+  };
+
+  startCreepySynthBgm = function(isPhase2 = false) {
+    stopCreepySynthBgm();
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+      const master = audioCtx.createGain();
+      master.gain.setValueAtTime(0.008, now);
+      master.gain.linearRampToValueAtTime(isPhase2 ? 0.075 : 0.05, now + 1.2);
+      master.connect(audioCtx.destination);
+
+      const freqs = isPhase2 ? [38, 41.5, 113, 615] : [46, 48.2, 138];
+      freqs.forEach((f, idx) => {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = idx === freqs.length - 1 ? 'sine' : 'sawtooth';
+        osc.frequency.setValueAtTime(f, now);
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = isPhase2 ? 280 : 160;
+
+        g.gain.value = idx === freqs.length - 1 ? 0.14 : 0.3;
+        osc.connect(filter);
+        filter.connect(g);
+        g.connect(master);
+        osc.start(now);
+        ckSynthNodes.push(osc);
+      });
+      ckSynthNodes.push(master);
+    } catch (e) {}
+  };
+
+  playCurseVoiceBlip = function(isHorrorPhase, isVerySlow = false) {
+    try {
+      initAudio();
+      const now = audioCtx.currentTime;
+
+      if (!isHorrorPhase) {
+        // เสียงพูด Ben ปกติ (ดันขึ้นให้ชัดและดังเท่ากับซาวด์)
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        const baseFreq = 320 + Math.random() * 75;
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.05, now + 0.065);
+        gain.gain.setValueAtTime(0.24, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.085);
+        return;
+      }
+
+      // เสียงพูดราชาคำสาป (ทุ้มลึก + ชัดขึ้น ไม่โดนซาวด์กลบ)
+      const dur = isVerySlow ? 0.22 : 0.11;
+      const baseFreq = isVerySlow ? (54 + Math.random() * 14) : (72 + Math.random() * 22);
+
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      osc1.type = 'sawtooth';
+      osc2.type = 'square';
+      osc1.frequency.setValueAtTime(baseFreq, now);
+      osc1.frequency.exponentialRampToValueAtTime(baseFreq * 0.58, now + dur);
+      osc2.frequency.setValueAtTime(baseFreq * 0.52, now);
+      osc2.frequency.exponentialRampToValueAtTime(baseFreq * 0.36, now + dur);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(isVerySlow ? 460 : 620, now);
+
+      const dryGain = audioCtx.createGain();
+      dryGain.gain.setValueAtTime(0.26, now);
+      dryGain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.03);
+
+      const delay = audioCtx.createDelay();
+      delay.delayTime.value = 0.14;
+      const echoGain = audioCtx.createGain();
+      echoGain.gain.setValueAtTime(0.32, now);
+      echoGain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.32);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(dryGain);
+      dryGain.connect(audioCtx.destination);
+      dryGain.connect(delay);
+      delay.connect(echoGain);
+      echoGain.connect(audioCtx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + dur + 0.04);
+      osc2.stop(now + dur + 0.04);
+    } catch (e) {}
+  };
+
+  // ลดเสียงจัมป์สแกร์ให้พอดี ไม่ดังเกินซาวด์อื่น
+  (function balanceJumpscareVol() {
+    const jsEl = document.getElementById('curseJumpscareAudio');
+    if (jsEl && !jsEl.dataset.volBalanced) {
+      jsEl.dataset.volBalanced = "1";
+      jsEl.addEventListener('play', () => {
+        jsEl.volume = Math.min(0.36, Math.max(0.18, musicVolume * 0.6));
+      });
+    }
+  })();
+
+  // 3) ระบบบันทึกผลลอยกระทง 2026 ถาวร + แสดงในกระดานจัดอันดับ + สลับเข้าธีม/เพลงคริสต์มาสอัตโนมัติ
+  lbPages.lkArchive = 1;
+  let lkArchiveCache = null;
+  let _lkArchiveSaving = false;
+  let _xmasAutoSwitched = !isLoyKrathongActive;
+
+  function initLkArchiveListener() {
+    if (!db) return;
+    db.ref("event_archives/loykrathong_2026").on("value", (snap) => {
+      lkArchiveCache = snap.val();
+      renderLkArchiveLeaderboard();
+    });
+  }
+
+  function saveLoyKrathongFinalArchive() {
+    if (!db || _lkArchiveSaving || lkArchiveCache) return;
+    if (Date.now() <= LOY_KRATHONG_END_MS) return;
+
+    const sorted = getLoyKrathongSortedUsers();
+    if (sorted.length === 0) return;
+
+    _lkArchiveSaving = true;
+    db.ref("event_archives/loykrathong_2026").once("value").then((snap) => {
+      if (snap.exists()) {
+        lkArchiveCache = snap.val();
+        renderLkArchiveLeaderboard();
+        return;
+      }
+      const totalKrathongs = sorted.reduce((s, e) => s + e.count, 0);
+      const rankings = sorted.map((e, idx) => ({
+        rank: idx + 1,
+        id: e.id,
+        count: e.count,
+        name: e.u.customName || e.u.name || "สมาชิก BGT",
+        avatarUrl: e.u.customAvatar || e.u.avatarUrl || "",
+        avatarDecoration: e.u.avatarDecoration || "",
+        roleTier: Number(e.u.roleTier) || 0,
+        donateAmount: Number(e.u.donateAmount) || 0,
+        heartsClicked: Number(e.u.heartsClicked) || 0
+      }));
+      return db.ref("event_archives/loykrathong_2026").set({
+        eventName: "ลอยกระทง 2026",
+        endedAt: LOY_KRATHONG_END_MS,
+        savedAt: Date.now(),
+        totalKrathongs: totalKrathongs,
+        rankings: rankings
+      });
+    }).catch(() => {
+      _lkArchiveSaving = false;
+    });
+  }
+
+  function renderLkArchiveLeaderboard() {
+    const statusEl = document.getElementById('lbLkArchiveStatus');
+    const isEnded = Date.now() > LOY_KRATHONG_END_MS;
+
+    if (statusEl) {
+      if (isEnded) {
+        statusEl.classList.add('archived');
+        statusEl.textContent = "🏁 จบกิจกรรมแล้ว • บันทึกผลถาวร";
+      } else {
+        statusEl.classList.remove('archived');
+        statusEl.textContent = "🔴 กำลังแข่งขัน (LIVE)";
+      }
+    }
+
+    let entries = [];
+    if (isEnded && lkArchiveCache && Array.isArray(lkArchiveCache.rankings)) {
+      entries = lkArchiveCache.rankings.map(item => {
+        const liveU = (usersCache && usersCache[item.id]) ? usersCache[item.id] : {};
+        return {
+          id: item.id,
+          u: {
+            ...liveU,
+            name: liveU.name || item.name,
+            customName: liveU.customName || item.name,
+            avatarUrl: liveU.avatarUrl || item.avatarUrl,
+            avatarDecoration: liveU.avatarDecoration || item.avatarDecoration,
+            roleTier: liveU.roleTier != null ? liveU.roleTier : item.roleTier,
+            donateAmount: liveU.donateAmount != null ? liveU.donateAmount : item.donateAmount,
+            heartsClicked: liveU.heartsClicked != null ? liveU.heartsClicked : item.heartsClicked,
+            krathongCount: item.count
+          }
+        };
+      });
+    } else {
+      entries = getLoyKrathongSortedUsers().map(e => ({
+        id: e.id,
+        u: { ...e.u, krathongCount: e.count }
+      }));
+    }
+
+    renderPaginatedLb(
+      'lkArchive',
+      'lbLkArchiveList',
+      'lbLkArchivePager',
+      entries,
+      (u) => "🪷 " + formatCompact(u.krathongCount) + " ใบ",
+      "ยังไม่มีผู้เข้าร่วมกิจกรรมลอยกระทง 2026 🪷"
+    );
+  }
+
+  // เชื่อมให้กระดานอัปเดตพร้อมกันทุกครั้งที่ข้อมูลผู้ใช้เปลี่ยน
+  const _origRenderLbForArchive = renderLeaderboards;
+  renderLeaderboards = function(force = false) {
+    _origRenderLbForArchive(force);
+    renderLkArchiveLeaderboard();
+    if (Date.now() > LOY_KRATHONG_END_MS) {
+      saveLoyKrathongFinalArchive();
+    }
+  };
+
+  // สลับเข้าสู่เทศกาลคริสต์มาสทันทีแบบเรียลไทม์เมื่อหมดเวลาลอยกระทง
+  function applyLiveChristmasTransition() {
+    if (_xmasAutoSwitched) return;
+    _xmasAutoSwitched = true;
+    isLoyKrathongActive = false;
+    isXmasActive = isChristmasEventNow();
+
+    // 1. บันทึกผลลอยกระทง 2026 ถาวร + แจกรางวัล
+    saveLoyKrathongFinalArchive();
+    if (typeof checkAndClaimEventRewards === "function") checkAndClaimEventRewards();
+
+    // 2. เปลี่ยนธีมพื้นหลัง + หัวเว็บ เป็นคริสต์มาสทันที
+    document.body.classList.remove('loy-krathong-mode');
+    document.body.classList.add('xmas-mode');
+    if (!isHorrorTriggered) {
+      const dL = document.getElementById('decorLeft');
+      const dR = document.getElementById('decorRight');
+      const tI = document.getElementById('titleIcon');
+      const bB = document.getElementById('brandBadge');
+      const mS = document.getElementById('musicSpeakerIcon');
+      if (dL) dL.textContent = '🎄✨';
+      if (dR) dR.textContent = '🎅❄️';
+      if (tI) tI.textContent = '🎅';
+      if (bB) bB.textContent = '🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️';
+      if (mS) mS.textContent = '🎄🔊';
+    }
+
+    // 3. สลับเพลย์ลิสต์เป็นเพลงคริสต์มาสที่มีอยู่ในระบบ (images/bgm1.mp3)
+    BGM_PLAYLIST = [{ name: "เพลงคริสต์มาส 🎄", src: "images/bgm1.mp3" }];
+    currentTrackIndex = 0;
+    const bgmEl = document.getElementById('bgmAudio');
+    if (bgmEl) {
+      const wasPlaying = !bgmEl.paused && !userPausedMusic;
+      bgmEl.dataset.src = "";
+      loadCurrentBgmTrack();
+      if (wasPlaying && !isHorrorTriggered && !isCurseSceneBlockingBgm()) {
+        startChristmasMusic();
+      }
+    }
+
+    // 4. เปลี่ยนการ์ดอีเวนต์หน้าหลักเป็นกิจกรรมคริสต์มาส 2026 + อัปเดตกระดาน
+    if (typeof renderLoyKrathongEvent === "function") renderLoyKrathongEvent();
+    if (currentPage === 'home') {
+      const lkCard = document.getElementById('loyKrathongEventCard');
+      if (lkCard && !isHorrorTriggered) lkCard.style.display = 'block';
+    }
+    renderLkArchiveLeaderboard();
+    showToast("🎄✨ จบกิจกรรมลอยกระทง 2026 แล้ว! บันทึกผลอันดับเรียบร้อย เข้าสู่เทศกาลคริสต์มาส! 🎅🎁");
+  }
+
+  // เริ่มฟังข้อมูล archive และคอยตรวจเวลาข้ามเที่ยงคืนทุก 1 วินาที
+  window.addEventListener("load", () => {
+    setTimeout(initLkArchiveListener, 400);
+  });
+  setInterval(() => {
+    if (Date.now() > LOY_KRATHONG_END_MS) {
+      applyLiveChristmasTransition();
+    }
+  }, 1000);
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
