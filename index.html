@@ -8016,6 +8016,19 @@
     .bgt-proto-widget.is-blushing .bgt-proto-img {
       animation: protoBlushWiggle 0.42s ease-in-out 2;
     }
+    /* ท่าเด้งเชียร์ตอนติดคอมโบ + ออร่าแว่น LED เรืองแสง */
+    .bgt-proto-widget.is-cheering .bgt-proto-img {
+      animation: protoCheerBounce 0.32s ease-in-out infinite;
+      filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.95)) drop-shadow(0 0 24px rgba(244, 114, 182, 0.75));
+    }
+    .bgt-proto-widget.is-cheering .bgt-proto-card {
+      border-color: #fde047;
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.7), 0 0 38px rgba(244, 63, 94, 0.45);
+    }
+    @keyframes protoCheerBounce {
+      0%, 100% { transform: translateY(0px) scale(1.02) rotate(-2.5deg); }
+      50%      { transform: translateY(-9px) scale(1.07, 0.97) rotate(2.5deg); }
+    }
 
     @keyframes protoAliveIdle {
       0%, 100% { transform: translateY(0px) scaleX(1) scaleY(1) rotate(0deg); }
@@ -19619,10 +19632,12 @@
     idle:  "images/proto_idle.png",
     blink: "images/proto_blink.png",
     talk:  "images/proto_talk.png",
-    blush: "images/proto_blush.png"
+    blush: "images/proto_blush.png",
+    cheer: "images/proto_cheer.png"
   };
 
-  const _protoReady = { idle: false, blink: false, talk: false, blush: false };
+  const _protoReady = { idle: false, blink: false, talk: false, blush: false, cheer: false };
+
   Object.keys(PROTO_SPRITES).forEach(k => {
     const im = new Image();
     im.onload = () => { _protoReady[k] = true; };
@@ -19846,8 +19861,10 @@
     clearInterval(_protoCtrl.typeT);
     clearInterval(_protoCtrl.talkT);
     clearTimeout(_protoCtrl.blushT);
+    clearTimeout(_protoCtrl.cheerEndT);
+    _protoCtrl.cheering = false;
     _protoCtrl.busy = true;
-    w.classList.remove('is-talking', 'is-blushing');
+    w.classList.remove('is-talking', 'is-blushing', 'is-cheering');
     void w.offsetWidth; // รีเซ็ตแอนิเมชันให้เด้งใหม่ทุกรอบที่จิ้ม
     w.classList.add('is-blushing');
     setGlobalProtoSprite('blush');
@@ -19860,6 +19877,64 @@
       w.classList.remove('is-blushing');
       setGlobalProtoSprite('idle');
     }, 2600);
+  }
+
+  // 🔥 ระบบเชียร์คอมโบ: กดรัวๆ -> ชูแขนใส่แว่น LED + ตะโกนให้กำลังใจ!
+  const PROTO_CHEER_LINES = [
+    "กดเลย! กดเลย! พลังกำลังพุ่งปรี๊ดเลยครับ! ⚡🔥",
+    "รัวอีก! รัวอีก! แว่น LED ผมสว่างจ้าแล้ว! 😎✨",
+    "สู้เขาครับ! นิ้วเทพมาก อย่าเพิ่งหยุดนะ! 🦾💥",
+    "โอ้โห คอมโบเดือดจัด! อัดพลังเข้าไปอีกครับ! 🚀💙"
+  ];
+
+  function triggerProtoComboCheer() {
+    if (!isProtoAllowedVisible() || _protoCtrl.minimized) return;
+    // เริ่มเข้าท่าเชียร์เมื่อชาร์จพลังรัวๆ ถึงระดับหนึ่ง (~8 คลิกติดกัน)
+    if (typeof genkiCharge === "undefined" || genkiCharge < 10) return;
+
+    const w = document.getElementById('bgtProtoWidget');
+    const txtEl = document.getElementById('globalProtoText');
+    if (!w) return;
+
+    const now = Date.now();
+    if (!_protoCtrl.cheering) {
+      clearInterval(_protoCtrl.typeT);
+      clearInterval(_protoCtrl.talkT);
+      clearTimeout(_protoCtrl.blushT);
+      _protoCtrl.busy = true;
+      _protoCtrl.cheering = true;
+      _protoCtrl.lastCheerLineTime = 0;
+
+      w.classList.remove('is-talking', 'is-blushing');
+      w.classList.add('is-cheering');
+      setGlobalProtoSprite('cheer');
+    }
+
+    // สลับคำพูดเชียร์ทุกๆ 2.2 วินาที (จะได้ไม่กระพริบเปลี่ยนคำทุกคลิก)
+    if (now - (_protoCtrl.lastCheerLineTime || 0) >= 2200) {
+      _protoCtrl.lastCheerLineTime = now;
+      const line = PROTO_CHEER_LINES[Math.floor(Math.random() * PROTO_CHEER_LINES.length)];
+      if (txtEl) txtEl.textContent = line;
+      playProtoRobotBlip();
+    }
+
+    // ถ้าหยุดกดเกิน 1.5 วินาที -> กลับสู่ท่าปกติพร้อมชม
+    clearTimeout(_protoCtrl.cheerEndT);
+    _protoCtrl.cheerEndT = setTimeout(() => {
+      _protoCtrl.cheering = false;
+      _protoCtrl.busy = false;
+      w.classList.remove('is-cheering');
+      setGlobalProtoSprite('idle');
+      if (txtEl) txtEl.textContent = "โห สุดยอดไปเลยครับ! พักนิ้วแป๊บนะ~ 💙✨";
+    }, 1500);
+  }
+
+  // เชื่อมเข้ากับ feedGenkidama (ทำงานอัตโนมัติทั้งปุ่มส่งหัวใจ, ลอยกระทง, ของขวัญคริสต์มาส และโหวตเกม!)
+  const _origFeedGenkidamaProto = feedGenkidama;
+  feedGenkidama = function(clickX, clickY) {
+    _origFeedGenkidamaProto(clickX, clickY);
+    triggerProtoComboCheer();
+  };
   }
 
   document.addEventListener('dragstart', (e) => {
