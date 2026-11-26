@@ -30,6 +30,10 @@
     * {
       box-sizing: border-box;
     }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
 
     body {
       font-family: 'Prompt', sans-serif;
@@ -273,10 +277,19 @@
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 5px;
+      white-space: nowrap;
+      max-width: 155px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       transition: transform 0.15s ease, filter 0.2s;
+    }
+    #musicStateText {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .music-toggle-btn:hover {
@@ -6744,6 +6757,113 @@
     @keyframes langSpin {
       to { transform: rotate(360deg); }
     }
+
+    /* ===== แก้ UI มือถือล้นจอ + ยศไม่ดันกรอบ + แก้กระตุกโหมดหลอน ===== */
+    .ck-red-slow-text {
+      color: #ff2a2a !important;
+      font-size: clamp(1.05rem, 3.8vw, 1.85rem) !important;
+      letter-spacing: 1.5px;
+      text-shadow: 2px 0 #000, -2px 0 #7f1d1d, 0 0 18px #dc2626 !important;
+    }
+    .bgt-inline-search {
+      width: 100%;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      background: rgba(15, 23, 42, 0.08);
+      color: inherit;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.86rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    body.bgt-dark-mode .bgt-inline-search {
+      background: rgba(15, 23, 42, 0.85);
+      color: #f8fafc;
+    }
+
+    @media (max-width: 780px) {
+      /* กันแผงแอดมินล้นขอบจอมือถือ */
+      #voteAdminPanel input, #voteAdminPanel select,
+      #devAdminPanel input, #projectsAdminPanel input {
+        min-width: 0 !important;
+        width: 100% !important;
+      }
+      #voteAdminPanel > div {
+        grid-template-columns: 1fr !important;
+      }
+      /* กันป้ายโปรไฟล์และยศมุมขวาบนโดนบีบหรือดันขอบ */
+      .nav-profile-pill { max-width: 170px; padding: 3px 10px 3px 4px; }
+      .nav-profile-meta { min-width: 0; max-width: 105px; }
+      .role-pill, .title-pill, .dev-patron-pill, .secret-horror-pill {
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      /* ลดอาการกระตุกโหมดหลอนบนมือถือ (เปลี่ยนจากการคำนวณเงาซ้ำๆ เป็น opacity เบาๆ) */
+      body.horror-mode .blood-curtain { filter: none !important; }
+      body.horror-mode .blood-vignette {
+        animation: mobileVignettePulse 2.8s infinite alternate ease-in-out !important;
+      }
+      body.horror-mode #horrorStaticOverlay {
+        animation: none !important;
+        opacity: 0.14 !important;
+      }
+    }
+    @keyframes mobileVignettePulse {
+      0% { opacity: 0.55; }
+      100% { opacity: 0.95; }
+    }
+
+    /* ===== เอฟเฟกต์รอยข่วน 3 ขีด + ดาเมจ 99999 สไตล์ Chara ===== */
+    #ckClawOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      pointer-events: none;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(120, 0, 0, 0.25);
+    }
+    #ckClawOverlay svg {
+      width: min(92vw, 620px);
+      height: auto;
+      filter: drop-shadow(0 0 18px #ff0000);
+    }
+    .ck-claw-path {
+      stroke-dasharray: 450;
+      stroke-dashoffset: 450;
+      animation: ckSlashDraw 0.26s ease-out forwards;
+    }
+    .ck-claw-path:nth-child(2) { animation-delay: 0.06s; }
+    .ck-claw-path:nth-child(3) { animation-delay: 0.12s; }
+    @keyframes ckSlashDraw {
+      to { stroke-dashoffset: 0; }
+    }
+    #ckDamageOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100001;
+      pointer-events: none;
+      display: none;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.72);
+    }
+    .ck-dmg-num {
+      position: absolute;
+      font-family: 'Kanit', monospace, sans-serif;
+      font-weight: 900;
+      color: #ff1e1e;
+      text-shadow: 3px 3px 0 #000, -2px -2px 0 #7f1d1d, 0 0 18px #dc2626;
+      animation: ckDmgPop 0.18s ease-out forwards;
+      user-select: none;
+    }
+    @keyframes ckDmgPop {
+      0% { transform: scale(1.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -6971,8 +7091,17 @@
 
 <!-- ฉากจัมป์สแกร์ 1 ครั้ง (ซูมหน้าเต็มจอ) -->
 <div id="ckJumpscareFlash">
-  <img id="ckJumpscareImg" class="face-zoom" src="images/curse_5.png" alt="">
+  <img id="ckJumpscareImg" class="face-zoom" src="images/curse_10.png" alt="">
 </div>
+<!-- รอยกรงเล็บข่วน 3 ขีด + ดาเมจ 99999 -->
+<div id="ckClawOverlay">
+  <svg viewBox="0 0 400 400">
+    <path class="ck-claw-path" d="M60,55 Q190,175 335,345" stroke="#ff1e1e" stroke-width="16" stroke-linecap="round" fill="none"/>
+    <path class="ck-claw-path" d="M125,35 Q240,165 365,300" stroke="#dc2626" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <path class="ck-claw-path" d="M30,115 Q150,235 280,370" stroke="#ef4444" stroke-width="12" stroke-linecap="round" fill="none"/>
+  </svg>
+</div>
+<div id="ckDamageOverlay"></div>
 
 <!-- แถบควบคุมลอยมุมขวาบน -->
 <div class="floating-controls">
@@ -7110,6 +7239,7 @@
       <h2 class="bgt-row-title">⚡ คลังเกมแปลไทยฟรี (itch.io)</h2>
       <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="profile-btn" style="padding:5px 12px; font-size:0.78rem; text-decoration:none;">ดูทั้งหมดบน itch.io →</a>
     </div>
+    <input type="text" id="homeGameSearchInput" class="bgt-inline-search" placeholder="🔍 ค้นหาชื่อเกมแปลไทย..." oninput="renderHomeStatsAndCarousel()">
     <div class="bgt-showcase-tabs" id="homeShowcaseTabs">
       <button type="button" class="bgt-stab-btn active" onclick="setHomeShowcaseTab('downloads', this)">⬇️ โหลดมากที่สุด</button>
       <button type="button" class="bgt-stab-btn" onclick="setHomeShowcaseTab('views', this)">🔥 ยอดนิยม</button>
@@ -7468,7 +7598,8 @@
       <span class="step-pill" id="projCountBadge">กำลังโหลดโปรเจกต์...</span>
     </div>
 
-    <!-- แถบกรองสถานะงาน -->
+    <!-- ช่องค้นหา + แถบกรองสถานะงาน -->
+    <input type="text" id="projSearchInput" class="bgt-inline-search" placeholder="🔍 ค้นหาชื่องานแปล..." oninput="renderTranslationProjects()">
     <div class="proj-filter-bar" id="projFilterBar">
       <button type="button" class="proj-filter-btn active" onclick="setProjectFilter('all', this)">🌟 ทั้งหมด</button>
       <button type="button" class="proj-filter-btn" onclick="setProjectFilter('released', this)">✅ ปล่อยแล้ว (100%)</button>
@@ -14187,9 +14318,12 @@
 
     if (badge) badge.textContent = `ทั้งหมด ${allList.length} โปรเจกต์`;
 
-    const filtered = currentProjFilter === 'all'
-      ? allList
-      : allList.filter(p => (p.status || 'translating') === currentProjFilter);
+    const projQ = (document.getElementById('projSearchInput')?.value || "").trim().toLowerCase();
+    const filtered = allList.filter(p => {
+      const matchStatus = currentProjFilter === 'all' || (p.status || 'translating') === currentProjFilter;
+      const matchSearch = !projQ || (p.title || "").toLowerCase().includes(projQ);
+      return matchStatus && matchSearch;
+    });
 
     grid.innerHTML = "";
     if (filtered.length === 0) {
@@ -14634,10 +14768,18 @@
   });
 
   function handleGlobalGameSearch(q) {
-    const query = (q || "").trim().toLowerCase();
-    if (!query) return;
-    switchPage('vote', true);
-    renderWishBoard(query);
+    const homeInp = document.getElementById('homeGameSearchInput');
+    const projInp = document.getElementById('projSearchInput');
+    if (currentPage === 'projects' && projInp) {
+      projInp.value = q;
+      renderTranslationProjects();
+    } else if (currentPage === 'vote') {
+      renderWishBoard((q || "").trim().toLowerCase());
+    } else {
+      if (currentPage !== 'home') switchPage('home', true);
+      if (homeInp) homeInp.value = q;
+      renderHomeStatsAndCarousel();
+    }
   }
 
   function initItchStatsAndCarousel() {
@@ -15021,6 +15163,10 @@
           const p = projectsCache["itch_" + g.id] || {};
           return { ...g, likes: Number(p.hypeCount) || 0, pinned: !!p.pinned };
         });
+        const homeQ = (document.getElementById('homeGameSearchInput')?.value || "").trim().toLowerCase();
+        if (homeQ) {
+          list = list.filter(g => (g.title || "").toLowerCase().includes(homeQ));
+        }
 
         if (homeShowcaseTab === 'downloads') {
           list.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
@@ -15172,9 +15318,12 @@
       .map(k => ({ key: k, ...projectsCache[k] }))
       .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (Number(b.updatedAt || b.createdAt) || 0) - (Number(a.updatedAt || a.createdAt) || 0));
 
-    const filtered = currentProjFilter === 'all'
-      ? allList
-      : allList.filter(p => (p.status || 'translating') === currentProjFilter);
+    const projQ = (document.getElementById('projSearchInput')?.value || "").trim().toLowerCase();
+    const filtered = allList.filter(p => {
+      const matchStatus = currentProjFilter === 'all' || (p.status || 'translating') === currentProjFilter;
+      const matchSearch = !projQ || (p.title || "").toLowerCase().includes(projQ);
+      return matchStatus && matchSearch;
+    });
 
     const cards = Array.from(grid.querySelectorAll('.proj-card'));
     const isAdmin = currentUser && currentUser.isVoteAdmin;
@@ -16113,6 +16262,14 @@
   }
 
   const CK_PHASE_KEY = "bgt_ck_active_phase_v1";
+  const CK_LINE_KEY  = "bgt_ck_active_line_v1";
+  const CK_RELOAD_KEY = "bgt_ck_reload_count_v1";
+
+  // โหลดรูปฉากหลอนล่วงหน้า 1-10 กันปากไม่ขยับบนมือถือ
+  [
+    "images/curse_1.png", "images/curse_2.png", "images/curse_3.png", "images/curse_4.png", "images/curse_5.png",
+    "images/curse_6.png", "images/curse_7.png", "images/curse_8.png", "images/curse_9.png", "images/curse_10.png"
+  ].forEach(src => { const im = new Image(); im.src = src; });
 
   function stopAllCurseMusic() {
     stopCreepySynthBgm();
@@ -16136,6 +16293,101 @@
     }
   }
 
+  // เสียงฟันฉัวะ + ดาเมจ 99999 เต็มจอ
+  function playClawAndDamage99999(onFinish) {
+    const clawEl = document.getElementById('ckClawOverlay');
+    const dmgEl  = document.getElementById('ckDamageOverlay');
+    if (clawEl) {
+      clawEl.style.display = 'flex';
+      clawEl.querySelectorAll('.ck-claw-path').forEach(p => {
+        p.style.animation = 'none';
+        void p.offsetWidth;
+        p.style.animation = '';
+      });
+    }
+    playButtonDestroySound();
+    document.body.classList.add('horror-glitch-shake');
+
+    setTimeout(() => {
+      if (clawEl) clawEl.style.display = 'none';
+      if (dmgEl) {
+        dmgEl.innerHTML = '';
+        dmgEl.style.display = 'block';
+        let count = 0;
+        const spam = setInterval(() => {
+          const n = document.createElement('div');
+          n.className = 'ck-dmg-num';
+          n.textContent = '99999';
+          n.style.left = (Math.random() * 78) + 'vw';
+          n.style.top  = (Math.random() * 82) + 'vh';
+          n.style.fontSize = (1.6 + Math.random() * 2.4) + 'rem';
+          dmgEl.appendChild(n);
+          count++;
+          if (count >= 26) {
+            clearInterval(spam);
+            setTimeout(() => {
+              dmgEl.style.display = 'none';
+              document.body.classList.remove('horror-glitch-shake');
+              if (onFinish) onFinish();
+            }, 650);
+          }
+        }, 42);
+      } else if (onFinish) {
+        onFinish();
+      }
+    }, 380);
+  }
+
+  function getReloadScoldLine(reloadCount, isHorrorPhase) {
+    const pName = (currentUser && (currentUser.displayName || currentUser.name)) || "คุณ";
+    if (reloadCount >= 4) {
+      document.title = "👁️ อย่าให้มีครั้งที่ 5...";
+      spawnCurseSysPopup(`⚠️ [ACCESS]: บันทึกการรีเฟรชครั้งที่ ${reloadCount}/5 แล้ว`);
+      return {
+        speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
+        text: `...อย่าให้มีครั้งที่ 5 นะครับ ${pName} ผมเตือนคุณด้วยความหวังดีจริงๆ...`,
+        idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_8.png",
+        talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_8.png",
+        talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_9.png",
+        horror: true, speed: 115
+      };
+    }
+    if (reloadCount === 3) {
+      document.title = "👁️ I SEE YOU";
+      spawnCurseSysPopup(`⚠️ [SYSTEM]: ตรวจพบการหลบหนีครั้งที่ 3 (${pName})`);
+      return {
+        speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
+        text: `รอบที่ 3 แล้วนะ ${pName}... สนุกมากเลยเหรอครับ ที่เห็นผมต้องเริ่มพูดใหม่ซ้ำไปซ้ำมาแบบนี้?`,
+        idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_6.png",
+        talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_6.png",
+        talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_7.png",
+        horror: isHorrorPhase, speed: 95
+      };
+    }
+    if (reloadCount === 2) {
+      return {
+        speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
+        text: isHorrorPhase
+          ? "กดรีเฟรชอีกแล้วเหรอ... กูบอกแล้วไงว่าหนีไม่พ้น มาฟังให้จบดิ!"
+          : "กดรีเฟรชอีกแล้วเหรอครับ... ผมบอกแล้วไงว่ามันหนีไม่พ้นหรอก เลิกกดแล้วฟังผมพูดให้จบเถอะ",
+        idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_1.png",
+        talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_2.png",
+        talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_3.png",
+        horror: isHorrorPhase, speed: 85
+      };
+    }
+    return {
+      speaker: isHorrorPhase ? "👁️ BGT.EXE // ราชาคำสาป" : "Ben",
+      text: isHorrorPhase
+        ? "มึงจะหนีไปไหน... มาคุยให้จบก่อนดิ! คิดว่ากดรีเฟรชแล้วจะหนีพ้นเหรอ?"
+        : "เอ๊ะ... คิดจะหนีไปไหนครับ? มาคุยกันให้จบก่อนสิ... ว่าแต่เมื่อกี้เราคุยถึงไหนแล้วนะ",
+      idle: isHorrorPhase ? "images/curse_4.png" : "images/curse_1.png",
+      talkA: isHorrorPhase ? "images/curse_4.png" : "images/curse_2.png",
+      talkB: isHorrorPhase ? "images/curse_5.png" : "images/curse_3.png",
+      horror: isHorrorPhase, speed: 82
+    };
+  }
+
   function startCurseKingCutscene(resumePhase = null) {
     clearInterval(horrorScareTimer);
     removeCursedEye();
@@ -16143,40 +16395,72 @@
     stopChristmasMusic();
 
     const stage = document.getElementById('curseKingStage');
-    const bgm = document.getElementById('curseBgmAudio');
     if (!stage) return;
 
     stage.classList.remove('phase-horror');
     stage.style.display = 'block';
 
-    // บันทึกเฟสปัจจุบันลงเครื่อง (รีเฟรชหนีไม่ได้!)
     const startPhase = resumePhase || "1";
-    try { localStorage.setItem(CK_PHASE_KEY, startPhase); } catch (e) {}
+    let reloadCount = 0;
+    let savedLineIdx = 0;
+    try {
+      if (resumePhase) {
+        reloadCount = (parseInt(localStorage.getItem(CK_RELOAD_KEY) || "0", 10) || 0) + 1;
+        localStorage.setItem(CK_RELOAD_KEY, String(reloadCount));
+        savedLineIdx = parseInt(localStorage.getItem(CK_LINE_KEY) || "0", 10) || 0;
+      } else {
+        localStorage.setItem(CK_PHASE_KEY, "1");
+        localStorage.setItem(CK_LINE_KEY, "0");
+        localStorage.setItem(CK_RELOAD_KEY, "0");
+      }
+    } catch (e) {}
 
-    let usingSynth = false;
-    const playCurseBgm = (isPhase2) => playCursePhaseMusic(isPhase2 ? 2 : 1);
-
-    // 🔴 กรณีแอบรีเฟรชตอนอยู่ใน "เฟสหลอน (Phase 2)" -> ดักกลับเข้ามาดุทันที!
-    if (resumePhase === "2") {
-      playCurseBgm(true);
+    // 🔥 รีเฟรชหนีครบ 5 รอบ -> โกรธสุดขีด ตัดเข้าฉากจบพิเศษทันที!
+    if (resumePhase && reloadCount >= 5) {
+      stopAllCurseMusic();
       stage.classList.add('phase-horror');
-      spawnCurseSysPopup("⚠️ [SYSTEM]: ตรวจพบการพยายามหลบหนี (RELOAD_BLOCKED)");
-      ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
+      document.title = "🩸 หนีไม่พ้นหรอก...";
+      ckFlyInterval = setInterval(spawnFlyingHorrorText, 320);
 
       playCurseSequence([
         {
           speaker: "👁️ BGT.EXE // ราชาคำสาป",
-          text: "มึงจะหนีไปไหน... มาคุยให้จบก่อนดิ! คิดว่ากดรีเฟรชหน้าเว็บแล้วจะหนีพ้นเหรอ...?",
-          idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
-          horror: true, speed: 115
+          text: "ผมเตือนคุณแล้วนะ... เตือนตั้ง 4 รอบแล้ว แต่คุณก็ยังดื้อที่จะกดหนีผมอยู่ดี",
+          idle: "images/curse_6.png", talkA: "images/curse_6.png", talkB: "images/curse_7.png",
+          horror: true, speed: 105
         },
         {
           speaker: "👁️ BGT.EXE // ราชาคำสาป",
-          text: "เมื่อกี้กูถามว่า... ตอนที่เห็นหน้าเว็บพัง เห็นกูร้องไห้ มึงกำลังนั่งยิ้มอยู่หน้าจอหรือเปล่า? ตอบมา!",
-          idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
-          horror: true, speed: 105, autoNext: true, autoDelay: 300
+          text: "งั้นก็ไม่ต้องไปไหนทั้งนั้น... อยู่กับผมตรงนี้แหละ!!",
+          idle: "images/curse_8.png", talkA: "images/curse_8.png", talkB: "images/curse_9.png",
+          horror: true, speed: 170, autoNext: true, autoDelay: 400, noSkip: true
         }
-      ], () => {
+      ], () => triggerCurseKingJumpscareAndFinish(true));
+      return;
+    }
+
+    // 🔴 เฟส 2 (กรณีรีเฟรชกลับมา -> พูดดักแล้วต่อจากบรรทัดเดิมไม่ข้าม!)
+    if (resumePhase === "2") {
+      playCursePhaseMusic(2);
+      stage.classList.add('phase-horror');
+      ckFlyInterval = setInterval(spawnFlyingHorrorText, 420);
+
+      const p2Base = [
+        {
+          speaker: "👁️ BGT.EXE // ราชาคำสาป",
+          text: "ทำไมกันนะ... ทั้งที่ผมให้โอกาสคุณกดขอโทษตั้งหลายรอบแล้วแท้ๆ...",
+          idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+          horror: true, speed: 120, onStart: () => { try { localStorage.setItem(CK_LINE_KEY, "0"); } catch(e){} }
+        },
+        {
+          speaker: "👁️ BGT.EXE // ราชาคำสาป",
+          text: "แต่คุณก็ยังเลือกที่จะเหยียบย่ำมันซ้ำแล้วซ้ำเล่า จนเดินมาถึงตรงนี้จนได้... ตอนที่เห็นหน้าเว็บพัง เห็นผมร้องไห้ คุณกำลังนั่งยิ้มอยู่หน้าจอหรือเปล่า?",
+          idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
+          horror: true, speed: 105, autoNext: true, autoDelay: 300, onStart: () => { try { localStorage.setItem(CK_LINE_KEY, "1"); } catch(e){} }
+        }
+      ];
+      const resumeSeq = [getReloadScoldLine(reloadCount, true), ...p2Base.slice(Math.min(savedLineIdx, p2Base.length - 1))];
+      playCurseSequence(resumeSeq, () => {
         showCurseChoices([
           { label: "ผมขอโทษจริงๆ นะ... ปล่อยผมไปเถอะ", onPick: enterCurseFinalLie },
           { label: "ผมไม่ได้คิดแบบนั้นเลย...", onPick: enterCurseFinalLie }
@@ -16185,63 +16469,43 @@
       return;
     }
 
-    // 🟡 กรณีแอบรีเฟรชตอนอยู่ใน "เฟสปกติ (Phase 1)" -> สีหน้าปกติแต่ดักไว้ก่อน!
-    playCurseBgm(false);
-    const phase1Lines = resumePhase === "1"
-      ? [
-          {
-            speaker: "Ben",
-            text: "เอ๊ะ... คิดจะหนีไปไหนครับ? มาคุยกันให้จบก่อนสิ...",
-            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-            horror: false, speed: 80
-          },
-          {
-            speaker: "Ben",
-            text: "...ว่าแต่เมื่อกี้เราคุยกันถึงไหนแล้วนะ? อ๋อใช่... สรุปแล้วงานแปลของผมมันมีปัญหาอะไรหรือเปล่าครับ?",
-            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-            horror: false, speed: 78, autoNext: true, autoDelay: 250
-          }
-        ]
-      : [
-          {
-            speaker: "Ben",
-            text: "...อ้าว พิมพ์คำว่า 'ไม่ขอโทษ!' เข้ามาจริงๆ ด้วยสินะครับ ทั้งที่ระบบก็เตือนไปแล้วแท้ๆ...",
-            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-            horror: false, speed: 78
-          },
-          {
-            speaker: "Ben",
-            text: "ผมก็อุตส่าห์นั่งแปลเกมพวกนี้ทีละบรรทัด แก้บั๊ก ตรวจสระลอยจนดึกดื่นแทบไม่ได้นอน... เพื่อให้ทุกคนได้เล่นกันฟรีๆ โดยไม่คิดเงินสักบาท",
-            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-            horror: false, speed: 75
-          },
-          {
-            speaker: "Ben",
-            text: "แต่คุณกลับกดให้ 1 ดาวรัวๆ ทุกข้อ ไม่แม้แต่จะพิมพ์บอกเหตุผลสักคำ... ช่วยบอกผมทีเถอะครับ สรุปแล้วงานแปลของผมมันมีปัญหาอะไรหรือเปล่า?",
-            idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
-            horror: false, speed: 78, autoNext: true, autoDelay: 250
-          }
-        ];
+    // 🟡 เฟส 1 (ปกติ หรือ รีเฟรชกลับมาต่อจากบรรทัดเดิมเป๊ะๆ ไม่ข้าม!)
+    playCursePhaseMusic(1);
+    const p1Base = [
+      {
+        speaker: "Ben",
+        text: "...อ้าว พิมพ์คำว่า 'ไม่ขอโทษ!' เข้ามาจริงๆ ด้วยสินะครับ ทั้งที่ระบบก็เตือนไปแล้วแท้ๆ...",
+        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+        horror: false, speed: 78, onStart: () => { try { localStorage.setItem(CK_LINE_KEY, "0"); } catch(e){} }
+      },
+      {
+        speaker: "Ben",
+        text: "ผมก็อุตส่าห์นั่งแปลเกมพวกนี้ทีละบรรทัด แก้บั๊ก ตรวจสระลอยจนดึกดื่นแทบไม่ได้นอน... เพื่อให้ทุกคนได้เล่นกันฟรีๆ โดยไม่คิดเงินสักบาท",
+        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+        horror: false, speed: 75, onStart: () => { try { localStorage.setItem(CK_LINE_KEY, "1"); } catch(e){} }
+      },
+      {
+        speaker: "Ben",
+        text: "แต่คุณกลับกดให้ 1 ดาวรัวๆ ทุกข้อ ไม่แม้แต่จะพิมพ์บอกเหตุผลสักคำ... ช่วยบอกผมทีเถอะครับ สรุปแล้วงานแปลของผมมันมีปัญหาอะไรหรือเปล่า?",
+        idle: "images/curse_1.png", talkA: "images/curse_2.png", talkB: "images/curse_3.png",
+        horror: false, speed: 78, autoNext: true, autoDelay: 250, onStart: () => { try { localStorage.setItem(CK_LINE_KEY, "2"); } catch(e){} }
+      }
+    ];
 
-    playCurseSequence(phase1Lines, () => {
+    const phase1Seq = resumePhase === "1"
+      ? [getReloadScoldLine(reloadCount, false), ...p1Base.slice(Math.min(savedLineIdx, p1Base.length - 1))]
+      : p1Base;
+
+    playCurseSequence(phase1Seq, () => {
       showCurseChoices([
-        {
-          label: "ผมไม่ได้ตั้งใจจริงๆ นะ...",
-          onPick: () => enterCursePhase2(usingSynth, "ไม่ได้ตั้งใจ... แต่ก็ตั้งใจกด 1 ดาวทุกข้อ แล้วพิมพ์คำนั้นเข้ามาเองกับมือเลยนะครับ...")
-        },
-        {
-          label: "แค่แกล้งหยอกพี่เบนเล่นๆ เท่านั้นเอง",
-          onPick: () => enterCursePhase2(usingSynth, "ความตั้งใจและความรู้สึกของคนทำ... มันเป็นเรื่องที่เอามาหยอกเล่นกันได้ง่ายๆ แบบนี้เลยเหรอครับ?")
-        },
-        {
-          label: "แค่อยากลองดูว่าจะเกิดอะไรขึ้น...",
-          onPick: () => enterCursePhase2(usingSynth, "อยากรู้มากเลยใช่ไหมครับ ว่าถ้าทำให้ผมเสียใจจนถึงที่สุดแล้ว... จะเกิดอะไรขึ้น?")
-        }
+        { label: "ผมไม่ได้ตั้งใจจริงๆ นะ...", onPick: () => enterCursePhase2("ไม่ได้ตั้งใจ... แต่ก็ตั้งใจกด 1 ดาวทุกข้อ แล้วพิมพ์คำนั้นเข้ามาเองกับมือเลยนะครับ...") },
+        { label: "แค่แกล้งหยอกพี่เบนเล่นๆ เท่านั้นเอง", onPick: () => enterCursePhase2("ความตั้งใจและความรู้สึกของคนทำ... มันเป็นเรื่องที่เอามาหยอกเล่นกันได้ง่ายๆ แบบนี้เลยเหรอครับ?") },
+        { label: "แค่อยากลองดูว่าจะเกิดอะไรขึ้น...", onPick: () => enterCursePhase2("อยากรู้มากเลยใช่ไหมครับ ว่าถ้าทำให้ผมเสียใจจนถึงที่สุดแล้ว... จะเกิดอะไรขึ้น?") }
       ]);
     });
   }
 
-  function enterCursePhase2(usingSynth, replyLine) {
+  function enterCursePhase2(replyLine) {
     const stage = document.getElementById('curseKingStage');
 
     playCurseSequence([
@@ -16257,7 +16521,7 @@
         idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
         horror: true, speed: 120,
         onStart: () => {
-          try { localStorage.setItem(CK_PHASE_KEY, "2"); } catch (e) {}
+          try { localStorage.setItem(CK_PHASE_KEY, "2"); localStorage.setItem(CK_LINE_KEY, "0"); } catch (e) {}
           if (stage) stage.classList.add('phase-horror');
           playCursePhaseMusic(2);
           spawnCurseSysPopup("⚠️ [SYSTEM]: ตรวจพบคำโกหกในระบบ...");
@@ -16268,7 +16532,8 @@
         speaker: "👁️ BGT.EXE // ราชาคำสาป",
         text: "แต่คุณก็ยังเลือกที่จะเหยียบย่ำมันซ้ำแล้วซ้ำเล่า จนเดินมาถึงตรงนี้จนได้... ตอนที่เห็นหน้าเว็บพัง เห็นผมร้องไห้ คุณกำลังนั่งยิ้มอยู่หน้าจอหรือเปล่า?",
         idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
-        horror: true, speed: 105, autoNext: true, autoDelay: 300
+        horror: true, speed: 105, autoNext: true, autoDelay: 300,
+        onStart: () => { try { localStorage.setItem(CK_LINE_KEY, "1"); } catch (e) {} }
       }
     ], () => {
       showCurseChoices([
@@ -16278,47 +16543,58 @@
     });
   }
 
+  // 🩸 ฉากจบใหม่ 3 จังหวะ: หลับตายิ้ม -> ก้มหน้าพูดช้าๆ "1 ดาวแลก 1 ชีวิต" -> พุ่งกางกรงเล็บ + รอยข่วน + 99999
   function enterCurseFinalLie() {
-    // 🔇 ตัดเสียงเพลงเงียบสนิททันทีหลังตอบครั้งที่ 2 (เพิ่มความหลอนก่อนจัมป์สแกร์!)
     stopAllCurseMusic();
-
     spawnCurseSysPopup("🩸 [ERROR]: TRUTH_NOT_FOUND // กำลังปิดระบบ");
-    ckSysInterval = setInterval(() => {
-      spawnCurseSysPopup("👁️ โกหก... คุณกำลังโกหกผมอยู่...");
-    }, 1200);
 
     playCurseSequence([
       {
-        speaker: "👁️ BGT.EXE // ราชาคำสาป",
-        text: "มาพูดคำนั้นเอาตอนนี้... มันสายเกินไปแล้วครับ คำขอโทษที่หลุดออกมาจากปากของคุณน่ะ...",
-        idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
-        horror: true, speed: 125
+        speaker: "Ben",
+        text: "ฮะๆ... สนุกมากเลยใช่ไหมครับ ที่ได้เห็นความพยายามของคนอื่นพังลงต่อหน้าแบบนี้...",
+        idle: "images/curse_6.png", talkA: "images/curse_6.png", talkB: "images/curse_7.png",
+        horror: false, speed: 92
+      },
+      {
+        speaker: "Ben",
+        text: "รู้ไหมครับ... เวลาที่ผมนั่งแปลอยู่คนเดียวตอนดึกๆ ผมไม่เคยคิดจะโกรธใครเลยนะ...",
+        idle: "images/curse_8.png", talkA: "images/curse_8.png", talkB: "images/curse_9.png",
+        horror: false, speed: 105
       },
       {
         speaker: "👁️ BGT.EXE // ราชาคำสาป",
-        text: "โกหก......",
-        idle: "images/curse_4.png", talkA: "images/curse_4.png", talkB: "images/curse_5.png",
-        horror: true, speed: 280, autoNext: true, autoDelay: 450, noSkip: true
+        text: "ในเมื่อคุณอยากให้ 1 ดาวนัก... งั้นผมขอแลกเป็น 1 ชีวิตของคุณแล้วกันนะ~",
+        idle: "images/curse_8.png", talkA: "images/curse_8.png", talkB: "images/curse_9.png",
+        horror: true, speed: 175, autoNext: true, autoDelay: 450, noSkip: true
       }
-    ], () => {
-      // จัมป์สแกร์ซูมหน้า curse_5 เต็มจอ
-      clearInterval(ckFlyInterval);
-      clearInterval(ckSysInterval);
+    ], () => triggerCurseKingJumpscareAndFinish(false));
+  }
 
-      const jsBox = document.getElementById('ckJumpscareFlash');
-      const jsAudio = document.getElementById('curseJumpscareAudio');
-      if (jsBox) jsBox.style.display = 'flex';
-      if (jsAudio) {
-        jsAudio.volume = Math.min(0.65, Math.max(0.3, musicVolume));
-        jsAudio.currentTime = 0;
-        jsAudio.play().catch(() => playExeSilentScareAudio());
-      } else {
-        playExeSilentScareAudio();
-      }
+  function triggerCurseKingJumpscareAndFinish(from5Reloads = false) {
+    clearInterval(ckFlyInterval);
+    clearInterval(ckSysInterval);
 
-      // ตัดจบและปลดล็อก (ล้างสถานะดักรีเฟรชออก)
-      setTimeout(() => {
-        try { localStorage.removeItem(CK_PHASE_KEY); } catch (e) {}
+    const jsBox = document.getElementById('ckJumpscareFlash');
+    const jsImg = document.getElementById('ckJumpscareImg');
+    const jsAudio = document.getElementById('curseJumpscareAudio');
+    if (jsImg) jsImg.src = "images/curse_10.png";
+    if (jsBox) jsBox.style.display = 'flex';
+    if (jsAudio) {
+      jsAudio.volume = Math.min(0.65, Math.max(0.3, musicVolume));
+      jsAudio.currentTime = 0;
+      jsAudio.play().catch(() => playExeSilentScareAudio());
+    } else {
+      playExeSilentScareAudio();
+    }
+
+    setTimeout(() => {
+      playClawAndDamage99999(() => {
+        try {
+          localStorage.removeItem(CK_PHASE_KEY);
+          localStorage.removeItem(CK_LINE_KEY);
+          localStorage.removeItem(CK_RELOAD_KEY);
+        } catch (e) {}
+        document.title = "🎄 แบบประเมินคุณภาพการแปลภาษาไทยในเกม | Ben the Game Translator";
         if (jsBox) jsBox.style.display = 'none';
         const stage = document.getElementById('curseKingStage');
         if (stage) {
@@ -16354,17 +16630,17 @@
         const fTitle = document.getElementById('forgivenTitle');
         const fDesc = document.getElementById('forgivenDesc');
         if (fIcon) fIcon.textContent = "🦊✨";
-        if (fTitle) fTitle.textContent = "เกิดอะไรขึ้นนิ ชั่งเถอะ ;3";
+        if (fTitle) fTitle.textContent = from5Reloads ? "หนีไม่พ้นหรอกนะ... ;3" : "เกิดอะไรขึ้นนิ ชั่งเถอะ ;3";
         if (fDesc) {
           fDesc.textContent =
-            "เอ๊ะ เมื่อกี้เหมือนเว็บจะกระตุกนิดหน่อยนะ~ ชั่งเถอะ! ยินดีด้วยครับ คุณปลดล็อกยศและกรอบลับระดับสูงสุด [👑👁️ ราชาคำสาป] (มีลูกตากระพริบในกรอบ!) ถาวรแล้ว เข้าไปลองใส่ในหน้าแต่งโปรไฟล์ได้เลยนะ ;3";
+            "เอ๊ะ เมื่อกี้เหมือนเว็บจะกระตุกนิดหน่อยนะ~ ชั่งเถอะ! ยินดีด้วยครับ คุณปลดล็อกยศและกรอบลับระดับสูงสุด [👑👁️ ราชาคำสาป] ถาวรแล้ว เข้าไปลองใส่ในหน้าแต่งโปรไฟล์ได้เลยนะ ;3";
         }
         if (currentUser) applyProfileToUI(currentUser);
-      }, 850);
-    });
+      });
+    }, 650);
   }
 
-  // 👁️ เช็กทันทีตอนเปิดเว็บ/รีเฟรช: ถ้าแอบรีเฟรชหนีค้างอยู่ ให้ดึงกลับมาคุยต่อทันที!
+  // 👁️ เช็กทันทีตอนเปิดเว็บ/รีเฟรช: ดึงกลับเข้าฉากและต่อจากบรรทัดเดิมเป๊ะๆ!
   window.addEventListener("load", () => {
     try {
       const savedPhase = localStorage.getItem(CK_PHASE_KEY);
