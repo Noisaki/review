@@ -12928,7 +12928,7 @@
   initSnow();
 
   function animateSnow() {
-    if (!document.hidden && (typeof genkiFxEnabled === 'undefined' || genkiFxEnabled)) {
+    if (!document.hidden && genkiFxEnabled) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < snowflakes.length; i++) {
         snowflakes[i].update();
@@ -12937,7 +12937,7 @@
     }
     requestAnimationFrame(animateSnow);
   }
-  animateSnow();
+  requestAnimationFrame(animateSnow);
 
   // =========================================
   // 5. พิมพ์ดีด & รายชื่อเกมครบ 12 เกม
@@ -15814,8 +15814,9 @@
           showToast("⚠️ ไฟล์รูปสลิปไม่ถูกต้อง");
           return;
         }
-        const w = window.open("", "_blank", "noopener,noreferrer");
+        const w = window.open("", "_blank");
         if (w) {
+          w.opener = null;
           const fullImg = w.document.createElement("img");
           fullImg.src = item.slipImg;
           fullImg.style.maxWidth = "100%";
