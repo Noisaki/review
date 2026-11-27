@@ -9229,6 +9229,7 @@
       padding-right: 4px;
     }
     .xt-user-card {
+      flex-shrink: 0;
       position: relative;
       border-radius: 16px;
       overflow: hidden;
@@ -22915,7 +22916,7 @@
   // 🔄📢 ระบบแจ้งเตือนเว็บอัปเดตอัตโนมัติ (เพิ่มเลข SITE_BUILD_VER ทุกครั้งที่อัปเว็บ!)
   // =========================================================================
   (function initSiteUpdateNotifier() {
-    const SITE_BUILD_VER = 4; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
+    const SITE_BUILD_VER = 5; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
 
     const banner = document.createElement('div');
     banner.id = 'bgtUpdateBanner';
@@ -23296,14 +23297,17 @@
       saveXmasWorkshopLocal();
 
       const otherIds = Object.keys(usersCache || {}).filter(id => id !== uid);
-      let targetUid = null;
-      let receiverName = "ชุมชน BGT";
-      if (_selectedTargetUid !== "random" && usersCache[_selectedTargetUid]) {
-        targetUid = _selectedTargetUid;
-        receiverName = usersCache[targetUid].customName || usersCache[targetUid].name || "เพื่อนสมาชิก";
+      const isSpecific = _selectedTargetUid !== "random" && usersCache[_selectedTargetUid];
+      const recipientCounts = {}; // { targetUid: จำนวนกล่องที่ได้ }
+
+      if (isSpecific) {
+        recipientCounts[_selectedTargetUid] = qty;
       } else if (otherIds.length > 0) {
-        targetUid = otherIds[Math.floor(Math.random() * otherIds.length)];
-        receiverName = usersCache[targetUid].customName || usersCache[targetUid].name || "เพื่อนสมาชิก";
+        // 🎲 สุ่มแยกทีละกล่อง (1 กล่อง = สุ่ม 1 คน กระจายให้เพื่อนๆ หลายคน!)
+        for (let i = 0; i < qty; i++) {
+          const randId = otherIds[Math.floor(Math.random() * otherIds.length)];
+          recipientCounts[randId] = (recipientCounts[randId] || 0) + 1;
+        }
       }
 
       const drops = [];
@@ -23321,16 +23325,19 @@
       updates[`users/${uid}/pawPoints`]       = firebase.database.ServerValue.increment(totalPts);
 
       db.ref().update(updates).then(() => {
-        if (targetUid) {
-          const senderName = currentUser.displayName || currentUser.name || "ซานต้าลึกลับ";
-          const inboxRef = db.ref(`users/${targetUid}/xmasInbox`);
+        const senderName = currentUser.displayName || currentUser.name || "ซานต้าลึกลับ";
+        const recipientUids = Object.keys(recipientCounts);
+
+        // ส่งเข้ากล่องจดหมายของเพื่อนแต่ละคนที่สุ่มได้
+        recipientUids.forEach(tUid => {
+          const inboxRef = db.ref(`users/${tUid}/xmasInbox`);
           inboxRef.once("value").then(snap => {
             const cur = snap.val() || {};
             if (Object.keys(cur).length < 20) {
-              inboxRef.push({ fromName: senderName, qty: Math.min(3, qty), ts: Date.now() }).catch(() => {});
+              inboxRef.push({ fromName: senderName, qty: recipientCounts[tUid], ts: Date.now() }).catch(() => {});
             }
           }).catch(() => {});
-        }
+        });
 
         if (typeof unlockAchievement === "function") {
           unlockAchievement("event_xmas");
@@ -23340,11 +23347,17 @@
           achsToUnlock.forEach(a => unlockAchievement(a));
         }
 
-        showGachaRipAnimation(
-          `🎉 ส่งของขวัญ ${qty} กล่องสำเร็จ!`,
-          `ส่งให้ "${receiverName}" เรียบร้อยแล้ว 🎅✨`,
-          drops
-        );
+        // สร้างข้อความสรุปผู้รับ
+        let subMsg = `ส่งให้ "ชุมชน BGT" เรียบร้อยแล้ว 🎅✨`;
+        if (recipientUids.length === 1) {
+          const tU = usersCache[recipientUids[0]] || {};
+          subMsg = `ส่งให้ "${tU.customName || tU.name || 'เพื่อนสมาชิก'}" เรียบร้อยแล้ว 🎅✨`;
+        } else if (recipientUids.length > 1) {
+          const names = recipientUids.slice(0, 3).map(id => (usersCache[id]?.customName || usersCache[id]?.name || 'สมาชิก'));
+          subMsg = `🎲 สุ่มกระจายให้เพื่อนๆ ${recipientUids.length} คน (${names.join(', ')}${recipientUids.length > 3 ? '...' : ''}) 🎅✨`;
+        }
+
+        showGachaRipAnimation(`🎉 ส่งของขวัญ ${qty} กล่องสำเร็จ!`, subMsg, drops);
         updateProfileEcoUI();
         updateXmasWorkshopUI();
       }).catch(() => {
@@ -23375,21 +23388,36 @@
       }
 
       _v3Lock = Date.now();
-      const firstKey = keys[0];
-      const item = inboxObj[firstKey] || {};
-      const drops = [rollGiftV3(getV3Stats(u), true)];
-      const pts = drops[0].pts;
-
+      // 🎉 ฉีกทีเดียวทั้งหมดที่มี (ไม่เกินโควต้าที่เหลือของวันนี้)
+      const keysToOpen = keys.slice(0, remainQuota);
+      const st = getV3Stats(u);
+      const drops = [];
+      let totalPts = 0;
+      const senderNames = new Set();
       const updates = {};
-      updates[`users/${uid}/xmasInbox/${firstKey}`] = null;
+
+      keysToOpen.forEach(k => {
+        const item = inboxObj[k] || {};
+        if (item.fromName) senderNames.add(item.fromName);
+        const d = rollGiftV3(st, true);
+        drops.push(d);
+        totalPts += d.pts;
+        updates[`users/${uid}/xmasInbox/${k}`] = null;
+      });
+
+      const openCount = keysToOpen.length;
       updates[`users/${uid}/xmasInboxDate`] = today;
-      updates[`users/${uid}/xmasInboxClaimed`] = claimedToday + 1;
-      updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(pts);
+      updates[`users/${uid}/xmasInboxClaimed`] = claimedToday + openCount;
+      updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(totalPts);
 
       db.ref().update(updates).then(() => {
+        const fromList = Array.from(senderNames);
+        const fromText = fromList.length > 0
+          ? `จาก: ${fromList.slice(0, 3).join(', ')}${fromList.length > 3 ? ` และอีก ${fromList.length - 3} คน` : ''}`
+          : 'จากเพื่อนๆ ในชุมชน BGT';
         showGachaRipAnimation(
-          `📬 ฉีกกล่องจาก "${item.fromName || 'เพื่อน BGT'}"!`,
-          `โควต้าเปิดกล่องเพื่อนวันนี้: ${claimedToday + 1}/${INBOX_DAILY_LIMIT} กล่อง`,
+          `📬 ฉีกกล่องจากเพื่อนทั้งหมด ${openCount} กล่อง!`,
+          `${fromText} • โควต้าวันนี้ ${claimedToday + openCount}/${INBOX_DAILY_LIMIT}`,
           drops
         );
         updateProfileEcoUI();
