@@ -29,17 +29,13 @@
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-    html, body {
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-    img {
-      -webkit-user-drag: none;
-      user-drag: none;
+    button, a, .lk-float-btn, .mega-cheer-btn {
+      -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-touch-callout: none;
+      outline: none;
     }
 
     body {
@@ -7995,7 +7991,9 @@
       border-radius: 14px;
       margin-bottom: -14px;
     }
+    
     .bgt-proto-img {
+      pointer-events: none;
       width: 226px;
       height: 226px;
       object-fit: contain;
@@ -8224,6 +8222,528 @@
     .wish-pg-summary strong {
       color: #ffffff;
       font-weight: 700;
+    }
+    /* =========================================
+       📐 ลำดับที่ 3: ขยายจอคอม + ย่อแถบมือถือ + แก้เลย์เอาต์เพี้ยนทั้งหมด
+       ========================================= */
+
+    /* 1. ขยายความกว้างจอคอมให้เต็มตาทั้งเว็บ (จาก 920px -> 1240px) */
+    .container {
+      max-width: 1240px !important;
+    }
+
+    /* 2. แก้ป้ายแจ้งเตือน Toast ไม่ให้เป็นวงรีอ้วน */
+    .toast-msg {
+      border-radius: 16px !important;
+      padding: 11px 18px !important;
+      line-height: 1.45 !important;
+    }
+
+    /* 3. แก้เมนู Dropdown โปรไฟล์ไม่ให้ตัดคำแปลก (หอเกียรติยศอชีฟเม้น / 💠 2.2 พัน) */
+    .nav-dropdown-menu {
+      width: 280px !important;
+    }
+    .nd-item {
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .nd-pill-tag {
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 4. แก้ปุ่มแอดมินบนการ์ดงานแปลไม่ให้ไปทับป้ายสถานะมุมซ้ายบน */
+    .proj-cover-wrap .dev-admin-actions {
+      top: auto !important;
+      bottom: 8px !important;
+      right: 8px !important;
+      background: rgba(15, 23, 42, 0.72);
+      padding: 4px;
+      border-radius: 10px;
+      backdrop-filter: blur(4px);
+    }
+    .proj-pin-chip {
+      top: 10px !important;
+      right: 10px !important;
+    }
+
+    /* 5. จัดระเบียบหน้าล็อกอินมือถือ (กันแถบปุ่ม EN/เอฟเฟค/🌙 ทับป้าย 🎮 LOGIN) */
+    @media (max-width: 900px) {
+      .lg-top-controls {
+        top: 12px !important;
+        right: 12px !important;
+        left: 12px !important;
+        justify-content: flex-end;
+        gap: 6px !important;
+      }
+      .lg-fx-pill {
+        padding: 6px 11px !important;
+        font-size: 0.76rem !important;
+      }
+      .lg-theme-circle {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 1rem !important;
+      }
+      .lg-right {
+        padding-top: 64px !important; /* ดันกล่อง LOGIN ลงมาพ้นแถบปุ่มด้านบน */
+      }
+      .lg-auth-btn {
+        font-size: 0.88rem !important;
+        padding: 12px 12px !important;
+        white-space: nowrap;
+      }
+    }
+
+    /* 6. ปรับมือถือให้กะทัดรัด ไม่ต้องเลื่อนจอยาวเป็นกิโล */
+    @media (max-width: 780px) {
+      /* ย่อแถบเพลง & ปุ่มตั้งค่าด้านบนให้บางลง ไม่กินพื้นที่ครึ่งจอ */
+      .floating-controls {
+        gap: 5px !important;
+        margin-bottom: 10px !important;
+      }
+      .music-player-pill {
+        width: 100%;
+        justify-content: space-between;
+        padding: 5px 10px !important;
+        gap: 5px !important;
+      }
+      .music-toggle-btn {
+        padding: 4px 9px !important;
+        font-size: 0.74rem !important;
+      }
+      .volume-slider {
+        width: 58px !important;
+      }
+      .pill-control-btn {
+        padding: 5px 10px !important;
+        font-size: 0.73rem !important;
+      }
+
+      /* การ์ดเลือกเกมหน้าประเมิน -> เรียง 2 คอลัมน์บนมือถือ (ลดความยาวลงครึ่งนึง!) */
+      .game-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .game-title {
+        padding: 9px 8px !important;
+        font-size: 0.8rem !important;
+      }
+
+      /* แก้ตาราง Top 5 กิจกรรมโดนบีบจนชื่อและยศขาด */
+      #lkEventTopList .lb-row {
+        flex-wrap: wrap !important;
+        padding: 9px 10px !important;
+      }
+      #lkEventTopList .lb-meta {
+        flex: 1 1 55% !important;
+        min-width: 130px !important;
+      }
+      #lkEventTopList .lb-score {
+        width: 100% !important;
+        text-align: right;
+        padding-top: 4px;
+        margin-top: 2px;
+        border-top: 1px dashed rgba(148, 163, 184, 0.25);
+        font-size: 0.84rem !important;
+      }
+    }
+
+    /* 7. สไตล์ปุ่มพับเก็บแผงแอดมิน (สะอาด ไม่เกะกะ!) */
+    .bgt-admin-collapse-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      color: #fde047;
+      border: 1.5px solid rgba(251, 191, 36, 0.55);
+      border-radius: 12px;
+      padding: 9px 14px;
+      margin-bottom: 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .bgt-admin-collapse-btn:hover {
+      filter: brightness(1.12);
+    }
+    /* =========================================
+       ✨ ลำดับที่ 4: อัปเกรดดีไซน์มีมิติ (3D Depth) + แก้กล่องขาวโดดในโหมดมืด
+       ========================================= */
+
+    /* 1. เพิ่มมิติให้การ์ดหลักทุกใบในโหมดมืด (ไล่เฉด + ขอบแสงสะท้อนด้านบน + เงาลึก) */
+    body.bgt-dark-mode:not(.horror-mode) .header-card,
+    body.bgt-dark-mode:not(.horror-mode) .profile-card,
+    body.bgt-dark-mode:not(.horror-mode) .cheer-spotlight-card,
+    body.bgt-dark-mode:not(.horror-mode) .podium-card,
+    body.bgt-dark-mode:not(.horror-mode) .lb-card,
+    body.bgt-dark-mode:not(.horror-mode) .section-card,
+    body.bgt-dark-mode:not(.horror-mode) .donate-card,
+    body.bgt-dark-mode:not(.horror-mode) .bgt-row-section {
+      background: linear-gradient(160deg, rgba(24, 30, 52, 0.96) 0%, rgba(13, 17, 32, 0.98) 100%) !important;
+      border: 1.5px solid rgba(56, 189, 248, 0.28) !important;
+      box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+    }
+
+    body.bgt-dark-mode:not(.horror-mode) .bgt-stat-card {
+      background: linear-gradient(145deg, rgba(28, 35, 62, 0.95), rgba(15, 20, 38, 0.98)) !important;
+      border: 1.5px solid rgba(56, 189, 248, 0.25) !important;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .bgt-stat-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, 0.6) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .bgt-stat-lbl {
+      color: #94a3b8 !important;
+    }
+
+    /* 2. แก้กล่องข้อความ Ho Ho Ho~ หน้าหลัก (เดิมสีขาวจั๊วะ -> กระจกเข้มขอบทอง/ฟ้า) */
+    body.bgt-dark-mode:not(.horror-mode) .vn-dialogue-box {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.94)) !important;
+      border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+      color: #e2e8f0 !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 3. แก้การ์ดประเมินเกม + ปุ่มคะแนน + กล่องสรุปคะแนน + ช่องพิมพ์ในโหมดมืด */
+    body.bgt-dark-mode:not(.horror-mode) .game-card {
+      background: linear-gradient(160deg, #1a2238, #111626) !important;
+      border-color: rgba(148, 163, 184, 0.24) !important;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    body.bgt-dark-mode:not(.horror-mode) .game-title {
+      color: #f1f5f9 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .game-option input[type="radio"]:checked + .game-card {
+      background: linear-gradient(160deg, #2d1626, #1a1020) !important;
+      border-color: #fb7185 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .rating-btn span {
+      background: #161d31 !important;
+      border-color: rgba(148, 163, 184, 0.3) !important;
+      color: #cbd5e1 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .total-score-card {
+      background: linear-gradient(145deg, #161d31, #0f1424) !important;
+      border-color: rgba(56, 189, 248, 0.3) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .total-score-label { color: #f8fafc !important; }
+    body.bgt-dark-mode:not(.horror-mode) .total-score-subtext { color: #94a3b8 !important; }
+    body.bgt-dark-mode:not(.horror-mode) textarea {
+      background: #0d1220 !important;
+      border-color: rgba(148, 163, 184, 0.3) !important;
+      color: #f8fafc !important;
+    }
+
+    /* 4. แก้การ์ดหน้างานแปล (Translation Projects) ไม่ให้เป็นสีขาวโดด */
+    body.bgt-dark-mode:not(.horror-mode) .proj-filter-btn:not(.active) {
+      background: #161d31 !important;
+      border-color: rgba(148, 163, 184, 0.28) !important;
+      color: #cbd5e1 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .proj-card {
+      background: linear-gradient(165deg, #1a2138 0%, #101524 100%) !important;
+      border-color: rgba(251, 191, 36, 0.4) !important;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .proj-title { color: #fde68a !important; }
+    body.bgt-dark-mode:not(.horror-mode) .proj-progress-box {
+      background: rgba(15, 23, 42, 0.72) !important;
+      border-color: rgba(251, 191, 36, 0.28) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .proj-progress-top { color: #fde047 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .proj-progress-track { background: #090d1a !important; }
+    body.bgt-dark-mode:not(.horror-mode) .proj-meta-list,
+    body.bgt-dark-mode:not(.horror-mode) .proj-meta-list strong { color: #cbd5e1 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .proj-note-box {
+      background: rgba(15, 23, 42, 0.65) !important;
+      color: #cbd5e1 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .proj-media-btn {
+      background: #1e293b !important;
+      border-color: rgba(148, 163, 184, 0.3) !important;
+      color: #e2e8f0 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .proj-footer {
+      background: rgba(9, 13, 26, 0.65) !important;
+      border-top-color: rgba(251, 191, 36, 0.25) !important;
+    }
+
+    /* 5. แก้การ์ดหน้าผู้พัฒนา (Developers) ให้เป็นโทนมืดหรูมีมิติ */
+    body.bgt-dark-mode:not(.horror-mode) .dev-patron-info-card {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.9), rgba(23, 37, 84, 0.9)) !important;
+      border-color: rgba(251, 191, 36, 0.5) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .dev-patron-info-card div { color: #e2e8f0 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .dev-card {
+      background: linear-gradient(165deg, #1a2138 0%, #101524 100%) !important;
+      border-color: rgba(251, 191, 36, 0.45) !important;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .dev-name { color: #fde68a !important; }
+    body.bgt-dark-mode:not(.horror-mode) .dev-desc { color: #cbd5e1 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .dev-team-box {
+      background: rgba(15, 23, 42, 0.65) !important;
+      border-color: rgba(251, 191, 36, 0.35) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .dev-team-title { color: #fde047 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .dev-team-member { color: #f8fafc !important; }
+    body.bgt-dark-mode:not(.horror-mode) .dev-team-duty {
+      background: #1e293b !important;
+      border-color: rgba(251, 191, 36, 0.3) !important;
+      color: #fde68a !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .dev-links-footer,
+    body.bgt-dark-mode:not(.horror-mode) .dev-interact-bar,
+    body.bgt-dark-mode:not(.horror-mode) .dev-comment-drawer {
+      background: rgba(9, 13, 26, 0.72) !important;
+      border-top-color: rgba(251, 191, 36, 0.25) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .dev-comment-toggle-btn {
+      background: #1e293b !important;
+      color: #fde68a !important;
+      border-color: rgba(251, 191, 36, 0.45) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .dev-comment-item {
+      background: #161d31 !important;
+      border-color: rgba(148, 163, 184, 0.22) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .dev-comment-author { color: #38bdf8 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .dev-comment-text { color: #e2e8f0 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .dev-comment-input {
+      background: #0d1220 !important;
+      border-color: rgba(251, 191, 36, 0.4) !important;
+      color: #f8fafc !important;
+    }
+
+    /* 6. แก้โซน Donate & กล่อง Bio โปรไฟล์ & แถวอันดับกิจกรรมในโหมดมืด */
+    body.bgt-dark-mode:not(.horror-mode) .donate-desc { color: #cbd5e1 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .role-badge-item {
+      background: linear-gradient(145deg, #1b233a, #121728) !important;
+      border-color: rgba(251, 191, 36, 0.35) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .role-info strong { color: #fde68a !important; }
+    body.bgt-dark-mode:not(.horror-mode) .role-info small { color: #94a3b8 !important; }
+    body.bgt-dark-mode:not(.horror-mode) .discord-ticket-note {
+      background: rgba(16, 185, 129, 0.14) !important;
+      border-color: rgba(52, 211, 153, 0.45) !important;
+      color: #a7f3d0 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .profile-bio-box {
+      background: rgba(15, 23, 42, 0.72) !important;
+      border-color: rgba(56, 189, 248, 0.3) !important;
+      color: #e2e8f0 !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .lk-event-lb-box .lb-row {
+      background: rgba(22, 28, 48, 0.92) !important;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .lb-row.rank-1 .lb-name,
+    body.bgt-dark-mode:not(.horror-mode) .lb-row.rank-2 .lb-name,
+    body.bgt-dark-mode:not(.horror-mode) .lb-row.rank-3 .lb-name {
+      color: #f8fafc !important;
+    }
+    /* =========================================
+       🎮 ลำดับที่ 5: จัดระเบียบหน้าโปรไฟล์ใหม่สไตล์ Steam (แยกชัด 4 โซน ไม่ยาวเหยียด)
+       ========================================= */
+
+    /* ซ่อนป้ายแคปซูลยาวๆ เดิมบนการ์ดโปรไฟล์ (คงไว้เฉพาะยศหลัก 1 อัน) */
+    .bgt-roles-zone #profileHorrorPill,
+    .bgt-roles-zone #profileDevPatronPill,
+    .bgt-roles-zone #profileLkEventPill,
+    .bgt-roles-zone #profileAutoClickPill,
+    .bgt-roles-zone #profileTitlePill {
+      display: none !important;
+    }
+
+    /* 1. วงกลมเลเวลสไตล์ Steam (มุมขวาบนของการ์ดโปรไฟล์) */
+    .bgt-steam-lv-wrap {
+      position: absolute;
+      top: 12px;
+      right: 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 3;
+    }
+    .bgt-steam-lv-label {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+    .bgt-steam-lv-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      background: #0f172a;
+      border: 2.5px solid #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .bgt-steam-lv-circle:hover {
+      transform: scale(1.08);
+    }
+
+    /* 2. แถบฉายาที่เลือกสวมใส่ (1 อัน) + ปุ่มเปลี่ยนฉายา */
+    .bgt-equipped-title-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 6px 0 8px;
+    }
+    .bgt-equipped-title-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #bae6fd;
+    }
+    body:not(.bgt-dark-mode) .bgt-equipped-title-chip {
+      background: #eef2ff;
+      border-color: #a5b4fc;
+      color: #3730a3;
+    }
+    .bgt-swap-title-btn {
+      background: rgba(148, 163, 184, 0.16);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+      border-radius: 8px;
+      padding: 3px 9px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .bgt-swap-title-btn:hover {
+      background: #38bdf8;
+      color: #0f172a;
+      border-color: #38bdf8;
+    }
+
+    /* 3. แถวเข็มกลัดไอคอนจิ๋ว (Steam Badges Row) */
+    .bgt-steam-badges-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 8px 0 6px;
+    }
+    .bgt-steam-badge-slot {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1.5px solid rgba(148, 163, 184, 0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+      transition: transform 0.16s ease, border-color 0.2s ease;
+    }
+    .bgt-steam-badge-slot:hover {
+      transform: translateY(-2px) scale(1.08);
+      border-color: #fde047;
+    }
+    .bgt-steam-badge-slot.b-horror {
+      border-color: #ef4444;
+      background: linear-gradient(145deg, #450a0a, #090000);
+      box-shadow: 0 0 10px rgba(220, 38, 38, 0.45);
+    }
+    .bgt-steam-badge-slot.b-patron {
+      border-color: #f472b6;
+      background: linear-gradient(145deg, #581c87, #1e1b4b);
+      box-shadow: 0 0 10px rgba(236, 72, 153, 0.45);
+    }
+    .bgt-steam-badge-slot.b-event {
+      border-color: #fbbf24;
+      background: linear-gradient(145deg, #78350f, #1e1b4b);
+    }
+    .bgt-steam-badge-slot.b-mystery {
+      border-color: #22c55e;
+      background: linear-gradient(145deg, #064e3b, #020617);
+    }
+
+    @media (max-width: 640px) {
+      .bgt-steam-lv-wrap {
+        top: 8px;
+        right: 12px;
+      }
+      .bgt-steam-lv-label { display: none; }
+      .bgt-steam-lv-circle {
+        width: 38px;
+        height: 38px;
+        font-size: 0.84rem;
+      }
+    }
+    /* =========================================
+       👑 ลำดับที่ 6: ล็อก GPU ให้กรอบรูปหมุนลื่นไม่กระตุก + แอนิเมชันใหม่
+       ========================================= */
+    .avatar-deco-overlay {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+    .avatar-deco-overlay svg {
+      shape-rendering: geometricPrecision;
+    }
+
+    @keyframes decoOrbitSlow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes decoOrbitRev {
+      from { transform: rotate(360deg); }
+      to   { transform: rotate(0deg); }
+    }
+    @keyframes decoBreathe {
+      0%, 100% { transform: scale(1); opacity: 0.92; }
+      50%      { transform: scale(1.045); opacity: 1; }
+    }
+    @keyframes decoTwinkle {
+      0%, 100% { opacity: 0.35; transform: scale(0.82); }
+      50%      { opacity: 1; transform: scale(1.18); }
+    }
+
+    .d6-spin-slow { transform-origin: 50px 50px; animation: decoOrbitSlow 16s linear infinite; }
+    .d6-spin-mid  { transform-origin: 50px 50px; animation: decoOrbitSlow 9s linear infinite; }
+    .d6-spin-rev  { transform-origin: 50px 50px; animation: decoOrbitRev 12s linear infinite; }
+    .d6-breathe   { transform-origin: 50px 50px; animation: decoBreathe 2.8s ease-in-out infinite; }
+    .d6-twinkle   { transform-origin: center; transform-box: fill-box; animation: decoTwinkle 1.8s ease-in-out infinite; }
+
+    @media (max-width: 780px) {
+      .deco-divine, .deco-cosmic, .deco-fire, .deco-pulse {
+        animation: none !important;
+        filter: none !important;
+      }
     }
   </style>
 </head>
@@ -8658,7 +9178,7 @@
           <!-- แถบสถานะแต้มอุ้งเท้า + ขีดจำกัดรายวัน + ช่องอวดอชีฟเม้น -->
           <div class="bgt-points-bar" id="profilePointsBar">
             <span class="bgt-pt-chip" id="profilePointsChip">🐾 0 แต้ม</span>
-            <span class="bgt-pt-chip farm" id="profileFarmChip">⚡ ฟาร์มวันนี้: 0/350 (100%)</span>
+            <span class="bgt-pt-chip farm" id="profileFarmChip">⚡ ฟาร์มวันนี้: 0/2,000 (100%)</span>
             <span class="bgt-pt-chip vote" id="profileVoteQuotaChip">🔥 โหวตปกติ: 0/5</span>
           </div>
           <div class="bgt-ach-showcase" id="profileAchShowcase"></div>
@@ -9183,7 +9703,7 @@
 
     <!-- โซนปุ่มส่ง & ซากปุ่มที่พังทลาย -->
     <div class="submit-zone">
-      <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator 🛷✨</button>
+      <button type="submit" class="submit-btn" id="submitBtn">ส่งแบบประเมินให้ Ben the Game Translator (+100 💠/วัน) 🛷✨</button>
       <div class="destroyed-button-grave" id="destroyedButtonGrave">
         💥 [ ปุ่มส่งแบบประเมินถูกทำลายจนแหลกสลายแล้ว... ] 💥
       </div>
@@ -9347,9 +9867,8 @@
       <span class="bgt-proto-role-pill" id="protoRoleBadge">ผู้ช่วยประจำเว็บ</span>
     </div>
     <button type="button" class="bgt-proto-min-btn" onclick="toggleProtoMinimize(true)" title="พับเก็บ">−</button>
-    <div class="bgt-proto-stage">
+    <div class="bgt-proto-stage" onclick="pokeGlobalProto()" style="cursor:pointer;">
       <img id="globalProtoImg" class="bgt-proto-img" src="images/proto_idle.png" alt="PROTO-AI"
-           onclick="pokeGlobalProto()"
            onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/mascot.png';}">
     </div>
     <div class="bgt-proto-bubble" id="globalProtoBubble" onclick="nextProtoSpeech(true)">
@@ -9698,6 +10217,377 @@
 </div>
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 <script>
+  // =========================================================================
+  // 👑 ลำดับที่ 6: ยกเครื่องกรอบรูปโปรไฟล์ใหม่ทั้งหมด (BGT Original) + แก้กระตุกทุกจุด
+  // =========================================================================
+  (function upgradeAllAvatarFramesAndFixStutter() {
+    const NEW_BGT_FRAMES = {
+      // 🦊 หูจิ้งจอก BGT (หูสองชั้นขยับดุ๊กดิ๊ก + วงแหวนอำพัน + ประกายดาว)
+      fox_ears: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtFoxG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#fb923c"/><stop offset="100%" stop-color="#ea580c"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtFoxG)" stroke-width="3.4"/>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#fed7aa" stroke-width="1.2" stroke-dasharray="6 8" class="d6-spin-slow"/>
+        <g class="deco-wiggle">
+          <path d="M13,37 Q15,10 21,5 Q33,12 40,23 Z" fill="url(#bgtFoxG)" stroke="#7c2d12" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M19,31 Q20,16 23,12 Q30,17 34,24 Z" fill="#fff7ed"/>
+          <path d="M87,37 Q85,10 79,5 Q67,12 60,23 Z" fill="url(#bgtFoxG)" stroke="#7c2d12" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M81,31 Q80,16 77,12 Q70,17 66,24 Z" fill="#fff7ed"/>
+        </g>
+        <circle cx="18" cy="78" r="2.6" fill="#fde047" class="d6-twinkle"/>
+        <circle cx="82" cy="78" r="2.2" fill="#fdba74" class="d6-twinkle"/>
+      </svg>`,
+
+      // 🌸 กลีบซากุระ (วงแหวนคู่สีชมพูมุก + กลีบซากุระหมุนวน 6 กลีบ)
+      sakura: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtSakG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fdf2f8"/><stop offset="50%" stop-color="#f472b6"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtSakG)" stroke-width="3.2"/>
+        <g class="d6-spin-slow">
+          <circle cx="50" cy="50" r="45.5" fill="none" stroke="#fbcfe8" stroke-width="1.4" stroke-dasharray="10 10"/>
+          <path d="M50,2 C54,7 54,12 50,15 C46,12 46,7 50,2 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/>
+          <path d="M50,98 C54,93 54,88 50,85 C46,88 46,93 50,98 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/>
+          <path d="M2,50 C7,46 12,46 15,50 C12,54 7,54 2,50 Z" fill="#f9a8d4" stroke="#db2777" stroke-width="1"/>
+          <path d="M98,50 C93,46 88,46 85,50 C88,54 93,54 98,50 Z" fill="#f9a8d4" stroke="#db2777" stroke-width="1"/>
+          <circle cx="19" cy="19" r="2.8" fill="#fdf2f8"/>
+          <circle cx="81" cy="81" r="2.8" fill="#fdf2f8"/>
+        </g>
+      </svg>`,
+
+      // 🎄 พวงมาลัยคริสต์มาส (กิ่งสนซ้อน + ดาวทองคำ + ลูกบอลประดับ)
+      xmas: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14532d" stroke-width="5.5"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#22c55e" stroke-width="2.6" stroke-dasharray="8 4" class="d6-spin-slow"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#fde047" stroke-width="1.2" stroke-dasharray="3 9" class="d6-spin-rev"/>
+        <polygon class="deco-float" points="50,0 53.5,8.5 62.5,8.5 55.2,14 58,22.5 50,17.2 42,22.5 44.8,14 37.5,8.5 46.5,8.5" fill="#fde047" stroke="#b45309" stroke-width="1.2"/>
+        <circle cx="20" cy="80" r="4" fill="#ef4444" stroke="#fef08a" stroke-width="1.1"/>
+        <circle cx="80" cy="80" r="4" fill="#ef4444" stroke="#fef08a" stroke-width="1.1"/>
+        <circle cx="50" cy="92" r="4.5" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
+      </svg>`,
+
+      // ⚡ ไซเบอร์นีออน (วงแหวน HUD ไซไฟ 3 ชั้นหมุนสวนทางกัน)
+      cyber: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtCybG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="50%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41" fill="none" stroke="url(#bgtCybG)" stroke-width="2.8"/>
+        <g class="d6-spin-mid">
+          <circle cx="50" cy="50" r="45.8" fill="none" stroke="#a855f7" stroke-width="2.6" stroke-dasharray="20 8 5 8"/>
+          <rect x="48" y="1" width="4" height="7" rx="1" fill="#38bdf8"/>
+          <rect x="48" y="92" width="4" height="7" rx="1" fill="#c084fc"/>
+        </g>
+        <g class="d6-spin-rev">
+          <circle cx="50" cy="50" r="37.5" fill="none" stroke="#22d3ee" stroke-width="1.4" stroke-dasharray="6 14"/>
+          <circle cx="12.5" cy="50" r="2.6" fill="#22d3ee"/>
+          <circle cx="87.5" cy="50" r="2.6" fill="#e879f9"/>
+        </g>
+      </svg>`,
+
+      // 🔥 เพลิงโลกันตร์ (วงแหวนลาวา + เปลวไฟโอบล้อม + สะเก็ดไฟหมุน)
+      fire: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtFirG" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#991b1b"/><stop offset="45%" stop-color="#ef4444"/><stop offset="80%" stop-color="#f97316"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtFirG)" stroke-width="4.2"/>
+        <path class="d6-breathe" d="M11,66 Q2,46 16,28 Q14,46 23,54 Z M89,66 Q98,46 84,28 Q86,46 77,54 Z M35,93 Q50,74 65,93 Q50,86 35,93 Z" fill="url(#bgtFirG)"/>
+        <g class="d6-spin-mid">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="10 14"/>
+          <circle cx="20" cy="18" r="2.5" fill="#fde047"/>
+          <circle cx="82" cy="22" r="2.2" fill="#f97316"/>
+          <circle cx="78" cy="82" r="2.5" fill="#fde047"/>
+        </g>
+      </svg>`,
+
+      // 🩸 คำสาป 1 ดาว (วงแหวนทมิฬ + หยดเลือด + ดวงตาแดง)
+      cursed: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#7f1d1d" stroke-width="4.4"/>
+        <circle cx="50" cy="50" r="45.8" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="12 6 3 6" class="d6-spin-rev"/>
+        <path d="M21,80 Q21,98 25,98 Q29,98 29,80 Z M71,79 Q71,99 75,99 Q79,99 79,79 Z" fill="#dc2626"/>
+        <g class="curse-king-eye">
+          <ellipse cx="50" cy="9" rx="10" ry="5.5" fill="#090000" stroke="#ef4444" stroke-width="1.6"/>
+          <circle cx="50" cy="9" r="2.8" fill="#ef4444"/>
+        </g>
+      </svg>`,
+
+      // 👁️‍🗨️ เนตรอาฆาต 2 ดาว
+      cursed_2: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#450a0a" stroke-width="5"/>
+        <circle cx="50" cy="50" r="45.8" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="14 5 4 5" class="d6-spin-rev"/>
+        <g class="curse-king-eye"><ellipse cx="50" cy="7.5" rx="11.5" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="7.5" r="3.2" fill="#ef4444"/></g>
+        <g class="curse-king-eye"><ellipse cx="50" cy="92.5" rx="11.5" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="92.5" r="3.2" fill="#ef4444"/></g>
+      </svg>`,
+
+      // 💀🩸 โซ่ตรวนวิญญาณ 3 ดาว
+      cursed_3: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#090000" stroke-width="6"/>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#dc2626" stroke-width="2.6" stroke-dasharray="8 4" class="d6-spin-slow"/>
+        <circle cx="50" cy="50" r="46.2" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="18 8" class="d6-spin-mid"/>
+        <path d="M18,78 Q18,98 22,98 Q26,98 26,78 Z M74,76 Q74,99 78,99 Q82,99 82,76 Z" fill="#dc2626"/>
+        <polygon points="50,0 56,12 44,12" fill="#ef4444" stroke="#000" stroke-width="1.3"/>
+      </svg>`,
+
+      // 🩸👁️‍🗨️ BGT.EXE 4 ดาว
+      cursed_4: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtExeG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#000000"/><stop offset="45%" stop-color="#dc2626"/><stop offset="75%" stop-color="#ef4444"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtExeG)" stroke-width="4.8"/>
+        <circle cx="50" cy="50" r="46.5" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="14 6 3 6" class="d6-spin-mid"/>
+        <circle cx="50" cy="50" r="37.2" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="6 12" class="d6-spin-rev"/>
+        <g class="curse-king-eye"><ellipse cx="50" cy="6.5" rx="13" ry="7" fill="#000" stroke="#ef4444" stroke-width="1.8"/><circle cx="50" cy="6.5" r="3.4" fill="#ff0000"/></g>
+      </svg>`,
+
+      // 👑👁️ ราชาคำสาป (TRUE)
+      curse_king: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtCkG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#090000"/><stop offset="35%" stop-color="#dc2626"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtCkG)" stroke-width="5"/>
+        <circle cx="50" cy="50" r="46.5" fill="none" stroke="#fde047" stroke-width="1.8" stroke-dasharray="14 6 3 6" class="d6-spin-mid"/>
+        <circle cx="50" cy="50" r="37" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="8 10" class="d6-spin-rev"/>
+        <polygon class="deco-float" points="31,15 37,2 45,10 50,0 55,10 63,2 69,15" fill="url(#bgtCkG)" stroke="#fde047" stroke-width="1.4" stroke-linejoin="round"/>
+        <g class="curse-king-eye"><ellipse cx="50" cy="91" rx="13" ry="7" fill="#090000" stroke="#fde047" stroke-width="1.6"/><circle cx="50" cy="91" r="4.2" fill="#dc2626"/><circle cx="50" cy="91" r="1.8" fill="#000"/><circle cx="51.4" cy="89.6" r="0.9" fill="#fff"/></g>
+        <g class="curse-king-eye"><ellipse cx="9.5" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.4"/><circle cx="9.5" cy="50" r="2.6" fill="#dc2626"/></g>
+        <g class="curse-king-eye"><ellipse cx="90.5" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.4"/><circle cx="90.5" cy="50" r="2.6" fill="#dc2626"/></g>
+      </svg>`,
+
+      // 👑 มงกุฎผู้พิทักษ์ VIP (ปีกทองคำคู่ + วงแหวนศักดิ์สิทธิ์ + มงกุฎอัญมณี)
+      celestial: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtVipG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="35%" stop-color="#fde047"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs>
+        <path d="M12,58 Q-3,44 6,27 Q13,38 19,40 Q9,29 17,19 Q19,32 25,36" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.2"/>
+        <path d="M88,58 Q103,44 94,27 Q87,38 81,40 Q91,29 83,19 Q81,32 75,36" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.2"/>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtVipG)" stroke-width="4"/>
+        <g class="d6-spin-slow">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="#fef08a" stroke-width="1.6" stroke-dasharray="5 7"/>
+          <polygon points="50,1 53,5 50,9 47,5" fill="#fffbeb"/>
+          <polygon points="50,91 53,95 50,99 47,95" fill="#fde047"/>
+        </g>
+        <g class="deco-float">
+          <polygon points="30,17 37,3 45,12 50,1 55,12 63,3 70,17" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="50" cy="11" r="2.8" fill="#38bdf8" stroke="#fff" stroke-width="0.9"/>
+          <circle cx="39" cy="13" r="1.9" fill="#f43f5e"/>
+          <circle cx="61" cy="13" r="1.9" fill="#f43f5e"/>
+        </g>
+      </svg>`,
+
+      // 🪷✨ มหาบัวกระทงทอง 2026 (LIMITED)
+      krathong_supreme: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtLkG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="30%" stop-color="#fde047"/><stop offset="65%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#bgtLkG)" stroke-width="4.2"/>
+        <g class="d6-spin-slow">
+          <circle cx="50" cy="50" r="47" fill="none" stroke="#fde047" stroke-width="1.6" stroke-dasharray="4 6"/>
+          <path d="M50,0 Q56,9 50,15 Q44,9 50,0 Z M50,100 Q56,91 50,85 Q44,91 50,100 Z M0,50 Q9,44 15,50 Q9,56 0,50 Z M100,50 Q91,44 85,50 Q91,56 100,50 Z" fill="#f472b6" stroke="#fef08a" stroke-width="1"/>
+        </g>
+        <path d="M24,87 Q50,101 76,87" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round"/>
+        <g class="deco-float">
+          <path d="M33,17 L41,8 L50,14 L59,8 L67,17 Q50,22 33,17 Z" fill="#16a34a" stroke="#fef08a" stroke-width="1.2"/>
+          <path d="M39,16 L45,6 L50,13 L55,6 L61,16 Z" fill="#ec4899" stroke="#fbcfe8" stroke-width="0.9"/>
+          <rect x="48.2" y="4" width="3.6" height="10" rx="1.2" fill="#fffbeb"/>
+          <path class="lk-flame" d="M50,-4 Q55,2 50,7 Q45,2 50,-4 Z" fill="#fde047"/>
+        </g>
+      </svg>`,
+
+      // 🌌👑 จักรพรรดิจักรวาล BGT (ADMIN MYTHIC — วงแหวนกาแล็กซี 3 ชั้น + มงกุฎเพชร)
+      admin_cosmic: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtAdmG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="33%" stop-color="#a855f7"/><stop offset="66%" stop-color="#ec4899"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#bgtAdmG)" stroke-width="4.6"/>
+        <g class="d6-spin-mid">
+          <circle cx="50" cy="50" r="46.8" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="16 8 4 8"/>
+          <polygon points="50,0 53.5,5 50,10 46.5,5" fill="#ffffff"/>
+          <polygon points="50,90 53.5,95 50,100 46.5,95" fill="#38bdf8"/>
+        </g>
+        <g class="d6-spin-rev">
+          <circle cx="50" cy="50" r="37.8" fill="none" stroke="#f472b6" stroke-width="1.6" stroke-dasharray="6 10"/>
+          <circle cx="13" cy="50" r="3" fill="#38bdf8"/>
+          <circle cx="87" cy="50" r="3" fill="#fde047"/>
+        </g>
+        <g class="deco-float">
+          <polygon points="28,16 36,2 44,11 50,-1 56,11 64,2 72,16" fill="url(#bgtAdmG)" stroke="#fef08a" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="50" cy="10" r="3.2" fill="#ffffff" stroke="#38bdf8" stroke-width="1"/>
+        </g>
+      </svg>`
+    };
+
+    // อัปเดต SVG กรอบรูปใหม่ทั้งหมดเข้า AVATAR_DECORATIONS
+    if (Array.isArray(AVATAR_DECORATIONS)) {
+      AVATAR_DECORATIONS.forEach(item => {
+        if (NEW_BGT_FRAMES[item.id]) item.svg = NEW_BGT_FRAMES[item.id];
+      });
+    }
+
+    // 🧹 แก้กระตุกทุกจุดบนกระดานจัดอันดับ: ถ้าอันดับคนเดิมยังไม่เปลี่ยน ให้อัปเดตเฉพาะตัวเลขคะแนน ไม่ลบสร้างแถวใหม่!
+    const _origRenderPaginatedLb = renderPaginatedLb;
+    renderPaginatedLb = function(type, listElId, pagerElId, sortedEntries, formatterFn, emptyMsg) {
+      const listEl = document.getElementById(listElId);
+      if (!listEl) return;
+
+      const totalPages = Math.max(1, Math.ceil(sortedEntries.length / LB_PER_PAGE));
+      const curPage = Math.min(Math.max(1, lbPages[type] || 1), totalPages);
+      const startIdx = (curPage - 1) * LB_PER_PAGE;
+      const pageItems = sortedEntries.slice(startIdx, startIdx + LB_PER_PAGE);
+
+      // สร้างลายเซ็นโครงสร้างของหน้านี้ (ถ้าคน+กรอบรูป+ชื่อยังเหมือนเดิม -> ไม่อัปเดต DOM ใหม่)
+      const myUid = currentUser ? currentUser.id : "";
+      const structKey = curPage + "|" + myUid + "|" + pageItems.map(e => {
+        const u = e.u || {};
+        return `${e.id}:${u.avatarDecoration || ""}:${u.customName || u.name || ""}:${u.roleTier || 0}`;
+      }).join(",");
+
+      if (sortedEntries.length > 0 && listEl.dataset.lbStructKey === structKey) {
+        // อัปเดตเฉพาะตัวเลขคะแนนในแถวเดิม -> กรอบรูปหมุนลื่น 100% ไม่รีเซ็ตกลับ 0 องศา!
+        const rows = listEl.querySelectorAll('.lb-row');
+        pageItems.forEach((e, i) => {
+          if (rows[i]) {
+            const sc = rows[i].querySelector('.lb-score');
+            if (sc) sc.textContent = formatterFn(e.u);
+          }
+        });
+        return;
+      }
+
+      listEl.dataset.lbStructKey = structKey;
+      _origRenderPaginatedLb(type, listElId, pagerElId, sortedEntries, formatterFn, emptyMsg);
+    };
+  })();
+  // =========================================================================
+  // 🎮 ลำดับที่ 5: ระบบโปรไฟล์สไตล์ Steam (วงกลมเลเวล + เข็มกลัดจิ๋ว + เลือกสวมฉายา 1 อัน)
+  // =========================================================================
+  function getUnlockedTitlesForUser(uid, uData) {
+    const u = uData || {};
+    const clicks = Number(u.heartsClicked) || 0;
+    const lvInfo = getLevelData(clicks);
+    const list = [
+      { id: "level", label: lvInfo.title, desc: `ฉายาจากเลเวลปัจจุบัน (Lv.${formatNum(lvInfo.level)})` }
+    ];
+
+    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, uid) : 0;
+    const hMeta = typeof getHorrorRoleMeta === "function" ? getHorrorRoleMeta(hTier) : null;
+    if (hMeta) list.push({ id: "horror", label: hMeta.name, desc: "ฉายาลับจากคำสาป 1 ดาว" });
+
+    if (u.devSupporter) {
+      list.push({ id: "patron", label: "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』", desc: "ผู้สนับสนุนผู้พัฒนาต้นฉบับ" });
+    }
+
+    const lkInfo = typeof getLoyKrathongRankInfo === "function" ? getLoyKrathongRankInfo(uid) : null;
+    if (lkInfo) list.push({ id: "lk2026", label: lkInfo.label, desc: "ฉายาถาวรจากกิจกรรมลอยกระทง 2026" });
+
+    const acTier = Math.max(
+      Number(u.autoClickTier) || 0,
+      uid ? Number(localStorage.getItem("bgt_ac_mystery_tier_" + uid) || 0) : 0
+    );
+    const acInfo = typeof getAutoClickMysteryInfo === "function" ? getAutoClickMysteryInfo(acTier) : null;
+    if (acInfo) list.push({ id: "ac", label: acInfo.name, desc: "ฉายาปริศนาลับ" });
+
+    return list;
+  }
+
+  function cycleEquippedTitle() {
+    if (!currentUser || !db) return;
+    playClickSound();
+    const uid = currentUser.id;
+    const u = usersCache[uid] || {};
+    const titles = getUnlockedTitlesForUser(uid, u);
+    if (titles.length <= 1) {
+      showToast("✨ ตอนนี้คุณมี 1 ฉายา — ลองร่วมกิจกรรมหรือหาความลับเพื่อปลดล็อกฉายาเพิ่มนะ!");
+      return;
+    }
+
+    const curId = u.equippedTitleId || "level";
+    const curIdx = titles.findIndex(t => t.id === curId);
+    const next = titles[(curIdx + 1) % titles.length];
+
+    if (!usersCache[uid]) usersCache[uid] = {};
+    usersCache[uid].equippedTitleId = next.id;
+    db.ref(`users/${uid}/equippedTitleId`).set(next.id).catch(() => {});
+    renderSteamProfileLayout(currentUser);
+    showToast(`🏷️ เปลี่ยนฉายาที่สวมใส่เป็น: ${next.label}`);
+  }
+
+  function renderSteamProfileLayout(profile) {
+    if (!profile) return;
+    const uid = profile.id;
+    const u = (usersCache && usersCache[uid]) ? usersCache[uid] : {};
+    const bodyEl = document.querySelector('.profile-logged-in-body');
+    const infoEl = document.querySelector('#profileLoggedIn .profile-info');
+    if (!bodyEl || !infoEl) return;
+
+    // 1. วงกลมเลเวลสไตล์ Steam มุมขวาบน
+    let lvWrap = document.getElementById('bgtSteamLvWrap');
+    if (!lvWrap) {
+      lvWrap = document.createElement('div');
+      lvWrap.id = 'bgtSteamLvWrap';
+      lvWrap.className = 'bgt-steam-lv-wrap';
+      lvWrap.innerHTML = `<span class="bgt-steam-lv-label">LEVEL</span><div class="bgt-steam-lv-circle" id="bgtSteamLvCircle">1</div>`;
+      bodyEl.appendChild(lvWrap);
+    }
+    const clicks = Number(u.heartsClicked) || (myServerHearts + pendingClicks);
+    const lvInfo = getLevelData(clicks);
+    const circle = document.getElementById('bgtSteamLvCircle');
+    if (circle) {
+      circle.className = `bgt-steam-lv-circle ${lvInfo.rarityClass}`;
+      circle.textContent = formatNum(lvInfo.level);
+      circle.title = `Lv.${formatNum(lvInfo.level)} (${lvInfo.rarityName}) — ${lvInfo.title}`;
+      circle.onclick = () => showToast(`⭐ เลเวล ${formatNum(lvInfo.level)} [${lvInfo.rarityName}] • ${lvInfo.title}`);
+    }
+
+    // 2. แถบฉายาที่เลือกสวมใส่ (1 อัน) + ปุ่มเปลี่ยนฉายา
+    let titleRow = document.getElementById('bgtEquippedTitleRow');
+    if (!titleRow) {
+      titleRow = document.createElement('div');
+      titleRow.id = 'bgtEquippedTitleRow';
+      titleRow.className = 'bgt-equipped-title-row';
+      const rolesZone = infoEl.querySelector('.bgt-roles-zone');
+      if (rolesZone) rolesZone.insertAdjacentElement('afterend', titleRow);
+      else infoEl.appendChild(titleRow);
+    }
+    const titles = getUnlockedTitlesForUser(uid, u);
+    const activeTitle = titles.find(t => t.id === (u.equippedTitleId || "level")) || titles[0];
+    titleRow.innerHTML = `
+      <span class="bgt-equipped-title-chip" title="${activeTitle.desc}">🏷️ ฉายา: ${activeTitle.label}</span>
+      ${titles.length > 1 ? `<button type="button" class="bgt-swap-title-btn" onclick="cycleEquippedTitle()">🔄 เปลี่ยนฉายา (${titles.length})</button>` : ''}
+    `;
+
+    // 3. แถวเข็มกลัดไอคอนจิ๋ว (Steam Badges Row)
+    let badgesRow = document.getElementById('bgtSteamBadgesRow');
+    if (!badgesRow) {
+      badgesRow = document.createElement('div');
+      badgesRow.id = 'bgtSteamBadgesRow';
+      badgesRow.className = 'bgt-steam-badges-row';
+      titleRow.insertAdjacentElement('afterend', badgesRow);
+    }
+
+    const badges = [];
+    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, uid) : 0;
+    const hMeta = typeof getHorrorRoleMeta === "function" ? getHorrorRoleMeta(hTier) : null;
+    if (hMeta) badges.push({ icon: hTier >= 5 ? "👑" : "🩸", cls: "b-horror", title: hMeta.name });
+
+    if (u.devSupporter) {
+      badges.push({ icon: "🕊️", cls: "b-patron", title: "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』" });
+    }
+
+    const lkInfo = typeof getLoyKrathongRankInfo === "function" ? getLoyKrathongRankInfo(uid) : null;
+    if (lkInfo) badges.push({ icon: "🪷", cls: "b-event", title: lkInfo.label });
+
+    const acTier = Math.max(
+      Number(u.autoClickTier) || 0,
+      Number(localStorage.getItem("bgt_ac_mystery_tier_" + uid) || 0)
+    );
+    const acInfo = typeof getAutoClickMysteryInfo === "function" ? getAutoClickMysteryInfo(acTier) : null;
+    if (acInfo) badges.push({ icon: acTier >= 4 ? "💎" : acTier === 3 ? "💸" : acTier === 2 ? "🦾" : "🖱️", cls: "b-mystery", title: acInfo.name });
+
+    badgesRow.innerHTML = "";
+    if (badges.length === 0) {
+      badgesRow.style.display = "none";
+    } else {
+      badgesRow.style.display = "flex";
+      badges.forEach(b => {
+        const slot = document.createElement('button');
+        slot.type = "button";
+        slot.className = `bgt-steam-badge-slot ${b.cls}`;
+        slot.textContent = b.icon;
+        slot.title = b.title;
+        slot.onclick = () => { playClickSound(); showToast(`🎖️ เข็มกลัด: ${b.title}`); };
+        badgesRow.appendChild(slot);
+      });
+    }
+  }
+
+  // เชื่อมเข้ากับ applyProfileToUI อัตโนมัติ
+  const _origApplySteam = applyProfileToUI;
+  applyProfileToUI = function(profile) {
+    _origApplySteam(profile);
+    renderSteamProfileLayout(profile);
+  };
   // =========================================================================
   // ⚙️ ค่าตั้งต้นระบบทั้งหมด (Firebase + Discord OAuth2)
   // =========================================================================
@@ -12192,10 +13082,12 @@
   initSnow();
 
   function animateSnow() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < snowflakes.length; i++) {
-      snowflakes[i].update();
-      snowflakes[i].draw();
+    if (!document.hidden) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < snowflakes.length; i++) {
+        snowflakes[i].update();
+        snowflakes[i].draw();
+      }
     }
     requestAnimationFrame(animateSnow);
   }
@@ -13295,7 +14187,14 @@
       const usersSnap = await db.ref("users").once("value");
       const allUsers = usersSnap.val() || {};
       const userTasks = Object.keys(allUsers).map(uid =>
-        db.ref("users/" + uid).update({ heartsClicked: 0, devHeartsClicked: 0 })
+        db.ref("users/" + uid).update({
+          heartsClicked: 0,
+          devHeartsClicked: 0,
+          pawPoints: 200,
+          ecoFarmToday: 0,
+          ecoVotesToday: 0,
+          wishPointsSpent: 0
+        })
       );
       await Promise.all(userTasks);
     } catch (e) {
@@ -14019,7 +14918,7 @@
     heartBtn.type = "button";
     heartBtn.className = "dev-heart-btn";
     heartBtn.onclick = (e) => devHeartClick(dev.key, e);
-    heartBtn.innerHTML = `❤️ ส่งใจ <span class="dev-heart-pill" id="dev-heart-count-${dev.key}">0</span>`;
+    heartBtn.innerHTML = `🎁 เปย์ใจ (-25 💠) <span class="dev-heart-pill" id="dev-heart-count-${dev.key}">0</span>`;
     interactBar.appendChild(heartBtn);
 
     const commentBtn = document.createElement('button');
@@ -14050,7 +14949,7 @@
     cInput.id = `dev-comment-input-${dev.key}`;
     cInput.className = "dev-comment-input";
     cInput.maxLength = 200;
-    cInput.placeholder = "พิมพ์ให้กำลังใจผู้พัฒนา (สูงสุด 200 ตัวอักษร)...";
+    cInput.placeholder = "พิมพ์ให้กำลังใจผู้พัฒนา (+100 💠/วัน สูงสุด 200 ตัวอักษร)...";
     cInput.onkeydown = (ev) => {
       if (ev.key === "Enter") {
         ev.preventDefault();
@@ -17789,18 +18688,34 @@
     const stage = document.getElementById('curseKingStage');
     if (!stage || stage.dataset.clickBound) return;
     stage.dataset.clickBound = "1";
-    stage.addEventListener('click', (e) => {
+
+    // 🔊 ปลุก AudioContext และเพลงหลอนทันทีที่นิ้วแตะจอ (แก้เสียงเบาหลังรีเฟรชบนมือถือ)
+    stage.addEventListener('pointerdown', () => {
+      try {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      } catch (e) {}
       primeCurseJumpscareAudio();
-      if (e.target.closest('.ck-choice-btn')) return;
+
+      const isPhase2 = stage.classList.contains('phase-horror');
+      const bgmEl = document.getElementById(isPhase2 ? 'curseBgmPhase2Audio' : 'curseBgmAudio');
+      if (bgmEl && bgmEl.paused && ckSynthNodes.length === 0) {
+        bgmEl.volume = Math.min(0.18, Math.max(0.08, musicVolume * 0.35));
+        bgmEl.play().catch(() => {});
+      }
+    }, { passive: true });
+
+    stage.addEventListener('click', (e) => {
+      if (e.target && e.target.closest && e.target.closest('.ck-choice-btn')) return;
       if (ckForceFinishLine) {
-        ckForceFinishLine();
+        const fn = ckForceFinishLine;
+        ckForceFinishLine = null;
+        fn();
       } else if (ckWaitingAdvance) {
-        const nextFn = ckWaitingAdvance;
+        const next = ckWaitingAdvance;
         ckWaitingAdvance = null;
-        const hint = document.getElementById('ckNextHint');
-        if (hint) hint.style.display = 'none';
         playClickSound();
-        nextFn();
+        next();
       }
     });
   })();
@@ -18349,7 +19264,7 @@
     { id: "lv_20",             icon: "🕯️", title: "ผู้จุดไฟแห่งแรงบันดาลใจ",  desc: "สะสมหัวใจจนถึง Lv.20 ขึ้นไป",                    reward: 150, rarity: "common", secret: false },
     { id: "lv_50",             icon: "🎖️", title: "แม่ทัพกองกำลังหัวใจ",     desc: "สะสมหัวใจจนถึง Lv.50 ขึ้นไป",                    reward: 300, rarity: "rare",   secret: false },
     { id: "lv_100",            icon: "👑", title: "ราชวงศ์แห่งกำลังใจ",       desc: "สะสมหัวใจจนถึง Lv.100 ขึ้นไป",                   reward: 600, rarity: "epic",   secret: false },
-    { id: "softcap_farmer",    icon: "⚡", title: "ฟาร์มจนนิ้วล็อก",          desc: "ฟาร์มแต้มกดหัวใจแตะขีดจำกัดสูงสุดของวัน (350+)", reward: 200, rarity: "epic",   secret: false },
+    { id: "softcap_farmer",    icon: "⚡", title: "ฟาร์มจนนิ้วล็อก",          desc: "ฟาร์มแต้มกดหัวใจแตะขีดจำกัดสูงสุดของวัน (2,000+)", reward: 200, rarity: "epic",   secret: false },
     // 🔥 สายชุมชน โหวต & ผู้พัฒนา
     { id: "first_eval",        icon: "📝", title: "นักวิจารณ์มือใหม่",        desc: "ส่งแบบประเมินคุณภาพเกมแปลไทยครั้งแรก",           reward: 150, rarity: "common", secret: false },
     { id: "first_vote",        icon: "🔥", title: "เสียงนี้เพื่อเกมที่รัก",    desc: "ใช้ผลึก BGT โหวตเกมหรือขอเกมครั้งแรก",          reward: 100, rarity: "common", secret: false },
@@ -18368,20 +19283,20 @@
 
   let _farmClickBuf = 0;
   let _pendingFarmPts = 0;
-  let _flushingFarmPts = 0;
   let _farmFlushTimer = null;
   let _localPtsSpendLock = 0;
   let _achPopupTimer = null;
   const _migrationDoneUids = new Set();
   const _claimingAchSet = new Set();
   const _localUnlockedAch = new Set();
+  const DAILY_FARM_CAP = 2000;
 
   function getUserEcoData(uid) {
     const u = (uid && usersCache && usersCache[uid]) ? usersCache[uid] : {};
     const today = getBangkokDateStr(0);
     const sameDay = u.ecoDate === today;
     const isMe = !!(currentUser && uid === currentUser.id);
-    const extraPts = isMe ? (_pendingFarmPts + _flushingFarmPts) : 0;
+    const extraPts = isMe ? _pendingFarmPts : 0;
     return {
       points: Math.max(0, (Number(u.pawPoints) || 0) + extraPts),
       farmedToday: (sameDay ? (Number(u.ecoFarmToday) || 0) : 0) + extraPts,
@@ -18416,11 +19331,35 @@
     return u;
   }
 
+  // ⚖️ สูตรฟาร์มใหม่: สายขยันได้วันละ 1,000 - 2,000 แต้ม (และคูณเพิ่มตามบอลพลัง x1.0 - x2.0!)
   function getFarmStepInfo(farmedToday) {
-    if (farmedToday < 150) return { clicksPerPt: 1,  rateText: "100%" };
-    if (farmedToday < 250) return { clicksPerPt: 3,  rateText: "33%"  };
-    if (farmedToday < 350) return { clicksPerPt: 10, rateText: "10%"  };
-    return                        { clicksPerPt: 50, rateText: "2%"   };
+    if (farmedToday < 500)  return { rate: 1.00, rateText: "100%" };
+    if (farmedToday < 1000) return { rate: 0.50, rateText: "50%"  };
+    if (farmedToday < 1500) return { rate: 0.25, rateText: "25%"  };
+    if (farmedToday < 2000) return { rate: 0.10, rateText: "10%"  };
+    return                         { rate: 0.02, rateText: "2%"   };
+  }
+
+  // ⚡ ตัวช่วยคำนวณแต้มฟาร์มต่อคลิก (เชื่อมตัวคูณบอลพลัง x1.0 - x2.0 ด้วย!)
+  function addSoftCapFarmClick(uid) {
+    if (!uid || !db) return;
+    const eco = getUserEcoData(uid);
+    const step = getFarmStepInfo(eco.farmedToday);
+    const norm = (typeof genkiCharge !== "undefined") ? Math.min(1, genkiCharge / 300) : 0;
+    const genkiMult = (typeof getGenkiStageData === "function") ? getGenkiStageData(norm).mult : 1.0;
+
+    _farmClickBuf += (step.rate * genkiMult);
+    const gain = Math.floor(_farmClickBuf);
+    if (gain > 0) {
+      _farmClickBuf -= gain;
+      _pendingFarmPts += gain;
+
+      clearTimeout(_farmFlushTimer);
+      _farmFlushTimer = setTimeout(flushPendingFarmPoints, 1000);
+
+      updateProfileEcoUI();
+      if (eco.farmedToday + gain >= DAILY_FARM_CAP) unlockAchievement("softcap_farmer");
+    }
   }
 
   function getNextVoteCost(votesToday) {
@@ -18430,13 +19369,12 @@
     return                      { cost: 500, tierLabel: "โซนสุลต่าน x10" };
   }
 
-  // ส่งแต้มที่ฟาร์มไว้ขึ้น Firebase เป็นก้อนทุก 1 วิ (ลดอาการหน่วง & ประหยัดโควต้า)
+  // ส่งแต้มที่ฟาร์มไว้ขึ้น Firebase (ไม่ใช้ _flushingFarmPts แล้ว -> ตัวเลขวิ่งขึ้นเนียน 100% ไม่มีเด้งตก!)
   function flushPendingFarmPoints() {
     if (!db || !currentUser || _pendingFarmPts <= 0) return;
     const uid = currentUser.id;
     const batch = _pendingFarmPts;
     _pendingFarmPts = 0;
-    _flushingFarmPts += batch;
 
     const today = getBangkokDateStr(0);
     const isNewDay = !usersCache[uid] || usersCache[uid].ecoDate !== today;
@@ -18446,11 +19384,10 @@
     updates[`users/${uid}/ecoFarmToday`] = isNewDay ? batch : firebase.database.ServerValue.increment(batch);
 
     db.ref().update(updates).then(() => {
-      _flushingFarmPts = Math.max(0, _flushingFarmPts - batch);
       updateProfileEcoUI();
     }).catch(() => {
-      _flushingFarmPts = Math.max(0, _flushingFarmPts - batch);
       _pendingFarmPts += batch;
+      updateProfileEcoUI();
     });
   }
   window.addEventListener("beforeunload", flushPendingFarmPoints);
@@ -18497,7 +19434,7 @@
     const vtEl = document.getElementById('profileVoteQuotaChip');
     const ndPt = document.getElementById('ndPointsBadge');
     if (ptEl) ptEl.textContent = `${POINT_UNIT} ${formatNum(eco.points)} ${POINT_NAME}`;
-    if (fmEl) fmEl.textContent = `⚡ ฟาร์มวันนี้: ${eco.farmedToday}/350 (เรท ${step.rateText})`;
+    if (fmEl) fmEl.textContent = `⚡ ฟาร์มวันนี้: ${eco.farmedToday}/2,000 (เรท ${step.rateText})`;
     if (vtEl) vtEl.textContent = `🔥 โหวตวันนี้: ${eco.votesToday}/5 (ครั้งต่อไป ${vInfo.cost} ${POINT_UNIT})`;
     if (ndPt) ndPt.textContent = `${POINT_UNIT} ${formatCompact(eco.points)}`;
     const navTopPt = document.getElementById('navTopPointsPill');
@@ -18577,7 +19514,7 @@
     if (lv >= 20)  unlockAchievement("lv_20");
     if (lv >= 50)  unlockAchievement("lv_50");
     if (lv >= 100) unlockAchievement("lv_100");
-    if (eco.farmedToday >= 350) unlockAchievement("softcap_farmer");
+    if (eco.farmedToday >= DAILY_FARM_CAP) unlockAchievement("softcap_farmer");
     if (eco.votesToday >= 6)    unlockAchievement("over_quota_vote");
 
     if ((Number(u.krathongCount) || 0) > 0) unlockAchievement("event_loykrathong");
@@ -18750,7 +19687,7 @@
     extra.style.marginTop = "8px";
     extra.innerHTML = `
       <div style="font-size:0.78rem; color:#fde047; font-weight:700; margin-bottom:5px;">
-        ${POINT_UNIT} คงเหลือ: ${formatNum(eco.points)} • ⚡ ฟาร์มวันนี้: ${eco.farmedToday}/350
+        ${POINT_UNIT} คงเหลือ: ${formatNum(eco.points)} • ⚡ ฟาร์มวันนี้: ${eco.farmedToday}/2,000
       </div>
       <div class="bgt-ach-showcase" id="uhcAchShowcase"></div>
     `;
@@ -18797,21 +19734,7 @@
     _origMegaCheer(e);
     if (isHorrorTriggered || !currentUser || !db) return;
     if (!checkStealthAntiAutoClick('paw_farm')) return;
-
-    const uid = currentUser.id;
-    const eco = getUserEcoData(uid);
-    const step = getFarmStepInfo(eco.farmedToday);
-    _farmClickBuf++;
-    if (_farmClickBuf >= step.clicksPerPt) {
-      _farmClickBuf = 0;
-      _pendingFarmPts += 1;
-
-      clearTimeout(_farmFlushTimer);
-      _farmFlushTimer = setTimeout(flushPendingFarmPoints, 1000);
-
-      updateProfileEcoUI();
-      if (eco.farmedToday + 1 === 350) unlockAchievement("softcap_farmer");
-    }
+    addSoftCapFarmClick(currentUser.id);
   };
 
   voteHeartClick = function(gameId, e) {
@@ -19009,19 +19932,7 @@
 
   // ตัวช่วยแจกผลึก BGT แบบ Soft Cap เวลาคนกดกิจกรรม
   function earnEventSoftCapPoint(uid) {
-    if (!uid || !db) return;
-    const eco = getUserEcoData(uid);
-    const step = getFarmStepInfo(eco.farmedToday);
-    _farmClickBuf++;
-    if (_farmClickBuf >= step.clicksPerPt) {
-      _farmClickBuf = 0;
-      _pendingFarmPts += 1;
-
-      clearTimeout(_farmFlushTimer);
-      _farmFlushTimer = setTimeout(flushPendingFarmPoints, 1000);
-      updateProfileEcoUI();
-      if (eco.farmedToday + 1 === 350) unlockAchievement("softcap_farmer");
-    }
+    addSoftCapFarmClick(uid);
   }
 
   // อัปเกรดปุ่มกดกิจกรรม: รองรับทั้งลอยกระทง & คริสต์มาส + กดแล้วได้ผลึก BGT ด้วย!
@@ -19383,6 +20294,7 @@
   playCurseVoiceBlip = function(isHorrorPhase, isVerySlow = false) {
     try {
       initAudio();
+      if (!audioCtx || audioCtx.state !== 'running') return;
       const now = audioCtx.currentTime;
 
       if (!isHorrorPhase) {
@@ -19653,7 +20565,8 @@
         "ยินดีต้อนรับสู่ BGT ครับ! เลื่อนลงไปกดเช็กอินรายวันและกดหัวใจสะสม 💠 ผลึก BGT ได้เลย~",
         "ด้านบนมีคลังเกมแปลไทยฟรีบน itch.io กดสลับแท็บดูเกมยอดนิยมหรือกดถูกใจได้เลยนะ!",
         "ลองดูแท่นเกียรติยศ Top 3 ด้านล่างสิครับ ใครจะเป็นอันดับ 1 ประจำเว็บกันนะ~ 🤖✨",
-        "จิ้มที่ตัวผมได้นะ แต่... อย่าจิ้มบ่อยล่ะ เดี๋ยวระบบระบายความร้อนทำงานหนัก! 💙"
+        "จิ้มที่ตัวผมได้นะ แต่... อย่าจิ้มบ่อยล่ะ เดี๋ยวระบบระบายความร้อนทำงานหนัก! 💙",
+        "ยิ่งลงทุน 💠 ผลึก BGT ดันเกมเยอะ ยิ่งมีสิทธิ์ขึ้นแท่น Top 3 สายเปย์ดันเกมประจำเว็บด้วยนะ! 🔥🤖"
       ]
     },
     projects: {
@@ -19778,6 +20691,7 @@
   }
 
   function isProtoAllowedVisible() {
+    if (document.hidden) return false;
     if (isHorrorTriggered) return false;
     if (document.body.classList.contains('login-gate-open')) return false;
     const ck = document.getElementById('curseKingStage');
@@ -19937,8 +20851,46 @@
     triggerProtoComboCheer();
   };
 
-  document.addEventListener('dragstart', (e) => {
+  // 🛡️ กันกดค้างเซฟรูปบนมือถือ Android และคลิกขวาบนคอม
+  document.addEventListener('contextmenu', (e) => {
     if (e.target && e.target.tagName === 'IMG') e.preventDefault();
+  });
+
+  // 💤 โหมดประหยัดสเปค: ย่อจอ / สลับแท็บ -> หยุดเพลง หยุดเสียงตัวละครทันที!
+  let _wasBgmPlayingBeforeHide = false;
+
+  document.addEventListener("visibilitychange", () => {
+    const bgmEl = document.getElementById('bgmAudio');
+    const cryEl = document.getElementById('realCryAudio');
+    const c1El  = document.getElementById('curseBgmAudio');
+    const c2El  = document.getElementById('curseBgmPhase2Audio');
+
+    if (document.hidden) {
+      _wasBgmPlayingBeforeHide = !!(bgmEl && !bgmEl.paused);
+      if (bgmEl && !bgmEl.paused) bgmEl.pause();
+      if (cryEl && !cryEl.paused) cryEl.pause();
+      if (c1El  && !c1El.paused)  c1El.pause();
+      if (c2El  && !c2El.paused)  c2El.pause();
+
+      if (audioCtx && audioCtx.state === 'running') {
+        audioCtx.suspend().catch(() => {});
+      }
+      if (typeof _protoCtrl !== 'undefined') {
+        clearInterval(_protoCtrl.typeT);
+        clearInterval(_protoCtrl.talkT);
+        _protoCtrl.busy = false;
+      }
+    } else {
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      if (_wasBgmPlayingBeforeHide && !userPausedMusic && !isHorrorTriggered && !isCurseSceneBlockingBgm()) {
+        if (bgmEl) bgmEl.play().catch(() => {});
+      }
+      if (isHorrorTriggered && cryEl) {
+        cryEl.play().catch(() => {});
+      }
+    }
   });
 
   // เชื่อมเข้ากับ switchPage ทุกครั้งที่เปลี่ยนหมวดหมู่ -> เปลี่ยนป้ายและพูดแนะนำหน้าใหม่ทันที
@@ -20053,7 +21005,7 @@
           </div>
         </div>
         <div class="wish-actions-dual">
-          <button type="button" class="wish-btn-boost" onclick="voteWishItem('${item.key}', event)">⚡ โหวต / ดันอันดับ</button>
+          <button type="button" class="wish-btn-boost" onclick="voteWishItem('${item.key}', event)">⚡ ดันอันดับ (-${getNextVoteCost(currentUser ? getUserEcoData(currentUser.id).votesToday : 0).cost} 💠)</button>
           ${isAdmin ? `<button type="button" class="dev-card-btn del" onclick="deleteWishItem('${item.key}')">🗑️</button>` : ''}
         </div>
       `;
@@ -20170,6 +21122,67 @@
       pager.appendChild(sum);
     }
   };
+  // =========================================================================
+  // 👑 ยุบแผงแอดมินทั้งหมดเป็นปุ่มพับเก็บ (กดเมื่อไหร่ค่อยกางออก หน้าเว็บไม่รก!)
+  // =========================================================================
+  (function initCollapsibleAdminPanels() {
+    const adminPanels = [
+      { id: 'donateAdminPanel',     label: '👑 จัดการยอดโดเนท & รีเซ็ตแต้ม (Admin)' },
+      { id: 'devAdminPanel',        label: '👑 เพิ่ม / แก้ไขรายชื่อผู้พัฒนา (Admin)' },
+      { id: 'projectsAdminPanel',   label: '👑 จัดการสถานะงานแปล (Admin)' },
+      { id: 'adminSlipReviewPanel', label: '👑 ตรวจสลิปโอนเงินรออนุมัติ (Admin)' }
+    ];
+
+    adminPanels.forEach(cfg => {
+      const panel = document.getElementById(cfg.id);
+      if (!panel || panel.dataset.collapsibleBound) return;
+      panel.dataset.collapsibleBound = "1";
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = cfg.id + '_ToggleBtn';
+      btn.className = 'bgt-admin-collapse-btn';
+      btn.style.display = 'none';
+      btn.innerHTML = `<span>${cfg.label}</span><span class="adm-arrow">▾ เปิดแผง</span>`;
+
+      let isOpen = false;
+      btn.onclick = () => {
+        playClickSound();
+        isOpen = !isOpen;
+        panel.style.display = isOpen ? 'block' : 'none';
+        const arrow = btn.querySelector('.adm-arrow');
+        if (arrow) arrow.textContent = isOpen ? '▴ พับเก็บ' : '▾ เปิดแผง';
+      };
+
+      panel.parentNode.insertBefore(btn, panel);
+    });
+
+    // ซิงก์สถานะปุ่มพับเก็บตามสิทธิ์แอดมินอัตโนมัติ
+    const syncAdminButtons = () => {
+      const isAdm = !!(currentUser && currentUser.isVoteAdmin);
+      adminPanels.forEach(cfg => {
+        const panel = document.getElementById(cfg.id);
+        const btn = document.getElementById(cfg.id + '_ToggleBtn');
+        if (!panel || !btn) return;
+        btn.style.display = isAdm ? 'flex' : 'none';
+        // พับเก็บไว้เป็นค่าเริ่มต้นทุกครั้งที่โหลด/สลับสิทธิ์
+        panel.style.display = 'none';
+        const arrow = btn.querySelector('.adm-arrow');
+        if (arrow) arrow.textContent = '▾ เปิดแผง';
+      });
+    };
+
+    const _origApplyAdm = applyProfileToUI;
+    applyProfileToUI = function(profile) {
+      _origApplyAdm(profile);
+      syncAdminButtons();
+    };
+    const _origLogoutAdm = applyLoggedOutUI;
+    applyLoggedOutUI = function() {
+      _origLogoutAdm();
+      syncAdminButtons();
+    };
+  })();
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
