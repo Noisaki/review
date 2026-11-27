@@ -9162,7 +9162,145 @@
     .gacha-card.t-epic   { border-color: #c084fc; box-shadow: 0 0 12px rgba(192,132,252,0.45); }
     .gacha-card.t-legend { border-color: #fbbf24; box-shadow: 0 0 15px rgba(251,191,36,0.65); background: rgba(120,53,15,0.45); }
     .gacha-card.t-mythic { border-color: #fff; background: linear-gradient(135deg, #9333ea, #ec4899, #f59e0b); box-shadow: 0 0 18px rgba(236,72,153,0.85); }
-  </style>
+    /* 🎅 ปุ่มเลือกผู้รับ & หน้าต่างเลือกเพื่อนแบบการ์ดโปรไฟล์ */
+    .xmas-target-btn {
+      flex: 1;
+      min-width: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(253, 224, 71, 0.55);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 27, 75, 0.88));
+      color: #fef08a;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .xmas-target-btn:hover { border-color: #38bdf8; transform: translateY(-1px); }
+    .xmas-target-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .xmas-target-av-wrap {
+      position: relative;
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .xmas-target-av-wrap img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid #fde047;
+    }
+    #xmasTargetModal .modal-box {
+      background: #0f172a;
+      color: #f8fafc;
+      border: 2px solid #fde047;
+      max-width: 520px;
+      text-align: left;
+      padding: 20px 18px;
+    }
+    .xt-search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(56, 189, 248, 0.5);
+      background: #1e293b;
+      color: #fff;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .xt-list-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 58vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .xt-user-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid rgba(148, 163, 184, 0.28);
+      background: #161d31;
+      cursor: pointer;
+      transition: border-color 0.18s, transform 0.15s;
+    }
+    .xt-user-card:hover { border-color: #38bdf8; transform: translateY(-1px); }
+    .xt-user-card.selected {
+      border-color: #fde047;
+      box-shadow: 0 0 0 2px rgba(253, 224, 71, 0.35);
+    }
+    .xt-card-banner {
+      height: 46px;
+      background: linear-gradient(135deg, #1e1b4b, #4338ca, #be123c);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .xt-card-body {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px 12px;
+    }
+    .xt-av-frame {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      margin-top: -26px;
+      border-radius: 50%;
+      padding: 3px;
+      background: #38bdf8;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+    }
+    .xt-av-frame img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #0f172a;
+    }
+    .xt-card-info {
+      flex: 1;
+      min-width: 0;
+      padding-top: 6px;
+    }
+    .xt-card-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .xt-card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 3px;
+    }
+    .xt-card-badges .role-pill,
+    .xt-card-badges .title-pill {
+      font-size: 0.66rem !important;
+      padding: 1px 8px !important;
+      margin: 0 !important;
+    }
+ </style>
   
 </head>
 <body>
@@ -22773,11 +22911,11 @@
       }
     };
   })();
-  // =========================================================================
+// =========================================================================
   // 🔄📢 ระบบแจ้งเตือนเว็บอัปเดตอัตโนมัติ (เพิ่มเลข SITE_BUILD_VER ทุกครั้งที่อัปเว็บ!)
   // =========================================================================
   (function initSiteUpdateNotifier() {
-    const SITE_BUILD_VER = 3; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
+    const SITE_BUILD_VER = 4; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
 
     const banner = document.createElement('div');
     banner.id = 'bgtUpdateBanner';
@@ -22812,16 +22950,17 @@
   })();
 
   // =========================================================================
-  // 🏭🎁✨ โรงงานผลิตของขวัญ V3 (สมดุล 1 เดือน + เอลฟ์ออฟไลน์ + ฉีกกล่องกาชา + กล่องเพื่อน)
+  // 🏭🎁✨ โรงงานผลิตของขวัญ V3.1 (เอลฟ์ 2 สาย: ความเร็ว 10→2 นาที + จ้างเพิ่ม 1→5 ตัว + การ์ดเลือกเพื่อน)
   // =========================================================================
   (function upgradeXmasWorkshopV3() {
-    const MAX_EXP_V3    = 300;
-    const EXP_STEP_V3   = 15;
-    const EXP_COST_V3   = 250;
-    const ELF_COSTS_V3  = [250, 450, 750, 1100, 1600]; // Lv.1-5
-    const ELF_MINS_V3   = [0, 60, 45, 30, 20, 12];     // นาที/กล่อง (ทำงานตอนปิดเว็บได้!)
-    const BAG_COSTS_V3  = [200, 350, 550, 800, 1100];  // จุ 5 -> 20 กล่อง (+3/ขั้น)
-    const LUCK_COSTS_V3 = [250, 450, 750, 1100, 1500]; // Epic +1.5%, Leg +0.3%, Mythic +0.01%
+    const MAX_EXP_V3        = 300;
+    const EXP_STEP_V3       = 15;
+    const EXP_COST_V3       = 250;
+    const ELF_COSTS_V3      = [250, 450, 750, 1100, 1600]; // สายความเร็ว Lv.1-5
+    const ELF_MINS_V3       = [0, 10, 8, 6, 4, 2];         // 10 -> 2 นาที/รอบ
+    const ELF_CNT_COSTS_V3  = [1500, 3000, 5500, 9000];    // สายจ้างเพิ่ม: ตัวที่ 2 -> 5
+    const BAG_COSTS_V3      = [200, 350, 550, 800, 1100];  // จุ 5 -> 20 กล่อง (+3/ขั้น)
+    const LUCK_COSTS_V3     = [250, 450, 750, 1100, 1500]; // Epic +1.5%, Leg +0.3%, Mythic +0.01%
     const INBOX_DAILY_LIMIT = 10;
     const MILESTONES_V3 = [
       { need: 50,  pts: 500,  key: "ms50"  },
@@ -22832,12 +22971,12 @@
     let _v3Lock = 0;
     let _selectedTargetUid = "random";
 
-    // โหลดจำนวนกล่องในกระเป๋าที่ค้างไว้ (รองรับสูงสุด 20 กล่อง)
     try {
       const rawBag = parseInt(localStorage.getItem('bgt_xmas_bag_v1') || '0', 10) || 0;
       if (rawBag > xmasBagCount) xmasBagCount = Math.min(20, rawBag);
     } catch (e) {}
 
+    // 1. Modal ฉีกกล่องกาชา
     if (!document.getElementById('xmasGachaModal')) {
       const m = document.createElement('div');
       m.id = 'xmasGachaModal';
@@ -22855,6 +22994,152 @@
       document.body.appendChild(m);
     }
 
+    // 2. Modal เลือกผู้รับของขวัญแบบการ์ดโปรไฟล์
+    if (!document.getElementById('xmasTargetModal')) {
+      const tm = document.createElement('div');
+      tm.id = 'xmasTargetModal';
+      tm.className = 'modal-overlay';
+      tm.onclick = (e) => { if (e.target === tm) tm.style.display = 'none'; };
+      tm.innerHTML = `
+        <div class="modal-box">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h2 style="margin:0; font-size:1.2rem; color:#fde047;">🎅 เลือกเพื่อนที่จะส่งของขวัญให้</h2>
+            <button type="button" class="modal-cancel-btn" style="padding:4px 11px; border-radius:999px; font-size:0.82rem;" onclick="document.getElementById('xmasTargetModal').style.display='none';">✕ ปิด</button>
+          </div>
+          <input type="text" id="xtSearchInput" class="xt-search-input" placeholder="🔍 ค้นหาชื่อเพื่อนสมาชิก..." oninput="renderXmasTargetModalList(this.value)">
+          <div id="xtUsersList" class="xt-list-wrap"></div>
+        </div>
+      `;
+      document.body.appendChild(tm);
+    }
+
+    window.openXmasTargetPicker = function() {
+      playClickSound();
+      const inp = document.getElementById('xtSearchInput');
+      if (inp) inp.value = "";
+      window.renderXmasTargetModalList("");
+      const tm = document.getElementById('xmasTargetModal');
+      if (tm) tm.style.display = 'flex';
+    };
+
+    window.selectXmasTargetUid = function(uid) {
+      playClickSound();
+      _selectedTargetUid = uid || "random";
+      const tm = document.getElementById('xmasTargetModal');
+      if (tm) tm.style.display = 'none';
+      updateXmasWorkshopUI();
+    };
+
+    window.renderXmasTargetModalList = function(query) {
+      const wrap = document.getElementById('xtUsersList');
+      if (!wrap) return;
+      const q = String(query || "").trim().toLowerCase();
+      wrap.innerHTML = "";
+
+      // การ์ดสุ่ม Secret Santa บนสุด
+      if (!q || "สุ่ม secret santa".includes(q)) {
+        const randCard = document.createElement('div');
+        randCard.className = 'xt-user-card' + (_selectedTargetUid === 'random' ? ' selected' : '');
+        randCard.onclick = () => window.selectXmasTargetUid('random');
+        randCard.innerHTML = `
+          <div style="display:flex; align-items:center; gap:12px; padding:12px 14px; background:linear-gradient(135deg, rgba(220,38,38,0.28), rgba(21,128,61,0.28));">
+            <div style="width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,#f59e0b,#dc2626); display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; border:2px solid #fde047;">🎲</div>
+            <div style="flex:1; min-width:0;">
+              <div class="xt-card-name" style="color:#fde047;">สุ่มแจกสมาชิกในเว็บ (Secret Santa)</div>
+              <div style="font-size:0.74rem; color:#cbd5e1;">สุ่มส่งของขวัญให้เพื่อนๆ ในชุมชน BGT แบบเซอร์ไพรส์ ✨</div>
+            </div>
+            ${_selectedTargetUid === 'random' ? '<span style="color:#4ade80; font-weight:800;">✓</span>' : ''}
+          </div>
+        `;
+        wrap.appendChild(randCard);
+      }
+
+      const myUid = currentUser ? currentUser.id : "";
+      const list = Object.keys(usersCache || {})
+        .filter(id => id !== myUid)
+        .map(id => ({ id, u: usersCache[id] || {} }))
+        .filter(e => {
+          if (!q) return true;
+          const nm = (e.u.customName || e.u.name || "").toLowerCase();
+          return nm.includes(q);
+        })
+        .sort((a, b) => (Number(b.u.lastSeen) || 0) - (Number(a.u.lastSeen) || 0))
+        .slice(0, 50);
+
+      if (list.length === 0 && q) {
+        wrap.innerHTML += `<div class="lb-empty" style="color:#94a3b8;">ไม่พบเพื่อนที่ชื่อ "${q.replace(/</g, '<')}" ครับ</div>`;
+        return;
+      }
+
+      list.forEach(({ id, u }) => {
+        const card = document.createElement('div');
+        card.className = 'xt-user-card' + (_selectedTargetUid === id ? ' selected' : '');
+        card.onclick = () => window.selectXmasTargetUid(id);
+
+        const banner = document.createElement('div');
+        banner.className = 'xt-card-banner';
+        applyBannerStyle(banner, u.bannerUrl || "");
+        card.appendChild(banner);
+
+        const body = document.createElement('div');
+        body.className = 'xt-card-body';
+
+        const tier = getEffectiveRoleTier(u.roleTier, u.donateAmount);
+        const roleInfo = getRoleInfoByTier(tier);
+        const lvInfo = getLevelData(Number(u.heartsClicked) || 0);
+        const rawAv = u.customAvatar || u.avatarUrl;
+        const avSrc = (typeof rawAv === "string" && (rawAv.startsWith("https://") || rawAv.startsWith("data:image/")))
+          ? rawAv : "https://cdn.discordapp.com/embed/avatars/0.png";
+
+        const avFrame = document.createElement('div');
+        avFrame.className = 'xt-av-frame' + (tier !== 0 ? ` tier-${tier}` : '');
+        const img = document.createElement('img');
+        img.src = avSrc;
+        img.referrerPolicy = "no-referrer";
+        img.onerror = function() { this.onerror = null; this.src = "https://cdn.discordapp.com/embed/avatars/0.png"; };
+        avFrame.appendChild(img);
+
+        const deco = document.createElement('div');
+        deco.className = 'avatar-deco-overlay';
+        applyAvatarDecoration(deco, u.avatarDecoration || "none");
+        avFrame.appendChild(deco);
+        body.appendChild(avFrame);
+
+        const info = document.createElement('div');
+        info.className = 'xt-card-info';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'xt-card-name';
+        nameEl.textContent = u.customName || u.name || "สมาชิก BGT";
+        info.appendChild(nameEl);
+
+        const badges = document.createElement('div');
+        badges.className = 'xt-card-badges';
+        if (roleInfo) {
+          const rp = document.createElement('span');
+          rp.className = `role-pill tier-${tier}`;
+          rp.textContent = roleInfo.name;
+          badges.appendChild(rp);
+        }
+        const lp = document.createElement('span');
+        lp.className = `title-pill ${lvInfo.rarityClass}`;
+        lp.textContent = `Lv.${formatNum(lvInfo.level)}`;
+        badges.appendChild(lp);
+        info.appendChild(badges);
+        body.appendChild(info);
+
+        if (_selectedTargetUid === id) {
+          const chk = document.createElement('span');
+          chk.style.cssText = "color:#4ade80; font-size:1.1rem; font-weight:800; padding-top:6px;";
+          chk.textContent = "✓";
+          body.appendChild(chk);
+        }
+
+        card.appendChild(body);
+        wrap.appendChild(card);
+      });
+    };
+
     function getV3Stats(uData) {
       const u = uData || {};
       const realGifts = Math.max(0, Number(u.xmasGiftCountV2) || 0);
@@ -22867,23 +23152,25 @@
       const rareChance = Math.min(45, Math.round(10 + ratio * 35));
       const commonPts  = Math.round(25 + ratio * 35);
 
-      const elfLv   = Math.min(5, Math.max(0, Number(u.xmasElfLv) || 0));
-      const elfMin  = ELF_MINS_V3[elfLv] || 0;
-      const bagLv   = Math.min(5, Math.max(0, Number(u.xmasBagLv) || 0));
-      const maxBag  = 5 + (bagLv * 3); // 5 -> 20 กล่อง
-      const luckLv  = Math.min(5, Math.max(0, Number(u.xmasLuckLv) || 0));
+      const elfLv      = Math.min(5, Math.max(0, Number(u.xmasElfLv) || 0));
+      const elfMin     = ELF_MINS_V3[elfLv] || 0;
+      const elfExtra   = Math.min(4, Math.max(0, Number(u.xmasElfCount) || 0)); // 0..4 ตัวเพิ่ม
+      const elfCount   = elfLv > 0 ? (1 + elfExtra) : 0; // รวม 1..5 ตัว
+      const bagLv      = Math.min(5, Math.max(0, Number(u.xmasBagLv) || 0));
+      const maxBag     = 5 + (bagLv * 3); // 5 -> 20 กล่อง
+      const luckLv     = Math.min(5, Math.max(0, Number(u.xmasLuckLv) || 0));
       const epicChance   = +(3.0 + luckLv * 1.5).toFixed(1);
       const legChance    = +(0.5 + luckLv * 0.3).toFixed(1);
       const mythicChance = +(0.01 + luckLv * 0.01).toFixed(2);
 
       return {
         realGifts, bonusExp, exp: totalExp, lv, craftMs, craftSec: (craftMs / 1000).toFixed(1),
-        rareChance, commonPts, elfLv, elfMin, bagLv, maxBag, luckLv, epicChance, legChance, mythicChance
+        rareChance, commonPts, elfLv, elfMin, elfExtra, elfCount, bagLv, maxBag, luckLv, epicChance, legChance, mythicChance
       };
     }
 
     function syncOfflineElfProduction(st) {
-      if (!currentUser || st.elfLv <= 0 || st.elfMin <= 0) return;
+      if (!currentUser || st.elfLv <= 0 || st.elfMin <= 0 || st.elfCount <= 0) return;
       const key = 'bgt_xmas_elf_ts_' + currentUser.id;
       const now = Date.now();
       let lastTs = parseInt(localStorage.getItem(key) || '0', 10) || 0;
@@ -22894,13 +23181,14 @@
       const intervalMs = st.elfMin * 60 * 1000;
       const elapsed = now - lastTs;
       if (elapsed >= intervalMs) {
-        const produced = Math.floor(elapsed / intervalMs);
+        const cycles = Math.floor(elapsed / intervalMs);
+        const produced = cycles * st.elfCount;
         const space = Math.max(0, st.maxBag - xmasBagCount);
         const added = Math.min(space, produced);
         if (added > 0) {
           xmasBagCount += added;
           saveXmasWorkshopLocal();
-          showToast(`🧝 เอลฟ์ช่วยห่อของขวัญเสร็จเพิ่ม +${added} กล่องขณะพักหน้าจอ! 🎁`);
+          showToast(`🧝 เอลฟ์ ${st.elfCount} ตัวช่วยห่อของขวัญเสร็จเพิ่ม +${added} กล่อง! 🎁`);
         }
         const rem = elapsed % intervalMs;
         try { localStorage.setItem(key, String(now - rem)); } catch (e) {}
@@ -22967,7 +23255,6 @@
       }, 560);
     }
 
-    // 🔨 แทนที่ปุ่มผลิตให้ใช้สเปก V3 (300 EXP / จุสูงสุด 20 กล่อง)
     startCraftXmasGift = function() {
       if (!currentUser) {
         openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนผลิตของขวัญคริสต์มาสนะครับ 🎄");
@@ -23146,7 +23433,12 @@
       } else if (type === "elf") {
         if (st.elfLv >= 5) return;
         cost = ELF_COSTS_V3[st.elfLv]; field = "xmasElfLv"; incVal = 1;
-        label = `🧝 จ้างเอลฟ์ผลิตออโต้ Lv.${st.elfLv + 1} (1 กล่อง/${ELF_MINS_V3[st.elfLv + 1]} นาที)`;
+        label = `🧝 อัปความเร็วเอลฟ์ Lv.${st.elfLv + 1} (${ELF_MINS_V3[st.elfLv + 1]} นาที/รอบ)`;
+      } else if (type === "elfCount") {
+        if (st.elfLv <= 0) { showToast("⚠️ ต้องจ้างเอลฟ์ตัวแรก (Lv.1) ก่อนจึงจะจ้างเพิ่มได้ครับ 🧝"); return; }
+        if (st.elfExtra >= 4) return;
+        cost = ELF_CNT_COSTS_V3[st.elfExtra]; field = "xmasElfCount"; incVal = 1;
+        label = `👥 จ้างเอลฟ์เพิ่มเป็น ${st.elfCount + 1} ตัว (+${st.elfCount + 1} กล่อง/รอบ)`;
       } else if (type === "bag") {
         if (st.bagLv >= 5) return;
         cost = BAG_COSTS_V3[st.bagLv]; field = "xmasBagLv"; incVal = 1;
@@ -23218,7 +23510,11 @@
         if (cBtn) { cBtn.disabled = true; cBtn.textContent = `⏳ กำลังผลิต... (${(rem / 1000).toFixed(1)} วิ)`; }
       } else {
         if (fillEl) fillEl.style.width = xmasBagCount >= st.maxBag ? '100%' : '0%';
-        if (stateEl) stateEl.textContent = st.elfLv > 0 ? `🧝 เอลฟ์ Lv.${st.elfLv} กำลังช่วยผลิต (1 กล่อง/${st.elfMin} นาที)` : '✨ พร้อมผลิตของขวัญ';
+        if (stateEl) {
+          stateEl.textContent = st.elfLv > 0
+            ? `🧝 เอลฟ์ ${st.elfCount} ตัวกำลังช่วยผลิต (+${st.elfCount} กล่อง / ${st.elfMin} นาที)`
+            : '✨ พร้อมผลิตของขวัญ';
+        }
         if (cBtn) { cBtn.disabled = xmasBagCount >= st.maxBag; cBtn.textContent = xmasBagCount >= st.maxBag ? '🎒 กระเป๋าเต็มแล้ว' : `🔨 ผลิต (${st.craftSec} วิ)`; }
       }
       if (gBtn) { gBtn.disabled = xmasBagCount <= 0; gBtn.textContent = `🎁 ฉีกส่ง 1 กล่อง`; }
@@ -23237,27 +23533,35 @@
         allBtn.textContent = `⚡ ส่งทั้งหมด (${xmasBagCount})`;
       }
 
+      // ปุ่มเลือกผู้รับแบบการ์ดโปรไฟล์
       let targetRow = document.getElementById('xmasTargetRow');
       if (!targetRow && cBtn && cBtn.parentNode) {
         targetRow = document.createElement('div');
         targetRow.id = 'xmasTargetRow';
         targetRow.className = 'xmas-target-row';
-        targetRow.innerHTML = `<span style="font-size:0.8rem; color:#fde68a; font-weight:700;">🎯 ผู้รับ:</span><select id="xmasTargetSelect" class="xmas-target-select"></select>`;
+        targetRow.innerHTML = `
+          <span style="font-size:0.8rem; color:#fde68a; font-weight:700;">🎯 ผู้รับ:</span>
+          <button type="button" id="xmasTargetPickerBtn" class="xmas-target-btn" onclick="openXmasTargetPicker()"></button>
+        `;
         cBtn.parentNode.parentNode.insertBefore(targetRow, cBtn.parentNode);
-        const sel = document.getElementById('xmasTargetSelect');
-        if (sel) sel.onchange = () => { _selectedTargetUid = sel.value; };
       }
-      const sel = document.getElementById('xmasTargetSelect');
-      if (sel) {
-        const userKeys = Object.keys(usersCache || {}).filter(id => !currentUser || id !== currentUser.id);
-        const sig = userKeys.length + "|" + _selectedTargetUid;
-        if (sel.dataset.sig !== sig) {
-          sel.dataset.sig = sig;
-          sel.innerHTML = `<option value="random">🎲 สุ่มแจกสมาชิกในเว็บ (Secret Santa)</option>` +
-            userKeys.slice(0, 60).map(id => {
-              const nm = (usersCache[id].customName || usersCache[id].name || "สมาชิก").replace(/</g, "<");
-              return `<option value="${id}" ${_selectedTargetUid === id ? 'selected' : ''}>🎅 ส่งให้: ${nm}</option>`;
-            }).join('');
+      const pickBtn = document.getElementById('xmasTargetPickerBtn');
+      if (pickBtn) {
+        const targetU = (_selectedTargetUid !== "random" && usersCache[_selectedTargetUid]) ? usersCache[_selectedTargetUid] : null;
+        if (!targetU) {
+          pickBtn.innerHTML = `<span class="xmas-target-preview"><span>🎲</span><span>สุ่มแจกสมาชิกในเว็บ (Secret Santa)</span></span><span style="font-size:0.75rem; color:#38bdf8;">เปลี่ยน ▾</span>`;
+        } else {
+          const nm = (targetU.customName || targetU.name || "สมาชิก").replace(/</g, "<");
+          const rawAv = targetU.customAvatar || targetU.avatarUrl;
+          const avSrc = (typeof rawAv === "string" && (rawAv.startsWith("https://") || rawAv.startsWith("data:image/")))
+            ? rawAv : "https://cdn.discordapp.com/embed/avatars/0.png";
+          pickBtn.innerHTML = `
+            <span class="xmas-target-preview">
+              <span class="xmas-target-av-wrap"><img src="${avSrc}" referrerpolicy="no-referrer" alt=""></span>
+              <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">🎅 ส่งให้: ${nm}</span>
+            </span>
+            <span style="font-size:0.75rem; color:#38bdf8; flex-shrink:0;">เปลี่ยน ▾</span>
+          `;
         }
       }
 
@@ -23275,17 +23579,23 @@
         <span class="xmas-rate-pill">🎁 ธรรมดา: ${st.commonPts}💠</span>
       `;
 
+      // แผงอัปเกรด 5 ปุ่ม (รวมสายจ้างเอลฟ์เพิ่มราคาสูง!)
       let upgGrid = document.getElementById('xmasUpgradeGrid');
       if (!upgGrid) { upgGrid = document.createElement('div'); upgGrid.id = 'xmasUpgradeGrid'; upgGrid.className = 'xmas-upgrade-grid'; ws.appendChild(upgGrid); }
-      const expMax = st.exp >= MAX_EXP_V3, elfMax = st.elfLv >= 5, bagMax = st.bagLv >= 5, luckMax = st.luckLv >= 5;
-      const uSig = `${expMax}|${st.elfLv}|${st.bagLv}|${st.luckLv}`;
+      const expMax = st.exp >= MAX_EXP_V3, elfMax = st.elfLv >= 5, cntMax = st.elfExtra >= 4, bagMax = st.bagLv >= 5, luckMax = st.luckLv >= 5;
+      const uSig = `${expMax}|${st.elfLv}|${st.elfExtra}|${st.bagLv}|${st.luckLv}`;
       if (upgGrid.dataset.upgSig !== uSig) {
         upgGrid.dataset.upgSig = uSig;
         upgGrid.innerHTML = `
           <button type="button" class="xmas-upg-btn" onclick="buyXmasUpgrade('elf')" ${elfMax ? 'disabled' : ''}>
-            <span class="xmas-upg-title">🧝 เอลฟ์ผลิตออโต้ (Lv.${st.elfLv}/5)</span>
-            <span class="xmas-upg-sub">${elfMax ? '1 กล่อง / 12 นาที (ออฟไลน์ได้!)' : `1 กล่อง / ${ELF_MINS_V3[st.elfLv + 1]} นาที (ปิดเว็บก็ผลิต)`}</span>
-            <span class="xmas-upg-cost">${elfMax ? '✅ MAX' : `💎 ${formatNum(ELF_COSTS_V3[st.elfLv])} 💠`}</span>
+            <span class="xmas-upg-title">🧝 ความเร็วเอลฟ์ (Lv.${st.elfLv}/5)</span>
+            <span class="xmas-upg-sub">${elfMax ? 'ผลิตทุก 2 นาที (ออฟไลน์ได้!)' : `ลดเวลาเหลือ ${ELF_MINS_V3[st.elfLv + 1]} นาที/รอบ`}</span>
+            <span class="xmas-upg-cost">${elfMax ? '✅ MAX (2 นาที)' : `💎 ${formatNum(ELF_COSTS_V3[st.elfLv])} 💠`}</span>
+          </button>
+          <button type="button" class="xmas-upg-btn" onclick="buyXmasUpgrade('elfCount')" ${(cntMax || st.elfLv <= 0) ? 'disabled' : ''}>
+            <span class="xmas-upg-title">👥 จ้างเอลฟ์เพิ่ม (${st.elfCount}/5 ตัว)</span>
+            <span class="xmas-upg-sub">${st.elfLv <= 0 ? '🔒 จ้างเอลฟ์ Lv.1 ก่อน' : cntMax ? 'ช่วยผลิตทีละ 5 กล่อง/รอบ!' : `เพิ่มเป็น ${st.elfCount + 1} กล่อง/รอบ`}</span>
+            <span class="xmas-upg-cost">${cntMax ? '✅ MAX (5 ตัว)' : st.elfLv <= 0 ? '🔒 ล็อกอยู่' : `💎 ${formatNum(ELF_CNT_COSTS_V3[st.elfExtra])} 💠`}</span>
           </button>
           <button type="button" class="xmas-upg-btn" onclick="buyXmasUpgrade('bag')" ${bagMax ? 'disabled' : ''}>
             <span class="xmas-upg-title">🎒 ขยายกระเป๋า (Lv.${st.bagLv}/5)</span>
@@ -23297,9 +23607,9 @@
             <span class="xmas-upg-sub">Epic +1.5% • Leg +0.3% • Myth +0.01%</span>
             <span class="xmas-upg-cost">${luckMax ? '✅ MAX' : `💎 ${formatNum(LUCK_COSTS_V3[st.luckLv])} 💠`}</span>
           </button>
-          <button type="button" class="xmas-upg-btn" onclick="buyXmasUpgrade('exp')" ${expMax ? 'disabled' : ''}>
+          <button type="button" class="xmas-upg-btn" style="grid-column:1 / -1;" onclick="buyXmasUpgrade('exp')" ${expMax ? 'disabled' : ''}>
             <span class="xmas-upg-title">⚡ เร่งเลเวลโรงงาน</span>
-            <span class="xmas-upg-sub">+${EXP_STEP_V3} EXP (ลดเวลาผลิต)</span>
+            <span class="xmas-upg-sub">+${EXP_STEP_V3} EXP (ลดเวลาผลิตมือ 15 วิ → 3 วิ)</span>
             <span class="xmas-upg-cost">${expMax ? '✅ MAX (Lv.25)' : `💎 ${formatNum(EXP_COST_V3)} 💠`}</span>
           </button>
         `;
@@ -23336,7 +23646,6 @@
       `;
     };
 
-    // 🏆 อัปเดตระบบแจกรางวัลจบกิจกรรมคริสต์มาส 2026 ให้ตรงเรทใหม่ (10,000 / 6,000 / 3,500 / 1,000 💠)
     const _prevClaimEvV3 = checkAndClaimEventRewards;
     checkAndClaimEventRewards = function() {
       if (Date.now() > XMAS_END_MS && db && currentUser && usersCache && usersCache[currentUser.id]) {
@@ -23375,7 +23684,7 @@
       if (typeof isChristmasEventNow === "function" && isChristmasEventNow()) {
         const descEl = document.querySelector('#loyKrathongEventCard .lk-event-desc');
         if (descEl) {
-          descEl.innerHTML = `อัปเกรดโรงงาน & จ้าง <strong>🧝 เอลฟ์ผลิตออฟไลน์</strong> แล้วฉีกกล่องสุ่มกาชาแจกเพื่อน! จบกิจกรรมรับรางวัลใหญ่: <strong>🥇 อันดับ 1 (+10,000 💠)</strong> • <strong>🥈 อันดับ 2 (+6,000 💠)</strong> • <strong>🥉 อันดับ 3 (+3,500 💠)</strong> • ผู้เข้าร่วม 10 กล่องขึ้นไปรับ <strong>+1,000 💠</strong>!`;
+          descEl.innerHTML = `อัปเกรดโรงงาน & จ้างทีม <strong>🧝 เอลฟ์ผลิตออฟไลน์</strong> แล้วฉีกกล่องสุ่มกาชาแจกเพื่อน! จบกิจกรรมรับรางวัลใหญ่: <strong>🥇 อันดับ 1 (+10,000 💠)</strong> • <strong>🥈 อันดับ 2 (+6,000 💠)</strong> • <strong>🥉 อันดับ 3 (+3,500 💠)</strong> • ผู้เข้าร่วม 10 กล่องขึ้นไปรับ <strong>+1,000 💠</strong>!`;
         }
       }
     };
