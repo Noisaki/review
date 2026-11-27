@@ -10218,377 +10218,6 @@
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="onIframeLoad()"></iframe>
 <script>
   // =========================================================================
-  // 👑 ลำดับที่ 6: ยกเครื่องกรอบรูปโปรไฟล์ใหม่ทั้งหมด (BGT Original) + แก้กระตุกทุกจุด
-  // =========================================================================
-  (function upgradeAllAvatarFramesAndFixStutter() {
-    const NEW_BGT_FRAMES = {
-      // 🦊 หูจิ้งจอก BGT (หูสองชั้นขยับดุ๊กดิ๊ก + วงแหวนอำพัน + ประกายดาว)
-      fox_ears: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtFoxG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#fb923c"/><stop offset="100%" stop-color="#ea580c"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtFoxG)" stroke-width="3.4"/>
-        <circle cx="50" cy="50" r="45" fill="none" stroke="#fed7aa" stroke-width="1.2" stroke-dasharray="6 8" class="d6-spin-slow"/>
-        <g class="deco-wiggle">
-          <path d="M13,37 Q15,10 21,5 Q33,12 40,23 Z" fill="url(#bgtFoxG)" stroke="#7c2d12" stroke-width="1.8" stroke-linejoin="round"/>
-          <path d="M19,31 Q20,16 23,12 Q30,17 34,24 Z" fill="#fff7ed"/>
-          <path d="M87,37 Q85,10 79,5 Q67,12 60,23 Z" fill="url(#bgtFoxG)" stroke="#7c2d12" stroke-width="1.8" stroke-linejoin="round"/>
-          <path d="M81,31 Q80,16 77,12 Q70,17 66,24 Z" fill="#fff7ed"/>
-        </g>
-        <circle cx="18" cy="78" r="2.6" fill="#fde047" class="d6-twinkle"/>
-        <circle cx="82" cy="78" r="2.2" fill="#fdba74" class="d6-twinkle"/>
-      </svg>`,
-
-      // 🌸 กลีบซากุระ (วงแหวนคู่สีชมพูมุก + กลีบซากุระหมุนวน 6 กลีบ)
-      sakura: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtSakG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fdf2f8"/><stop offset="50%" stop-color="#f472b6"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtSakG)" stroke-width="3.2"/>
-        <g class="d6-spin-slow">
-          <circle cx="50" cy="50" r="45.5" fill="none" stroke="#fbcfe8" stroke-width="1.4" stroke-dasharray="10 10"/>
-          <path d="M50,2 C54,7 54,12 50,15 C46,12 46,7 50,2 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/>
-          <path d="M50,98 C54,93 54,88 50,85 C46,88 46,93 50,98 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/>
-          <path d="M2,50 C7,46 12,46 15,50 C12,54 7,54 2,50 Z" fill="#f9a8d4" stroke="#db2777" stroke-width="1"/>
-          <path d="M98,50 C93,46 88,46 85,50 C88,54 93,54 98,50 Z" fill="#f9a8d4" stroke="#db2777" stroke-width="1"/>
-          <circle cx="19" cy="19" r="2.8" fill="#fdf2f8"/>
-          <circle cx="81" cy="81" r="2.8" fill="#fdf2f8"/>
-        </g>
-      </svg>`,
-
-      // 🎄 พวงมาลัยคริสต์มาส (กิ่งสนซ้อน + ดาวทองคำ + ลูกบอลประดับ)
-      xmas: `<svg viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="42" fill="none" stroke="#14532d" stroke-width="5.5"/>
-        <circle cx="50" cy="50" r="42" fill="none" stroke="#22c55e" stroke-width="2.6" stroke-dasharray="8 4" class="d6-spin-slow"/>
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#fde047" stroke-width="1.2" stroke-dasharray="3 9" class="d6-spin-rev"/>
-        <polygon class="deco-float" points="50,0 53.5,8.5 62.5,8.5 55.2,14 58,22.5 50,17.2 42,22.5 44.8,14 37.5,8.5 46.5,8.5" fill="#fde047" stroke="#b45309" stroke-width="1.2"/>
-        <circle cx="20" cy="80" r="4" fill="#ef4444" stroke="#fef08a" stroke-width="1.1"/>
-        <circle cx="80" cy="80" r="4" fill="#ef4444" stroke="#fef08a" stroke-width="1.1"/>
-        <circle cx="50" cy="92" r="4.5" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
-      </svg>`,
-
-      // ⚡ ไซเบอร์นีออน (วงแหวน HUD ไซไฟ 3 ชั้นหมุนสวนทางกัน)
-      cyber: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtCybG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="50%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="41" fill="none" stroke="url(#bgtCybG)" stroke-width="2.8"/>
-        <g class="d6-spin-mid">
-          <circle cx="50" cy="50" r="45.8" fill="none" stroke="#a855f7" stroke-width="2.6" stroke-dasharray="20 8 5 8"/>
-          <rect x="48" y="1" width="4" height="7" rx="1" fill="#38bdf8"/>
-          <rect x="48" y="92" width="4" height="7" rx="1" fill="#c084fc"/>
-        </g>
-        <g class="d6-spin-rev">
-          <circle cx="50" cy="50" r="37.5" fill="none" stroke="#22d3ee" stroke-width="1.4" stroke-dasharray="6 14"/>
-          <circle cx="12.5" cy="50" r="2.6" fill="#22d3ee"/>
-          <circle cx="87.5" cy="50" r="2.6" fill="#e879f9"/>
-        </g>
-      </svg>`,
-
-      // 🔥 เพลิงโลกันตร์ (วงแหวนลาวา + เปลวไฟโอบล้อม + สะเก็ดไฟหมุน)
-      fire: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtFirG" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#991b1b"/><stop offset="45%" stop-color="#ef4444"/><stop offset="80%" stop-color="#f97316"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtFirG)" stroke-width="4.2"/>
-        <path class="d6-breathe" d="M11,66 Q2,46 16,28 Q14,46 23,54 Z M89,66 Q98,46 84,28 Q86,46 77,54 Z M35,93 Q50,74 65,93 Q50,86 35,93 Z" fill="url(#bgtFirG)"/>
-        <g class="d6-spin-mid">
-          <circle cx="50" cy="50" r="46" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="10 14"/>
-          <circle cx="20" cy="18" r="2.5" fill="#fde047"/>
-          <circle cx="82" cy="22" r="2.2" fill="#f97316"/>
-          <circle cx="78" cy="82" r="2.5" fill="#fde047"/>
-        </g>
-      </svg>`,
-
-      // 🩸 คำสาป 1 ดาว (วงแหวนทมิฬ + หยดเลือด + ดวงตาแดง)
-      cursed: `<svg viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#7f1d1d" stroke-width="4.4"/>
-        <circle cx="50" cy="50" r="45.8" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="12 6 3 6" class="d6-spin-rev"/>
-        <path d="M21,80 Q21,98 25,98 Q29,98 29,80 Z M71,79 Q71,99 75,99 Q79,99 79,79 Z" fill="#dc2626"/>
-        <g class="curse-king-eye">
-          <ellipse cx="50" cy="9" rx="10" ry="5.5" fill="#090000" stroke="#ef4444" stroke-width="1.6"/>
-          <circle cx="50" cy="9" r="2.8" fill="#ef4444"/>
-        </g>
-      </svg>`,
-
-      // 👁️‍🗨️ เนตรอาฆาต 2 ดาว
-      cursed_2: `<svg viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#450a0a" stroke-width="5"/>
-        <circle cx="50" cy="50" r="45.8" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="14 5 4 5" class="d6-spin-rev"/>
-        <g class="curse-king-eye"><ellipse cx="50" cy="7.5" rx="11.5" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="7.5" r="3.2" fill="#ef4444"/></g>
-        <g class="curse-king-eye"><ellipse cx="50" cy="92.5" rx="11.5" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="92.5" r="3.2" fill="#ef4444"/></g>
-      </svg>`,
-
-      // 💀🩸 โซ่ตรวนวิญญาณ 3 ดาว
-      cursed_3: `<svg viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#090000" stroke-width="6"/>
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#dc2626" stroke-width="2.6" stroke-dasharray="8 4" class="d6-spin-slow"/>
-        <circle cx="50" cy="50" r="46.2" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="18 8" class="d6-spin-mid"/>
-        <path d="M18,78 Q18,98 22,98 Q26,98 26,78 Z M74,76 Q74,99 78,99 Q82,99 82,76 Z" fill="#dc2626"/>
-        <polygon points="50,0 56,12 44,12" fill="#ef4444" stroke="#000" stroke-width="1.3"/>
-      </svg>`,
-
-      // 🩸👁️‍🗨️ BGT.EXE 4 ดาว
-      cursed_4: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtExeG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#000000"/><stop offset="45%" stop-color="#dc2626"/><stop offset="75%" stop-color="#ef4444"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtExeG)" stroke-width="4.8"/>
-        <circle cx="50" cy="50" r="46.5" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="14 6 3 6" class="d6-spin-mid"/>
-        <circle cx="50" cy="50" r="37.2" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="6 12" class="d6-spin-rev"/>
-        <g class="curse-king-eye"><ellipse cx="50" cy="6.5" rx="13" ry="7" fill="#000" stroke="#ef4444" stroke-width="1.8"/><circle cx="50" cy="6.5" r="3.4" fill="#ff0000"/></g>
-      </svg>`,
-
-      // 👑👁️ ราชาคำสาป (TRUE)
-      curse_king: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtCkG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#090000"/><stop offset="35%" stop-color="#dc2626"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtCkG)" stroke-width="5"/>
-        <circle cx="50" cy="50" r="46.5" fill="none" stroke="#fde047" stroke-width="1.8" stroke-dasharray="14 6 3 6" class="d6-spin-mid"/>
-        <circle cx="50" cy="50" r="37" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="8 10" class="d6-spin-rev"/>
-        <polygon class="deco-float" points="31,15 37,2 45,10 50,0 55,10 63,2 69,15" fill="url(#bgtCkG)" stroke="#fde047" stroke-width="1.4" stroke-linejoin="round"/>
-        <g class="curse-king-eye"><ellipse cx="50" cy="91" rx="13" ry="7" fill="#090000" stroke="#fde047" stroke-width="1.6"/><circle cx="50" cy="91" r="4.2" fill="#dc2626"/><circle cx="50" cy="91" r="1.8" fill="#000"/><circle cx="51.4" cy="89.6" r="0.9" fill="#fff"/></g>
-        <g class="curse-king-eye"><ellipse cx="9.5" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.4"/><circle cx="9.5" cy="50" r="2.6" fill="#dc2626"/></g>
-        <g class="curse-king-eye"><ellipse cx="90.5" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.4"/><circle cx="90.5" cy="50" r="2.6" fill="#dc2626"/></g>
-      </svg>`,
-
-      // 👑 มงกุฎผู้พิทักษ์ VIP (ปีกทองคำคู่ + วงแหวนศักดิ์สิทธิ์ + มงกุฎอัญมณี)
-      celestial: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtVipG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="35%" stop-color="#fde047"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs>
-        <path d="M12,58 Q-3,44 6,27 Q13,38 19,40 Q9,29 17,19 Q19,32 25,36" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.2"/>
-        <path d="M88,58 Q103,44 94,27 Q87,38 81,40 Q91,29 83,19 Q81,32 75,36" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.2"/>
-        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtVipG)" stroke-width="4"/>
-        <g class="d6-spin-slow">
-          <circle cx="50" cy="50" r="46" fill="none" stroke="#fef08a" stroke-width="1.6" stroke-dasharray="5 7"/>
-          <polygon points="50,1 53,5 50,9 47,5" fill="#fffbeb"/>
-          <polygon points="50,91 53,95 50,99 47,95" fill="#fde047"/>
-        </g>
-        <g class="deco-float">
-          <polygon points="30,17 37,3 45,12 50,1 55,12 63,3 70,17" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.5" stroke-linejoin="round"/>
-          <circle cx="50" cy="11" r="2.8" fill="#38bdf8" stroke="#fff" stroke-width="0.9"/>
-          <circle cx="39" cy="13" r="1.9" fill="#f43f5e"/>
-          <circle cx="61" cy="13" r="1.9" fill="#f43f5e"/>
-        </g>
-      </svg>`,
-
-      // 🪷✨ มหาบัวกระทงทอง 2026 (LIMITED)
-      krathong_supreme: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtLkG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="30%" stop-color="#fde047"/><stop offset="65%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#bgtLkG)" stroke-width="4.2"/>
-        <g class="d6-spin-slow">
-          <circle cx="50" cy="50" r="47" fill="none" stroke="#fde047" stroke-width="1.6" stroke-dasharray="4 6"/>
-          <path d="M50,0 Q56,9 50,15 Q44,9 50,0 Z M50,100 Q56,91 50,85 Q44,91 50,100 Z M0,50 Q9,44 15,50 Q9,56 0,50 Z M100,50 Q91,44 85,50 Q91,56 100,50 Z" fill="#f472b6" stroke="#fef08a" stroke-width="1"/>
-        </g>
-        <path d="M24,87 Q50,101 76,87" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round"/>
-        <g class="deco-float">
-          <path d="M33,17 L41,8 L50,14 L59,8 L67,17 Q50,22 33,17 Z" fill="#16a34a" stroke="#fef08a" stroke-width="1.2"/>
-          <path d="M39,16 L45,6 L50,13 L55,6 L61,16 Z" fill="#ec4899" stroke="#fbcfe8" stroke-width="0.9"/>
-          <rect x="48.2" y="4" width="3.6" height="10" rx="1.2" fill="#fffbeb"/>
-          <path class="lk-flame" d="M50,-4 Q55,2 50,7 Q45,2 50,-4 Z" fill="#fde047"/>
-        </g>
-      </svg>`,
-
-      // 🌌👑 จักรพรรดิจักรวาล BGT (ADMIN MYTHIC — วงแหวนกาแล็กซี 3 ชั้น + มงกุฎเพชร)
-      admin_cosmic: `<svg viewBox="0 0 100 100">
-        <defs><linearGradient id="bgtAdmG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="33%" stop-color="#a855f7"/><stop offset="66%" stop-color="#ec4899"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs>
-        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#bgtAdmG)" stroke-width="4.6"/>
-        <g class="d6-spin-mid">
-          <circle cx="50" cy="50" r="46.8" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="16 8 4 8"/>
-          <polygon points="50,0 53.5,5 50,10 46.5,5" fill="#ffffff"/>
-          <polygon points="50,90 53.5,95 50,100 46.5,95" fill="#38bdf8"/>
-        </g>
-        <g class="d6-spin-rev">
-          <circle cx="50" cy="50" r="37.8" fill="none" stroke="#f472b6" stroke-width="1.6" stroke-dasharray="6 10"/>
-          <circle cx="13" cy="50" r="3" fill="#38bdf8"/>
-          <circle cx="87" cy="50" r="3" fill="#fde047"/>
-        </g>
-        <g class="deco-float">
-          <polygon points="28,16 36,2 44,11 50,-1 56,11 64,2 72,16" fill="url(#bgtAdmG)" stroke="#fef08a" stroke-width="1.6" stroke-linejoin="round"/>
-          <circle cx="50" cy="10" r="3.2" fill="#ffffff" stroke="#38bdf8" stroke-width="1"/>
-        </g>
-      </svg>`
-    };
-
-    // อัปเดต SVG กรอบรูปใหม่ทั้งหมดเข้า AVATAR_DECORATIONS
-    if (Array.isArray(AVATAR_DECORATIONS)) {
-      AVATAR_DECORATIONS.forEach(item => {
-        if (NEW_BGT_FRAMES[item.id]) item.svg = NEW_BGT_FRAMES[item.id];
-      });
-    }
-
-    // 🧹 แก้กระตุกทุกจุดบนกระดานจัดอันดับ: ถ้าอันดับคนเดิมยังไม่เปลี่ยน ให้อัปเดตเฉพาะตัวเลขคะแนน ไม่ลบสร้างแถวใหม่!
-    const _origRenderPaginatedLb = renderPaginatedLb;
-    renderPaginatedLb = function(type, listElId, pagerElId, sortedEntries, formatterFn, emptyMsg) {
-      const listEl = document.getElementById(listElId);
-      if (!listEl) return;
-
-      const totalPages = Math.max(1, Math.ceil(sortedEntries.length / LB_PER_PAGE));
-      const curPage = Math.min(Math.max(1, lbPages[type] || 1), totalPages);
-      const startIdx = (curPage - 1) * LB_PER_PAGE;
-      const pageItems = sortedEntries.slice(startIdx, startIdx + LB_PER_PAGE);
-
-      // สร้างลายเซ็นโครงสร้างของหน้านี้ (ถ้าคน+กรอบรูป+ชื่อยังเหมือนเดิม -> ไม่อัปเดต DOM ใหม่)
-      const myUid = currentUser ? currentUser.id : "";
-      const structKey = curPage + "|" + myUid + "|" + pageItems.map(e => {
-        const u = e.u || {};
-        return `${e.id}:${u.avatarDecoration || ""}:${u.customName || u.name || ""}:${u.roleTier || 0}`;
-      }).join(",");
-
-      if (sortedEntries.length > 0 && listEl.dataset.lbStructKey === structKey) {
-        // อัปเดตเฉพาะตัวเลขคะแนนในแถวเดิม -> กรอบรูปหมุนลื่น 100% ไม่รีเซ็ตกลับ 0 องศา!
-        const rows = listEl.querySelectorAll('.lb-row');
-        pageItems.forEach((e, i) => {
-          if (rows[i]) {
-            const sc = rows[i].querySelector('.lb-score');
-            if (sc) sc.textContent = formatterFn(e.u);
-          }
-        });
-        return;
-      }
-
-      listEl.dataset.lbStructKey = structKey;
-      _origRenderPaginatedLb(type, listElId, pagerElId, sortedEntries, formatterFn, emptyMsg);
-    };
-  })();
-  // =========================================================================
-  // 🎮 ลำดับที่ 5: ระบบโปรไฟล์สไตล์ Steam (วงกลมเลเวล + เข็มกลัดจิ๋ว + เลือกสวมฉายา 1 อัน)
-  // =========================================================================
-  function getUnlockedTitlesForUser(uid, uData) {
-    const u = uData || {};
-    const clicks = Number(u.heartsClicked) || 0;
-    const lvInfo = getLevelData(clicks);
-    const list = [
-      { id: "level", label: lvInfo.title, desc: `ฉายาจากเลเวลปัจจุบัน (Lv.${formatNum(lvInfo.level)})` }
-    ];
-
-    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, uid) : 0;
-    const hMeta = typeof getHorrorRoleMeta === "function" ? getHorrorRoleMeta(hTier) : null;
-    if (hMeta) list.push({ id: "horror", label: hMeta.name, desc: "ฉายาลับจากคำสาป 1 ดาว" });
-
-    if (u.devSupporter) {
-      list.push({ id: "patron", label: "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』", desc: "ผู้สนับสนุนผู้พัฒนาต้นฉบับ" });
-    }
-
-    const lkInfo = typeof getLoyKrathongRankInfo === "function" ? getLoyKrathongRankInfo(uid) : null;
-    if (lkInfo) list.push({ id: "lk2026", label: lkInfo.label, desc: "ฉายาถาวรจากกิจกรรมลอยกระทง 2026" });
-
-    const acTier = Math.max(
-      Number(u.autoClickTier) || 0,
-      uid ? Number(localStorage.getItem("bgt_ac_mystery_tier_" + uid) || 0) : 0
-    );
-    const acInfo = typeof getAutoClickMysteryInfo === "function" ? getAutoClickMysteryInfo(acTier) : null;
-    if (acInfo) list.push({ id: "ac", label: acInfo.name, desc: "ฉายาปริศนาลับ" });
-
-    return list;
-  }
-
-  function cycleEquippedTitle() {
-    if (!currentUser || !db) return;
-    playClickSound();
-    const uid = currentUser.id;
-    const u = usersCache[uid] || {};
-    const titles = getUnlockedTitlesForUser(uid, u);
-    if (titles.length <= 1) {
-      showToast("✨ ตอนนี้คุณมี 1 ฉายา — ลองร่วมกิจกรรมหรือหาความลับเพื่อปลดล็อกฉายาเพิ่มนะ!");
-      return;
-    }
-
-    const curId = u.equippedTitleId || "level";
-    const curIdx = titles.findIndex(t => t.id === curId);
-    const next = titles[(curIdx + 1) % titles.length];
-
-    if (!usersCache[uid]) usersCache[uid] = {};
-    usersCache[uid].equippedTitleId = next.id;
-    db.ref(`users/${uid}/equippedTitleId`).set(next.id).catch(() => {});
-    renderSteamProfileLayout(currentUser);
-    showToast(`🏷️ เปลี่ยนฉายาที่สวมใส่เป็น: ${next.label}`);
-  }
-
-  function renderSteamProfileLayout(profile) {
-    if (!profile) return;
-    const uid = profile.id;
-    const u = (usersCache && usersCache[uid]) ? usersCache[uid] : {};
-    const bodyEl = document.querySelector('.profile-logged-in-body');
-    const infoEl = document.querySelector('#profileLoggedIn .profile-info');
-    if (!bodyEl || !infoEl) return;
-
-    // 1. วงกลมเลเวลสไตล์ Steam มุมขวาบน
-    let lvWrap = document.getElementById('bgtSteamLvWrap');
-    if (!lvWrap) {
-      lvWrap = document.createElement('div');
-      lvWrap.id = 'bgtSteamLvWrap';
-      lvWrap.className = 'bgt-steam-lv-wrap';
-      lvWrap.innerHTML = `<span class="bgt-steam-lv-label">LEVEL</span><div class="bgt-steam-lv-circle" id="bgtSteamLvCircle">1</div>`;
-      bodyEl.appendChild(lvWrap);
-    }
-    const clicks = Number(u.heartsClicked) || (myServerHearts + pendingClicks);
-    const lvInfo = getLevelData(clicks);
-    const circle = document.getElementById('bgtSteamLvCircle');
-    if (circle) {
-      circle.className = `bgt-steam-lv-circle ${lvInfo.rarityClass}`;
-      circle.textContent = formatNum(lvInfo.level);
-      circle.title = `Lv.${formatNum(lvInfo.level)} (${lvInfo.rarityName}) — ${lvInfo.title}`;
-      circle.onclick = () => showToast(`⭐ เลเวล ${formatNum(lvInfo.level)} [${lvInfo.rarityName}] • ${lvInfo.title}`);
-    }
-
-    // 2. แถบฉายาที่เลือกสวมใส่ (1 อัน) + ปุ่มเปลี่ยนฉายา
-    let titleRow = document.getElementById('bgtEquippedTitleRow');
-    if (!titleRow) {
-      titleRow = document.createElement('div');
-      titleRow.id = 'bgtEquippedTitleRow';
-      titleRow.className = 'bgt-equipped-title-row';
-      const rolesZone = infoEl.querySelector('.bgt-roles-zone');
-      if (rolesZone) rolesZone.insertAdjacentElement('afterend', titleRow);
-      else infoEl.appendChild(titleRow);
-    }
-    const titles = getUnlockedTitlesForUser(uid, u);
-    const activeTitle = titles.find(t => t.id === (u.equippedTitleId || "level")) || titles[0];
-    titleRow.innerHTML = `
-      <span class="bgt-equipped-title-chip" title="${activeTitle.desc}">🏷️ ฉายา: ${activeTitle.label}</span>
-      ${titles.length > 1 ? `<button type="button" class="bgt-swap-title-btn" onclick="cycleEquippedTitle()">🔄 เปลี่ยนฉายา (${titles.length})</button>` : ''}
-    `;
-
-    // 3. แถวเข็มกลัดไอคอนจิ๋ว (Steam Badges Row)
-    let badgesRow = document.getElementById('bgtSteamBadgesRow');
-    if (!badgesRow) {
-      badgesRow = document.createElement('div');
-      badgesRow.id = 'bgtSteamBadgesRow';
-      badgesRow.className = 'bgt-steam-badges-row';
-      titleRow.insertAdjacentElement('afterend', badgesRow);
-    }
-
-    const badges = [];
-    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, uid) : 0;
-    const hMeta = typeof getHorrorRoleMeta === "function" ? getHorrorRoleMeta(hTier) : null;
-    if (hMeta) badges.push({ icon: hTier >= 5 ? "👑" : "🩸", cls: "b-horror", title: hMeta.name });
-
-    if (u.devSupporter) {
-      badges.push({ icon: "🕊️", cls: "b-patron", title: "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』" });
-    }
-
-    const lkInfo = typeof getLoyKrathongRankInfo === "function" ? getLoyKrathongRankInfo(uid) : null;
-    if (lkInfo) badges.push({ icon: "🪷", cls: "b-event", title: lkInfo.label });
-
-    const acTier = Math.max(
-      Number(u.autoClickTier) || 0,
-      Number(localStorage.getItem("bgt_ac_mystery_tier_" + uid) || 0)
-    );
-    const acInfo = typeof getAutoClickMysteryInfo === "function" ? getAutoClickMysteryInfo(acTier) : null;
-    if (acInfo) badges.push({ icon: acTier >= 4 ? "💎" : acTier === 3 ? "💸" : acTier === 2 ? "🦾" : "🖱️", cls: "b-mystery", title: acInfo.name });
-
-    badgesRow.innerHTML = "";
-    if (badges.length === 0) {
-      badgesRow.style.display = "none";
-    } else {
-      badgesRow.style.display = "flex";
-      badges.forEach(b => {
-        const slot = document.createElement('button');
-        slot.type = "button";
-        slot.className = `bgt-steam-badge-slot ${b.cls}`;
-        slot.textContent = b.icon;
-        slot.title = b.title;
-        slot.onclick = () => { playClickSound(); showToast(`🎖️ เข็มกลัด: ${b.title}`); };
-        badgesRow.appendChild(slot);
-      });
-    }
-  }
-
-  // เชื่อมเข้ากับ applyProfileToUI อัตโนมัติ
-  const _origApplySteam = applyProfileToUI;
-  applyProfileToUI = function(profile) {
-    _origApplySteam(profile);
-    renderSteamProfileLayout(profile);
-  };
-  // =========================================================================
   // ⚙️ ค่าตั้งต้นระบบทั้งหมด (Firebase + Discord OAuth2)
   // =========================================================================
   const FIREBASE_CONFIG = {
@@ -21183,6 +20812,378 @@
       syncAdminButtons();
     };
   })();
+
+  // =========================================================================
+  // 👑 ลำดับที่ 6: ยกเครื่องกรอบรูปโปรไฟล์ใหม่ทั้งหมด (BGT Original) + แก้กระตุกทุกจุด
+  // =========================================================================
+  (function upgradeAllAvatarFramesAndFixStutter() {
+    const NEW_BGT_FRAMES = {
+      // 🦊 หูจิ้งจอก BGT (หูสองชั้นขยับดุ๊กดิ๊ก + วงแหวนอำพัน + ประกายดาว)
+      fox_ears: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtFoxG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#fb923c"/><stop offset="100%" stop-color="#ea580c"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtFoxG)" stroke-width="3.4"/>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#fed7aa" stroke-width="1.2" stroke-dasharray="6 8" class="d6-spin-slow"/>
+        <g class="deco-wiggle">
+          <path d="M13,37 Q15,10 21,5 Q33,12 40,23 Z" fill="url(#bgtFoxG)" stroke="#7c2d12" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M19,31 Q20,16 23,12 Q30,17 34,24 Z" fill="#fff7ed"/>
+          <path d="M87,37 Q85,10 79,5 Q67,12 60,23 Z" fill="url(#bgtFoxG)" stroke="#7c2d12" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M81,31 Q80,16 77,12 Q70,17 66,24 Z" fill="#fff7ed"/>
+        </g>
+        <circle cx="18" cy="78" r="2.6" fill="#fde047" class="d6-twinkle"/>
+        <circle cx="82" cy="78" r="2.2" fill="#fdba74" class="d6-twinkle"/>
+      </svg>`,
+
+      // 🌸 กลีบซากุระ (วงแหวนคู่สีชมพูมุก + กลีบซากุระหมุนวน 6 กลีบ)
+      sakura: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtSakG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fdf2f8"/><stop offset="50%" stop-color="#f472b6"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtSakG)" stroke-width="3.2"/>
+        <g class="d6-spin-slow">
+          <circle cx="50" cy="50" r="45.5" fill="none" stroke="#fbcfe8" stroke-width="1.4" stroke-dasharray="10 10"/>
+          <path d="M50,2 C54,7 54,12 50,15 C46,12 46,7 50,2 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/>
+          <path d="M50,98 C54,93 54,88 50,85 C46,88 46,93 50,98 Z" fill="#fbcfe8" stroke="#ec4899" stroke-width="1"/>
+          <path d="M2,50 C7,46 12,46 15,50 C12,54 7,54 2,50 Z" fill="#f9a8d4" stroke="#db2777" stroke-width="1"/>
+          <path d="M98,50 C93,46 88,46 85,50 C88,54 93,54 98,50 Z" fill="#f9a8d4" stroke="#db2777" stroke-width="1"/>
+          <circle cx="19" cy="19" r="2.8" fill="#fdf2f8"/>
+          <circle cx="81" cy="81" r="2.8" fill="#fdf2f8"/>
+        </g>
+      </svg>`,
+
+      // 🎄 พวงมาลัยคริสต์มาส (กิ่งสนซ้อน + ดาวทองคำ + ลูกบอลประดับ)
+      xmas: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14532d" stroke-width="5.5"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#22c55e" stroke-width="2.6" stroke-dasharray="8 4" class="d6-spin-slow"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#fde047" stroke-width="1.2" stroke-dasharray="3 9" class="d6-spin-rev"/>
+        <polygon class="deco-float" points="50,0 53.5,8.5 62.5,8.5 55.2,14 58,22.5 50,17.2 42,22.5 44.8,14 37.5,8.5 46.5,8.5" fill="#fde047" stroke="#b45309" stroke-width="1.2"/>
+        <circle cx="20" cy="80" r="4" fill="#ef4444" stroke="#fef08a" stroke-width="1.1"/>
+        <circle cx="80" cy="80" r="4" fill="#ef4444" stroke="#fef08a" stroke-width="1.1"/>
+        <circle cx="50" cy="92" r="4.5" fill="#dc2626" stroke="#fde047" stroke-width="1.2"/>
+      </svg>`,
+
+      // ⚡ ไซเบอร์นีออน (วงแหวน HUD ไซไฟ 3 ชั้นหมุนสวนทางกัน)
+      cyber: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtCybG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="50%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41" fill="none" stroke="url(#bgtCybG)" stroke-width="2.8"/>
+        <g class="d6-spin-mid">
+          <circle cx="50" cy="50" r="45.8" fill="none" stroke="#a855f7" stroke-width="2.6" stroke-dasharray="20 8 5 8"/>
+          <rect x="48" y="1" width="4" height="7" rx="1" fill="#38bdf8"/>
+          <rect x="48" y="92" width="4" height="7" rx="1" fill="#c084fc"/>
+        </g>
+        <g class="d6-spin-rev">
+          <circle cx="50" cy="50" r="37.5" fill="none" stroke="#22d3ee" stroke-width="1.4" stroke-dasharray="6 14"/>
+          <circle cx="12.5" cy="50" r="2.6" fill="#22d3ee"/>
+          <circle cx="87.5" cy="50" r="2.6" fill="#e879f9"/>
+        </g>
+      </svg>`,
+
+      // 🔥 เพลิงโลกันตร์ (วงแหวนลาวา + เปลวไฟโอบล้อม + สะเก็ดไฟหมุน)
+      fire: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtFirG" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#991b1b"/><stop offset="45%" stop-color="#ef4444"/><stop offset="80%" stop-color="#f97316"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtFirG)" stroke-width="4.2"/>
+        <path class="d6-breathe" d="M11,66 Q2,46 16,28 Q14,46 23,54 Z M89,66 Q98,46 84,28 Q86,46 77,54 Z M35,93 Q50,74 65,93 Q50,86 35,93 Z" fill="url(#bgtFirG)"/>
+        <g class="d6-spin-mid">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="10 14"/>
+          <circle cx="20" cy="18" r="2.5" fill="#fde047"/>
+          <circle cx="82" cy="22" r="2.2" fill="#f97316"/>
+          <circle cx="78" cy="82" r="2.5" fill="#fde047"/>
+        </g>
+      </svg>`,
+
+      // 🩸 คำสาป 1 ดาว (วงแหวนทมิฬ + หยดเลือด + ดวงตาแดง)
+      cursed: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#7f1d1d" stroke-width="4.4"/>
+        <circle cx="50" cy="50" r="45.8" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="12 6 3 6" class="d6-spin-rev"/>
+        <path d="M21,80 Q21,98 25,98 Q29,98 29,80 Z M71,79 Q71,99 75,99 Q79,99 79,79 Z" fill="#dc2626"/>
+        <g class="curse-king-eye">
+          <ellipse cx="50" cy="9" rx="10" ry="5.5" fill="#090000" stroke="#ef4444" stroke-width="1.6"/>
+          <circle cx="50" cy="9" r="2.8" fill="#ef4444"/>
+        </g>
+      </svg>`,
+
+      // 👁️‍🗨️ เนตรอาฆาต 2 ดาว
+      cursed_2: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#450a0a" stroke-width="5"/>
+        <circle cx="50" cy="50" r="45.8" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="14 5 4 5" class="d6-spin-rev"/>
+        <g class="curse-king-eye"><ellipse cx="50" cy="7.5" rx="11.5" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="7.5" r="3.2" fill="#ef4444"/></g>
+        <g class="curse-king-eye"><ellipse cx="50" cy="92.5" rx="11.5" ry="6" fill="#000" stroke="#ef4444" stroke-width="1.6"/><circle cx="50" cy="92.5" r="3.2" fill="#ef4444"/></g>
+      </svg>`,
+
+      // 💀🩸 โซ่ตรวนวิญญาณ 3 ดาว
+      cursed_3: `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#090000" stroke-width="6"/>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="#dc2626" stroke-width="2.6" stroke-dasharray="8 4" class="d6-spin-slow"/>
+        <circle cx="50" cy="50" r="46.2" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="18 8" class="d6-spin-mid"/>
+        <path d="M18,78 Q18,98 22,98 Q26,98 26,78 Z M74,76 Q74,99 78,99 Q82,99 82,76 Z" fill="#dc2626"/>
+        <polygon points="50,0 56,12 44,12" fill="#ef4444" stroke="#000" stroke-width="1.3"/>
+      </svg>`,
+
+      // 🩸👁️‍🗨️ BGT.EXE 4 ดาว
+      cursed_4: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtExeG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#000000"/><stop offset="45%" stop-color="#dc2626"/><stop offset="75%" stop-color="#ef4444"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtExeG)" stroke-width="4.8"/>
+        <circle cx="50" cy="50" r="46.5" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="14 6 3 6" class="d6-spin-mid"/>
+        <circle cx="50" cy="50" r="37.2" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="6 12" class="d6-spin-rev"/>
+        <g class="curse-king-eye"><ellipse cx="50" cy="6.5" rx="13" ry="7" fill="#000" stroke="#ef4444" stroke-width="1.8"/><circle cx="50" cy="6.5" r="3.4" fill="#ff0000"/></g>
+      </svg>`,
+
+      // 👑👁️ ราชาคำสาป (TRUE)
+      curse_king: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtCkG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#090000"/><stop offset="35%" stop-color="#dc2626"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtCkG)" stroke-width="5"/>
+        <circle cx="50" cy="50" r="46.5" fill="none" stroke="#fde047" stroke-width="1.8" stroke-dasharray="14 6 3 6" class="d6-spin-mid"/>
+        <circle cx="50" cy="50" r="37" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="8 10" class="d6-spin-rev"/>
+        <polygon class="deco-float" points="31,15 37,2 45,10 50,0 55,10 63,2 69,15" fill="url(#bgtCkG)" stroke="#fde047" stroke-width="1.4" stroke-linejoin="round"/>
+        <g class="curse-king-eye"><ellipse cx="50" cy="91" rx="13" ry="7" fill="#090000" stroke="#fde047" stroke-width="1.6"/><circle cx="50" cy="91" r="4.2" fill="#dc2626"/><circle cx="50" cy="91" r="1.8" fill="#000"/><circle cx="51.4" cy="89.6" r="0.9" fill="#fff"/></g>
+        <g class="curse-king-eye"><ellipse cx="9.5" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.4"/><circle cx="9.5" cy="50" r="2.6" fill="#dc2626"/></g>
+        <g class="curse-king-eye"><ellipse cx="90.5" cy="50" rx="5.5" ry="9" fill="#090000" stroke="#ef4444" stroke-width="1.4"/><circle cx="90.5" cy="50" r="2.6" fill="#dc2626"/></g>
+      </svg>`,
+
+      // 👑 มงกุฎผู้พิทักษ์ VIP (ปีกทองคำคู่ + วงแหวนศักดิ์สิทธิ์ + มงกุฎอัญมณี)
+      celestial: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtVipG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="35%" stop-color="#fde047"/><stop offset="70%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs>
+        <path d="M12,58 Q-3,44 6,27 Q13,38 19,40 Q9,29 17,19 Q19,32 25,36" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.2"/>
+        <path d="M88,58 Q103,44 94,27 Q87,38 81,40 Q91,29 83,19 Q81,32 75,36" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.2"/>
+        <circle cx="50" cy="50" r="41.5" fill="none" stroke="url(#bgtVipG)" stroke-width="4"/>
+        <g class="d6-spin-slow">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="#fef08a" stroke-width="1.6" stroke-dasharray="5 7"/>
+          <polygon points="50,1 53,5 50,9 47,5" fill="#fffbeb"/>
+          <polygon points="50,91 53,95 50,99 47,95" fill="#fde047"/>
+        </g>
+        <g class="deco-float">
+          <polygon points="30,17 37,3 45,12 50,1 55,12 63,3 70,17" fill="url(#bgtVipG)" stroke="#92400e" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="50" cy="11" r="2.8" fill="#38bdf8" stroke="#fff" stroke-width="0.9"/>
+          <circle cx="39" cy="13" r="1.9" fill="#f43f5e"/>
+          <circle cx="61" cy="13" r="1.9" fill="#f43f5e"/>
+        </g>
+      </svg>`,
+
+      // 🪷✨ มหาบัวกระทงทอง 2026 (LIMITED)
+      krathong_supreme: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtLkG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffbeb"/><stop offset="30%" stop-color="#fde047"/><stop offset="65%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#bgtLkG)" stroke-width="4.2"/>
+        <g class="d6-spin-slow">
+          <circle cx="50" cy="50" r="47" fill="none" stroke="#fde047" stroke-width="1.6" stroke-dasharray="4 6"/>
+          <path d="M50,0 Q56,9 50,15 Q44,9 50,0 Z M50,100 Q56,91 50,85 Q44,91 50,100 Z M0,50 Q9,44 15,50 Q9,56 0,50 Z M100,50 Q91,44 85,50 Q91,56 100,50 Z" fill="#f472b6" stroke="#fef08a" stroke-width="1"/>
+        </g>
+        <path d="M24,87 Q50,101 76,87" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round"/>
+        <g class="deco-float">
+          <path d="M33,17 L41,8 L50,14 L59,8 L67,17 Q50,22 33,17 Z" fill="#16a34a" stroke="#fef08a" stroke-width="1.2"/>
+          <path d="M39,16 L45,6 L50,13 L55,6 L61,16 Z" fill="#ec4899" stroke="#fbcfe8" stroke-width="0.9"/>
+          <rect x="48.2" y="4" width="3.6" height="10" rx="1.2" fill="#fffbeb"/>
+          <path class="lk-flame" d="M50,-4 Q55,2 50,7 Q45,2 50,-4 Z" fill="#fde047"/>
+        </g>
+      </svg>`,
+
+      // 🌌👑 จักรพรรดิจักรวาล BGT (ADMIN MYTHIC — วงแหวนกาแล็กซี 3 ชั้น + มงกุฎเพชร)
+      admin_cosmic: `<svg viewBox="0 0 100 100">
+        <defs><linearGradient id="bgtAdmG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="33%" stop-color="#a855f7"/><stop offset="66%" stop-color="#ec4899"/><stop offset="100%" stop-color="#fde047"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#bgtAdmG)" stroke-width="4.6"/>
+        <g class="d6-spin-mid">
+          <circle cx="50" cy="50" r="46.8" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="16 8 4 8"/>
+          <polygon points="50,0 53.5,5 50,10 46.5,5" fill="#ffffff"/>
+          <polygon points="50,90 53.5,95 50,100 46.5,95" fill="#38bdf8"/>
+        </g>
+        <g class="d6-spin-rev">
+          <circle cx="50" cy="50" r="37.8" fill="none" stroke="#f472b6" stroke-width="1.6" stroke-dasharray="6 10"/>
+          <circle cx="13" cy="50" r="3" fill="#38bdf8"/>
+          <circle cx="87" cy="50" r="3" fill="#fde047"/>
+        </g>
+        <g class="deco-float">
+          <polygon points="28,16 36,2 44,11 50,-1 56,11 64,2 72,16" fill="url(#bgtAdmG)" stroke="#fef08a" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="50" cy="10" r="3.2" fill="#ffffff" stroke="#38bdf8" stroke-width="1"/>
+        </g>
+      </svg>`
+    };
+
+    // อัปเดต SVG กรอบรูปใหม่ทั้งหมดเข้า AVATAR_DECORATIONS
+    if (Array.isArray(AVATAR_DECORATIONS)) {
+      AVATAR_DECORATIONS.forEach(item => {
+        if (NEW_BGT_FRAMES[item.id]) item.svg = NEW_BGT_FRAMES[item.id];
+      });
+    }
+
+    // 🧹 แก้กระตุกทุกจุดบนกระดานจัดอันดับ: ถ้าอันดับคนเดิมยังไม่เปลี่ยน ให้อัปเดตเฉพาะตัวเลขคะแนน ไม่ลบสร้างแถวใหม่!
+    const _origRenderPaginatedLb = renderPaginatedLb;
+    renderPaginatedLb = function(type, listElId, pagerElId, sortedEntries, formatterFn, emptyMsg) {
+      const listEl = document.getElementById(listElId);
+      if (!listEl) return;
+
+      const totalPages = Math.max(1, Math.ceil(sortedEntries.length / LB_PER_PAGE));
+      const curPage = Math.min(Math.max(1, lbPages[type] || 1), totalPages);
+      const startIdx = (curPage - 1) * LB_PER_PAGE;
+      const pageItems = sortedEntries.slice(startIdx, startIdx + LB_PER_PAGE);
+
+      // สร้างลายเซ็นโครงสร้างของหน้านี้ (ถ้าคน+กรอบรูป+ชื่อยังเหมือนเดิม -> ไม่อัปเดต DOM ใหม่)
+      const myUid = currentUser ? currentUser.id : "";
+      const structKey = curPage + "|" + myUid + "|" + pageItems.map(e => {
+        const u = e.u || {};
+        return `${e.id}:${u.avatarDecoration || ""}:${u.customName || u.name || ""}:${u.roleTier || 0}`;
+      }).join(",");
+
+      if (sortedEntries.length > 0 && listEl.dataset.lbStructKey === structKey) {
+        // อัปเดตเฉพาะตัวเลขคะแนนในแถวเดิม -> กรอบรูปหมุนลื่น 100% ไม่รีเซ็ตกลับ 0 องศา!
+        const rows = listEl.querySelectorAll('.lb-row');
+        pageItems.forEach((e, i) => {
+          if (rows[i]) {
+            const sc = rows[i].querySelector('.lb-score');
+            if (sc) sc.textContent = formatterFn(e.u);
+          }
+        });
+        return;
+      }
+
+      listEl.dataset.lbStructKey = structKey;
+      _origRenderPaginatedLb(type, listElId, pagerElId, sortedEntries, formatterFn, emptyMsg);
+    };
+  })();
+  // =========================================================================
+  // 🎮 ลำดับที่ 5: ระบบโปรไฟล์สไตล์ Steam (วงกลมเลเวล + เข็มกลัดจิ๋ว + เลือกสวมฉายา 1 อัน)
+  // =========================================================================
+  function getUnlockedTitlesForUser(uid, uData) {
+    const u = uData || {};
+    const clicks = Number(u.heartsClicked) || 0;
+    const lvInfo = getLevelData(clicks);
+    const list = [
+      { id: "level", label: lvInfo.title, desc: `ฉายาจากเลเวลปัจจุบัน (Lv.${formatNum(lvInfo.level)})` }
+    ];
+
+    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, uid) : 0;
+    const hMeta = typeof getHorrorRoleMeta === "function" ? getHorrorRoleMeta(hTier) : null;
+    if (hMeta) list.push({ id: "horror", label: hMeta.name, desc: "ฉายาลับจากคำสาป 1 ดาว" });
+
+    if (u.devSupporter) {
+      list.push({ id: "patron", label: "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』", desc: "ผู้สนับสนุนผู้พัฒนาต้นฉบับ" });
+    }
+
+    const lkInfo = typeof getLoyKrathongRankInfo === "function" ? getLoyKrathongRankInfo(uid) : null;
+    if (lkInfo) list.push({ id: "lk2026", label: lkInfo.label, desc: "ฉายาถาวรจากกิจกรรมลอยกระทง 2026" });
+
+    const acTier = Math.max(
+      Number(u.autoClickTier) || 0,
+      uid ? Number(localStorage.getItem("bgt_ac_mystery_tier_" + uid) || 0) : 0
+    );
+    const acInfo = typeof getAutoClickMysteryInfo === "function" ? getAutoClickMysteryInfo(acTier) : null;
+    if (acInfo) list.push({ id: "ac", label: acInfo.name, desc: "ฉายาปริศนาลับ" });
+
+    return list;
+  }
+
+  function cycleEquippedTitle() {
+    if (!currentUser || !db) return;
+    playClickSound();
+    const uid = currentUser.id;
+    const u = usersCache[uid] || {};
+    const titles = getUnlockedTitlesForUser(uid, u);
+    if (titles.length <= 1) {
+      showToast("✨ ตอนนี้คุณมี 1 ฉายา — ลองร่วมกิจกรรมหรือหาความลับเพื่อปลดล็อกฉายาเพิ่มนะ!");
+      return;
+    }
+
+    const curId = u.equippedTitleId || "level";
+    const curIdx = titles.findIndex(t => t.id === curId);
+    const next = titles[(curIdx + 1) % titles.length];
+
+    if (!usersCache[uid]) usersCache[uid] = {};
+    usersCache[uid].equippedTitleId = next.id;
+    db.ref(`users/${uid}/equippedTitleId`).set(next.id).catch(() => {});
+    renderSteamProfileLayout(currentUser);
+    showToast(`🏷️ เปลี่ยนฉายาที่สวมใส่เป็น: ${next.label}`);
+  }
+
+  function renderSteamProfileLayout(profile) {
+    if (!profile) return;
+    const uid = profile.id;
+    const u = (usersCache && usersCache[uid]) ? usersCache[uid] : {};
+    const bodyEl = document.querySelector('.profile-logged-in-body');
+    const infoEl = document.querySelector('#profileLoggedIn .profile-info');
+    if (!bodyEl || !infoEl) return;
+
+    // 1. วงกลมเลเวลสไตล์ Steam มุมขวาบน
+    let lvWrap = document.getElementById('bgtSteamLvWrap');
+    if (!lvWrap) {
+      lvWrap = document.createElement('div');
+      lvWrap.id = 'bgtSteamLvWrap';
+      lvWrap.className = 'bgt-steam-lv-wrap';
+      lvWrap.innerHTML = `<span class="bgt-steam-lv-label">LEVEL</span><div class="bgt-steam-lv-circle" id="bgtSteamLvCircle">1</div>`;
+      bodyEl.appendChild(lvWrap);
+    }
+    const clicks = Number(u.heartsClicked) || (myServerHearts + pendingClicks);
+    const lvInfo = getLevelData(clicks);
+    const circle = document.getElementById('bgtSteamLvCircle');
+    if (circle) {
+      circle.className = `bgt-steam-lv-circle ${lvInfo.rarityClass}`;
+      circle.textContent = formatNum(lvInfo.level);
+      circle.title = `Lv.${formatNum(lvInfo.level)} (${lvInfo.rarityName}) — ${lvInfo.title}`;
+      circle.onclick = () => showToast(`⭐ เลเวล ${formatNum(lvInfo.level)} [${lvInfo.rarityName}] • ${lvInfo.title}`);
+    }
+
+    // 2. แถบฉายาที่เลือกสวมใส่ (1 อัน) + ปุ่มเปลี่ยนฉายา
+    let titleRow = document.getElementById('bgtEquippedTitleRow');
+    if (!titleRow) {
+      titleRow = document.createElement('div');
+      titleRow.id = 'bgtEquippedTitleRow';
+      titleRow.className = 'bgt-equipped-title-row';
+      const rolesZone = infoEl.querySelector('.bgt-roles-zone');
+      if (rolesZone) rolesZone.insertAdjacentElement('afterend', titleRow);
+      else infoEl.appendChild(titleRow);
+    }
+    const titles = getUnlockedTitlesForUser(uid, u);
+    const activeTitle = titles.find(t => t.id === (u.equippedTitleId || "level")) || titles[0];
+    titleRow.innerHTML = `
+      <span class="bgt-equipped-title-chip" title="${activeTitle.desc}">🏷️ ฉายา: ${activeTitle.label}</span>
+      ${titles.length > 1 ? `<button type="button" class="bgt-swap-title-btn" onclick="cycleEquippedTitle()">🔄 เปลี่ยนฉายา (${titles.length})</button>` : ''}
+    `;
+
+    // 3. แถวเข็มกลัดไอคอนจิ๋ว (Steam Badges Row)
+    let badgesRow = document.getElementById('bgtSteamBadgesRow');
+    if (!badgesRow) {
+      badgesRow = document.createElement('div');
+      badgesRow.id = 'bgtSteamBadgesRow';
+      badgesRow.className = 'bgt-steam-badges-row';
+      titleRow.insertAdjacentElement('afterend', badgesRow);
+    }
+
+    const badges = [];
+    const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, uid) : 0;
+    const hMeta = typeof getHorrorRoleMeta === "function" ? getHorrorRoleMeta(hTier) : null;
+    if (hMeta) badges.push({ icon: hTier >= 5 ? "👑" : "🩸", cls: "b-horror", title: hMeta.name });
+
+    if (u.devSupporter) {
+      badges.push({ icon: "🕊️", cls: "b-patron", title: "🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』" });
+    }
+
+    const lkInfo = typeof getLoyKrathongRankInfo === "function" ? getLoyKrathongRankInfo(uid) : null;
+    if (lkInfo) badges.push({ icon: "🪷", cls: "b-event", title: lkInfo.label });
+
+    const acTier = Math.max(
+      Number(u.autoClickTier) || 0,
+      Number(localStorage.getItem("bgt_ac_mystery_tier_" + uid) || 0)
+    );
+    const acInfo = typeof getAutoClickMysteryInfo === "function" ? getAutoClickMysteryInfo(acTier) : null;
+    if (acInfo) badges.push({ icon: acTier >= 4 ? "💎" : acTier === 3 ? "💸" : acTier === 2 ? "🦾" : "🖱️", cls: "b-mystery", title: acInfo.name });
+
+    badgesRow.innerHTML = "";
+    if (badges.length === 0) {
+      badgesRow.style.display = "none";
+    } else {
+      badgesRow.style.display = "flex";
+      badges.forEach(b => {
+        const slot = document.createElement('button');
+        slot.type = "button";
+        slot.className = `bgt-steam-badge-slot ${b.cls}`;
+        slot.textContent = b.icon;
+        slot.title = b.title;
+        slot.onclick = () => { playClickSound(); showToast(`🎖️ เข็มกลัด: ${b.title}`); };
+        badgesRow.appendChild(slot);
+      });
+    }
+  }
+
+  // เชื่อมเข้ากับ applyProfileToUI อัตโนมัติ
+  const _origApplySteam = applyProfileToUI;
+  applyProfileToUI = function(profile) {
+    _origApplySteam(profile);
+    renderSteamProfileLayout(profile);
+  };
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
