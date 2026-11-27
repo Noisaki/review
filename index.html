@@ -8745,7 +8745,294 @@
         filter: none !important;
       }
     }
+    /* =========================================
+       🛠️ แก้ภาพเด้ง + โปรไฟล์โดนบีบ + กรอบกระตุก + อัปเกรดแท่นยืน Top 3
+       ========================================= */
+
+    /* 1. แก้ชี้การ์ดแล้วเด้งรัวๆ (เอา translateY ออก เหลือแค่ซูมรูปนุ่มๆ) */
+    .proj-card:hover,
+    .game-card:hover,
+    .dev-card:hover,
+    .bgt-hgame-card:hover,
+    .wish-card:hover,
+    .bgt-stat-card:hover {
+      transform: none !important;
+      border-color: #fbbf24 !important;
+      box-shadow: 0 14px 30px rgba(245, 158, 11, 0.28) !important;
+    }
+    .proj-card:hover .proj-cover-wrap img,
+    .game-card:hover img,
+    .bgt-hgame-card:hover .bgt-hgame-thumb img,
+    .wish-card:hover .wish-thumb img {
+      transform: scale(1.05);
+      transition: transform 0.28s ease;
+    }
+
+    /* 2. แก้หน้าโปรไฟล์ & ยศโดนบีบ + กันวงกลมเลเวลทับปุ่ม */
+    .profile-logged-in-body {
+      padding-right: 115px !important; /* เว้นที่มุมขวาบนให้วงกลมเลเวล */
+    }
+    .profile-logged-in-body .profile-info {
+      flex: 1 1 540px !important;
+      min-width: 280px !important;
+    }
+    .profile-logged-in-body .profile-actions {
+      flex: 1 1 100% !important; /* ดันแถบปุ่มลงมาเรียงเต็มแถวล่าง ไม่บีบโซนยศ */
+      padding-top: 10px !important;
+      margin-top: 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.25);
+    }
+    @media (max-width: 780px) {
+      .profile-logged-in-body { padding-right: 16px !important; }
+      .profile-logged-in-body .profile-info { flex: 1 1 100% !important; min-width: 0 !important; }
+    }
+
+    /* 3. แก้ขอบกรอบภาพกระตุกบนคอม (หยุดการคำนวณเงาซ้ำๆ + ล็อกเลเยอร์ GPU) */
+    .avatar-frame.tier-99,
+    .nav-avatar-frame.tier-99,
+    .avatar-frame.tier-4,
+    .nav-avatar-frame.tier-4,
+    .avatar-frame.dev-patron-frame,
+    .nav-avatar-frame.dev-patron-frame {
+      animation: none !important;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.65), 0 0 22px rgba(168, 85, 247, 0.45) !important;
+    }
+    .avatar-deco-overlay svg,
+    .d6-spin-slow, .d6-spin-mid, .d6-spin-rev {
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+
+    /* 4. 🏆 อัปเกรดแท่นยืน Top 3 ให้หรูหรามีมิติ (3D Neon Pedestal) */
+    body.bgt-dark-mode:not(.horror-mode) .podium-box {
+      background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.96) 72%) !important;
+      border: 1.5px solid rgba(251, 191, 36, 0.38) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 12px 28px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+    .podium-pillar {
+      position: relative;
+      overflow: hidden;
+      border-top: 2.5px solid rgba(255, 255, 255, 0.65);
+      box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.35), inset 0 10px 18px rgba(255, 255, 255, 0.25) !important;
+    }
+    .podium-pillar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+      pointer-events: none;
+    }
+    .podium-slot.p-1 .podium-pillar {
+      height: 102px !important;
+      background: linear-gradient(180deg, #fef08a 0%, #f59e0b 45%, #92400e 100%) !important;
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.55), inset 0 6px 14px rgba(255, 255, 255, 0.45) !important;
+    }
+    .podium-slot.p-2 .podium-pillar {
+      height: 74px !important;
+      background: linear-gradient(180deg, #f8fafc 0%, #94a3b8 50%, #334155 100%) !important;
+      box-shadow: 0 0 18px rgba(148, 163, 184, 0.4), inset 0 6px 12px rgba(255, 255, 255, 0.4) !important;
+    }
+    .podium-slot.p-3 .podium-pillar {
+      height: 54px !important;
+      background: linear-gradient(180deg, #fed7aa 0%, #ea580c 50%, #7c2d12 100%) !important;
+      box-shadow: 0 0 16px rgba(234, 88, 12, 0.4), inset 0 6px 12px rgba(255, 255, 255, 0.35) !important;
+    }
+    /* =========================================
+       🏭🎁 โรงงานผลิตและแจกของขวัญคริสต์มาส (กันสแปม 100%)
+       ========================================= */
+    .xmas-workshop-box {
+      max-width: 560px;
+      margin: 0 auto 14px;
+      background: rgba(10, 20, 16, 0.72);
+      border: 1.5px solid rgba(253, 224, 71, 0.55);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .xmas-bag-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fef08a;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .xmas-craft-track {
+      width: 100%;
+      height: 12px;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid rgba(253, 224, 71, 0.35);
+    }
+    .xmas-craft-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22c55e, #fde047, #f59e0b);
+      border-radius: 999px;
+      transition: width 0.15s linear;
+    }
+    .xmas-ws-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .xmas-ws-btn {
+      flex: 1;
+      min-width: 170px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 2px solid #fde68a;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.2s, opacity 0.2s;
+    }
+    .xmas-ws-btn.craft {
+      background: linear-gradient(135deg, #15803d, #22c55e);
+      box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
+    }
+    .xmas-ws-btn.give {
+      background: linear-gradient(135deg, #dc2626, #f59e0b);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+    }
+    .xmas-ws-btn:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+    .xmas-ws-btn:active:not(:disabled) { transform: scale(0.95); }
+    .xmas-ws-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(0.4);
+    }
+    /* =========================================
+       🏆 แท่นเกียรติยศ Top 3 แบบกดเลื่อนทีละแท่น (1/4 - 4/4)
+       ========================================= */
+    .podium-switcher-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .podium-tabs-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .podium-tab-btn {
+      background: rgba(148, 163, 184, 0.14);
+      border: 1.5px solid rgba(148, 163, 184, 0.3);
+      color: #64748b;
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    body.bgt-dark-mode .podium-tab-btn { color: #cbd5e1; }
+    .podium-tab-btn:hover { border-color: #fbbf24; color: #fde047; }
+    .podium-tab-btn.active {
+      background: linear-gradient(135deg, #f59e0b, #dc2626);
+      color: #ffffff !important;
+      border-color: #fde68a;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    }
+
+    .podium-nav-arrows {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .podium-arrow-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(251, 191, 36, 0.55);
+      background: rgba(15, 23, 42, 0.75);
+      color: #fde047;
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, background 0.2s;
+    }
+    .podium-arrow-btn:hover { background: #f59e0b; color: #0f172a; transform: scale(1.08); }
+    .podium-page-counter {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #fde68a;
+      min-width: 38px;
+      text-align: center;
+    }
+
+    /* โชว์ทีละ 1 แท่นเต็มความกว้างสวยงาม */
+    #homePodiumSection .podium-grid.carousel-mode {
+      display: block !important;
+    }
+    #homePodiumSection .podium-grid.carousel-mode .podium-box {
+      display: none !important;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    #homePodiumSection .podium-grid.carousel-mode .podium-box.active-podium {
+      display: flex !important;
+      animation: fadeSlideUp 0.28s ease-out;
+    }
+    /* =========================================
+       💖👑 ยศปลอบใจ & ของแรร์ตำนาน Season 1 (Top 3 นักส่งหัวใจ)
+       ========================================= */
+    .s1-legend-pill {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 2px 11px;
+      border-radius: 999px;
+      color: #ffffff !important;
+      background: linear-gradient(110deg, #9f1239 0%, #f43f5e 30%, #fbbf24 55%, #ec4899 80%, #9f1239 100%) !important;
+      background-size: 280% 280% !important;
+      animation: gradientFlow 2.8s linear infinite !important;
+      border: 1.5px solid #fef08a !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75) !important;
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.7), 0 0 6px rgba(251, 191, 36, 0.75) !important;
+      white-space: nowrap;
+    }
+    .s1-legend-pill::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -120%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+      transform: skewX(-25deg);
+      animation: rankShimmer 2.2s infinite;
+      pointer-events: none;
+    }
+    .bgt-steam-badge-slot.b-s1legend {
+      border-color: #fde047;
+      background: linear-gradient(145deg, #9f1239, #4c0519);
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.65);
+    }
   </style>
+  
 </head>
 <body>
 
@@ -21184,6 +21471,520 @@
     _origApplySteam(profile);
     renderSteamProfileLayout(profile);
   };
+  // =========================================================================
+  // 🔇 แก้เพลงยังดังตอนสลับหน้าต่าง / พับจอบนมือถือ (iOS & Android)
+  // =========================================================================
+  (function fixMobileBackgroundAudio() {
+    const pauseAllSiteAudio = () => {
+      ['bgmAudio', 'realCryAudio', 'curseBgmAudio', 'curseBgmPhase2Audio', 'curseJumpscareAudio'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.paused) {
+          el.dataset.wasPlayingBg = "1";
+          el.pause();
+        }
+      });
+      if (typeof audioCtx !== 'undefined' && audioCtx && audioCtx.state === 'running') {
+        audioCtx.suspend().catch(() => {});
+      }
+    };
+
+    const resumeSiteAudioIfNeeded = () => {
+      if (document.hidden) return;
+      if (typeof audioCtx !== 'undefined' && audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      const bgmEl = document.getElementById('bgmAudio');
+      if (bgmEl && bgmEl.dataset.wasPlayingBg === "1" && !userPausedMusic && !isHorrorTriggered && !isCurseSceneBlockingBgm()) {
+        bgmEl.dataset.wasPlayingBg = "";
+        bgmEl.play().catch(() => {});
+      }
+    };
+
+    window.addEventListener('pagehide', pauseAllSiteAudio);
+    window.addEventListener('blur', pauseAllSiteAudio);
+    window.addEventListener('focus', resumeSiteAudioIfNeeded);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) pauseAllSiteAudio();
+      else resumeSiteAudioIfNeeded();
+    });
+  })();
+
+  // =========================================================================
+  // 🏭🎁 ระบบโรงงานผลิต & แจกของขวัญคริสต์มาส 2026 (Anti-Spam 100%)
+  // =========================================================================
+  const XMAS_CRAFT_MS = 15000;
+  const XMAS_MAX_BAG  = 5;
+  const XMAS_GIFT_PTS = 25;
+
+  let xmasBagCount = 0;
+  let xmasCraftEndAt = 0;
+  let xmasCraftTimer = null;
+  let _xmasGiveLock = 0;
+
+  try {
+    xmasBagCount   = Math.min(XMAS_MAX_BAG, Math.max(0, parseInt(localStorage.getItem('bgt_xmas_bag_v1') || '0', 10) || 0));
+    xmasCraftEndAt = parseInt(localStorage.getItem('bgt_xmas_craft_end_v1') || '0', 10) || 0;
+  } catch (e) {}
+
+  function saveXmasWorkshopLocal() {
+    try {
+      localStorage.setItem('bgt_xmas_bag_v1', String(xmasBagCount));
+      localStorage.setItem('bgt_xmas_craft_end_v1', String(xmasCraftEndAt));
+    } catch (e) {}
+  }
+
+  function ensureXmasWorkshopUI() {
+    const card = document.getElementById('loyKrathongEventCard');
+    const oldBtn = document.getElementById('lkFloatBtn');
+    if (!card || !oldBtn) return;
+
+    oldBtn.style.display = 'none';
+
+    let ws = document.getElementById('xmasWorkshopBox');
+    if (!ws) {
+      ws = document.createElement('div');
+      ws.id = 'xmasWorkshopBox';
+      ws.className = 'xmas-workshop-box';
+      ws.innerHTML = `
+        <div class="xmas-bag-status">
+          <span id="xmasBagText">🎒 กระเป๋าของขวัญ: 0 / ${XMAS_MAX_BAG} กล่อง</span>
+          <span id="xmasCraftStateText" style="color:#86efac;">✨ พร้อมผลิตของขวัญ</span>
+        </div>
+        <div class="xmas-craft-track">
+          <div class="xmas-craft-fill" id="xmasCraftFill"></div>
+        </div>
+        <div class="xmas-ws-btns">
+          <button type="button" class="xmas-ws-btn craft" id="xmasCraftBtn" onclick="startCraftXmasGift()">🔨 ผลิตของขวัญ (15 วิ)</button>
+          <button type="button" class="xmas-ws-btn give" id="xmasGiveBtn" onclick="giveXmasGiftAway(event)" disabled>🎁 แจกของขวัญ! (0)</button>
+        </div>
+      `;
+      oldBtn.parentNode.insertBefore(ws, oldBtn.nextSibling);
+    }
+    updateXmasWorkshopUI();
+  }
+
+  function updateXmasWorkshopUI() {
+    const bagEl   = document.getElementById('xmasBagText');
+    const stateEl = document.getElementById('xmasCraftStateText');
+    const fillEl  = document.getElementById('xmasCraftFill');
+    const cBtn    = document.getElementById('xmasCraftBtn');
+    const gBtn    = document.getElementById('xmasGiveBtn');
+    if (!bagEl || !cBtn || !gBtn) return;
+
+    const now = Date.now();
+    if (xmasCraftEndAt > 0 && now >= xmasCraftEndAt) {
+      xmasCraftEndAt = 0;
+      if (xmasBagCount < XMAS_MAX_BAG) {
+        xmasBagCount++;
+        playSuccessSound();
+        showToast(`🎁 ผลิตของขวัญเสร็จแล้ว! (ในกระเป๋ามี ${xmasBagCount}/${XMAS_MAX_BAG} กล่อง)`);
+      }
+      saveXmasWorkshopLocal();
+    }
+
+    const isCrafting = xmasCraftEndAt > now;
+    bagEl.textContent = `🎒 กระเป๋าของขวัญ: ${xmasBagCount} / ${XMAS_MAX_BAG} กล่อง`;
+
+    if (isCrafting) {
+      const remainMs = xmasCraftEndAt - now;
+      const pct = Math.min(100, Math.max(0, ((XMAS_CRAFT_MS - remainMs) / XMAS_CRAFT_MS) * 100));
+      const secLeft = Math.ceil(remainMs / 1000);
+      if (fillEl) fillEl.style.width = pct.toFixed(1) + '%';
+      if (stateEl) stateEl.textContent = `⚙️ กำลังห่อของขวัญ... เหลือ ${secLeft} วิ`;
+      cBtn.disabled = true;
+      cBtn.textContent = `⏳ กำลังผลิต... (${secLeft} วิ)`;
+    } else {
+      if (fillEl) fillEl.style.width = xmasBagCount >= XMAS_MAX_BAG ? '100%' : '0%';
+      if (stateEl) stateEl.textContent = xmasBagCount >= XMAS_MAX_BAG ? '🎒 กระเป๋าเต็มแล้ว! กดแจกก่อนนะ' : '✨ พร้อมผลิตของขวัญ';
+      cBtn.disabled = xmasBagCount >= XMAS_MAX_BAG;
+      cBtn.textContent = xmasBagCount >= XMAS_MAX_BAG ? '🎒 กระเป๋าเต็มแล้ว' : '🔨 ผลิตของขวัญ (15 วิ)';
+    }
+
+    gBtn.disabled = xmasBagCount <= 0;
+    gBtn.textContent = `🎁 แจกของขวัญ! (${xmasBagCount} กล่อง • +${XMAS_GIFT_PTS} 💠)`;
+  }
+
+  function startCraftXmasGift() {
+    if (!currentUser) {
+      openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนผลิตของขวัญคริสต์มาสนะครับ 🎄");
+      return;
+    }
+    if (xmasBagCount >= XMAS_MAX_BAG) {
+      showToast("🎒 กระเป๋าเต็มแล้วครับ! กดแจกของขวัญให้เพื่อนๆ ก่อนนะ 🎁");
+      return;
+    }
+    if (xmasCraftEndAt > Date.now()) return;
+
+    playClickSound();
+    xmasCraftEndAt = Date.now() + XMAS_CRAFT_MS;
+    saveXmasWorkshopLocal();
+    updateXmasWorkshopUI();
+
+    if (!xmasCraftTimer) {
+      xmasCraftTimer = setInterval(() => {
+        if (xmasCraftEndAt > 0) updateXmasWorkshopUI();
+        else { clearInterval(xmasCraftTimer); xmasCraftTimer = null; }
+      }, 200);
+    }
+  }
+
+  function giveXmasGiftAway(e) {
+    if (!currentUser) {
+      openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนแจกของขวัญนะครับ 🎁");
+      return;
+    }
+    if (!db || xmasBagCount <= 0) return;
+    if (Date.now() - _xmasGiveLock < 400) return;
+    _xmasGiveLock = Date.now();
+
+    playCoinSound();
+    xmasBagCount = Math.max(0, xmasBagCount - 1);
+    saveXmasWorkshopLocal();
+    updateXmasWorkshopUI();
+
+    const otherIds = Object.keys(usersCache || {}).filter(id => id !== currentUser.id);
+    let receiverName = "ชุมชน BGT";
+    if (otherIds.length > 0) {
+      const pick = usersCache[otherIds[Math.floor(Math.random() * otherIds.length)]] || {};
+      receiverName = pick.customName || pick.name || "เพื่อนสมาชิก BGT";
+    }
+
+    const updates = {};
+    updates[`users/${currentUser.id}/xmasGiftCount`] = firebase.database.ServerValue.increment(1);
+    updates[`users/${currentUser.id}/pawPoints`]     = firebase.database.ServerValue.increment(XMAS_GIFT_PTS);
+    db.ref().update(updates).then(() => {
+      if (typeof unlockAchievement === "function") unlockAchievement("event_xmas");
+      showToast(`🎅 แจกของขวัญให้ "${receiverName}" แล้ว! (+1 กล่อง • +${XMAS_GIFT_PTS} 💠)`);
+      updateProfileEcoUI();
+    }).catch(() => {
+      xmasBagCount = Math.min(XMAS_MAX_BAG, xmasBagCount + 1);
+      saveXmasWorkshopLocal();
+      updateXmasWorkshopUI();
+      showToast("⚠️ แจกของขวัญไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
+    });
+
+    if (e) {
+      const icons = ['🎁', '🎄', '❄️', '⭐', '💠'];
+      for (let i = 0; i < 4; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-heart';
+        el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = (e.clientX + (Math.random() - 0.5) * 90) + 'px';
+        el.style.top  = (e.clientY - 12) + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1200);
+      }
+    }
+  }
+
+  const _origRenderLkForWorkshop = renderLoyKrathongEvent;
+  renderLoyKrathongEvent = function() {
+    _origRenderLkForWorkshop();
+    if (typeof isChristmasEventNow === "function" && isChristmasEventNow()) {
+      ensureXmasWorkshopUI();
+      const card = document.getElementById('loyKrathongEventCard');
+      const descEl = card ? card.querySelector('.lk-event-desc') : null;
+      if (descEl) {
+        descEl.innerHTML = `ช่วยกัน <strong>🔨 ผลิตของขวัญ (15 วิ/กล่อง)</strong> แล้วกด <strong>🎁 แจกให้เพื่อนในชุมชน</strong> รับ <strong>+${XMAS_GIFT_PTS} 💠 ผลึก BGT</strong> ต่อกล่อง! จบกิจกรรมรับรางวัลใหญ่: <strong>🥇 อันดับ 1 (+3,000 💠)</strong> • <strong>🥈 อันดับ 2 (+1,500 💠)</strong> • <strong>🥉 อันดับ 3 (+800 💠)</strong> • เข้าร่วมรับ <strong>+300 💠</strong>!`;
+      }
+    }
+  };
+
+  if (xmasCraftEndAt > Date.now()) {
+    xmasCraftTimer = setInterval(() => {
+      if (xmasCraftEndAt > 0) updateXmasWorkshopUI();
+      else { clearInterval(xmasCraftTimer); xmasCraftTimer = null; }
+    }, 200);
+  }
+
+  // =========================================================================
+  // 🏆 ระบบสลับแท่นเกียรติยศ Top 3 (4 ต่อ 4) + ปุ่มแอดมินล้างยอดสแปมคริสต์มาส
+  // =========================================================================
+  (function initPodiumCarouselAndXmasReset() {
+    const PODIUM_TABS = [
+      { idx: 0, label: "🎁 ผู้สนับสนุน" },
+      { idx: 1, label: "💖 ส่งหัวใจ" },
+      { idx: 2, label: "💠 สายเปย์ดันเกม" },
+      { idx: 3, label: "🤝 ใจรักผู้พัฒนา" }
+    ];
+    let curPodiumIdx = 0;
+
+    function setupPodiumCarousel() {
+      const sec = document.getElementById('homePodiumSection');
+      const grid = sec ? sec.querySelector('.podium-grid') : null;
+      if (!sec || !grid || grid.dataset.carouselReady) return;
+      grid.dataset.carouselReady = "1";
+      grid.classList.add('carousel-mode');
+
+      const bar = document.createElement('div');
+      bar.className = 'podium-switcher-bar';
+      bar.innerHTML = `
+        <div class="podium-tabs-row" id="podiumTabsRow">
+          ${PODIUM_TABS.map(t => `<button type="button" class="podium-tab-btn${t.idx === 0 ? ' active' : ''}" data-pidx="${t.idx}">${t.label}</button>`).join('')}
+        </div>
+        <div class="podium-nav-arrows">
+          <button type="button" class="podium-arrow-btn" id="podiumPrevBtn" title="แท่นก่อนหน้า">‹</button>
+          <span class="podium-page-counter" id="podiumPageCounter">1 / 4</span>
+          <button type="button" class="podium-arrow-btn" id="podiumNextBtn" title="แท่นถัดไป">›</button>
+        </div>
+      `;
+      grid.parentNode.insertBefore(bar, grid);
+
+      const showPodium = (idx, silent = false) => {
+        if (!silent && typeof playClickSound === "function") playClickSound();
+        const boxes = grid.querySelectorAll('.podium-box');
+        if (boxes.length === 0) return;
+        curPodiumIdx = ((idx % boxes.length) + boxes.length) % boxes.length;
+
+        boxes.forEach((b, i) => b.classList.toggle('active-podium', i === curPodiumIdx));
+        bar.querySelectorAll('.podium-tab-btn').forEach(btn => {
+          btn.classList.toggle('active', Number(btn.dataset.pidx) === curPodiumIdx);
+        });
+        const cnt = document.getElementById('podiumPageCounter');
+        if (cnt) cnt.textContent = `${curPodiumIdx + 1} / ${boxes.length}`;
+      };
+
+      bar.querySelectorAll('.podium-tab-btn').forEach(btn => {
+        btn.onclick = () => showPodium(Number(btn.dataset.pidx));
+      });
+      document.getElementById('podiumPrevBtn').onclick = () => showPodium(curPodiumIdx - 1);
+      document.getElementById('podiumNextBtn').onclick = () => showPodium(curPodiumIdx + 1);
+
+      showPodium(0, true);
+    }
+
+    window.adminResetXmasGifts = async function() {
+      if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+      if (!confirm("🧹 ต้องการล้างยอดของขวัญคริสต์มาส (xmasGiftCount) ของทุกคนเป็น 0 เพื่อเริ่มระบบโรงงานใหม่แบบแฟร์ๆ ใช่ไหมครับ?")) return;
+      try {
+        const snap = await db.ref("users").once("value");
+        const all = snap.val() || {};
+        const updates = {};
+        Object.keys(all).forEach(uid => {
+          if (all[uid] && all[uid].xmasGiftCount) {
+            updates[`users/${uid}/xmasGiftCount`] = 0;
+          }
+        });
+        await db.ref().update(updates);
+        showToast("✨ ล้างยอดของขวัญคริสต์มาสเก่าเป็น 0 เรียบร้อย! เริ่มผลิตใหม่ได้เลย 🎁");
+      } catch (e) {
+        showToast("⚠️ ล้างยอดไม่สำเร็จ กรุณาเช็กสิทธิ์ Firebase");
+      }
+    };
+
+    const _origEnsureWs = typeof ensureXmasWorkshopUI === "function" ? ensureXmasWorkshopUI : null;
+    if (_origEnsureWs) {
+      ensureXmasWorkshopUI = function() {
+        _origEnsureWs();
+        const ws = document.getElementById('xmasWorkshopBox');
+        if (!ws) return;
+        let rstBtn = document.getElementById('adminResetXmasBtn');
+        const isAdm = !!(currentUser && currentUser.isVoteAdmin);
+        if (isAdm && !rstBtn) {
+          rstBtn = document.createElement('button');
+          rstBtn.id = 'adminResetXmasBtn';
+          rstBtn.type = 'button';
+          rstBtn.style.cssText = "margin-top:10px; width:100%; background:rgba(153,27,27,0.85); color:#fecaca; border:1px dashed #f87171; border-radius:10px; padding:7px 12px; font-family:'Kanit',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer;";
+          rstBtn.textContent = "👑 Admin: 🧹 ล้างยอดของขวัญสแปมเก่าเป็น 0 (เริ่มนับใหม่)";
+          rstBtn.onclick = adminResetXmasGifts;
+          ws.appendChild(rstBtn);
+        } else if (rstBtn) {
+          rstBtn.style.display = isAdm ? 'block' : 'none';
+        }
+      };
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setupPodiumCarousel);
+    } else {
+      setupPodiumCarousel();
+    }
+  })();
+
+  // =========================================================================
+  // 💖👑 ระบบรางวัลปลอบใจตำนาน Season 1 (ยศ + อชีฟเม้นหายาก + กรอบรูปสุดเท่)
+  // =========================================================================
+  (function initSeason1HeartLegendRewards() {
+    if (Array.isArray(AVATAR_DECORATIONS) && !AVATAR_DECORATIONS.some(d => d.id === "s1_heart_legend")) {
+      AVATAR_DECORATIONS.push({
+        id: "s1_heart_legend",
+        name: "💖🌌 จักรพรรดิหัวใจนิรันดร์ (SS1)",
+        rarity: "mythic",
+        rarityLabel: "LEGACY SS1",
+        reqText: "Top 3 นักส่งหัวใจสูงสุด (ก่อนรีเซ็ต SS1)",
+        isSecret: false,
+        svg: `<svg viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="s1HeartG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff1f2"/>
+              <stop offset="28%" stop-color="#fb7185"/>
+              <stop offset="58%" stop-color="#f59e0b"/>
+              <stop offset="85%" stop-color="#e11d48"/>
+              <stop offset="100%" stop-color="#fde047"/>
+            </linearGradient>
+          </defs>
+          <path d="M11,60 Q-4,44 6,24 Q13,36 19,39 Q8,27 17,15 Q19,30 25,35" fill="url(#s1HeartG)" stroke="#881337" stroke-width="1.2"/>
+          <path d="M89,60 Q104,44 94,24 Q87,36 81,39 Q92,27 83,15 Q81,30 75,35" fill="url(#s1HeartG)" stroke="#881337" stroke-width="1.2"/>
+          <circle cx="50" cy="50" r="41.8" fill="none" stroke="url(#s1HeartG)" stroke-width="4.6"/>
+          <g class="d6-spin-mid">
+            <circle cx="50" cy="50" r="46.8" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="14 6 4 6"/>
+            <polygon points="50,0 53.5,5 50,10 46.5,5" fill="#fff1f2"/>
+            <polygon points="50,90 53.5,95 50,100 46.5,95" fill="#fb7185"/>
+          </g>
+          <g class="d6-spin-rev">
+            <circle cx="50" cy="50" r="37.4" fill="none" stroke="#fda4af" stroke-width="1.5" stroke-dasharray="6 10"/>
+            <circle cx="12.6" cy="50" r="2.8" fill="#fde047"/>
+            <circle cx="87.4" cy="50" r="2.8" fill="#fb7185"/>
+          </g>
+          <g class="deco-float">
+            <polygon points="29,16 36,3 44,11 50,1 56,11 64,3 71,16" fill="url(#s1HeartG)" stroke="#fef08a" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M50,16 C50,16 44,12 44,8.8 C44,7 45.5,5.8 47.2,5.8 C48.4,5.8 49.4,6.5 50,7.5 C50.6,6.5 51.6,5.8 52.8,5.8 C54.5,5.8 56,7 56,8.8 C56,12 50,16 50,16 Z" fill="#fff1f2" stroke="#e11d48" stroke-width="0.9"/>
+          </g>
+        </svg>`
+      });
+    }
+
+    if (Array.isArray(BGT_ACHIEVEMENTS) && !BGT_ACHIEVEMENTS.some(a => a.id === "s1_heart_top3")) {
+      BGT_ACHIEVEMENTS.push({
+        id: "s1_heart_top3",
+        icon: "💖",
+        title: "ปฐมบทแห่งตำนาน (SS1 Top 3)",
+        desc: "ติดอันดับ Top 3 นักส่งหัวใจสูงสุดก่อนรีเซ็ตซีซั่น 1 (หายากที่สุด • ไม่มีแจกซ้ำ!)",
+        reward: 1000,
+        rarity: "secret",
+        secret: false
+      });
+    }
+
+    function getS1HeartLegendMeta(rank) {
+      const r = Number(rank) || 0;
+      if (r === 1) return { rank: 1, name: "💖👑 ราชันหัวใจนิรันดร์ #1 (SS1)" };
+      if (r === 2) return { rank: 2, name: "💖🥈 มหาเทพหัวใจ #2 (SS1)" };
+      if (r === 3) return { rank: 3, name: "💖🥉 อัศวินหัวใจ #3 (SS1)" };
+      return null;
+    }
+
+    const _origIsDecoUnlS1 = isDecorationUnlocked;
+    isDecorationUnlocked = function(decoId, uData) {
+      if (decoId === "s1_heart_legend") {
+        const r = Number((uData || {}).s1HeartTopRank) || 0;
+        return r >= 1 && r <= 3;
+      }
+      return _origIsDecoUnlS1(decoId, uData);
+    };
+
+    const _origCheckAchS1 = checkAutoAchievements;
+    checkAutoAchievements = function() {
+      _origCheckAchS1();
+      if (!currentUser || !usersCache[currentUser.id]) return;
+      const r = Number(usersCache[currentUser.id].s1HeartTopRank) || 0;
+      if (r >= 1 && r <= 3) unlockAchievement("s1_heart_top3");
+    };
+
+    if (typeof getUnlockedTitlesForUser === "function") {
+      const _origGetTitlesS1 = getUnlockedTitlesForUser;
+      getUnlockedTitlesForUser = function(uid, uData) {
+        const list = _origGetTitlesS1(uid, uData);
+        const meta = getS1HeartLegendMeta((uData || {}).s1HeartTopRank);
+        if (meta) list.push({ id: "s1_heart", label: meta.name, desc: "ยศปลอบใจถาวร Top 3 นักส่งหัวใจ SS1" });
+        return list;
+      };
+    }
+
+    if (typeof renderSteamProfileLayout === "function") {
+      const _origSteamS1 = renderSteamProfileLayout;
+      renderSteamProfileLayout = function(profile) {
+        _origSteamS1(profile);
+        if (!profile) return;
+        const u = (usersCache && usersCache[profile.id]) ? usersCache[profile.id] : {};
+        const meta = getS1HeartLegendMeta(u.s1HeartTopRank);
+        const badgesRow = document.getElementById('bgtSteamBadgesRow');
+        if (meta && badgesRow && !badgesRow.querySelector('.b-s1legend')) {
+          badgesRow.style.display = "flex";
+          const slot = document.createElement('button');
+          slot.type = "button";
+          slot.className = "bgt-steam-badge-slot b-s1legend";
+          slot.textContent = "💖";
+          slot.title = meta.name;
+          slot.onclick = () => { playClickSound(); showToast(`🎖️ ยศตำนาน SS1: ${meta.name}`); };
+          badgesRow.prepend(slot);
+        }
+      };
+    }
+
+    const _origBuildLbS1 = buildLbRow;
+    buildLbRow = function(rank, id, u, scoreText) {
+      const row = _origBuildLbS1(rank, id, u, scoreText);
+      const meta = getS1HeartLegendMeta((u || {}).s1HeartTopRank);
+      const wrap = row.querySelector('.lb-badges-wrap');
+      if (meta && wrap) {
+        const sp = document.createElement('span');
+        sp.className = "s1-legend-pill";
+        sp.textContent = meta.name;
+        wrap.prepend(sp);
+      }
+      return row;
+    };
+
+    const _origHoverS1 = showUserHoverCard;
+    showUserHoverCard = function(uid, anchorEl) {
+      _origHoverS1(uid, anchorEl);
+      const u = (uid && usersCache && usersCache[uid]) ? usersCache[uid] : {};
+      const meta = getS1HeartLegendMeta(u.s1HeartTopRank);
+      const wrap = document.getElementById('uhcRoles');
+      if (meta && wrap) {
+        const sp = document.createElement('span');
+        sp.className = "s1-legend-pill";
+        sp.textContent = meta.name;
+        wrap.prepend(sp);
+      }
+    };
+
+    window.adminGrantSeason1HeartLegends = async function() {
+      if (!db || !currentUser || !currentUser.isVoteAdmin) return;
+      const entries = Object.keys(usersCache || {})
+        .map(id => ({ id, u: usersCache[id] || {}, h: Number((usersCache[id] || {}).heartsClicked) || 0 }))
+        .filter(e => e.h > 0)
+        .sort((a, b) => b.h - a.h)
+        .slice(0, 3);
+
+      if (entries.length === 0) {
+        showToast("⚠️ ยังไม่มีรายชื่อนักส่งหัวใจให้แจกรางวัลครับ");
+        return;
+      }
+
+      const preview = entries.map((e, i) => `#${i + 1} ${e.u.customName || e.u.name || e.id} (❤️ ${formatCompact(e.h)})`).join("\n");
+      if (!confirm(`💖 ยืนยันมอบรางวัลปลอบใจตำนาน SS1 (ยศถาวร + อชีฟเม้นหายาก + กรอบรูปสุดเท่) ให้ Top 3 ปัจจุบัน:\n\n${preview}\n\n(กดยืนยันก่อนรีเซ็ตแต้มนะครับ!)`)) return;
+
+      const updates = {};
+      const now = Date.now();
+      entries.forEach((e, idx) => {
+        const r = idx + 1;
+        updates[`users/${e.id}/s1HeartTopRank`] = r;
+        updates[`users/${e.id}/avatarDecoration`] = "s1_heart_legend";
+        updates[`users/${e.id}/achievements/unlocked/s1_heart_top3`] = now;
+      });
+
+      try {
+        await db.ref().update(updates);
+        playMilestoneFanfare();
+        showToast("💖👑 มอบยศตำนาน + อชีฟเม้นหายาก + กรอบรูปสุดเท่ให้ Top 3 นักส่งหัวใจเรียบร้อย! ตอนนี้กดรีเซ็ตได้เลย ✨");
+      } catch (err) {
+        showToast("⚠️ บันทึกรางวัลไม่สำเร็จ กรุณาเช็กสิทธิ์ Firebase");
+      }
+    };
+
+    const donatePanel = document.getElementById('donateAdminPanel');
+    if (donatePanel && !document.getElementById('adminGrantS1HeartBtn')) {
+      const btn = document.createElement('button');
+      btn.id = 'adminGrantS1HeartBtn';
+      btn.type = 'button';
+      btn.style.cssText = "width:100%; margin-top:8px; background:linear-gradient(135deg,#be123c,#f59e0b); color:#fff; border:1.5px solid #fef08a; padding:8px 12px; border-radius:10px; font-family:'Kanit',sans-serif; font-size:0.84rem; font-weight:700; cursor:pointer; box-shadow:0 3px 12px rgba(244,63,94,0.35);";
+      btn.textContent = "💖👑 แจกรางวัลปลอบใจ Top 3 นักส่งหัวใจ (กดก่อนรีเซ็ต!)";
+      btn.onclick = adminGrantSeason1HeartLegends;
+      donatePanel.appendChild(btn);
+    }
+  })();
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
