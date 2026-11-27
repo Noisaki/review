@@ -9301,6 +9301,63 @@
       padding: 1px 8px !important;
       margin: 0 !important;
     }
+    /* 💻 ขยายโรงงานของขวัญบนหน้าจอคอมให้กว้างพอเหมาะ (ไม่โดนบีบ) */
+    @media (min-width: 820px) {
+      .xmas-workshop-box,
+      .xmas-inbox-box {
+        max-width: 960px !important;
+        padding: 20px 24px !important;
+      }
+      .xmas-ws-btns {
+        flex-wrap: nowrap !important;
+      }
+      .xmas-upgrade-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .xmas-upgrade-grid .xmas-upg-btn:last-child {
+        grid-column: span 2 !important;
+      }
+    }
+
+    /* 🌈👑 แถบประกาศแจ็กพอตแบบไม่รบกวน (กดทะลุได้ 100% ไม่บังจอ) */
+    #xmasJackpotBanner {
+      position: fixed;
+      top: 74px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      z-index: 99985;
+      pointer-events: none;
+      opacity: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(120, 53, 15, 0.94), rgba(180, 83, 9, 0.94));
+      border: 1.5px solid #fde047;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 18px rgba(251, 191, 36, 0.55);
+      max-width: 92vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+    }
+    #xmasJackpotBanner.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    #xmasJackpotBanner.is-mythic {
+      background: linear-gradient(90deg, #7e22ce, #db2777, #f59e0b, #06b6d4);
+      background-size: 260% 260%;
+      animation: gradientFlow 2.6s linear infinite;
+      border-color: #ffffff;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(236, 72, 153, 0.75);
+    }
  </style>
   
 </head>
@@ -22916,7 +22973,7 @@
   // 🔄📢 ระบบแจ้งเตือนเว็บอัปเดตอัตโนมัติ (เพิ่มเลข SITE_BUILD_VER ทุกครั้งที่อัปเว็บ!)
   // =========================================================================
   (function initSiteUpdateNotifier() {
-    const SITE_BUILD_VER = 5; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
+    const SITE_BUILD_VER = 6; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
 
     const banner = document.createElement('div');
     banner.id = 'bgtUpdateBanner';
@@ -23722,6 +23779,128 @@
         updateXmasWorkshopUI();
       }
     }, 15000);
+  })();
+  // =========================================================================
+  // 🌈👑 ระบบประกาศรางวัลใหญ่ (Legendary / Mythic) แบบลอยบางๆ ไม่รบกวน
+  // =========================================================================
+  (function initXmasJackpotFeed() {
+    const LOAD_TS = Date.now();
+    let hideTimer = null;
+
+    const bar = document.createElement('div');
+    bar.id = 'xmasJackpotBanner';
+    document.body.appendChild(bar);
+
+    function showJackpotBar(data) {
+      if (!data || !data.name) return;
+      const isMythic = data.tier === 'mythic';
+      bar.className = isMythic ? 'is-mythic' : '';
+      bar.textContent = isMythic
+        ? `🌈✨ แจ็กพอตแตก! "${data.name}" สุ่มได้ MYTHIC (+${formatNum(data.pts)} 💠)!!`
+        : `👑✨ ยินดีด้วย! "${data.name}" สุ่มได้ LEGENDARY (+${formatNum(data.pts)} 💠)!`;
+
+      void bar.offsetWidth;
+      bar.classList.add('show');
+
+      // ถ้าเป็น MYTHIC โปรยประกายเบาๆ 6 ดวง (ไม่บังจอ)
+      if (isMythic && genkiFxEnabled) {
+        const sparks = ['🌈', '✨', '👑', '💠'];
+        for (let i = 0; i < 6; i++) {
+          setTimeout(() => {
+            const el = document.createElement('div');
+            el.className = 'floating-heart';
+            el.textContent = sparks[i % sparks.length];
+            el.style.left = (25 + Math.random() * 50) + 'vw';
+            el.style.top = '115px';
+            el.style.fontSize = '1.35rem';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1100);
+          }, i * 110);
+        }
+      }
+
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => bar.classList.remove('show'), 4500);
+    }
+
+    // ฟังประกาศจาก Firebase (โชว์เฉพาะที่เพิ่งแตกสดๆ หลังเปิดเว็บ ไม่เด้งของเก่า)
+    window.addEventListener("load", () => {
+      if (!db) return;
+      db.ref("xmas_config/latestJackpot").on("value", (snap) => {
+        const val = snap.val();
+        if (val && Number(val.ts) > LOAD_TS) {
+          showJackpotBar(val);
+        }
+      });
+    });
+
+    // ดักจับตอนเปิดกาชา ถ้ามี Legendary หรือ Mythic ให้ยิงประกาศขึ้น Firebase อัตโนมัติ
+    const _origShowModal = window.addEventListener;
+    const _watchGacha = setInterval(() => {
+      const grid = document.getElementById('gachaResultsGrid');
+      if (!grid || grid.dataset.jpWatched) return;
+      grid.dataset.jpWatched = "1";
+      clearInterval(_watchGacha);
+
+      const obs = new MutationObserver(() => {
+        if (!db || !currentUser) return;
+        const hasMythic = grid.querySelector('.gacha-card.t-mythic');
+        const hasLegend = grid.querySelector('.gacha-card.t-legend');
+        if (!hasMythic && !hasLegend) return;
+
+        const winnerName = currentUser.displayName || currentUser.name || "สมาชิก BGT";
+        db.ref("xmas_config/latestJackpot").set({
+          name: winnerName,
+          tier: hasMythic ? 'mythic' : 'legend',
+          pts: hasMythic ? 10000 : 2000,
+          ts: Date.now()
+        }).catch(() => {});
+      });
+      obs.observe(grid, { childList: true });
+    }, 800);
+    // 👑 ปุ่มทดสอบแจ็กพอตเฉพาะแอดมิน (เห็นคนเดียว ไม่ส่งขึ้น Firebase)
+    let _jpPreviewStep = 0;
+    window.adminPreviewJackpot = function() {
+      if (!currentUser || !currentUser.isVoteAdmin) return;
+      _jpPreviewStep = (_jpPreviewStep + 1) % 2;
+      const isMyth = _jpPreviewStep === 1;
+      const myName = currentUser.displayName || currentUser.name || "Admin";
+      showJackpotBar({
+        name: myName + " (ทดสอบ)",
+        tier: isMyth ? 'mythic' : 'legend',
+        pts: isMyth ? 10000 : 2000
+      });
+      if (isMyth) playMilestoneFanfare();
+      else playCoinSound();
+    };
+
+    const curseBtn = document.getElementById('navTestCurseBtn');
+    if (curseBtn && !document.getElementById('navTestJackpotBtn')) {
+      const jpBtn = document.createElement('button');
+      jpBtn.type = 'button';
+      jpBtn.id = 'navTestJackpotBtn';
+      jpBtn.className = 'nd-item';
+      jpBtn.style.cssText = 'display:none; color:#fde047;';
+      jpBtn.innerHTML = `<span>🌈 ทดสอบแจ้งเตือนแจ็กพอต</span><span class="nd-pill-tag" style="background:rgba(245,158,11,0.28); color:#fde047;">ADMIN</span>`;
+      jpBtn.onclick = () => {
+        closeProfileDropdown();
+        window.adminPreviewJackpot();
+      };
+      curseBtn.insertAdjacentElement('afterend', jpBtn);
+    }
+
+    const _origApplyJpAdm = applyProfileToUI;
+    applyProfileToUI = function(profile) {
+      _origApplyJpAdm(profile);
+      const b = document.getElementById('navTestJackpotBtn');
+      if (b) b.style.display = (profile && profile.isVoteAdmin) ? 'flex' : 'none';
+    };
+    const _origLogoutJpAdm = applyLoggedOutUI;
+    applyLoggedOutUI = function() {
+      _origLogoutJpAdm();
+      const b = document.getElementById('navTestJackpotBtn');
+      if (b) b.style.display = 'none';
+    };
   })();
 </script>
 
