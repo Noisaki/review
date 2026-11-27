@@ -4663,110 +4663,7 @@
       line-height: 1.2;
     }
 
-    /* =========================================
-       🌕🪷 ธีมลอยกระทง (เมืองไทย + แม่น้ำ + กระทงจุดเทียน)
-       ========================================= */
-    body.loy-krathong-mode:not(.horror-mode) {
-      background: linear-gradient(180deg, #06091f 0%, #101942 42%, #1e1b4b 72%, #0c1428 100%);
-    }
-    body.loy-krathong-mode:not(.horror-mode) .orb-1 { background: #f59e0b; opacity: 0.38; }
-    body.loy-krathong-mode:not(.horror-mode) .orb-2 { background: #3b82f6; opacity: 0.35; }
-    body.loy-krathong-mode:not(.horror-mode) .orb-3 { background: #fbbf24; opacity: 0.32; }
-    body.loy-krathong-mode:not(.horror-mode) .logo-showcase {
-      background: radial-gradient(circle at center, #1e1b4b 0%, #312e81 55%, #090d24 100%);
-      border-bottom-color: #fbbf24;
-    }
-    body.loy-krathong-mode:not(.horror-mode) .brand-badge {
-      background: linear-gradient(90deg, #b45309, #f59e0b, #4338ca);
-    }
-
-    .loy-krathong-scene {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    body.loy-krathong-mode:not(.horror-mode) .loy-krathong-scene {
-      display: block;
-    }
-
-    /* พระจันทร์เต็มดวง */
-    .lk-moon {
-      position: absolute;
-      top: 86px;
-      right: 9%;
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fffbeb 0%, #fef08a 55%, #f59e0b 100%);
-      box-shadow: 0 0 38px rgba(254, 240, 138, 0.85), 0 0 85px rgba(245, 158, 11, 0.45);
-      opacity: 0.92;
-    }
-
-    /* เส้นขอบฟ้าเมืองไทยและวัดริมน้ำ */
-    .lk-skyline {
-      position: absolute;
-      bottom: 92px;
-      left: 0;
-      width: 100%;
-      height: 150px;
-      opacity: 0.88;
-    }
-
-    /* แม่น้ำเจ้าพระยาตอนกลางคืน */
-    .lk-river {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 105px;
-      background: linear-gradient(180deg, #0b1636 0%, #071026 55%, #040814 100%);
-      border-top: 2px solid rgba(251, 191, 36, 0.35);
-      overflow: hidden;
-    }
-    .lk-river::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(253, 224, 71, 0.08) 0px,
-        rgba(253, 224, 71, 0.08) 2px,
-        transparent 2px,
-        transparent 12px
-      );
-      animation: lkWaterShimmer 4s ease-in-out infinite alternate;
-    }
-    @keyframes lkWaterShimmer {
-      0% { opacity: 0.35; transform: translateX(-8px); }
-      100% { opacity: 0.85; transform: translateX(8px); }
-    }
-
-    /* กระทงจุดเทียนลอยตามน้ำ */
-    .lk-krathong {
-      position: absolute;
-      bottom: 18px;
-      left: -80px;
-      width: 56px;
-      height: 46px;
-      animation: lkFloatAcross 24s linear infinite, lkBobbing 3s ease-in-out infinite alternate;
-      filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.75));
-    }
-    .lk-krathong.k2 { bottom: 48px; width: 42px; height: 34px; animation-duration: 32s, 2.6s; animation-delay: -9s, -1s; opacity: 0.85; }
-    .lk-krathong.k3 { bottom: 26px; width: 50px; height: 40px; animation-duration: 28s, 3.4s; animation-delay: -17s, -2s; }
-    .lk-krathong.k4 { bottom: 60px; width: 34px; height: 28px; animation-duration: 38s, 2.2s; animation-delay: -24s, -0.5s; opacity: 0.72; }
-    .lk-krathong.k5 { bottom: 12px; width: 62px; height: 50px; animation-duration: 21s, 2.9s; animation-delay: -4s, -1.5s; }
-
-    @keyframes lkFloatAcross {
-      0% { transform: translateX(-80px); }
-      100% { transform: translateX(calc(100vw + 120px)); }
-    }
-    @keyframes lkBobbing {
-      0% { margin-bottom: 0px; }
-      100% { margin-bottom: 6px; }
-    }
+ 
     @keyframes lkCandleFlicker {
       0%, 100% { transform: scale(1); opacity: 0.92; }
       50% { transform: scale(1.18) translateY(-1px); opacity: 1; }
@@ -9358,6 +9255,395 @@
       border-color: #ffffff;
       box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(236, 72, 153, 0.75);
     }
+    /* =========================================
+     📚✨ ดีไซน์ใหม่หน้า คลังเกมแปลไทย & สถานะงาน (ทรงเดียวกับหน้าขอเกม)
+     ========================================= */
+  .bgt-proj-wip-wrap {
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.94), rgba(30, 27, 75, 0.9));
+    border: 2px solid rgba(251, 191, 36, 0.65);
+    border-radius: 22px;
+    padding: 18px;
+    margin-bottom: 24px;
+  }
+  .bgt-proj-wip-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  @media (max-width: 900px) {
+    .bgt-proj-wip-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 620px) {
+    .bgt-proj-wip-grid { grid-template-columns: 1fr; }
+  }
+  .bgt-proj-released-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  @media (max-width: 1024px) {
+    .bgt-proj-released-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 720px) {
+    .bgt-proj-released-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  }
+  .bgt-rel-card {
+    background: #131625;
+    color: #f8fafc;
+    border: 1.5px solid rgba(52, 211, 153, 0.35);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .bgt-rel-card:hover {
+    border-color: #34d399;
+    box-shadow: 0 10px 24px rgba(16, 185, 129, 0.22);
+  }
+  .bgt-rel-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #0f172a;
+    overflow: hidden;
+  }
+  .bgt-rel-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.28s ease;
+  }
+  .bgt-rel-card:hover .bgt-rel-thumb img { transform: scale(1.05); }
+  .bgt-rel-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    color: #ffffff;
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 9px;
+    border-radius: 999px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  }
+  .bgt-rel-dl-chip {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(15, 23, 42, 0.86);
+    color: #7dd3fc;
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .bgt-rel-body {
+    padding: 11px 12px 10px;
+    flex: 1;
+  }
+  .bgt-rel-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 4px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .bgt-rel-meta {
+    font-size: 0.72rem;
+    color: #94a3b8;
+  }
+  .bgt-rel-actions {
+    padding: 9px 10px 11px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    gap: 6px;
+  }
+  .bgt-rel-btn-dl {
+    flex: 1;
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 7px 8px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .bgt-rel-btn-dl:hover { filter: brightness(1.08); }
+  .bgt-rel-btn-like {
+    background: rgba(244, 63, 94, 0.16);
+    color: #fda4af;
+    border: 1px solid rgba(244, 63, 94, 0.45);
+    border-radius: 10px;
+    padding: 7px 9px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .bgt-rel-btn-like:hover { background: #e11d48; color: #ffffff; }
+  /* =========================================
+       ✨🎨 ยกเครื่อง 4 หน้าใหม่: อันดับ / ผู้พัฒนา / ประเมินเกม / สนับสนุน (รองรับมือถือ 100%)
+       ========================================= */
+
+    /* --- 1. 🏆 หน้ากระดานจัดอันดับ (Leaderboard Tabs & Accent Cards) --- */
+    .bgt-lb-tabs {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .bgt-lb-tab {
+      background: rgba(148, 163, 184, 0.14);
+      border: 1.5px solid rgba(148, 163, 184, 0.3);
+      color: #64748b;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    body.bgt-dark-mode .bgt-lb-tab { color: #cbd5e1; }
+    .bgt-lb-tab:hover { border-color: #fbbf24; color: #fde047; }
+    .bgt-lb-tab.active {
+      background: linear-gradient(135deg, #f59e0b, #dc2626);
+      color: #ffffff !important;
+      border-color: #fde68a;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.38);
+    }
+
+    .lb-grid.single-focus {
+      grid-template-columns: 1fr !important;
+    }
+    .lb-column.lb-accent-gold   { border-top: 4px solid #f59e0b !important; }
+    .lb-column.lb-accent-rose   { border-top: 4px solid #f43f5e !important; }
+    .lb-column.lb-accent-cyan   { border-top: 4px solid #38bdf8 !important; }
+    .lb-column.lb-accent-green  { border-top: 4px solid #10b981 !important; }
+    .lb-column.lb-accent-purple { border-top: 4px solid #a855f7 !important; }
+
+    .lb-col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.28);
+    }
+    .lb-col-head .lb-col-title { margin: 0 !important; }
+
+    /* --- 2. 📝 หน้าประเมินเกม (Steps + Search + 5-Column Mobile Rating) --- */
+    .bgt-eval-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .bgt-eval-step-chip {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.78rem;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bgt-eval-step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.74rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .bgt-eval-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .bgt-eval-toolbar .bgt-inline-search {
+      flex: 1;
+      min-width: 180px;
+      margin-bottom: 0;
+    }
+    .rating-group {
+      display: grid !important;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px !important;
+    }
+    .rating-btn span {
+      width: 100%;
+      min-width: 0 !important;
+      padding: 11px 6px !important;
+      font-size: 0.95rem;
+    }
+
+    /* --- 3. 🎁 หน้าสนับสนุนผลงาน (VIP Tier Cards + Step Bar + Glowing QR) --- */
+    .bgt-donate-main-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.85fr;
+      gap: 22px;
+      align-items: start;
+    }
+    .bgt-vip-tier-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .bgt-vip-card {
+      position: relative;
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.05);
+      border: 1.5px solid #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .bgt-vip-card {
+      background: linear-gradient(155deg, rgba(28, 35, 62, 0.9), rgba(15, 20, 38, 0.96));
+      border-color: rgba(148, 163, 184, 0.25);
+    }
+    .bgt-vip-card.v-t1 { border-left: 4px solid #22c55e; }
+    .bgt-vip-card.v-t2 { border-left: 4px solid #a855f7; }
+    .bgt-vip-card.v-t3 { border-left: 4px solid #f43f5e; }
+    .bgt-vip-card.v-t4 {
+      border: 1.5px solid #f59e0b !important;
+      border-left: 4px solid #fbbf24 !important;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.2);
+    }
+    .bgt-vip-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .bgt-vip-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #991b1b;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .bgt-vip-name { color: #fde68a; }
+    .bgt-vip-price {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.16);
+      color: #d97706;
+      white-space: nowrap;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .bgt-vip-price { color: #fde047; }
+    .bgt-vip-perk {
+      font-size: 0.76rem;
+      color: #475569;
+      line-height: 1.4;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .bgt-vip-perk { color: #94a3b8; }
+
+    .bgt-donate-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .bgt-dstep {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px dashed rgba(16, 185, 129, 0.45);
+      border-radius: 12px;
+      padding: 9px 10px;
+      font-size: 0.76rem;
+      color: #065f46;
+      line-height: 1.4;
+    }
+    body.bgt-dark-mode:not(.horror-mode) .bgt-dstep {
+      background: rgba(16, 185, 129, 0.12);
+      color: #a7f3d0;
+    }
+    .bgt-dstep strong {
+      display: block;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.82rem;
+      margin-bottom: 2px;
+    }
+
+    /* --- 4. 🤝 หน้าผู้พัฒนาต้นฉบับ (Search + Spotlight) --- */
+    .bgt-dev-patron-banner {
+      background: linear-gradient(135deg, rgba(120, 53, 15, 0.25), rgba(157, 23, 77, 0.28), rgba(30, 58, 138, 0.3));
+      border: 2px solid rgba(251, 191, 36, 0.65);
+      border-radius: 20px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    /* --- 📱 ปรับรองรับจอมือถือทุกขนาด --- */
+    @media (max-width: 780px) {
+      .bgt-donate-main-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .bgt-vip-tier-grid,
+      .bgt-donate-steps,
+      .bgt-eval-steps {
+        grid-template-columns: 1fr !important;
+      }
+      .bgt-lb-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+      }
+      .bgt-lb-tabs::-webkit-scrollbar { display: none; }
+      .bgt-lb-tab { flex-shrink: 0; font-size: 0.78rem; padding: 6px 12px; }
+      .qr-frame {
+        width: 195px !important;
+        height: 225px !important;
+      }
+      .rating-btn span {
+        padding: 9px 4px !important;
+        font-size: 0.86rem;
+      }
+    }
  </style>
   
 </head>
@@ -9655,35 +9941,6 @@
 <canvas id="snowCanvas"></canvas>
 <canvas id="genkidamaCanvas"></canvas>
 
-<!-- ฉากพื้นหลังลอยกระทง: พระจันทร์ + วัดและเมืองไทย + แม่น้ำ + กระทงจุดเทียน -->
-<div class="loy-krathong-scene" id="loyKrathongScene" aria-hidden="true">
-  <div class="lk-moon"></div>
-
-  <!-- เงาเมืองไทย & วัดริมแม่น้ำ -->
-  <svg class="lk-skyline" viewBox="0 0 1440 160" preserveAspectRatio="none">
-    <path fill="#090f26" d="M0,160 L0,115 L45,115 L45,95 L70,95 L70,120 L110,120 L130,85 L140,48 L150,85 L170,120 L215,120 L215,90 L260,90 L260,115 L310,115 L335,72 L350,26 L365,72 L390,115 L430,115 L430,100 L485,100 L485,120 L540,120 L560,78 L580,120 L620,120 L620,84 L675,84 L675,115 L730,115 L750,62 L762,18 L774,62 L795,115 L850,115 L850,92 L910,92 L910,122 L970,122 L995,70 L1010,32 L1025,70 L1050,122 L1110,122 L1110,88 L1165,88 L1165,118 L1220,118 L1245,68 L1260,22 L1275,68 L1300,118 L1360,118 L1360,94 L1410,94 L1410,118 L1440,118 L1440,160 Z"/>
-    <!-- แสงไฟเมืองไทยระยิบระยับ -->
-    <g fill="#fde047" opacity="0.7">
-      <rect x="52" y="102" width="4" height="5"/><rect x="60" y="102" width="4" height="5"/>
-      <rect x="225" y="98" width="5" height="6"/><rect x="238" y="98" width="5" height="6"/><rect x="250" y="108" width="4" height="5"/>
-      <rect x="442" y="108" width="4" height="5"/><rect x="456" y="108" width="4" height="5"/>
-      <rect x="632" y="94" width="5" height="6"/><rect x="646" y="94" width="5" height="6"/><rect x="660" y="104" width="4" height="5"/>
-      <rect x="862" y="100" width="5" height="6"/><rect x="876" y="100" width="5" height="6"/>
-      <rect x="1122" y="98" width="5" height="6"/><rect x="1136" y="98" width="5" height="6"/>
-      <rect x="1372" y="102" width="5" height="6"/><rect x="1388" y="102" width="5" height="6"/>
-    </g>
-  </svg>
-
-  <!-- แม่น้ำและกระทงที่จุดเทียนลอยอยู่ 5 ใบ -->
-  <div class="lk-river">
-    <svg class="lk-krathong k1" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#22c55e" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#f472b6"/><circle cx="38" cy="31" r="3" fill="#facc15"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#facc15"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
-    <svg class="lk-krathong k2" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#16a34a" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#fb7185"/><circle cx="38" cy="31" r="3" fill="#fde047"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#f59e0b"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
-    <svg class="lk-krathong k3" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#22c55e" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#c084fc"/><circle cx="38" cy="31" r="3" fill="#f472b6"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#facc15"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
-    <svg class="lk-krathong k4" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#16a34a" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#facc15"/><circle cx="38" cy="31" r="3" fill="#fb7185"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#facc15"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.28"/></svg>
-    <svg class="lk-krathong k5" viewBox="0 0 60 50"><ellipse cx="30" cy="40" rx="22" ry="6" fill="#15803d"/><path d="M10,36 L18,24 L26,35 L30,22 L34,35 L42,24 L50,36 Z" fill="#22c55e" stroke="#14532d" stroke-width="1.2"/><circle cx="22" cy="31" r="3" fill="#f472b6"/><circle cx="38" cy="31" r="3" fill="#fde047"/><rect x="28" y="17" width="4" height="14" rx="1" fill="#fef3c7"/><path class="lk-flame" d="M30,5 Q35,12 30,17 Q25,12 30,5 Z" fill="#f59e0b"/><circle cx="30" cy="13" r="8" fill="#fbbf24" opacity="0.3"/></svg>
-  </div>
-</div>
-
 <div class="container">
   <!-- ส่วนหัวและแท่นโชว์โลโก้ BGT -->
   <div class="header-card">
@@ -9908,19 +10165,41 @@
     </div>
   </div>
 
-  <!-- =========================================
-       กระดานจัดอันดับ Real-time
+<!-- =========================================
+       🏆 กระดานจัดอันดับ Real-time (ดีไซน์ใหม่ + แท็บสลับหมวดรองรับมือถือ)
        ========================================= -->
   <div class="lb-card" id="leaderboardSection">
-    <div class="section-header">
-      <h2 class="section-title corruptible" data-cursed="🥀 ไม่มีใครเหลืออยู่บนกระดานแล้ว...">🏆 กระดานจัดอันดับ</h2>
-      <span class="live-sync-badge"><span class="live-dot"></span> REAL-TIME</span>
+    <div class="bgt-req-hero" style="margin-bottom:18px;">
+      <div class="bgt-req-hero-card">
+        <div class="bgt-req-pill">🏆 HALL OF FAME • REAL-TIME</div>
+        <h2 class="bgt-req-title corruptible" data-cursed="🥀 ไม่มีใครเหลืออยู่บนกระดานแล้ว...">กระดาน<span>จัดอันดับ</span></h2>
+        <p class="bgt-req-sub">
+          รวมสุดยอดผู้สนับสนุน นักส่งหัวใจ สายเปย์ดันเกม และผู้รักผู้พัฒนาอัปเดตสดแบบเรียลไทม์! แตะที่ชื่อเพื่อนเพื่อดูการ์ดโปรไฟล์และตู้โชว์อชีฟเม้นได้ทันที ✨
+        </p>
+        <div class="bgt-req-meta-row" style="margin-top:8px;">
+          <span class="live-sync-badge"><span class="live-dot"></span> REAL-TIME SYNC</span>
+          <span class="bgt-req-pt-pill">👆 แตะชื่อเพื่อนเพื่อส่องโปรไฟล์</span>
+        </div>
+      </div>
     </div>
-    
-    <div class="lb-grid">
-      <div class="lb-column">
-        <h3 class="lb-col-title">🎁 ทำเนียบผู้สนับสนุน (Top Donate)</h3>
-        <!-- แผงแอดมินค้นหาชื่อ & ใส่ยอดโดเนท (โผล่เฉพาะแอดมิน) -->
+
+    <!-- แท็บกรองหมวดอันดับ (ช่วยให้มือถือไม่ต้องเลื่อนยาว!) -->
+    <div class="bgt-lb-tabs" id="bgtLbFilterTabs">
+      <button type="button" class="bgt-lb-tab active" onclick="filterLeaderboardTab('all', this)">🌟 ดูทั้งหมด</button>
+      <button type="button" class="bgt-lb-tab" onclick="filterLeaderboardTab('donate', this)">🎁 ผู้สนับสนุน</button>
+      <button type="button" class="bgt-lb-tab" onclick="filterLeaderboardTab('hearts', this)">💖 นักส่งหัวใจ</button>
+      <button type="button" class="bgt-lb-tab" onclick="filterLeaderboardTab('vote', this)">💠 สายเปย์ดันเกม</button>
+      <button type="button" class="bgt-lb-tab" onclick="filterLeaderboardTab('devHearts', this)">🤝 ใจรักผู้พัฒนา</button>
+      <button type="button" class="bgt-lb-tab" onclick="filterLeaderboardTab('lkArchive', this)">🪷 ลอยกระทง 2026</button>
+    </div>
+
+    <div class="lb-grid" id="bgtLbMainGrid">
+      <div class="lb-column lb-accent-gold" data-lb-cat="donate">
+        <div class="lb-col-head">
+          <h3 class="lb-col-title">🎁 ทำเนียบผู้สนับสนุน (Top Donate)</h3>
+          <span class="step-pill">VIP</span>
+        </div>
+        <!-- แผงแอดมินค้นหาชื่อ & ใส่ยอดโดเนท (พับเก็บอัตโนมัติ) -->
         <div id="donateAdminPanel" style="display:none; background:#fff1f2; border:1.5px dashed #e11d48; border-radius:12px; padding:10px; margin-bottom:10px;">
           <div style="font-size:0.8rem; font-weight:700; color:#9f1239; margin-bottom:6px;">👑 แอดมิน: ค้นหาชื่อเพื่อใส่ยอดโดเนท (บาท)</div>
           <input type="text" id="adminDonateSearch" placeholder="พิมพ์ชื่อ หรือ username..." oninput="renderAdminDonateSearch()" style="width:100%; padding:6px 10px; border-radius:8px; border:1px solid #fda4af; font-family:'Prompt',sans-serif; font-size:0.84rem; margin-bottom:6px;">
@@ -9934,29 +10213,42 @@
         <div class="lb-list" id="lbDonateList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
         <div class="lb-pagination" id="lbDonatePager" style="display:none;"></div>
       </div>
-      <div class="lb-column">
-        <h3 class="lb-col-title">💖 ทำเนียบนักส่งหัวใจสูงสุด</h3>
+
+      <div class="lb-column lb-accent-rose" data-lb-cat="hearts">
+        <div class="lb-col-head">
+          <h3 class="lb-col-title">💖 ทำเนียบนักส่งหัวใจสูงสุด</h3>
+          <span class="step-pill">LEVEL</span>
+        </div>
         <div class="lb-list" id="lbHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
         <div class="lb-pagination" id="lbHeartsPager" style="display:none;"></div>
       </div>
 
-      <div class="lb-column">
-        <h3 class="lb-col-title">💠 ทำเนียบสายเปย์ดันเกม (กระดานคำขอ)</h3>
+      <div class="lb-column lb-accent-cyan" data-lb-cat="vote">
+        <div class="lb-col-head">
+          <h3 class="lb-col-title">💠 ทำเนียบสายเปย์ดันเกม (กระดานคำขอ)</h3>
+          <span class="step-pill">WISH</span>
+        </div>
         <div class="lb-list" id="lbVoteList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
         <div class="lb-pagination" id="lbVotePager" style="display:none;"></div>
       </div>
 
-      <div class="lb-column">
-        <h3 class="lb-col-title">🤝 ทำเนียบใจรักผู้พัฒนาสูงสุด</h3>
+      <div class="lb-column lb-accent-green" data-lb-cat="devHearts">
+        <div class="lb-col-head">
+          <h3 class="lb-col-title">🤝 ทำเนียบใจรักผู้พัฒนาสูงสุด</h3>
+          <span class="step-pill">CREATOR</span>
+        </div>
         <div class="lb-list" id="lbDevHeartsList"><div class="lb-empty">กำลังโหลดข้อมูล...</div></div>
         <div class="lb-pagination" id="lbDevHeartsPager" style="display:none;"></div>
       </div>
 
-      <div class="lb-column full-span" id="lbLkArchiveColumn">
-        <h3 class="lb-col-title">
-          🌕🪷 ทำเนียบกิจกรรมลอยกระทง 2026
-          <span class="lb-event-status-tag" id="lbLkArchiveStatus">🔴 กำลังแข่งขัน</span>
-        </h3>
+      <div class="lb-column full-span lb-accent-purple" id="lbLkArchiveColumn" data-lb-cat="lkArchive">
+        <div class="lb-col-head">
+          <h3 class="lb-col-title">
+            🌕🪷 ทำเนียบกิจกรรมลอยกระทง 2026
+            <span class="lb-event-status-tag" id="lbLkArchiveStatus">🔴 กำลังแข่งขัน</span>
+          </h3>
+          <span class="step-pill">ARCHIVE</span>
+        </div>
         <div class="lb-list" id="lbLkArchiveList"><div class="lb-empty">กำลังโหลดผลอันดับกิจกรรม...</div></div>
         <div class="lb-pagination" id="lbLkArchivePager" style="display:none;"></div>
       </div>
@@ -10075,36 +10367,46 @@
       </div>
     </div>
   </div>
-  <!-- =========================================
-       หน้าผู้พัฒนา & พันธมิตร (Creators & Developers)
+ <!-- =========================================
+       🤝 หน้าผู้พัฒนา & พันธมิตร (ดีไซน์ใหม่ + ค้นหาได้ + รองรับมือถือ)
        ========================================= -->
   <div class="section-card" id="devSection" style="display:none;">
-    <div class="section-header">
-      <h2 class="section-title">🤝 ผู้พัฒนาเกมต้นฉบับ & พันธมิตร</h2>
-      <span class="step-pill">ให้เกียรติ & สนับสนุนผู้สร้างต้นฉบับ 🐾</span>
-    </div>
-    <p style="color:#475569; font-size:0.92rem; margin:0 0 18px 0; line-height:1.55;">
-      ทุกโปรเจกต์แปลไทยได้รับการอนุญาตและพัฒนาต่อยอดจากผลงานของนักพัฒนาเกมอิสระเหล่านี้ หากชื่นชอบตัวเกมอย่าลืมแวะไปติดตามและสนับสนุนผู้พัฒนาตัวจริงกันนะครับ! 💖
-    </p>
-
-    <!-- แผงแอดมินเพิ่ม / แก้ไขผู้พัฒนา (โผล่เฉพาะแอดมิน) -->
-    <div class="dev-patron-info-card">
-      <div style="flex:1; min-width:230px;">
-        <div style="font-family:'Kanit',sans-serif; font-size:1.05rem; font-weight:700; color:#991b1b; margin-bottom:4px;">
-          🎁 สนับสนุนผู้พัฒนาต้นฉบับ รับยศพิเศษที่สวยที่สุดบนเว็บ!
-        </div>
-        <div style="font-size:0.85rem; color:#475569; line-height:1.55;">
-          เพียงกดโดเนทสนับสนุนผู้พัฒนาเกมค่ายไหนก็ได้ (<strong>ไม่จำกัดจำนวนเงิน กี่บาทก็ได้ครับ!</strong>) แล้วส่งภาพสลิปหลักฐานทาง Discord เพื่อรับยศถาวรสุดอลังการ <span class="dev-patron-pill" style="font-size:0.72rem; padding:2px 10px;">🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨</span> ประดับโปรไฟล์ทันที!
+    <div class="bgt-req-hero" style="margin-bottom:18px;">
+      <div class="bgt-req-hero-card">
+        <div class="bgt-req-pill">🤝 ORIGINAL CREATORS & PARTNERS</div>
+        <h2 class="bgt-req-title">ผู้พัฒนาต้นฉบับ <span>& พันธมิตร</span></h2>
+        <p class="bgt-req-sub">
+          ทุกโปรเจกต์แปลไทยได้รับอนุญาตจากนักพัฒนาเกมอิสระเหล่านี้ แวะไปกดส่งใจ คอมเมนต์ให้กำลังใจ (รับโบนัส <strong>+100 💠/วัน</strong>) หรือติดตามผลงานต้นฉบับของพวกเขาได้เลยครับ! 💖
+        </p>
+        <div class="bgt-req-meta-row" style="margin-top:8px;">
+          <span class="bgt-req-pt-pill" id="devTotalCountPill">🤝 ผู้พัฒนาทั้งหมด: 0 ค่าย</span>
+          <span class="bgt-req-pt-pill" style="border-color:rgba(244,114,182,0.55); color:#fbcfe8; background:rgba(236,72,153,0.16);">💬 คอมเมนต์แรกของวัน +100 💠</span>
         </div>
       </div>
-      <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" style="width:auto; padding:10px 18px; font-size:0.88rem; white-space:nowrap;" onmouseenter="playHoverSound()" onclick="playClickSound()">
-        💬 ส่งหลักฐานรับยศใน Discord
+    </div>
+
+    <!-- ป้ายรับยศพิเศษเมื่อสนับสนุนผู้พัฒนาต้นฉบับ -->
+    <div class="bgt-dev-patron-banner">
+      <div style="flex:1; min-width:220px;">
+        <div style="font-family:'Kanit',sans-serif; font-size:1.05rem; font-weight:800; color:#fde047; margin-bottom:4px;">
+          🕊️💎 สนับสนุนผู้พัฒนาต้นฉบับ รับยศเกียรติยศที่สวยที่สุดบนเว็บ!
+        </div>
+        <div style="font-size:0.84rem; line-height:1.55;">
+          เพียงโดเนทสนับสนุนผู้พัฒนาเกมค่ายไหนก็ได้ (<strong>กี่บาทก็ได้ไม่มีขั้นต่ำ!</strong>) แล้วส่งหลักฐานทาง Discord เพื่อรับยศถาวร <span class="dev-patron-pill" style="font-size:0.72rem; padding:2px 10px;">🕊️💎 『 ผู้พิทักษ์ผู้สร้างต้นฉบับ 』 ✨</span> ประดับโปรไฟล์ทันที!
+        </div>
+      </div>
+      <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="bgt-req-new-btn" style="text-decoration:none; white-space:nowrap; font-size:0.88rem; padding:10px 18px;" onmouseenter="playHoverSound()" onclick="playClickSound()">
+        💬 ส่งหลักฐานใน Discord
       </a>
     </div>
+
+    <!-- ช่องค้นหาชื่อผู้พัฒนาหรือชื่อเกม -->
+    <input type="text" id="devSearchInput" class="bgt-inline-search" placeholder="🔍 ค้นหาชื่อผู้พัฒนา หรือชื่อเกมต้นฉบับ..." oninput="filterDeveloperCards(this.value)">
+
+    <!-- แผงแอดมินเพิ่ม / แก้ไขผู้พัฒนา (พับเก็บอัตโนมัติ) -->
     <div id="devAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
       <h3 id="devAdminFormTitle" style="margin:0 0 10px 0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินเพิ่มผู้พัฒนา & ทีมผู้สร้าง</h3>
 
-      <!-- กล่องแอดมินค้นหาชื่อ & มอบยศผู้พิทักษ์ผู้สร้างต้นฉบับ (1 คลิก) -->
       <div style="background:#ffffff; border:1.5px solid #f59e0b; border-radius:12px; padding:10px 12px; margin-bottom:14px;">
         <div style="font-size:0.84rem; font-weight:700; color:#92400e; margin-bottom:6px;">
           🕊️💎 มอบยศพิเศษ "ผู้พิทักษ์ผู้สร้างต้นฉบับ" (ค้นหาชื่อคนที่ส่งสลิปทาง Discord):
@@ -10126,7 +10428,9 @@
         <input type="text" id="adminDevBsky" placeholder="🦋 ลิงก์ bsky.app / Bluesky (ถ้ามี)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
       </div>
 
-      <textarea id="adminDevTeam" placeholder="👥 กรณีมีผู้พัฒนาหลายคน ให้พิมพ์แยกบรรทัดละ 1 คน (ใส่เครื่องหมาย - คั่นหน้าที่) เช่น:&#10;คุณ A - นักวาดตัวละคร & CG&#10;คุณ B - โปรแกรมเมอร์ & ระบบเกม" style="min-height:68px; margin-bottom:10px;"></textarea>
+      <textarea id="adminDevTeam" placeholder="👥 กรณีมีผู้พัฒนาหลายคน ให้พิมพ์แยกบรรทัดละ 1 คน (ใส่เครื่องหมาย - คั่นหน้าที่) เช่น:
+        คุณ A - นักวาดตัวละคร & CG
+        คุณ B - โปรแกรมเมอร์ & ระบบเกม" style="min-height:68px; margin-bottom:10px;"></textarea>
       <textarea id="adminDevDesc" placeholder="คำแนะนำตัวผู้พัฒนาหรือข้อความขอบคุณสั้นๆ..." style="min-height:56px; margin-bottom:10px;"></textarea>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -10142,75 +10446,192 @@
   </div>
 
   <!-- =========================================
-       📚 หน้าติดตามสถานะงานแปลไทย (Translation Projects Tracker)
-       ========================================= -->
-  <div class="section-card" id="projectsSection" style="display:none;">
-    <div class="section-header">
-      <h2 class="section-title">📚 สถานะงานแปลไทย (กำลังทำ & โปรเจกต์ทั้งหมด)</h2>
-      <span class="step-pill" id="projCountBadge">กำลังโหลดโปรเจกต์...</span>
-    </div>
+     📚 คลังเกมแปลไทย & สถานะโปรเจกต์ (ดีไซน์ใหม่เข้าชุดกับหน้าขอเกม)
+     ========================================= -->
+<div class="section-card" id="projectsSection" style="display:none;">
 
-    <!-- ช่องค้นหา + แถบกรองสถานะงาน -->
-    <input type="text" id="projSearchInput" class="bgt-inline-search" placeholder="🔍 ค้นหาชื่องานแปล..." oninput="renderTranslationProjects()">
-    <div class="proj-filter-bar" id="projFilterBar">
-      <button type="button" class="proj-filter-btn active" onclick="setProjectFilter('all', this)">🌟 ทั้งหมด</button>
-      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('released', this)">✅ ปล่อยแล้ว (100%)</button>
-      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('updated', this)">🆕 มีอัปเดตใหม่</button>
-      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('updating', this)">🔄 กำลังอัปเดต</button>
-      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('translating', this)">✍️ กำลังแปล</button>
-      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('qc', this)">🔍 ตรวจคำ / QC</button>
-      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('testing', this)">🧪 ทดสอบบั๊ก</button>
-      <button type="button" class="proj-filter-btn" onclick="setProjectFilter('paused', this)">⏸️ พักชั่วคราว</button>
-    </div>
-
-    <!-- แผงแอดมินเพิ่ม / แก้ไขโปรเจกต์งานแปล -->
-    <div id="projectsAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-        <h3 id="projAdminFormTitle" style="margin:0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินจัดการสถานะงานแปล</h3>
-        <button type="button" class="profile-btn" style="background:linear-gradient(135deg,#0284c7,#38bdf8); color:#fff; border:none; padding:7px 14px; font-size:0.82rem;" onclick="adminSyncItchToProjects()">
-          🔄 ดึงเกมจาก itch.io มาลงเป็น 100% อัตโนมัติ
+  <!-- 1. Hero Banner ด้านบน -->
+  <div class="bgt-req-hero">
+    <div class="bgt-req-hero-card">
+      <div class="bgt-req-pill">📚 TRANSLATION HUB • คลังเกมแปลไทย</div>
+      <h2 class="bgt-req-title">คลังเกมแปลไทย <span>& สถานะงาน</span></h2>
+      <p class="bgt-req-sub">
+        ติดตามความคืบหน้าเกมที่กำลังแปลแบบเรียลไทม์ และดาวน์โหลดเกมที่แปลไทยเสร็จแล้ว <strong>100% ฟรีทุกเกม</strong> จากบัญชี itch.io โดยตรงครับ 🐾
+      </p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <a href="https://ben-the-game-translator.itch.io/" target="_blank" rel="noopener" class="bgt-req-new-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          🎮 เปิดหน้า itch.io ทั้งหมด
+        </a>
+        <button type="button" class="bgt-req-how-link" onclick="document.getElementById('projHowItWorks').scrollIntoView({behavior:'smooth'});">
+          ⓘ วิธีโหลด & ติดตามงานแปล
         </button>
       </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
-        <input type="text" id="adminProjTitle" placeholder="🎮 ชื่อเกม *" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <select id="adminProjGenre" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
-          <option value="Visual Novel">📖 แนว: Visual Novel</option>
-          <option value="RPG Maker">⚔️ แนว: RPG Maker</option>
-        </select>
-        <select id="adminProjStatus" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
-          <option value="translating">✍️ สถานะ: กำลังแปล</option>
-          <option value="qc">🔍 สถานะ: ตรวจคำ / QC</option>
-          <option value="testing">🧪 สถานะ: ทดสอบบั๊ก</option>
-          <option value="released">✅ สถานะ: ปล่อยแล้ว (100%)</option>
-          <option value="updated">🆕 สถานะ: มีอัปเดตใหม่ (100%)</option>
-          <option value="updating">🔄 สถานะ: กำลังอัปเดต</option>
-          <option value="paused">⏸️ สถานะ: พักชั่วคราว</option>
-        </select>
-        <input type="number" id="adminProjPercent" min="0" max="100" value="0" placeholder="📊 ความคืบหน้า (0-100%)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjTranslators" value="Ben" placeholder="✍️ ผู้แปล เช่น Ben" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjCover" placeholder="🖼️ ลิงก์รูปปกเกม (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjLicenseImg" placeholder="📜 ลิงก์รูปใบอนุญาต/หลักฐาน (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
-        <input type="text" id="adminProjDownloadUrl" placeholder="⬇️ ลิงก์ดาวน์โหลด / หน้าเกม (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      <div class="bgt-req-meta-row">
+        <span class="bgt-req-pt-pill" id="projWipCountPill">⚡ กำลังแปล: 0 เกม</span>
+        <span class="bgt-req-pt-pill" id="projRelCountPill" style="border-color:rgba(52,211,153,0.55); color:#6ee7b7; background:rgba(16,185,129,0.16);">✅ แปลเสร็จแล้ว 100%: 0 เกม</span>
       </div>
-
-      <textarea id="adminProjPreviewImgs" placeholder="🖼️ ลิงก์รูปตัวอย่างคำแปล (https://... ใส่หลายลิงก์ได้ แยกบรรทัด)" style="min-height:56px; margin-bottom:10px;"></textarea>
-
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button type="button" id="adminProjSubmitBtn" class="submit-btn" style="flex:2; width:auto; min-width:200px; padding:11px 16px; font-size:0.98rem;" onclick="adminSaveProject()">➕ เพิ่มโปรเจกต์งานแปล</button>
-        <button type="button" id="adminProjCancelBtn" class="submit-btn" style="display:none; flex:1; width:auto; min-width:130px; padding:11px 16px; font-size:0.98rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="cancelEditProject()">❌ ยกเลิกการแก้ไข</button>
-      </div>
-    </div>
-
-    <!-- ตารางการ์ดงานแปล -->
-    <div class="proj-grid" id="projectsGrid">
-      <div class="lb-empty" style="grid-column:1/-1;">กำลังโหลดรายการงานแปล...</div>
     </div>
   </div>
 
-  <!-- ฟอร์มส่งข้อมูลเข้า Google Forms -->
+  <!-- ช่องค้นหาชื่อเกม (กรองได้ทั้งกำลังแปลและเสร็จแล้ว) -->
+  <input type="text" id="projSearchInput" class="bgt-inline-search" placeholder="🔍 ค้นหาชื่อเกมแปลไทย..." oninput="projReleasedPage=1; renderTranslationProjects();">
+
+  <!-- แผงแอดมินเพิ่ม / แก้ไขโปรเจกต์งานแปล (ยุบเป็นปุ่มพับเก็บอัตโนมัติ) -->
+  <div id="projectsAdminPanel" style="display:none; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:16px; margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+      <h3 id="projAdminFormTitle" style="margin:0; color:#9f1239; font-family:'Kanit',sans-serif;">👑 แผงแอดมินจัดการสถานะงานแปล</h3>
+      <button type="button" class="profile-btn" style="background:linear-gradient(135deg,#0284c7,#38bdf8); color:#fff; border:none; padding:7px 14px; font-size:0.82rem;" onclick="adminSyncItchToProjects()">
+        🔄 ซิงก์เกมจาก itch.io เข้าฐานข้อมูล
+      </button>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
+      <input type="text" id="adminProjTitle" placeholder="🎮 ชื่อเกม *" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      <select id="adminProjGenre" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
+        <option value="Visual Novel">📖 แนว: Visual Novel</option>
+        <option value="RPG Maker">⚔️ แนว: RPG Maker</option>
+      </select>
+      <select id="adminProjStatus" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif; background:#fff;">
+        <option value="translating">✍️ สถานะ: กำลังแปล</option>
+        <option value="qc">🔍 สถานะ: ตรวจคำ / QC</option>
+        <option value="testing">🧪 สถานะ: ทดสอบบั๊ก</option>
+        <option value="updating">🔄 สถานะ: กำลังอัปเดต</option>
+        <option value="paused">⏸️ สถานะ: พักชั่วคราว</option>
+        <option value="released">✅ สถานะ: ปล่อยแล้ว (100%)</option>
+        <option value="updated">🆕 สถานะ: มีอัปเดตใหม่ (100%)</option>
+      </select>
+      <input type="number" id="adminProjPercent" min="0" max="100" value="0" placeholder="📊 ความคืบหน้า (0-100%)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      <input type="text" id="adminProjTranslators" value="Ben" placeholder="✍️ ผู้แปล เช่น Ben" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      <input type="text" id="adminProjCover" placeholder="🖼️ ลิงก์รูปปกเกม (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      <input type="text" id="adminProjLicenseImg" placeholder="📜 ลิงก์รูปใบอนุญาต/หลักฐาน (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+      <input type="text" id="adminProjDownloadUrl" placeholder="⬇️ ลิงก์ดาวน์โหลด / หน้าเกม (https://...)" style="padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1; font-family:'Prompt',sans-serif;">
+    </div>
+
+    <textarea id="adminProjPreviewImgs" placeholder="🖼️ ลิงก์รูปตัวอย่างคำแปล (https://... ใส่หลายลิงก์ได้ แยกบรรทัด)" style="min-height:56px; margin-bottom:10px;"></textarea>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button type="button" id="adminProjSubmitBtn" class="submit-btn" style="flex:2; width:auto; min-width:200px; padding:11px 16px; font-size:0.98rem;" onclick="adminSaveProject()">➕ เพิ่มโปรเจกต์งานแปล</button>
+      <button type="button" id="adminProjCancelBtn" class="submit-btn" style="display:none; flex:1; width:auto; min-width:130px; padding:11px 16px; font-size:0.98rem; background:linear-gradient(135deg,#475569,#1e293b); border-color:#cbd5e1;" onclick="cancelEditProject()">❌ ยกเลิกการแก้ไข</button>
+    </div>
+  </div>
+
+  <!-- 2. โซนกำลังแปล & กำลังอัปเดต (กรอบทองเด่นด้านบน) -->
+  <div class="bgt-proj-wip-wrap">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+      <div class="bgt-top3-head" style="margin-bottom:0;">⚡ IN PROGRESS • กำลังแปล & กำลังอัปเดต</div>
+      <div class="proj-filter-bar" id="projFilterBar" style="margin-bottom:0;">
+        <button type="button" class="proj-filter-btn active" onclick="setProjectFilter('all', this)">🌟 ทั้งหมด</button>
+        <button type="button" class="proj-filter-btn" onclick="setProjectFilter('translating', this)">✍️ กำลังแปล</button>
+        <button type="button" class="proj-filter-btn" onclick="setProjectFilter('updating', this)">🔄 กำลังอัปเดต</button>
+        <button type="button" class="proj-filter-btn" onclick="setProjectFilter('qc', this)">🔍 ตรวจคำ / QC</button>
+        <button type="button" class="proj-filter-btn" onclick="setProjectFilter('testing', this)">🧪 ทดสอบบั๊ก</button>
+        <button type="button" class="proj-filter-btn" onclick="setProjectFilter('paused', this)">⏸️ พักชั่วคราว</button>
+      </div>
+    </div>
+    <div class="bgt-proj-wip-grid" id="projInProgressGrid">
+      <div class="lb-empty" style="grid-column:1/-1; color:#94a3b8;">กำลังโหลดโปรเจกต์ที่กำลังแปล...</div>
+    </div>
+  </div>
+
+  <!-- 3. โซนเกมที่แปลเสร็จแล้ว 100% (ดึงจากบัญชี itch.io อัตโนมัติทั้งหมด!) -->
+  <div style="margin-bottom: 10px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+      <div>
+        <div style="font-size:0.72rem; color:#34d399; font-weight:700; letter-spacing:0.6px;">RELEASED 100% • ITCH.IO</div>
+        <h3 style="font-family:'Kanit',sans-serif; font-size:1.35rem; margin:0;">✅ เกมแปลไทยเสร็จแล้ว 100%</h3>
+      </div>
+      <span class="step-pill" id="projRelPageIndicator">หน้า 1 / 1</span>
+    </div>
+
+    <div class="bgt-proj-released-grid" id="projReleasedGrid">
+      <div class="lb-empty" style="grid-column:1/-1;">กำลังดึงรายชื่อเกมจากบัญชี itch.io...</div>
+    </div>
+    <div class="wish-pagination-wrap" id="projReleasedPager" style="display:none;"></div>
+  </div>
+
+  <!-- 4. HOW IT WORKS: สอนวิธีโหลดและติดตามงานแปลแบบง่ายๆ -->
+  <div class="bgt-how-section" id="projHowItWorks">
+    <div style="font-size:0.72rem; color:#38bdf8; font-weight:700; letter-spacing:0.6px;">HOW IT WORKS</div>
+    <h3 style="font-family:'Kanit',sans-serif; font-size:1.35rem; margin:0 0 16px;">📌 วิธีโหลดเกม & ติดตามสถานะงานแปล</h3>
+
+    <div class="bgt-how-grid">
+      <div class="bgt-how-card">
+        <span class="bgt-how-num">1</span>
+        <h4>🔍 เลือกเกมที่อยากเล่น</h4>
+        <p>เกมที่เสร็จ 100% จะอยู่ด้านล่าง (ดึงตรงจาก itch.io) ส่วนเกมที่กำลังทำจะอยู่ในกรอบทองด้านบน</p>
+      </div>
+      <div class="bgt-how-card">
+        <span class="bgt-how-num">2</span>
+        <h4>⬇️ กดปุ่มโหลดฟรี</h4>
+        <p>กดปุ่ม "โหลดฟรี (itch.io)" ระบบจะพาไปหน้าดาวน์โหลดของแท้ ปลอดภัย 100% ไม่มีโฆษณาเด้ง</p>
+      </div>
+      <div class="bgt-how-card">
+        <span class="bgt-how-num">3</span>
+        <h4>🔥 กดรอเล่นส่งกำลังใจ</h4>
+        <p>เกมไหนที่ยังแปลไม่เสร็จ กดปุ่ม "รอเล่น!" เพื่อส่งกำลังใจให้คนแปล และกดดูใบอนุญาตได้ทันที</p>
+      </div>
+      <div class="bgt-how-card" style="border-color:rgba(52,211,153,0.55);">
+        <span class="bgt-how-num" style="background:#10b981;">4</span>
+        <h4 style="color:#34d399;">🎮 แตกไฟล์แล้วเล่นเลย</h4>
+        <p>ดาวน์โหลดไฟล์เสร็จ แตกไฟล์ ZIP แล้วเปิดเล่นได้ทันที (มือถือ Android ใช้ไฟล์ .apk ได้เลยครับ)</p>
+      </div>
+    </div>
+
+    <div class="bgt-acc-item">
+      <button type="button" class="bgt-acc-head" onclick="this.parentElement.classList.toggle('open')">
+        <span>🏷️ ความหมายของป้ายสถานะแต่ละแบบ</span><span>▾</span>
+      </button>
+      <div class="bgt-acc-body">
+        • <strong>✍️ กำลังแปล:</strong> กำลังแปลเนื้อเรื่องและบทสนทนาเป็นภาษาไทย<br>
+        • <strong>🔍 ตรวจคำ / QC:</strong> แปลเสร็จแล้ว กำลังเกลาภาษาและเช็กคำผิด<br>
+        • <strong>🧪 ทดสอบบั๊ก:</strong> นำเข้าเกมเพื่อตรวจสระลอยและทดสอบการเล่นจริง<br>
+        • <strong>🔄 กำลังอัปเดต:</strong> ตัวเกมต้นฉบับออกเวอร์ชันใหม่ กำลังแปลเนื้อหาส่วนเพิ่ม<br>
+        • <strong>✅ เสร็จแล้ว 100%:</strong> ปล่อยให้ดาวน์โหลดฟรีบน itch.io เรียบร้อยแล้ว!
+      </div>
+    </div>
+    <div class="bgt-acc-item">
+      <button type="button" class="bgt-acc-head" onclick="this.parentElement.classList.toggle('open')">
+        <span>📥 วิธีดาวน์โหลดบน itch.io (ฟรี 100% ไม่ต้องจ่ายเงิน)</span><span>▾</span>
+      </button>
+      <div class="bgt-acc-body">
+        1. กดปุ่ม <strong>Download Now</strong> บนหน้าเกม itch.io<br>
+        2. หากขึ้นหน้าต่างให้ใส่ราคา ให้กดคำว่า <strong>"No thanks, just take me to the downloads"</strong> เพื่อโหลดฟรีได้เลยครับ<br>
+        3. เลือกโหลดไฟล์ให้ตรงเครื่อง (Windows / Mac / Android) แล้วแตกไฟล์เล่นได้เลย!
+      </div>
+    </div>
+    <div class="bgt-acc-item">
+      <button type="button" class="bgt-acc-head" onclick="this.parentElement.classList.toggle('open')">
+        <span>📜 นโยบายลิขสิทธิ์ & การแจ้งคำผิด</span><span>▾</span>
+      </button>
+      <div class="bgt-acc-body">
+        • ทุกโปรเจกต์แปลไทยได้รับอนุญาตจากผู้พัฒนาต้นฉบับอย่างถูกต้อง และเปิดให้เล่นฟรี 100%<br>
+        • หากพบคำผิด บั๊กสระลอย หรืออยากให้คะแนน สามารถแจ้งได้ที่เมนู <strong>📝 ประเมินเกม</strong> หรือใน Discord ได้ตลอดเลยครับ 🐾
+      </div>
+    </div>
+  </div>
+
+</div>
+ <!-- =========================================
+       🎄 แบบประเมินคุณภาพงานแปล (ดีไซน์ใหม่ + ค้นหาเกม + ปุ่มคะแนน 5 ช่องพอดีมือถือ)
+       ========================================= -->
   <form id="customForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfsO1BKiFPDVUhSJo-LrsCPP7I0bTSEHRPAiCO3qQA_3k7u6Q/formResponse" method="POST" target="hidden_iframe" onsubmit="return handleSubmit(event)">
     <input type="hidden" name="pageHistory" value="0,1,2,3">
+
+    <!-- Hero Banner ด้านบน -->
+    <div class="bgt-req-hero" style="margin-bottom:20px;">
+      <div class="bgt-req-hero-card">
+        <div class="bgt-req-pill corruptible" data-cursed="🩸 SYSTEM_ERROR // EVALUATION_CORRUPTED">📝 TRANSLATION REVIEW • รับโบนัส +100 💠/วัน</div>
+        <h2 class="bgt-req-title corruptible" data-cursed="💔 นี่งานแปลของผมมันแย่ขนาดนั้นเลยเหรอ...">ประเมินคุณภาพ<span>งานแปลไทย</span></h2>
+        <p class="bgt-req-sub corruptible" data-cursed="ให้ 1 ดาวทุกข้อโดยไม่บอกเหตุผลสักคำเลยเหรอครับ...">
+          ช่วยติชมงานแปล แจ้งคำผิด หรือจุดสระลอยเพื่อให้ทีมแปลพัฒนาแพตช์เกมต่อไปให้ดียิ่งขึ้น ส่งแบบประเมินรับโบนัส <strong>+100 💠 ผลึก BGT</strong> ทุกวันครับ! 🐾
+        </p>
+        <div class="bgt-eval-steps">
+          <div class="bgt-eval-step-chip"><span class="bgt-eval-step-num">1</span>เลือกเกมที่เล่นจบ</div>
+          <div class="bgt-eval-step-chip"><span class="bgt-eval-step-num">2</span>ให้คะแนน 4 หัวข้อ</div>
+          <div class="bgt-eval-step-chip"><span class="bgt-eval-step-num">3</span>ส่งรับ +100 💠</div>
+        </div>
+      </div>
+    </div>
 
     <!-- ส่วนที่ 1: เลือกเกม -->
     <div class="section-card">
@@ -10218,6 +10639,17 @@
         <h2 class="section-title corruptible" data-cursed="🩸 ERROR // โปรเจกต์ทั้งหมดพังทลาย...">🎄 เลือกเกมที่ต้องการประเมิน</h2>
         <span class="step-pill corruptible" data-cursed="ผมทำอะไรผิดทุกอย่างเลย">ขั้นตอนที่ 1 / 3 (เลือกได้ 1 เกมต่อครั้ง)</span>
       </div>
+
+      <!-- ช่องค้นหา + กรองแนวเกม -->
+      <div class="bgt-eval-toolbar">
+        <input type="text" id="evalGameSearch" class="bgt-inline-search" placeholder="🔍 พิมพ์ชื่อเกมที่ต้องการประเมิน..." oninput="filterEvalGameCards()">
+        <div style="display:flex; gap:6px; flex-wrap:wrap;" id="evalGenreFilters">
+          <button type="button" class="proj-filter-btn active" onclick="setEvalGenreFilter('all', this)">🌟 ทั้งหมด</button>
+          <button type="button" class="proj-filter-btn" onclick="setEvalGenreFilter('VN', this)">📖 VN</button>
+          <button type="button" class="proj-filter-btn" onclick="setEvalGenreFilter('RPG', this)">⚔️ RPG</button>
+        </div>
+      </div>
+
       <div class="game-grid" id="gameGrid"></div>
     </div>
 
@@ -10305,12 +10737,12 @@
       </div>
 
       <div class="question-block">
-        <div class="sub-question corruptible" data-cursed="ไม่มีอะไรน่าประทับใจเลยเหรอ...">จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
+        <div class="sub-question corruptible" data-cursed="ไม่มีอะไรน่าประทับใจเลยเหรอ...">💖 จุดที่ชอบ หรือคำแปลที่ประทับใจ</div>
         <textarea name="entry.1323886645" id="commentPraise" data-orig-placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..." placeholder="เล่าความประทับใจ หรือฉากที่ชอบให้ทีมแปลชื่นใจหน่อยฮะ..."></textarea>
       </div>
 
       <div class="question-block" style="margin-bottom: 0;">
-        <div class="sub-question corruptible" data-cursed="ทำไมไม่บอกจุดที่ผิด... ปล่อยให้ผมทำผิดทุกอย่างทำไม...">คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
+        <div class="sub-question corruptible" data-cursed="ทำไมไม่บอกจุดที่ผิด... ปล่อยให้ผมทำผิดทุกอย่างทำไม...">🛠️ คำผิด บั๊กสระลอย หรือจุดที่อยากให้ปรับปรุง</div>
         <textarea name="entry.1758010456" id="commentFix" data-orig-placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..." placeholder="แจ้งจุดที่พบปัญหา (เช่น ชื่อตัวละคร บทพูด หรือสระลอย) ได้เลยฮะ..."></textarea>
       </div>
     </div>
@@ -10324,92 +10756,112 @@
     </div>
   </form>
 
-  <!-- =========================================
-       โซน DONATE & QR CODE + ปุ่มขอโทษด้านล่างสุด (กด 3 ครั้ง)
+ <!-- =========================================
+       🎁 โซนสนับสนุนผลงาน & ระบบรับยศถาวร (ดีไซน์ใหม่ + โชว์โบนัส 💠 ชัดเจน)
        ========================================= -->
   <div class="donate-card" id="donateSection">
-    <div class="donate-ribbon corruptible" data-cursed="BROKEN">XMAS SUPPORT</div>
+    <div class="donate-ribbon corruptible" data-cursed="BROKEN">FREE 100% • SUPPORT</div>
 
-    <!-- โซนโดเนทปกติ -->
-    <div class="donate-layout" id="donateNormalContent">
-      <div>
-        <h2 class="donate-title">🎁 ช่องทางสนับสนุนผลงาน & ระบบรับยศถาวร</h2>
-        <p class="donate-desc">
-          ทุกโปรเจกต์เกมแปลไทยเปิดให้เล่นฟรี 100% ไม่มีล็อกไฟล์หรือจำกัดสิทธิ์ล่วงหน้าครับ! หากชื่นชอบผลงานสามารถสแกน QR Code ด้านข้างเพื่อสนับสนุนเท่าไหร่ก็ได้ตามกำลัง (ไม่มีขั้นต่ำ และทยอยสะสมยอดเลื่อนยศได้เรื่อยๆ ครับ):
-        </p>
-
-        <div class="role-showcase-grid">
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">🦴</span>
-            <div class="role-info">
-              <strong>『 ผู้สนับสนุนทั่วไป 』</strong>
-              <small>โดเนทเท่าไหร่ก็ได้ตามใจชอบ</small>
-            </div>
-          </div>
-
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">📜</span>
-            <div class="role-info">
-              <strong>『 ผู้ร่วมจารึก 』</strong>
-              <small>ยอดสะสมครบ 300 บาท</small>
-            </div>
-          </div>
-
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">💖</span>
-            <div class="role-info">
-              <strong>『 ผู้พิทักษ์หัวใจ 』</strong>
-              <small>ยอดสะสมครบ 500 บาท</small>
-            </div>
-          </div>
-
-          <div class="role-badge-item" onmouseenter="playHoverSound()">
-            <span class="role-emoji">👑</span>
-            <div class="role-info">
-              <strong>『 ภาคีผู้พิทักษ์นิรันดร์ 』</strong>
-              <small>ยอดสะสมครบ 1,000 บาท</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="discord-ticket-note">
-          📌 <strong>ขั้นตอนการแจ้งรับยศ (ไม่ต้องใช้ Discord ก็รับยศได้!):</strong> 1. สแกน QR เช็กชื่อบัญชี <strong>นาย เบญจพล</strong> • 2. กดปุ่ม <strong>"📤 แจ้งโอน & แนบสลิปหน้าเว็บ"</strong> ด้านล่าง • 3. แอดมินตรวจยอดแล้ว ยศจะขึ้นบนโปรไฟล์อัตโนมัติทันทีครับ!
-        </div>
-
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <button type="button" class="discord-ticket-btn" style="background:linear-gradient(135deg,#15803d,#16a34a); box-shadow:0 6px 16px rgba(21,128,61,0.32);" onmouseenter="playHoverSound()" onclick="playClickSound(); openSlipModal();">
-            📤 แจ้งโอน & แนบสลิปหน้าเว็บ (ไม่ต้องใช้ Discord)
-          </button>
-          <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
-            💬 หรือแจ้งสลิปผ่าน Discord (สำหรับคนอยากรับยศในดิสด้วย)
-          </a>
-        </div>
-
-        <!-- แผงแอดมินตรวจสลิปรออนุมัติ (เห็นเฉพาะแอดมิน) -->
-        <div id="adminSlipReviewPanel" style="display:none; margin-top:16px; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:14px;">
-          <div style="font-family:'Kanit',sans-serif; font-size:0.98rem; font-weight:700; color:#9f1239; margin-bottom:8px;">
-            👑 แอดมิน: รายการสลิปรอตรวจสอบ (<span id="pendingSlipCount">0</span>)
-          </div>
-          <div id="adminSlipList" style="display:flex; flex-direction:column; gap:10px;">
-            <div style="font-size:0.82rem; color:#64748b; text-align:center;">ไม่มีสลิปรอตรวจในขณะนี้ ✨</div>
+    <!-- โซนโดเนทปกติ (ใช้ display:grid 1 คอลัมน์ครอบไว้เพื่อให้ restoreAllElements ทำงานตรงเป๊ะ) -->
+    <div id="donateNormalContent" style="display:grid; grid-template-columns:1fr; gap:20px;">
+      <!-- Hero Banner -->
+      <div class="bgt-req-hero" style="margin-bottom:0;">
+        <div class="bgt-req-hero-card">
+          <div class="bgt-req-pill">🎁 SUPPORT & PERMANENT ROLES</div>
+          <h2 class="bgt-req-title">สนับสนุนผลงาน <span>& ระบบรับยศถาวร</span></h2>
+          <p class="bgt-req-sub">
+            ทุกเกมแปลไทยเปิดให้เล่นฟรี <strong>100% ไม่มีล็อกไฟล์หรือ VIP ก่อนใคร</strong> หากอยากเลี้ยงกาแฟทีมแปลสามารถสแกน QR ได้ตามกำลัง ไม่มีขั้นต่ำ และ<strong>ทยอยสะสมยอดเลื่อนยศถาวรได้ตลอดชีพ</strong>ครับ ☕🐾
+          </p>
+          <div class="bgt-req-meta-row" style="margin-top:8px;">
+            <span class="bgt-req-pt-pill">👑 ปลดล็อกกรอบมงกุฎ VIP ถาวร</span>
+            <span class="bgt-req-pt-pill" style="border-color:rgba(52,211,153,0.55); color:#6ee7b7; background:rgba(16,185,129,0.16);">💠 โบนัสเช็กอินสูงสุด +500/วัน</span>
           </div>
         </div>
       </div>
 
-      <div class="qr-box-wrapper">
-        <div class="qr-badge-label">🎄 SCAN PROMPTPAY • ไม่มีขั้นต่ำ</div>
-        <div class="qr-frame">
-          <div class="qr-laser"></div>
-          <img src="qr.png" alt="QR Code สแกนจ่ายพร้อมเพย์ นาย เบญจพล" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/qr.png';}">
+      <!-- เนื้อหา 2 ฝั่ง: ซ้าย (ตารางยศ + ปุ่มแนบสลิป) / ขวา (QR Code) -->
+      <div class="bgt-donate-main-grid">
+        <div>
+          <div style="font-family:'Kanit',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:10px;">
+            🎖️ ระดับยศถาวร & สิทธิพิเศษ (สะสมยอดทบได้เรื่อยๆ)
+          </div>
+
+          <div class="bgt-vip-tier-grid">
+            <div class="bgt-vip-card v-t1" onmouseenter="playHoverSound()">
+              <div class="bgt-vip-top">
+                <span class="bgt-vip-name">🦴 ผู้สนับสนุนทั่วไป</span>
+                <span class="bgt-vip-price">ไม่มีขั้นต่ำ</span>
+              </div>
+              <div class="bgt-vip-perk">ยศถาวร + กรอบ VIP + โบนัสเช็กอิน <strong>+100 💠/วัน</strong></div>
+            </div>
+
+            <div class="bgt-vip-card v-t2" onmouseenter="playHoverSound()">
+              <div class="bgt-vip-top">
+                <span class="bgt-vip-name">📜 ผู้ร่วมจารึก</span>
+                <span class="bgt-vip-price">ครบ 300฿</span>
+              </div>
+              <div class="bgt-vip-perk">ป้ายยศสีม่วงออร่า + โบนัสเช็กอิน <strong>+200 💠/วัน</strong></div>
+            </div>
+
+            <div class="bgt-vip-card v-t3" onmouseenter="playHoverSound()">
+              <div class="bgt-vip-top">
+                <span class="bgt-vip-name">💖 ผู้พิทักษ์หัวใจ</span>
+                <span class="bgt-vip-price">ครบ 500฿</span>
+              </div>
+              <div class="bgt-vip-perk">ป้ายยศทับทิม + โบนัสเช็กอิน <strong>+350 💠/วัน</strong></div>
+            </div>
+
+            <div class="bgt-vip-card v-t4" onmouseenter="playHoverSound()">
+              <div class="bgt-vip-top">
+                <span class="bgt-vip-name">👑 ภาคีผู้พิทักษ์นิรันดร์</span>
+                <span class="bgt-vip-price">ครบ 1,000฿</span>
+              </div>
+              <div class="bgt-vip-perk">ป้ายยศทองคำสูงสุด + โบนัสเช็กอิน <strong>+500 💠/วัน</strong></div>
+            </div>
+          </div>
+
+          <!-- 3 ขั้นตอนแจ้งรับยศแบบเข้าใจง่าย -->
+          <div class="bgt-donate-steps">
+            <div class="bgt-dstep"><strong>1. สแกน QR ด้านข้าง</strong>เช็กชื่อบัญชี <u>นาย เบญจพล</u></div>
+            <div class="bgt-dstep"><strong>2. แนบสลิปหน้าเว็บ</strong>ไม่ต้องมี Discord ก็รับยศได้</div>
+            <div class="bgt-dstep"><strong>3. รับยศอัตโนมัติ</strong>แอดมินตรวจยอดแล้วขึ้นทันที</div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <button type="button" class="discord-ticket-btn" style="background:linear-gradient(135deg,#15803d,#22c55e); box-shadow:0 6px 18px rgba(21,128,61,0.35);" onmouseenter="playHoverSound()" onclick="playClickSound(); openSlipModal();">
+              📤 แจ้งโอน & แนบสลิปหน้าเว็บ (ไม่ต้องใช้ Discord)
+            </button>
+            <a href="https://discord.gg/xCvMpAcR74" target="_blank" rel="noopener" class="discord-ticket-btn" onmouseenter="playHoverSound()" onclick="playClickSound()">
+              💬 หรือแจ้งสลิปผ่าน Discord (สำหรับคนอยากรับยศในดิสด้วย)
+            </a>
+          </div>
+
+          <!-- แผงแอดมินตรวจสลิปรออนุมัติ (พับเก็บอัตโนมัติ) -->
+          <div id="adminSlipReviewPanel" style="display:none; margin-top:16px; background:#fff1f2; border:2px dashed #e11d48; border-radius:16px; padding:14px;">
+            <div style="font-family:'Kanit',sans-serif; font-size:0.98rem; font-weight:700; color:#9f1239; margin-bottom:8px;">
+              👑 แอดมิน: รายการสลิปรอตรวจสอบ (<span id="pendingSlipCount">0</span>)
+            </div>
+            <div id="adminSlipList" style="display:flex; flex-direction:column; gap:10px;">
+              <div style="font-size:0.82rem; color:#64748b; text-align:center;">ไม่มีสลิปรอตรวจในขณะนี้ ✨</div>
+            </div>
+          </div>
         </div>
-        <p class="qr-subtext">
-          สแกนจ่ายพร้อมเพย์ได้ทุกแอปธนาคาร<br>
-          <span class="account-verify-tag">ชื่อบัญชี: นาย เบญจพล</span>
-        </p>
+
+        <div class="qr-box-wrapper">
+          <div class="qr-badge-label">🎄 PROMPTPAY • ไม่มีขั้นต่ำ • สะสมได้ตลอดชีพ</div>
+          <div class="qr-frame">
+            <div class="qr-laser"></div>
+            <img src="qr.png" alt="QR Code สแกนจ่ายพร้อมเพย์ นาย เบญจพล" onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='images/qr.png';}">
+          </div>
+          <p class="qr-subtext">
+            สแกนจ่ายพร้อมเพย์ได้ทุกแอปธนาคาร<br>
+            <span class="account-verify-tag">ชื่อบัญชี: นาย เบญจพล</span>
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- โซนปุ่มขอโทษด้านล่างสุด (ต้องกด 3 ครั้ง + กดปุ่มขอโทษด้านบนให้ครบตามรอบ) -->
+    <!-- โซนปุ่มขอโทษด้านล่างสุด (โหมดหลอน .EXE — คงไว้ครบทุก ID) -->
     <div class="cursed-apology-zone" id="cursedApologyZone">
       <div class="cursed-stage-tag" id="cursedStageTag">APOLOGY ROUND 1</div>
       <div class="cursed-apology-icon" id="cursedApologyIcon">😭💔</div>
@@ -10426,7 +10878,6 @@
         <span id="checkEyeStatus">⬜ ด่าน 3 ไล่ปิดดวงตาสีเลือด 👁️: 0 / 3 ดวง</span>
       </div>
 
-      <!-- ด่าน 2: กล่องพิมพ์คำสารภาพผิด -->
       <div class="cursed-ritual-box" id="cursedConfessBox">
         <div style="font-size:0.84rem; color:#fca5a5; font-weight:700;">🩸 ด่าน 2: พิมพ์ประโยคด้านล่างให้ตรงทุกตัวอักษร (ห้ามก๊อปวาง!)</div>
         <div class="cursed-ritual-target" id="cursedConfessTarget">ผมขอโทษที่ให้ 1 ดาว</div>
@@ -12658,12 +13109,10 @@
   const XMAS_START_MS       = LOY_KRATHONG_END_MS + 1;
   const XMAS_END_MS         = new Date("2027-01-05T23:59:59+07:00").getTime();
 
-  let isLoyKrathongActive = Date.now() <= LOY_KRATHONG_END_MS;
-  let isXmasActive = Date.now() >= XMAS_START_MS && Date.now() <= XMAS_END_MS;
+  let isLoyKrathongActive = false;
+  let isXmasActive = Date.now() <= XMAS_END_MS;
 
-  let BGM_PLAYLIST = isLoyKrathongActive
-    ? [{ name: "เพลงลอยกระทง 🌕", src: "images/loykrathong.mp3" }]
-    : [{ name: "เพลงคริสต์มาส 🎄", src: "images/bgm1.mp3" }];
+  let BGM_PLAYLIST = [{ name: "เพลงคริสต์มาส 🎄", src: "images/bgm1.mp3" }];
 
   let currentTrackIndex = 0;
   let isLoopOne = false;
@@ -15962,108 +16411,11 @@
     }
     return false;   // 🦊 แอบทิ้งเงียบๆ ไม่นับคะแนน (แต่เอฟเฟกต์ยังเล่นให้เนียน)
   }
-
-  function loyKrathongClick(e) {
-    if (Date.now() > LOY_KRATHONG_END_MS) {
-      showToast("⏳ กิจกรรมลอยกระทง 2026 หมดเวลาแล้วครับ! กรอบและยศจะอยู่กับคุณตลอดไป 🪷");
-      renderLoyKrathongEvent();
-      return;
-    }
-    if (!currentUser) {
-      openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนกดลอยกระทงเพื่อรับยศและสะสมอันดับนะครับ 🪷");
-      return;
-    }
-    if (!db) return;
-
-    playClickSound();
-    feedGenkidama(e ? e.clientX : null, e ? e.clientY : null);
-    // เช็กความเร็วแบบเนียนๆ — ถ้าเปิดโปรรัวเกิน จะข้ามการส่งคะแนนแต่ยังโชว์กระทงลอยอยู่ด้านล่าง
-    if (checkStealthAntiAutoClick('krathong')) {
-      const pts = getGenkiPointsToAdd('krathong');
-      if (pts > 0) {
-        const updates = {};
-        updates[`users/${currentUser.id}/krathongCount`] = firebase.database.ServerValue.increment(pts);
-        db.ref().update(updates).catch(() => {});
-      }
-    }
-
-    if (e) {
-      const icons = ['🪷', '🕯️', '🌕', '✨'];
-      for (let i = 0; i < 3; i++) {
-        const el = document.createElement('div');
-        el.className = 'floating-heart';
-        el.textContent = icons[Math.floor(Math.random() * icons.length)];
-        el.style.left = (e.clientX + (Math.random() - 0.5) * 80) + 'px';
-        el.style.top = (e.clientY - 12) + 'px';
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1200);
-      }
-    }
-  }
-
-  function renderLoyKrathongEvent() {
+    function loyKrathongClick() {}
+    function renderLoyKrathongEvent() {
     const card = document.getElementById('loyKrathongEventCard');
-    const countdownEl = document.getElementById('lkEventCountdown');
-    const totalEl = document.getElementById('lkTotalCounter');
-    const myLineEl = document.getElementById('lkMyCountLine');
-    const listEl = document.getElementById('lkEventTopList');
-
-    const diff = LOY_KRATHONG_END_MS - Date.now();
-    if (diff <= 0) {
-      // หมดเวลาอีเวนต์ -> ซ่อนการ์ดปุ่ม + เอาพื้นหลังลอยกระทงออก (กลับเป็นคริสต์มาสอัตโนมัติ)
-      if (card) card.style.display = 'none';
-      document.body.classList.remove('loy-krathong-mode');
-      return;
-    }
-
-    if (countdownEl) {
-      const days = Math.floor(diff / 86400000);
-      const hrs = Math.floor((diff % 86400000) / 3600000);
-      const mins = Math.floor((diff % 3600000) / 60000);
-      const secs = Math.floor((diff % 60000) / 1000);
-      countdownEl.textContent = `เหลือเวลา ${days} วัน ${hrs} ชม. ${mins} น. ${secs} วิ`;
-    }
-
-    const sorted = getLoyKrathongSortedUsers();
-    const totalKrathongs = sorted.reduce((sum, e) => sum + e.count, 0);
-    if (totalEl) totalEl.textContent = formatCompact(totalKrathongs) + " ใบ";
-
-    if (myLineEl) {
-      if (!currentUser) {
-        myLineEl.textContent = "🔐 ล็อกอินเพื่อร่วมลอยกระทงและรับยศถาวร 🪷";
-      } else {
-        const myEntry = sorted.find(e => e.id === currentUser.id);
-        const myCnt = myEntry ? myEntry.count : 0;
-        const myRankIdx = sorted.findIndex(e => e.id === currentUser.id);
-        myLineEl.textContent = myCnt > 0
-          ? `🪷 คุณลอยกระทงไปแล้ว: ${formatCompact(myCnt)} ใบ (อันดับ #${myRankIdx + 1})`
-          : "🪷 กดลอยกระทงอย่างน้อย 1 ใบ เพื่อรับยศถาวร [ผู้ร่วมลอยกระทง 2026] ทันที!";
-      }
-    }
-
-    if (listEl) {
-      const top5 = sorted.slice(0, 5);
-      const sig = top5.map(e => `${e.id}:${e.count}:${e.u.avatarDecoration || ""}:${e.u.customName || e.u.name || ""}`).join("|") + "|" + (currentUser ? currentUser.id : "");
-      if (listEl.dataset.lkSig !== sig) {
-        listEl.dataset.lkSig = sig;
-        listEl.textContent = "";
-        if (top5.length === 0) {
-          listEl.innerHTML = `<div class="lb-empty" style="color:#cbd5e1;">ยังไม่มีผู้ลอยกระทง — เป็นคนแรกเลยสิ! 🪷</div>`;
-        } else {
-          top5.forEach((e, i) => {
-            listEl.appendChild(buildLbRow(i + 1, e.id, e.u, "🪷 " + formatCompact(e.count) + " ใบ"));
-          });
-        }
-      }
-    }
+    if (card) card.style.display = 'none';
   }
-
-  setInterval(() => {
-    if (Date.now() <= LOY_KRATHONG_END_MS + 2000) {
-      renderLoyKrathongEvent();
-    }
-  }, 1000);
-
   // =========================================
   // 14. ระบบยศอัตโนมัติตามยอดโดเนท + แนบสลิปหน้าเว็บ (ไม่ต้องใช้ Discord)
   // =========================================
@@ -18124,7 +18476,61 @@
       body.appendChild(bar);
     }
   };
- 
+ // =========================================================================
+  // ✨ ตัวช่วย UI ใหม่: สลับแท็บกระดานอันดับ + ค้นหาหน้าประเมินเกม + ค้นหาผู้พัฒนา
+  // =========================================================================
+  function filterLeaderboardTab(cat, btnEl) {
+    if (typeof playClickSound === "function") playClickSound();
+    document.querySelectorAll('#bgtLbFilterTabs .bgt-lb-tab').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+
+    const grid = document.getElementById('bgtLbMainGrid');
+    if (!grid) return;
+    grid.classList.toggle('single-focus', cat !== 'all');
+
+    grid.querySelectorAll('.lb-column[data-lb-cat]').forEach(col => {
+      col.style.display = (cat === 'all' || col.dataset.lbCat === cat) ? 'block' : 'none';
+    });
+  }
+
+  let _evalGenreFilter = 'all';
+  function setEvalGenreFilter(tag, btnEl) {
+    if (typeof playClickSound === "function") playClickSound();
+    _evalGenreFilter = tag;
+    document.querySelectorAll('#evalGenreFilters .proj-filter-btn').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    filterEvalGameCards();
+  }
+
+  function filterEvalGameCards() {
+    const q = (document.getElementById('evalGameSearch')?.value || "").trim().toLowerCase();
+    document.querySelectorAll('#gameGrid .game-option').forEach(opt => {
+      const title = (opt.querySelector('.game-title')?.textContent || "").toLowerCase();
+      const tag = (opt.querySelector('.genre-tag')?.dataset.origTag || "").toUpperCase();
+      const matchQ = !q || title.includes(q);
+      const matchTag = _evalGenreFilter === 'all' || tag === _evalGenreFilter;
+      opt.style.display = (matchQ && matchTag) ? '' : 'none';
+    });
+  }
+
+  function filterDeveloperCards(query) {
+    const q = String(query || "").trim().toLowerCase();
+    document.querySelectorAll('#devGrid .dev-card').forEach(card => {
+      const text = (card.textContent || "").toLowerCase();
+      card.style.display = (!q || text.includes(q)) ? '' : 'none';
+    });
+  }
+
+  // อัปเดตตัวเลขจำนวนผู้พัฒนาบน Hero Banner อัตโนมัติ
+  const _origRenderDevCount = renderDevelopers;
+  renderDevelopers = function(data) {
+    _origRenderDevCount(data);
+    const pill = document.getElementById('devTotalCountPill');
+    const count = data ? Object.keys(data).length : 0;
+    if (pill) pill.textContent = `🤝 ผู้พัฒนาทั้งหมด: ${count} ค่าย`;
+    const q = document.getElementById('devSearchInput')?.value || "";
+    if (q) filterDeveloperCards(q);
+  };
 
 </script>
 
@@ -20632,7 +21038,7 @@
 
   function initLkArchiveListener() {
     if (!db) return;
-    db.ref("event_archives/loykrathong_2026").on("value", (snap) => {
+    db.ref("event_archives/loykrathong_2026").once("value", (snap) => {
       lkArchiveCache = snap.val();
       renderLkArchiveLeaderboard();
     });
@@ -20736,65 +21142,10 @@
     }
   };
 
-  // สลับเข้าสู่เทศกาลคริสต์มาสทันทีแบบเรียลไทม์เมื่อหมดเวลาลอยกระทง
-  function applyLiveChristmasTransition() {
-    if (_xmasAutoSwitched) return;
-    _xmasAutoSwitched = true;
-    isLoyKrathongActive = false;
-    isXmasActive = isChristmasEventNow();
-
-    // 1. บันทึกผลลอยกระทง 2026 ถาวร + แจกรางวัล
-    saveLoyKrathongFinalArchive();
-    if (typeof checkAndClaimEventRewards === "function") checkAndClaimEventRewards();
-
-    // 2. เปลี่ยนธีมพื้นหลัง + หัวเว็บ เป็นคริสต์มาสทันที
-    document.body.classList.remove('loy-krathong-mode');
-    document.body.classList.add('xmas-mode');
-    if (!isHorrorTriggered) {
-      const dL = document.getElementById('decorLeft');
-      const dR = document.getElementById('decorRight');
-      const tI = document.getElementById('titleIcon');
-      const bB = document.getElementById('brandBadge');
-      const mS = document.getElementById('musicSpeakerIcon');
-      if (dL) dL.textContent = '🎄✨';
-      if (dR) dR.textContent = '🎅❄️';
-      if (tI) tI.textContent = '🎅';
-      if (bB) bB.textContent = '🎄 BEN THE GAME TRANSLATOR • MERRY CHRISTMAS EDITION ❄️';
-      if (mS) mS.textContent = '🎄🔊';
-    }
-
-    // 3. สลับเพลย์ลิสต์เป็นเพลงคริสต์มาสที่มีอยู่ในระบบ (images/bgm1.mp3)
-    BGM_PLAYLIST = [{ name: "เพลงคริสต์มาส 🎄", src: "images/bgm1.mp3" }];
-    currentTrackIndex = 0;
-    const bgmEl = document.getElementById('bgmAudio');
-    if (bgmEl) {
-      const wasPlaying = !bgmEl.paused && !userPausedMusic;
-      bgmEl.dataset.src = "";
-      loadCurrentBgmTrack();
-      if (wasPlaying && !isHorrorTriggered && !isCurseSceneBlockingBgm()) {
-        startChristmasMusic();
-      }
-    }
-
-    // 4. เปลี่ยนการ์ดอีเวนต์หน้าหลักเป็นกิจกรรมคริสต์มาส 2026 + อัปเดตกระดาน
-    if (typeof renderLoyKrathongEvent === "function") renderLoyKrathongEvent();
-    if (currentPage === 'home') {
-      const lkCard = document.getElementById('loyKrathongEventCard');
-      if (lkCard && !isHorrorTriggered) lkCard.style.display = 'block';
-    }
-    renderLkArchiveLeaderboard();
-    showToast("🎄✨ จบกิจกรรมลอยกระทง 2026 แล้ว! บันทึกผลอันดับเรียบร้อย เข้าสู่เทศกาลคริสต์มาส! 🎅🎁");
-  }
-
-  // เริ่มฟังข้อมูล archive และคอยตรวจเวลาข้ามเที่ยงคืนทุก 1 วินาที
   window.addEventListener("load", () => {
     setTimeout(initLkArchiveListener, 400);
   });
-  setInterval(() => {
-    if (Date.now() > LOY_KRATHONG_END_MS) {
-      applyLiveChristmasTransition();
-    }
-  }, 1000);
+
   // =========================================================================
   // 26. 🤖 PROTO-AI ผู้ช่วยลอยตามจอทุกหน้า + เสียงหุ่นยนต์ + พูดแนะนำอัตโนมัติ
   // =========================================================================
@@ -22973,7 +23324,7 @@
   // 🔄📢 ระบบแจ้งเตือนเว็บอัปเดตอัตโนมัติ (เพิ่มเลข SITE_BUILD_VER ทุกครั้งที่อัปเว็บ!)
   // =========================================================================
   (function initSiteUpdateNotifier() {
-    const SITE_BUILD_VER = 6; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
+    const SITE_BUILD_VER = 7; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
 
     const banner = document.createElement('div');
     banner.id = 'bgtUpdateBanner';
@@ -23902,6 +24253,311 @@
       if (b) b.style.display = 'none';
     };
   })();
+      // =========================================================================
+// 📚✨ อัปเกรดหน้า คลังเกมแปลไทย & สถานะงาน (แยก กำลังแปล vs เสร็จแล้ว 100% จาก itch.io)
+// =========================================================================
+let projReleasedPage = 1;
+
+(function upgradeTranslationHubLayout() {
+  const WIP_STATUSES = ['translating', 'qc', 'testing', 'updating', 'paused'];
+
+  function renderTranslationHubNew() {
+    const wipGrid = document.getElementById('projInProgressGrid');
+    const relGrid = document.getElementById('projReleasedGrid');
+    const relPager = document.getElementById('projReleasedPager');
+    const relInd = document.getElementById('projRelPageIndicator');
+    if (!wipGrid || !relGrid) return;
+
+    const q = (document.getElementById('projSearchInput')?.value || "").trim().toLowerCase();
+    const isAdmin = !!(currentUser && currentUser.isVoteAdmin);
+
+    // 1) รวมโปรเจกต์ที่ "กำลังแปล / กำลังอัปเดต" จาก projectsCache
+    const allProj = Object.keys(projectsCache || {})
+      .map(k => ({ key: k, ...projectsCache[k] }))
+      .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (Number(b.updatedAt || b.createdAt) || 0) - (Number(a.updatedAt || a.createdAt) || 0));
+
+    const wipAll = allProj.filter(p => WIP_STATUSES.includes(p.status || 'translating'));
+    const wipFiltered = wipAll.filter(p => {
+      const matchSt = currentProjFilter === 'all' || (p.status || 'translating') === currentProjFilter;
+      const matchQ  = !q || (p.title || "").toLowerCase().includes(q);
+      return matchSt && matchQ;
+    });
+
+    // 2) รวมเกมที่ "แปลเสร็จแล้ว 100%" โดยดึงจากบัญชี itch.io (itchStatsCache.games) เป็นหลักทั้งหมด!
+    const relList = [];
+    const seenUrls = new Set();
+    const seenTitles = new Set();
+
+    if (itchStatsCache && Array.isArray(itchStatsCache.games)) {
+      itchStatsCache.games.forEach(g => {
+        const pKey = "itch_" + g.id;
+        const pData = projectsCache[pKey] || {};
+        // ถ้าแอดมินตั้งสถานะเกมนี้เป็นกำลังอัปเดตไว้ ก็ยังให้โชว์ใน 100% ด้วย (หรือจะโชว์ทั้งคู่ก็ได้)
+        relList.push({
+          id: g.id,
+          title: g.title || "Untitled",
+          cover: g.cover || pData.coverImg || "",
+          url: g.url || pData.downloadUrl || "https://ben-the-game-translator.itch.io/",
+          downloads: Number(g.downloads) || 0,
+          views: Number(g.views) || 0,
+          likes: Number(pData.hypeCount) || 0
+        });
+        if (g.url) seenUrls.add(g.url.toLowerCase());
+        if (g.title) seenTitles.add(g.title.toLowerCase().trim());
+      });
+    }
+
+    // เติมเกมที่แอดมินตั้งเป็น released/updated เอง (เฉพาะที่ยังไม่มีใน itch_stats)
+    allProj.forEach(p => {
+      if (p.status !== 'released' && p.status !== 'updated') return;
+      const tLow = (p.title || "").toLowerCase().trim();
+      const uLow = (p.downloadUrl || "").toLowerCase().trim();
+      if ((uLow && seenUrls.has(uLow)) || (tLow && seenTitles.has(tLow))) return;
+      relList.push({
+        id: p.key,
+        title: p.title || "Untitled",
+        cover: p.coverImg || "",
+        url: p.downloadUrl || "https://ben-the-game-translator.itch.io/",
+        downloads: 0,
+        views: 0,
+        likes: Number(p.hypeCount) || 0
+      });
+    });
+
+    relList.sort((a, b) => (b.downloads - a.downloads) || (b.likes - a.likes));
+    const relFiltered = q ? relList.filter(g => (g.title || "").toLowerCase().includes(q)) : relList;
+
+    // อัปเดตตัวเลขบน Hero Banner
+    const wipPill = document.getElementById('projWipCountPill');
+    const relPill = document.getElementById('projRelCountPill');
+    if (wipPill) wipPill.textContent = `⚡ กำลังแปล: ${wipAll.length} เกม`;
+    if (relPill) relPill.textContent = `✅ แปลเสร็จแล้ว 100%: ${relList.length} เกม`;
+
+    // --- วาดโซน 1: กำลังแปล & กำลังอัปเดต ---
+    wipGrid.innerHTML = "";
+    if (wipFiltered.length === 0) {
+      wipGrid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1; color:#94a3b8;">${wipAll.length === 0 ? 'ตอนนี้ไม่มีโปรเจกต์ค้างแปล ทุกเกมปล่อยครบ 100% ด้านล่างแล้วครับ! 🎉' : 'ไม่พบโปรเจกต์ในสถานะที่เลือกครับ'}</div>`;
+    } else {
+      wipFiltered.forEach(p => {
+        const stMeta = PROJ_STATUS_META[p.status] || PROJ_STATUS_META.translating;
+        const pct = Math.max(0, Math.min(100, Number(p.percent) || 0));
+        const previews = parseProjectMediaList(p.previewImgs);
+
+        const card = document.createElement('div');
+        card.className = "proj-card" + (p.pinned ? " is-pinned" : "");
+
+        const coverWrap = document.createElement('div');
+        coverWrap.className = "proj-cover-wrap";
+        const img = document.createElement('img');
+        img.alt = p.title || "";
+        setImgWithFallback(img, p.coverImg, p.title || "Game");
+        coverWrap.appendChild(img);
+
+        const stBadge = document.createElement('span');
+        stBadge.className = `proj-status-badge ${stMeta.cls}`;
+        stBadge.textContent = stMeta.label;
+        coverWrap.appendChild(stBadge);
+
+        if (p.pinned) {
+          const pin = document.createElement('span');
+          pin.className = 'proj-pin-chip';
+          pin.textContent = '📌 ปักหมุด';
+          coverWrap.appendChild(pin);
+        }
+
+        if (isAdmin) {
+          const admWrap = document.createElement('div');
+          admWrap.className = "dev-admin-actions";
+          const mk = (txt, title, fn, cls = "") => {
+            const b = document.createElement('button');
+            b.type = "button";
+            b.className = "dev-card-btn " + cls;
+            b.textContent = txt;
+            b.title = title;
+            b.onclick = fn;
+            return b;
+          };
+          admWrap.append(
+            mk(p.pinned ? "📌✓" : "📌", "ปักหมุด", () => adminToggleProjectPin(p.key)),
+            mk("✏️", "แก้ไข", () => editProject(p.key), "edit"),
+            mk("🗑️", "ลบ", () => adminDeleteProject(p.key), "del")
+          );
+          coverWrap.appendChild(admWrap);
+        }
+        card.appendChild(coverWrap);
+
+        const body = document.createElement('div');
+        body.className = "proj-body";
+        body.innerHTML = `
+          <div class="proj-head-row">
+            <h3 class="proj-title"></h3>
+            <span class="proj-genre-pill">${p.genre || 'Visual Novel'}</span>
+          </div>
+          <div class="proj-progress-box">
+            <div class="proj-progress-top"><span>📊 ความคืบหน้า</span><span>${pct}%</span></div>
+            <div class="proj-progress-track"><div class="proj-progress-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="proj-meta-list">
+            <div><strong>✍️ ผู้แปล:</strong> ${p.translators || 'Ben'}</div>
+          </div>
+        `;
+        body.querySelector('.proj-title').textContent = p.title || "Untitled";
+
+        if (p.licenseProofImg || previews.length > 0) {
+          const mRow = document.createElement('div');
+          mRow.className = "proj-media-row";
+          if (p.licenseProofImg) {
+            const b1 = document.createElement('button');
+            b1.type = "button";
+            b1.className = "proj-media-btn";
+            b1.textContent = "📜 ใบอนุญาต";
+            b1.onclick = () => openProjectMediaModal(`📜 หลักฐานใบอนุญาต — ${p.title}`, [p.licenseProofImg]);
+            mRow.appendChild(b1);
+          }
+          if (previews.length > 0) {
+            const b2 = document.createElement('button');
+            b2.type = "button";
+            b2.className = "proj-media-btn";
+            b2.textContent = `🖼️ ตัวอย่าง (${previews.length})`;
+            b2.onclick = () => openProjectMediaModal(`🖼️ ตัวอย่างคำแปล — ${p.title}`, previews);
+            mRow.appendChild(b2);
+          }
+          body.appendChild(mRow);
+        }
+        card.appendChild(body);
+
+        const footer = document.createElement('div');
+        footer.className = "proj-footer";
+        const hypeBtn = document.createElement('button');
+        hypeBtn.type = "button";
+        hypeBtn.className = "proj-hype-btn";
+        hypeBtn.innerHTML = `🔥 รอเล่น! <span class="dev-heart-pill">${formatCompact(p.hypeCount || 0)}</span>`;
+        hypeBtn.onclick = (e) => hypeProjectClick(p.key, e);
+        footer.appendChild(hypeBtn);
+
+        if (p.downloadUrl) {
+          const a = document.createElement('a');
+          a.href = p.downloadUrl;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.className = "proj-dl-btn";
+          a.textContent = "🔗 หน้าเกมต้นฉบับ";
+          footer.appendChild(a);
+        }
+        card.appendChild(footer);
+        wipGrid.appendChild(card);
+      });
+    }
+
+    // --- วาดโซน 2: เกมแปลเสร็จแล้ว 100% (จาก itch.io + ปุ่มเปลี่ยนหน้า) ---
+    relGrid.innerHTML = "";
+    if (relFiltered.length === 0) {
+      relGrid.innerHTML = `<div class="lb-empty" style="grid-column:1/-1;">${relList.length === 0 ? 'กำลังดึงรายชื่อเกมจาก itch.io...' : 'ไม่พบเกมที่ค้นหาครับ'}</div>`;
+      if (relPager) relPager.style.display = 'none';
+      if (relInd) relInd.textContent = "หน้า 1 / 1";
+      return;
+    }
+
+    const perPage = 12;
+    const totalPages = Math.max(1, Math.ceil(relFiltered.length / perPage));
+    if (projReleasedPage > totalPages) projReleasedPage = totalPages;
+    if (projReleasedPage < 1) projReleasedPage = 1;
+    const start = (projReleasedPage - 1) * perPage;
+    const pageItems = relFiltered.slice(start, start + perPage);
+    if (relInd) relInd.textContent = `หน้า ${projReleasedPage} / ${totalPages}`;
+
+    pageItems.forEach(g => {
+      const card = document.createElement('div');
+      card.className = "bgt-rel-card";
+      const fb = `https://placehold.co/480x300/064e3b/fde68a?text=${encodeURIComponent(g.title)}`;
+      const safeTitle = (g.title || '').replace(/'/g, "\\'").replace(/"/g, '"');
+      const safeCover = (g.cover || '').replace(/'/g, "\\'");
+      const safeUrl   = (g.url || '').replace(/'/g, "\\'");
+
+      card.innerHTML = `
+        <div class="bgt-rel-thumb">
+          <img src="${g.cover || fb}" alt="" onerror="this.src='${fb}';">
+          <span class="bgt-rel-badge">✅ 100%</span>
+          ${g.downloads > 0 ? `<span class="bgt-rel-dl-chip">⬇️ ${formatCompact(g.downloads)}</span>` : ''}
+        </div>
+        <div class="bgt-rel-body">
+          <div class="bgt-rel-title" title="${safeTitle}"></div>
+          <div class="bgt-rel-meta">${g.views > 0 ? `👀 ${formatCompact(g.views)} เข้าชม • ` : ''}ฟรี 100% บน itch.io</div>
+        </div>
+        <div class="bgt-rel-actions">
+          <a href="${g.url}" target="_blank" rel="noopener" class="bgt-rel-btn-dl">⬇️ โหลดฟรี</a>
+          <button type="button" class="bgt-rel-btn-like" onclick="likeHomeItchGame('${g.id}', '${safeTitle}', '${safeCover}', '${safeUrl}', event)">❤️ ${formatCompact(g.likes)}</button>
+        </div>
+      `;
+      card.querySelector('.bgt-rel-title').textContent = g.title;
+      relGrid.appendChild(card);
+    });
+
+    // ปุ่มเปลี่ยนหน้า ‹ PREV 01 02 NEXT › (ทรงเดียวกับหน้าขอเกมเป๊ะ!)
+    if (relPager) {
+      if (totalPages <= 1) {
+        relPager.style.display = 'none';
+      } else {
+        relPager.style.display = 'flex';
+        relPager.innerHTML = "";
+        const row = document.createElement('div');
+        row.className = "wish-pager-row";
+
+        const goPage = (p) => {
+          playClickSound();
+          projReleasedPage = p;
+          renderTranslationHubNew();
+          relGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        const prevBtn = document.createElement('button');
+        prevBtn.type = "button";
+        prevBtn.className = "wish-pg-btn nav";
+        prevBtn.textContent = "‹ PREV";
+        prevBtn.disabled = projReleasedPage <= 1;
+        prevBtn.onclick = () => goPage(projReleasedPage - 1);
+        row.appendChild(prevBtn);
+
+        for (let p = 1; p <= totalPages; p++) {
+          const b = document.createElement('button');
+          b.type = "button";
+          b.className = "wish-pg-btn" + (p === projReleasedPage ? " active" : "");
+          b.textContent = String(p).padStart(2, '0');
+          if (p !== projReleasedPage) b.onclick = () => goPage(p);
+          row.appendChild(b);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.type = "button";
+        nextBtn.className = "wish-pg-btn nav";
+        nextBtn.textContent = "NEXT ›";
+        nextBtn.disabled = projReleasedPage >= totalPages;
+        nextBtn.onclick = () => goPage(projReleasedPage + 1);
+        row.appendChild(nextBtn);
+
+        relPager.appendChild(row);
+        const sum = document.createElement('div');
+        sum.className = "wish-pg-summary";
+        sum.innerHTML = `เกมที่ <strong>${start + 1}–${Math.min(start + pageItems.length, relFiltered.length)}</strong> จาก <strong>${relFiltered.length}</strong> เกม`;
+        relPager.appendChild(sum);
+      }
+    }
+  }
+
+  // แทนที่ renderTranslationProjects เดิม และให้รีเฟรชอัตโนมัติทุกครั้งที่ itch_stats อัปเดต
+  renderTranslationProjects = function() {
+    renderTranslationHubNew();
+    if (typeof renderHomeStatsAndCarousel === "function") renderHomeStatsAndCarousel();
+  };
+
+  const _origRenderHomeStats = renderHomeStatsAndCarousel;
+  renderHomeStatsAndCarousel = function() {
+    _origRenderHomeStats();
+    renderTranslationHubNew();
+  };
+
+  setTimeout(renderTranslationHubNew, 350);
+})();
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
