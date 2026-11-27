@@ -9031,6 +9031,105 @@
       background: linear-gradient(145deg, #9f1239, #4c0519);
       box-shadow: 0 0 12px rgba(244, 63, 94, 0.65);
     }
+    /* =========================================
+       🏆 แท่นเกียรติยศแบบ 4 ต่อ 4 (โชว์ทีละ 4 แท่น 2x2)
+       ========================================= */
+    #homePodiumSection .podium-grid.carousel-mode {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 18px !important;
+    }
+    @media (max-width: 760px) {
+      #homePodiumSection .podium-grid.carousel-mode {
+        grid-template-columns: 1fr !important;
+      }
+    }
+    #homePodiumSection .podium-grid.carousel-mode .podium-box {
+      display: none !important;
+      max-width: none !important;
+      margin: 0 !important;
+    }
+    #homePodiumSection .podium-grid.carousel-mode .podium-box.active-podium {
+      display: flex !important;
+      animation: fadeSlideUp 0.28s ease-out;
+    }
+
+    /* =========================================
+       🏭✨ โรงงานของขวัญ v2 (เลเวล + คุณภาพกล่อง + ยศสวยๆ 5 ขั้น)
+       ========================================= */
+    .xmas-lv-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.82rem;
+      color: #e0f2fe;
+    }
+    .xmas-rate-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.7rem;
+    }
+    .xmas-rate-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(15, 23, 42, 0.7);
+      color: #cbd5e1;
+    }
+    .xmas-rate-pill.r-mythic { border-color: #fde047; color: #fef08a; background: linear-gradient(90deg, #9333ea, #ec4899, #f59e0b); font-weight: 700; }
+    .xmas-rate-pill.r-legend { border-color: #f59e0b; color: #fde68a; background: rgba(180, 83, 9, 0.55); }
+    .xmas-rate-pill.r-epic   { border-color: #c084fc; color: #f3e8ff; background: rgba(107, 33, 168, 0.55); }
+    .xmas-rate-pill.r-rare   { border-color: #38bdf8; color: #bae6fd; background: rgba(3, 105, 161, 0.5); }
+
+    /* ยศโรงงานของขวัญ 5 ระดับ (สวยอลังการ!) */
+    .xmas-ws-pill {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .xmas-ws-pill.ws-1 { background: linear-gradient(135deg, #166534, #22c55e); color: #fff; border: 1.5px solid #86efac; }
+    .xmas-ws-pill.ws-2 { background: linear-gradient(135deg, #0369a1, #38bdf8); color: #fff; border: 1.5px solid #bae6fd; }
+    .xmas-ws-pill.ws-3 { background: linear-gradient(135deg, #7e22ce, #ec4899); color: #fff; border: 1.5px solid #f5d0fe; box-shadow: 0 0 8px rgba(236,72,153,0.45); }
+    .xmas-ws-pill.ws-4 { background: linear-gradient(135deg, #b45309, #f59e0b, #fde047); color: #fff; border: 1.5px solid #fef9c3; text-shadow: 0 1px 3px rgba(0,0,0,0.65); box-shadow: 0 0 10px rgba(245,158,11,0.6); }
+    .xmas-ws-pill.ws-5 {
+      background: linear-gradient(90deg, #dc2626, #f59e0b, #22c55e, #38bdf8, #a855f7, #dc2626);
+      background-size: 280% 280%;
+      animation: gradientFlow 2.6s linear infinite;
+      color: #fff;
+      border: 1.5px solid #ffffff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+      box-shadow: 0 0 14px rgba(253,224,71,0.8);
+    }
+    .xmas-ws-pill.ws-5::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -120%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+      transform: skewX(-25deg);
+      animation: rankShimmer 2.2s infinite;
+      pointer-events: none;
+    }
   </style>
   
 </head>
@@ -21984,6 +22083,430 @@
       btn.onclick = adminGrantSeason1HeartLegends;
       donatePanel.appendChild(btn);
     }
+  })();
+    
+  // =========================================================================
+  // 🏆 1) อัปเกรดแท่นเกียรติยศเป็นแบบ 4 ต่อ 4 (โชว์ทีละ 4 แท่น ถ้ามีเพิ่มค่อยเลื่อนหน้า!)
+  // =========================================================================
+  (function upgradePodiumTo4PerPage() {
+    function apply4PerPage() {
+      const sec = document.getElementById('homePodiumSection');
+      const grid = sec ? sec.querySelector('.podium-grid') : null;
+      const bar = sec ? sec.querySelector('.podium-switcher-bar') : null;
+      if (!sec || !grid) return;
+
+      const boxes = Array.from(grid.querySelectorAll('.podium-box'));
+      const PER_PAGE = 4;
+      const totalPages = Math.max(1, Math.ceil(boxes.length / PER_PAGE));
+      let curPage = 0;
+
+      // ซ่อนแถบแท็บเดี่ยวๆ เปลี่ยนเป็นป้ายบอกกลุ่ม 4x4
+      const tabsRow = bar ? bar.querySelector('.podium-tabs-row') : null;
+      if (tabsRow) {
+        tabsRow.innerHTML = `<span style="font-family:'Kanit',sans-serif; font-size:0.84rem; color:#fde68a; font-weight:700;">✨ แสดงทีละ 4 แท่นเกียรติยศ (4×4)</span>`;
+      }
+
+      const renderPage = (pageIdx, silent = false) => {
+        if (!silent && typeof playClickSound === "function") playClickSound();
+        curPage = ((pageIdx % totalPages) + totalPages) % totalPages;
+        const start = curPage * PER_PAGE;
+        const end = start + PER_PAGE;
+
+        boxes.forEach((b, i) => {
+          b.classList.toggle('active-podium', i >= start && i < end);
+        });
+
+        const cnt = document.getElementById('podiumPageCounter');
+        if (cnt) cnt.textContent = `${curPage + 1} / ${totalPages}`;
+        const prevBtn = document.getElementById('podiumPrevBtn');
+        const nextBtn = document.getElementById('podiumNextBtn');
+        if (prevBtn) prevBtn.disabled = totalPages <= 1;
+        if (nextBtn) nextBtn.disabled = totalPages <= 1;
+      };
+
+      const prevBtn = document.getElementById('podiumPrevBtn');
+      const nextBtn = document.getElementById('podiumNextBtn');
+      if (prevBtn) prevBtn.onclick = () => renderPage(curPage - 1);
+      if (nextBtn) nextBtn.onclick = () => renderPage(curPage + 1);
+
+      renderPage(0, true);
+    }
+
+    setTimeout(apply4PerPage, 150);
+  })();
+
+  // =========================================================================
+  // 🏭🎁 2) โรงงานผลิตของขวัญ v2 (XP + ลดเวลา 15วิ->3วิ + สุ่มคุณภาพกล่อง + ยศ & อชีฟเม้น)
+  // =========================================================================
+  (function upgradeXmasWorkshopV2() {
+    const MAX_EXP_FOR_3S = 500; // ผลิต 500 กล่อง (~15 วัน ชิลๆ วันละ 33 กล่อง) เวลาผลิตตันที่ 3.0 วิ!
+
+    function getWorkshopStats(uData) {
+      const u = uData || {};
+      const exp = Math.max(0, Number(u.xmasGiftCount) || 0);
+      const lv = Math.min(25, Math.floor(exp / 20) + 1); // 20 กล่อง = 1 เลเวล (ตัน Lv.25 ที่ 480-500 กล่อง)
+      const ratio = Math.min(1, exp / MAX_EXP_FOR_3S);
+      const craftMs = Math.max(3000, Math.round(15000 - ratio * 12000)); // 15.0 วิ -> 3.0 วิ
+      const rareChance = Math.min(50, Math.round(10 + ratio * 40));     // โอกาสกล่อง Rare: 10% -> สูงสุด 50%
+      const commonPts = Math.round(25 + ratio * 75);                    // กล่องธรรมดาตาม XP: 25 -> 100 💠
+      return { exp, lv, craftMs, craftSec: (craftMs / 1000).toFixed(1), rareChance, commonPts };
+    }
+
+    function getWorkshopRankMeta(exp) {
+      const n = Number(exp) || 0;
+      if (n >= 500) return { tier: 5, cls: "ws-5", name: "🎅👑 จักรพรรดิโรงงานซานต้า (MAX)" };
+      if (n >= 250) return { tier: 4, cls: "ws-4", name: "🏭✨ เจ้าสัวโรงงานของขวัญ" };
+      if (n >= 100) return { tier: 3, cls: "ws-3", name: "🎁💜 ปรมาจารย์ห่อของขวัญ" };
+      if (n >= 30)  return { tier: 2, cls: "ws-2", name: "🧝‍♂️💙 เอลฟ์ช่างฝีมือ" };
+      if (n >= 1)   return { tier: 1, cls: "ws-1", name: "🎄🌱 เอลฟ์ฝึกหัด" };
+      return null;
+    }
+
+    // 🏆 เพิ่มอชีฟเม้นใหม่ 6 อัน (สวยๆ สายผลิต + สายดวง!)
+    const NEW_WS_ACHS = [
+      { id: "ws_craft_10",  icon: "🧝", title: "เอลฟ์ขยันขันแข็ง",         desc: "ผลิตและแจกของขวัญคริสต์มาสครบ 10 กล่อง",           reward: 150,  rarity: "common", secret: false },
+      { id: "ws_craft_100", icon: "🏭", title: "ผู้จัดการโรงงานของขวัญ",    desc: "ผลิตและแจกของขวัญคริสต์มาสครบ 100 กล่อง",          reward: 400,  rarity: "rare",   secret: false },
+      { id: "ws_max_speed", icon: "⚡", title: "มือไวระดับ 3 วินาที!",       desc: "อัปเกรดโรงงานจนเวลาผลิตตันที่ 3 วินาที (500 กล่อง)", reward: 1200, rarity: "epic",   secret: false },
+      { id: "ws_hit_epic",  icon: "💜", title: "กล่องคริสตัลนำโชค",         desc: "สุ่มแจกได้กล่องคุณภาพ EPIC (+1,000 💠)",            reward: 300,  rarity: "rare",   secret: false },
+      { id: "ws_hit_leg",   icon: "👑", title: "ซานต้าทองคำมาโปรด",         desc: "สุ่มแจกได้กล่องคุณภาพ LEGENDARY (+5,000 💠)",       reward: 800,  rarity: "epic",   secret: false },
+      { id: "ws_hit_myth",  icon: "🌈", title: "ปาฏิหาริย์ 0.01% (MYTHIC)", desc: "สุ่มได้กล่องจักรวาลทองคำ 0.01% (+50,000 💠)!",      reward: 3000, rarity: "secret", secret: false }
+    ];
+    if (Array.isArray(BGT_ACHIEVEMENTS)) {
+      NEW_WS_ACHS.forEach(a => {
+        if (!BGT_ACHIEVEMENTS.some(x => x.id === a.id)) BGT_ACHIEVEMENTS.push(a);
+      });
+    }
+
+    // สุ่มคุณภาพกล่องตอนกดแจก (0.01% = 50,000 | 1% = 5,000 | 5% = 1,000 | สูงสุด 50% = Rare | ที่เหลือ = Common ตาม XP)
+    function rollGiftQuality(stats) {
+      const r = Math.random() * 100;
+      if (r < 0.01) return { tier: "mythic", label: "🌈 MYTHIC จักรวาลทองคำ (0.01%!)", pts: 50000, ach: "ws_hit_myth", icons: ['🌈','👑','💠','🎉'] };
+      if (r < 1.01) return { tier: "legend", label: "👑 LEGENDARY ทองคำซานต้า (1%)",    pts: 5000,  ach: "ws_hit_leg",  icons: ['👑','✨','💠','🎁'] };
+      if (r < 6.01) return { tier: "epic",   label: "💜 EPIC คริสตัลหิมะ (5%)",          pts: 1000,  ach: "ws_hit_epic", icons: ['💜','❄️','💠','🎁'] };
+      if (r < 6.01 + stats.rareChance) {
+        return { tier: "rare", label: `💙 RARE ริบบิ้นเงิน (${stats.rareChance}%)`, pts: 120, ach: null, icons: ['💙','🎁','💠'] };
+      }
+      return { tier: "common", label: "🎁 กล่องธรรมดา", pts: stats.commonPts, ach: null, icons: ['🎁','🎄','💠'] };
+    }
+
+    // อัปเกรด UI โรงงานให้โชว์เลเวล, เวลาผลิตปัจจุบัน, และเรทสุ่มคุณภาพกล่อง
+    const _prevUpdateWs = updateXmasWorkshopUI;
+    updateXmasWorkshopUI = function() {
+      _prevUpdateWs();
+      const ws = document.getElementById('xmasWorkshopBox');
+      if (!ws) return;
+
+      const u = (currentUser && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+      const st = getWorkshopStats(u);
+
+      let lvBar = document.getElementById('xmasLvBar');
+      if (!lvBar) {
+        lvBar = document.createElement('div');
+        lvBar.id = 'xmasLvBar';
+        lvBar.className = 'xmas-lv-bar';
+        ws.prepend(lvBar);
+      }
+      lvBar.innerHTML = `
+        <span>🏭 โรงงาน <strong>Lv.${st.lv}</strong> (${formatNum(st.exp)} กล่อง)</span>
+        <span>⚡ เวลาผลิต: <strong style="color:#4ade80;">${st.craftSec} วิ</strong> ${st.craftMs <= 3000 ? '(MAX!)' : '(ต่ำสุด 3 วิ)'}</span>
+      `;
+
+      let rateRow = document.getElementById('xmasRatePills');
+      if (!rateRow) {
+        rateRow = document.createElement('div');
+        rateRow.id = 'xmasRatePills';
+        rateRow.className = 'xmas-rate-pills';
+        ws.appendChild(rateRow);
+      }
+      rateRow.innerHTML = `
+        <span class="xmas-rate-pill r-mythic">🌈 0.01%: 50,000💠</span>
+        <span class="xmas-rate-pill r-legend">👑 1%: 5,000💠</span>
+        <span class="xmas-rate-pill r-epic">💜 5%: 1,000💠</span>
+        <span class="xmas-rate-pill r-rare">💙 ${st.rareChance}%: 120💠</span>
+        <span class="xmas-rate-pill">🎁 ธรรมดา: ${st.commonPts}💠</span>
+      `;
+
+      const cBtn = document.getElementById('xmasCraftBtn');
+      const gBtn = document.getElementById('xmasGiveBtn');
+      const isCrafting = xmasCraftEndAt > Date.now();
+      if (cBtn && !isCrafting && xmasBagCount < XMAS_MAX_BAG) {
+        cBtn.textContent = `🔨 ผลิตของขวัญ (${st.craftSec} วิ)`;
+      }
+      if (gBtn) {
+        gBtn.textContent = `🎁 แจก & สุ่มคุณภาพ! (${xmasBagCount} กล่อง)`;
+      }
+    };
+
+    // แทนที่ฟังก์ชันเริ่มผลิต ให้ใช้เวลาตามเลเวลโรงงาน (15 วิ -> 3 วิ)
+    startCraftXmasGift = function() {
+      if (!currentUser) {
+        openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนผลิตของขวัญคริสต์มาสนะครับ 🎄");
+        return;
+      }
+      if (xmasBagCount >= XMAS_MAX_BAG) {
+        showToast("🎒 กระเป๋าเต็มแล้วครับ! กดแจกของขวัญให้เพื่อนๆ ก่อนนะ 🎁");
+        return;
+      }
+      if (xmasCraftEndAt > Date.now()) return;
+
+      const u = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+      const st = getWorkshopStats(u);
+
+      playClickSound();
+      xmasCraftEndAt = Date.now() + st.craftMs;
+      saveXmasWorkshopLocal();
+      updateXmasWorkshopUI();
+
+      if (!xmasCraftTimer) {
+        xmasCraftTimer = setInterval(() => {
+          if (xmasCraftEndAt > 0) updateXmasWorkshopUI();
+          else { clearInterval(xmasCraftTimer); xmasCraftTimer = null; }
+        }, 120);
+      }
+    };
+
+    // แทนที่ฟังก์ชันแจกของขวัญ ให้สุ่มคุณภาพกล่องตามเรท + ปลดล็อกอชีฟเม้น
+    giveXmasGiftAway = function(e) {
+      if (!currentUser) {
+        openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนแจกของขวัญนะครับ 🎁");
+        return;
+      }
+      if (!db || xmasBagCount <= 0) return;
+      if (Date.now() - _xmasGiveLock < 350) return;
+      _xmasGiveLock = Date.now();
+
+      const u = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+      const st = getWorkshopStats(u);
+      const drop = rollGiftQuality(st);
+
+      xmasBagCount = Math.max(0, xmasBagCount - 1);
+      saveXmasWorkshopLocal();
+      updateXmasWorkshopUI();
+
+      if (drop.tier === "mythic" || drop.tier === "legend") playMilestoneFanfare();
+      else playCoinSound();
+
+      const otherIds = Object.keys(usersCache || {}).filter(id => id !== currentUser.id);
+      let receiverName = "ชุมชน BGT";
+      if (otherIds.length > 0) {
+        const pick = usersCache[otherIds[Math.floor(Math.random() * otherIds.length)]] || {};
+        receiverName = pick.customName || pick.name || "เพื่อนสมาชิก BGT";
+      }
+
+      const nextExp = st.exp + 1;
+      const updates = {};
+      updates[`users/${currentUser.id}/xmasGiftCount`] = firebase.database.ServerValue.increment(1);
+      updates[`users/${currentUser.id}/pawPoints`]     = firebase.database.ServerValue.increment(drop.pts);
+      db.ref().update(updates).then(() => {
+        if (typeof unlockAchievement === "function") {
+          unlockAchievement("event_xmas");
+          if (nextExp >= 10)  unlockAchievement("ws_craft_10");
+          if (nextExp >= 100) unlockAchievement("ws_craft_100");
+          if (nextExp >= 500) unlockAchievement("ws_max_speed");
+          if (drop.ach)       unlockAchievement(drop.ach);
+        }
+        if (drop.tier === "mythic" || drop.tier === "legend") {
+          triggerMilestoneCelebration(`🎉 แจ็กพอตแตก! แจกให้ "${receiverName}" ได้ ${drop.label} รับ +${formatNum(drop.pts)} 💠!!`);
+        } else {
+          showToast(`🎅 แจกให้ "${receiverName}" ได้ ${drop.label} (+${formatNum(drop.pts)} 💠)`);
+        }
+        updateProfileEcoUI();
+      }).catch(() => {
+        xmasBagCount = Math.min(XMAS_MAX_BAG, xmasBagCount + 1);
+        saveXmasWorkshopLocal();
+        updateXmasWorkshopUI();
+        showToast("⚠️ แจกของขวัญไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
+      });
+
+      if (e) {
+        for (let i = 0; i < 4; i++) {
+          const el = document.createElement('div');
+          el.className = 'floating-heart';
+          el.textContent = drop.icons[Math.floor(Math.random() * drop.icons.length)];
+          el.style.left = (e.clientX + (Math.random() - 0.5) * 90) + 'px';
+          el.style.top  = (e.clientY - 12) + 'px';
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 1200);
+        }
+      }
+    };
+
+    // เชื่อมยศโรงงานของขวัญเข้ากับฉายา Steam + กระดานอันดับ + การ์ดโฮเวอร์
+    if (typeof getUnlockedTitlesForUser === "function") {
+      const _prevTitlesWs = getUnlockedTitlesForUser;
+      getUnlockedTitlesForUser = function(uid, uData) {
+        const list = _prevTitlesWs(uid, uData);
+        const meta = getWorkshopRankMeta((uData || {}).xmasGiftCount);
+        if (meta) list.push({ id: "xmas_ws", label: meta.name, desc: "ยศโรงงานผลิตของขวัญคริสต์มาส" });
+        return list;
+      };
+    }
+
+    const _prevBuildLbWs = buildLbRow;
+    buildLbRow = function(rank, id, u, scoreText) {
+      const row = _prevBuildLbWs(rank, id, u, scoreText);
+      const meta = getWorkshopRankMeta((u || {}).xmasGiftCount);
+      const wrap = row.querySelector('.lb-badges-wrap');
+      if (meta && wrap) {
+        const sp = document.createElement('span');
+        sp.className = `xmas-ws-pill ${meta.cls}`;
+        sp.textContent = meta.name;
+        wrap.appendChild(sp);
+      }
+      return row;
+    };
+
+    const _prevHoverWs = showUserHoverCard;
+    showUserHoverCard = function(uid, anchorEl) {
+      _prevHoverWs(uid, anchorEl);
+      const u = (uid && usersCache && usersCache[uid]) ? usersCache[uid] : {};
+      const meta = getWorkshopRankMeta(u.xmasGiftCount);
+      const wrap = document.getElementById('uhcRoles');
+      if (meta && wrap) {
+        const sp = document.createElement('span');
+        sp.className = `xmas-ws-pill ${meta.cls}`;
+        sp.textContent = meta.name;
+        wrap.appendChild(sp);
+      }
+    };
+  })(); 
+
+  // =========================================================================
+  // 🎄🏆 เพิ่มแท่นเกียรติยศกิจกรรมคริสต์มาส 2026 (แท่นเดียว -> หน้า 2/2)
+  // =========================================================================
+  (function initXmasEventPodiumOnly() {
+  // =========================================================================
+  // 🎄🏆 เพิ่มแท่นเกียรติยศกิจกรรมคริสต์มาส 2026 (แท่นเดียว -> หน้า 2/2)
+  // =========================================================================
+  (function initXmasEventPodiumOnly() {
+    const STAGE_ID = "podiumXmasEventStage";
+
+    function injectXmasPodiumBox() {
+      const sec = document.getElementById('homePodiumSection');
+      const grid = sec ? sec.querySelector('.podium-grid') : null;
+      if (!grid) return;
+
+      if (!document.getElementById(STAGE_ID)) {
+        const box = document.createElement('div');
+        box.className = 'podium-box';
+        box.innerHTML = `
+          <h3 class="podium-box-title">🎄 Top 3 กิจกรรมคริสต์มาส 2026</h3>
+          <div class="podium-stage" id="${STAGE_ID}">
+            <div class="lb-empty">ยังไม่มีผู้ร่วมกิจกรรมคริสต์มาส 🎄</div>
+          </div>
+        `;
+        grid.appendChild(box);
+      }
+
+      // อัปเดตระบบเปลี่ยนหน้า 4×4 (หน้า 1: 4 แท่นหลัก / หน้า 2: แท่นกิจกรรมคริสต์มาส)
+      const boxes = Array.from(grid.querySelectorAll('.podium-box'));
+      const PER_PAGE = 4;
+      const totalPages = Math.max(1, Math.ceil(boxes.length / PER_PAGE));
+      let curPage = 0;
+
+      const renderPage = (pageIdx, silent = false) => {
+        if (!silent && typeof playClickSound === "function") playClickSound();
+        curPage = ((pageIdx % totalPages) + totalPages) % totalPages;
+        const start = curPage * PER_PAGE;
+        const end = start + PER_PAGE;
+        boxes.forEach((b, i) => b.classList.toggle('active-podium', i >= start && i < end));
+
+        const cnt = document.getElementById('podiumPageCounter');
+        if (cnt) cnt.textContent = `${curPage + 1} / ${totalPages}`;
+        const prevBtn = document.getElementById('podiumPrevBtn');
+        const nextBtn = document.getElementById('podiumNextBtn');
+        if (prevBtn) prevBtn.disabled = totalPages <= 1;
+        if (nextBtn) nextBtn.disabled = totalPages <= 1;
+      };
+
+      const prevBtn = document.getElementById('podiumPrevBtn');
+      const nextBtn = document.getElementById('podiumNextBtn');
+      if (prevBtn) prevBtn.onclick = () => renderPage(curPage - 1);
+      if (nextBtn) nextBtn.onclick = () => renderPage(curPage + 1);
+      renderPage(0, true);
+    }
+
+    function renderXmasEventPodium() {
+      const stage = document.getElementById(STAGE_ID);
+      if (!stage) return;
+
+      const top3 = Object.keys(usersCache || {})
+        .map(id => ({ id, u: usersCache[id] || {}, val: Number((usersCache[id] || {}).xmasGiftCount) || 0 }))
+        .filter(x => x.val > 0)
+        .sort((a, b) => b.val - a.val)
+        .slice(0, 3);
+
+      if (top3.length === 0) {
+        stage.dataset.podiumKey = "";
+        stage.innerHTML = `<div class="lb-empty">ยังไม่มีผู้ร่วมกิจกรรมคริสต์มาส 🎄</div>`;
+        return;
+      }
+
+      const order = [
+        { rank: 2, medal: "🥈", item: top3[1] },
+        { rank: 1, medal: "🥇", item: top3[0] },
+        { rank: 3, medal: "🥉", item: top3[2] }
+      ];
+
+      const podiumKey = top3.map(x => x.id).join(",");
+      if (stage.dataset.podiumKey !== podiumKey) {
+        stage.dataset.podiumKey = podiumKey;
+        stage.innerHTML = "";
+        order.forEach(slot => {
+          if (!slot.item) return;
+          const u = slot.item.u || {};
+          const rawAv = u.customAvatar || u.avatarUrl;
+          const avatar = (typeof rawAv === "string" && (rawAv.startsWith("https://") || rawAv.startsWith("data:image/")))
+            ? rawAv : "https://cdn.discordapp.com/embed/avatars/0.png";
+
+          const div = document.createElement('div');
+          div.className = `podium-slot p-${slot.rank}`;
+          div.dataset.uid = slot.item.id;
+          div.innerHTML = `
+            <div class="podium-avatar-wrap">
+              ${slot.rank === 1 ? '<span class="podium-crown">👑</span><span class="podium-flame left">🔥</span><span class="podium-flame right">🔥</span>' : ''}
+              <img class="podium-avatar" src="${avatar}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://cdn.discordapp.com/embed/avatars/0.png';">
+            </div>
+            <div class="podium-name"></div>
+            <div class="podium-lv"></div>
+            <div class="podium-score"></div>
+            <div class="podium-pillar">${slot.medal}</div>
+          `;
+          stage.appendChild(div);
+        });
+      }
+
+      order.forEach(slot => {
+        if (!slot.item) return;
+        const slotEl = stage.querySelector(`.podium-slot.p-${slot.rank}`);
+        if (!slotEl) return;
+        const u = slot.item.u || {};
+        const lvInfo = getLevelData(Number(u.heartsClicked) || 0);
+        slotEl.querySelector('.podium-name').textContent = u.customName || u.name || "สมาชิก BGT";
+        let pDeco = slotEl.querySelector('.avatar-deco-overlay');
+        if (!pDeco) {
+          pDeco = document.createElement('div');
+          pDeco.className = 'avatar-deco-overlay';
+          slotEl.querySelector('.podium-avatar-wrap').appendChild(pDeco);
+        }
+        applyAvatarDecoration(pDeco, u.avatarDecoration || "none");
+        const lvEl = slotEl.querySelector('.podium-lv');
+        lvEl.className = `podium-lv ${lvInfo.rarityClass}`;
+        lvEl.textContent = `Lv.${formatNum(lvInfo.level)}`;
+        slotEl.querySelector('.podium-score').textContent = `🎁 ${formatCompact(slot.item.val)} กล่อง`;
+      });
+    }
+
+    const _prevLbXmasPod = renderLeaderboards;
+    renderLeaderboards = function(force = false) {
+      _prevLbXmasPod(force);
+      renderXmasEventPodium();
+    };
+
+    setTimeout(() => {
+      injectXmasPodiumBox();
+      renderXmasEventPodium();
+    }, 260);
   })();
 </script>
 
