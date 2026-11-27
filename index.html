@@ -19376,7 +19376,7 @@
     if (eco.votesToday >= 6)    unlockAchievement("over_quota_vote");
 
     if ((Number(u.krathongCount) || 0) > 0) unlockAchievement("event_loykrathong");
-    if ((Number(u.xmasGiftCount) || 0) > 0) unlockAchievement("event_xmas");
+    if ((Number(u.xmasGiftCountV2) || 0) > 0) unlockAchievement("event_xmas");
     if ((Number(u.donateAmount) || 0) > 0 || u.devSupporter) unlockAchievement("vip_patron");
 
     const hTier = typeof getHorrorTierOfUser === "function" ? getHorrorTierOfUser(u, currentUser.id) : 0;
@@ -19783,7 +19783,7 @@
 
   function getXmasSortedUsers() {
     return Object.keys(usersCache || {})
-      .map(id => ({ id, u: usersCache[id] || {}, count: Number((usersCache[id] || {}).xmasGiftCount) || 0 }))
+      .map(id => ({ id, u: usersCache[id] || {}, count: Number((usersCache[id] || {}).xmasGiftCountV2) || 0 }))
       .filter(e => e.count > 0)
       .sort((a, b) => b.count - a.count || a.id.localeCompare(b.id));
   }
@@ -19809,7 +19809,7 @@
       if (checkStealthAntiAutoClick('xmas_event')) {
         const pts = getGenkiPointsToAdd('xmas_event');
         if (pts > 0) {
-          db.ref(`users/${currentUser.id}/xmasGiftCount`).set(firebase.database.ServerValue.increment(pts)).catch(() => {});
+          db.ref(`users/${currentUser.id}/xmasGiftCountV2`).set(firebase.database.ServerValue.increment(pts)).catch(() => {});
         }
         earnEventSoftCapPoint(currentUser.id);
       }
@@ -21594,7 +21594,7 @@
     }
 
     const updates = {};
-    updates[`users/${currentUser.id}/xmasGiftCount`] = firebase.database.ServerValue.increment(1);
+    updates[`users/${currentUser.id}/xmasGiftCountV2`] = firebase.database.ServerValue.increment(1);
     updates[`users/${currentUser.id}/pawPoints`]     = firebase.database.ServerValue.increment(XMAS_GIFT_PTS);
     db.ref().update(updates).then(() => {
       if (typeof unlockAchievement === "function") unlockAchievement("event_xmas");
@@ -21699,14 +21699,14 @@
 
     window.adminResetXmasGifts = async function() {
       if (!db || !currentUser || !currentUser.isVoteAdmin) return;
-      if (!confirm("🧹 ต้องการล้างยอดของขวัญคริสต์มาส (xmasGiftCount) ของทุกคนเป็น 0 เพื่อเริ่มระบบโรงงานใหม่แบบแฟร์ๆ ใช่ไหมครับ?")) return;
+      if (!confirm("🧹 ต้องการล้างยอดของขวัญคริสต์มาส (xmasGiftCountV2) ของทุกคนเป็น 0 เพื่อเริ่มระบบโรงงานใหม่แบบแฟร์ๆ ใช่ไหมครับ?")) return;
       try {
         const snap = await db.ref("users").once("value");
         const all = snap.val() || {};
         const updates = {};
         Object.keys(all).forEach(uid => {
-          if (all[uid] && all[uid].xmasGiftCount) {
-            updates[`users/${uid}/xmasGiftCount`] = 0;
+          if (all[uid] && all[uid].xmasGiftCountV2) {
+            updates[`users/${uid}/xmasGiftCountV2`] = 0;
           }
         });
         await db.ref().update(updates);
@@ -21729,7 +21729,7 @@
           rstBtn.id = 'adminResetXmasBtn';
           rstBtn.type = 'button';
           rstBtn.style.cssText = "margin-top:10px; width:100%; background:rgba(153,27,27,0.85); color:#fecaca; border:1px dashed #f87171; border-radius:10px; padding:7px 12px; font-family:'Kanit',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer;";
-          rstBtn.textContent = "👑 Admin: 🧹 ล้างยอดของขวัญสแปมเก่าเป็น 0 (เริ่มนับใหม่)";
+          rstBtn.textContent = "👑 Admin: ✨ ย้ายยอดคนเล่นจริง (≤ 50 กล่อง) เข้า V2";
           rstBtn.onclick = adminResetXmasGifts;
           ws.appendChild(rstBtn);
         } else if (rstBtn) {
@@ -21988,7 +21988,7 @@
 
     function getWorkshopStats(uData) {
       const u = uData || {};
-      const exp = Math.max(0, Number(u.xmasGiftCount) || 0);
+      const exp = Math.max(0, Number(u.xmasGiftCountV2) || 0);
       const lv = Math.min(25, Math.floor(exp / 20) + 1); // 20 กล่อง = 1 เลเวล (ตัน Lv.25 ที่ 480-500 กล่อง)
       const ratio = Math.min(1, exp / MAX_EXP_FOR_3S);
       const craftMs = Math.max(3000, Math.round(15000 - ratio * 12000)); // 15.0 วิ -> 3.0 วิ
@@ -22147,7 +22147,7 @@
 
       const nextExp = st.exp + 1;
       const updates = {};
-      updates[`users/${currentUser.id}/xmasGiftCount`] = firebase.database.ServerValue.increment(1);
+      updates[`users/${currentUser.id}/xmasGiftCountV2`] = firebase.database.ServerValue.increment(1);
       updates[`users/${currentUser.id}/pawPoints`]     = firebase.database.ServerValue.increment(drop.pts);
       db.ref().update(updates).then(() => {
         if (typeof unlockAchievement === "function") {
@@ -22188,7 +22188,7 @@
       const _prevTitlesWs = getUnlockedTitlesForUser;
       getUnlockedTitlesForUser = function(uid, uData) {
         const list = _prevTitlesWs(uid, uData);
-        const meta = getWorkshopRankMeta((uData || {}).xmasGiftCount);
+        const meta = getWorkshopRankMeta((uData || {}).xmasGiftCountV2);
         if (meta) list.push({ id: "xmas_ws", label: meta.name, desc: "ยศโรงงานผลิตของขวัญคริสต์มาส" });
         return list;
       };
@@ -22197,7 +22197,7 @@
     const _prevBuildLbWs = buildLbRow;
     buildLbRow = function(rank, id, u, scoreText) {
       const row = _prevBuildLbWs(rank, id, u, scoreText);
-      const meta = getWorkshopRankMeta((u || {}).xmasGiftCount);
+      const meta = getWorkshopRankMeta((u || {}).xmasGiftCountV2);
       const wrap = row.querySelector('.lb-badges-wrap');
       if (meta && wrap) {
         const sp = document.createElement('span');
@@ -22212,7 +22212,7 @@
     showUserHoverCard = function(uid, anchorEl) {
       _prevHoverWs(uid, anchorEl);
       const u = (uid && usersCache && usersCache[uid]) ? usersCache[uid] : {};
-      const meta = getWorkshopRankMeta(u.xmasGiftCount);
+      const meta = getWorkshopRankMeta(u.xmasGiftCountV2);
       const wrap = document.getElementById('uhcRoles');
       if (meta && wrap) {
         const sp = document.createElement('span');
@@ -22279,7 +22279,7 @@
       if (!stage) return;
 
       const top3 = Object.keys(usersCache || {})
-        .map(id => ({ id, u: usersCache[id] || {}, val: Number((usersCache[id] || {}).xmasGiftCount) || 0 }))
+        .map(id => ({ id, u: usersCache[id] || {}, val: Number((usersCache[id] || {}).xmasGiftCountV2) || 0 }))
         .filter(x => x.val > 0)
         .sort((a, b) => b.val - a.val)
         .slice(0, 3);
@@ -22380,31 +22380,36 @@
       });
     });
 
-    const _prevResetFn = window.adminResetXmasGifts;
     window.adminResetXmasGifts = async function() {
       if (!db || !currentUser || !currentUser.isVoteAdmin) return;
-      if (!confirm("🧹 ต้องการล้างยอดของขวัญของทุกคนเป็น 0 และบังคับให้คนที่เปิดหน้าเก่าค้างไว้รีเฟรชใช่ไหมครับ?")) return;
+      const maxLegitStr = prompt("📦 กำหนดจำนวนกล่องสูงสุดของ 'คนเล่นจริง' ที่จะเก็บยอดไว้ (เกินนี้จะเริ่มที่ 0 ใน V2):", "50");
+      if (maxLegitStr === null) return;
+      const maxLegit = Math.max(0, parseInt(maxLegitStr, 10) || 50);
+
+      if (!confirm(`✨ ยืนยันย้ายยอดคนเล่นจริง (1 - ${maxLegit} กล่อง) จากระบบเก่าเข้า V2?\n• คนที่เกิน ${maxLegit} กล่อง (กดรัวจากหน้าเก่า) จะเริ่มที่ 0\n• คนที่เล่นจริงจะไม่เสียกล่องและไม่เสียผลึก BGT`)) return;
 
       try {
         const snap = await db.ref("users").once("value");
         const all = snap.val() || {};
         const updates = {};
+        let movedCount = 0;
+
         Object.keys(all).forEach(uid => {
-          if (all[uid] && all[uid].xmasGiftCount) {
-            updates[`users/${uid}/xmasGiftCount`] = 0;
+          const oldCnt = Number((all[uid] || {}).xmasGiftCount) || 0;
+          const curV2  = Number((all[uid] || {}).xmasGiftCountV2) || 0;
+          if (oldCnt > 0 && oldCnt <= maxLegit) {
+            // เก็บยอดของคนเล่นจริงไว้ (ไม่ทับถ้าใน V2 กดไปแล้วเยอะกว่า)
+            updates[`users/${uid}/xmasGiftCountV2`] = Math.max(oldCnt, curV2);
+            movedCount++;
           }
         });
+
         updates["xmas_config/resetAt"] = Date.now();
         await db.ref().update(updates);
 
-        try {
-          localStorage.removeItem('bgt_xmas_bag_v1');
-          localStorage.removeItem('bgt_xmas_craft_end_v1');
-        } catch (e) {}
-        setTimeout(() => location.reload(), 600);
+        showToast(`✅ ย้ายยอดคนเล่นจริงเข้า V2 สำเร็จ ${movedCount} คน! ตัดท่อหน้าเก่าเรียบร้อย 🛡️`);
       } catch (e) {
         showToast("⚠️ ดำเนินการไม่สำเร็จ กรุณาเช็กสิทธิ์ Firebase");
-        if (typeof _prevResetFn === "function") _prevResetFn();
       }
     };
   })();
