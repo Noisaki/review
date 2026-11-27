@@ -8961,6 +8961,46 @@
       animation: rankShimmer 2.2s infinite;
       pointer-events: none;
     }
+    /* แผงอัปเกรดโรงงานด้วยผลึก BGT (3 ปุ่ม) */
+    .xmas-upgrade-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(253, 224, 71, 0.35);
+    }
+    @media (max-width: 600px) {
+      .xmas-upgrade-grid { grid-template-columns: 1fr; }
+    }
+    .xmas-upg-btn {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.96));
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      border-radius: 12px;
+      padding: 8px 10px;
+      color: #f8fafc;
+      font-family: 'Kanit', sans-serif;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: transform 0.14s ease, border-color 0.2s, filter 0.2s;
+    }
+    .xmas-upg-btn:hover:not(:disabled) {
+      border-color: #fde047;
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .xmas-upg-btn:active:not(:disabled) { transform: scale(0.96); }
+    .xmas-upg-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      border-color: rgba(148, 163, 184, 0.3);
+    }
+    .xmas-upg-title { font-size: 0.8rem; font-weight: 700; color: #fde68a; }
+    .xmas-upg-sub   { font-size: 0.68rem; color: #cbd5e1; font-family: 'Prompt', sans-serif; }
+    .xmas-upg-cost  { font-size: 0.74rem; font-weight: 700; color: #7dd3fc; margin-top: 2px; }
   </style>
   
 </head>
@@ -21983,18 +22023,49 @@
   // =========================================================================
   // 🏭🎁 2) โรงงานผลิตของขวัญ v2 (XP + ลดเวลา 15วิ->3วิ + สุ่มคุณภาพกล่อง + ยศ & อชีฟเม้น)
   // =========================================================================
+  // =========================================================================
+  // 🏭🎁 2) โรงงานผลิตของขวัญ v2 (อัปเกรด 2 ทาง: สายขยัน + สายใช้แต้ม + เรทสมดุล)
+  // =========================================================================
   (function upgradeXmasWorkshopV2() {
-    const MAX_EXP_FOR_3S = 500; // ผลิต 500 กล่อง (~15 วัน ชิลๆ วันละ 33 กล่อง) เวลาผลิตตันที่ 3.0 วิ!
+    const MAX_EXP_FOR_3S = 500;
+    const EXP_BUY_STEP   = 20;
+    const EXP_BUY_COST   = 400;
+    const BAG_COSTS      = [300, 500, 800, 1200, 1800];  // สูงสุด Lv.5 (+10 กล่อง -> จุ 15)
+    const LUCK_COSTS     = [400, 700, 1100, 1600, 2200]; // สูงสุด Lv.5 (Epic +2.5%, Legend +0.5%)
+    let _upgBuyLock      = 0;
+
+    // โหลดจำนวนกล่องในกระเป๋าที่ค้างไว้ (รองรับสูงสุด 15 กล่อง)
+    try {
+      const rawBag = parseInt(localStorage.getItem('bgt_xmas_bag_v1') || '0', 10) || 0;
+      if (rawBag > xmasBagCount) xmasBagCount = Math.min(15, rawBag);
+    } catch (e) {}
 
     function getWorkshopStats(uData) {
       const u = uData || {};
-      const exp = Math.max(0, Number(u.xmasGiftCountV2) || 0);
-      const lv = Math.min(25, Math.floor(exp / 20) + 1); // 20 กล่อง = 1 เลเวล (ตัน Lv.25 ที่ 480-500 กล่อง)
-      const ratio = Math.min(1, exp / MAX_EXP_FOR_3S);
+      const realGifts = Math.max(0, Number(u.xmasGiftCountV2) || 0);
+      const bonusExp  = Math.max(0, Number(u.xmasWorkshopBonusExp) || 0);
+      const totalExp  = realGifts + bonusExp;
+
+      const lv = Math.min(25, Math.floor(totalExp / 20) + 1);
+      const ratio = Math.min(1, totalExp / MAX_EXP_FOR_3S);
       const craftMs = Math.max(3000, Math.round(15000 - ratio * 12000)); // 15.0 วิ -> 3.0 วิ
-      const rareChance = Math.min(50, Math.round(10 + ratio * 40));     // โอกาสกล่อง Rare: 10% -> สูงสุด 50%
-      const commonPts = Math.round(25 + ratio * 75);                    // กล่องธรรมดาตาม XP: 25 -> 100 💠
-      return { exp, lv, craftMs, craftSec: (craftMs / 1000).toFixed(1), rareChance, commonPts };
+      const rareChance = Math.min(45, Math.round(10 + ratio * 35));      // Rare: 10% -> 45%
+      const commonPts  = Math.round(25 + ratio * 35);                    // ธรรมดา: 25 -> 60 💠
+
+      const bagLv  = Math.min(5, Math.max(0, Number(u.xmasBagLv) || 0));
+      const maxBag = 5 + (bagLv * 2); // 5 -> 15 กล่อง
+
+      const luckLv     = Math.min(5, Math.max(0, Number(u.xmasLuckLv) || 0));
+      const epicChance = +(3.0 + luckLv * 0.5).toFixed(1);   // 3.0% -> 5.5%
+      const legChance  = +(0.5 + luckLv * 0.1).toFixed(1);   // 0.5% -> 1.0%
+
+      return {
+        realGifts, bonusExp, exp: totalExp, lv,
+        craftMs, craftSec: (craftMs / 1000).toFixed(1),
+        rareChance, commonPts,
+        bagLv, maxBag,
+        luckLv, epicChance, legChance
+      };
     }
 
     function getWorkshopRankMeta(exp) {
@@ -22007,14 +22078,14 @@
       return null;
     }
 
-    // 🏆 เพิ่มอชีฟเม้นใหม่ 6 อัน (สวยๆ สายผลิต + สายดวง!)
+    // 🏆 อชีฟเม้นสายโรงงาน (อัปเดตตัวเลขให้ตรงเรทสมดุลใหม่)
     const NEW_WS_ACHS = [
       { id: "ws_craft_10",  icon: "🧝", title: "เอลฟ์ขยันขันแข็ง",         desc: "ผลิตและแจกของขวัญคริสต์มาสครบ 10 กล่อง",           reward: 150,  rarity: "common", secret: false },
       { id: "ws_craft_100", icon: "🏭", title: "ผู้จัดการโรงงานของขวัญ",    desc: "ผลิตและแจกของขวัญคริสต์มาสครบ 100 กล่อง",          reward: 400,  rarity: "rare",   secret: false },
-      { id: "ws_max_speed", icon: "⚡", title: "มือไวระดับ 3 วินาที!",       desc: "อัปเกรดโรงงานจนเวลาผลิตตันที่ 3 วินาที (500 กล่อง)", reward: 1200, rarity: "epic",   secret: false },
-      { id: "ws_hit_epic",  icon: "💜", title: "กล่องคริสตัลนำโชค",         desc: "สุ่มแจกได้กล่องคุณภาพ EPIC (+1,000 💠)",            reward: 300,  rarity: "rare",   secret: false },
-      { id: "ws_hit_leg",   icon: "👑", title: "ซานต้าทองคำมาโปรด",         desc: "สุ่มแจกได้กล่องคุณภาพ LEGENDARY (+5,000 💠)",       reward: 800,  rarity: "epic",   secret: false },
-      { id: "ws_hit_myth",  icon: "🌈", title: "ปาฏิหาริย์ 0.01% (MYTHIC)", desc: "สุ่มได้กล่องจักรวาลทองคำ 0.01% (+50,000 💠)!",      reward: 3000, rarity: "secret", secret: false }
+      { id: "ws_max_speed", icon: "⚡", title: "มือไวระดับ 3 วินาที!",       desc: "อัปเกรดโรงงานจนเวลาผลิตตันที่ 3 วินาที (Lv.25)",    reward: 1200, rarity: "epic",   secret: false },
+      { id: "ws_hit_epic",  icon: "💜", title: "กล่องคริสตัลนำโชค",         desc: "สุ่มแจกได้กล่องคุณภาพ EPIC (+400 💠)",              reward: 300,  rarity: "rare",   secret: false },
+      { id: "ws_hit_leg",   icon: "👑", title: "ซานต้าทองคำมาโปรด",         desc: "สุ่มแจกได้กล่องคุณภาพ LEGENDARY (+2,000 💠)",       reward: 800,  rarity: "epic",   secret: false },
+      { id: "ws_hit_myth",  icon: "🌈", title: "ปาฏิหาริย์ 0.01% (MYTHIC)", desc: "สุ่มได้กล่องจักรวาลทองคำ 0.01% (+10,000 💠)!",      reward: 3000, rarity: "secret", secret: false }
     ];
     if (Array.isArray(BGT_ACHIEVEMENTS)) {
       NEW_WS_ACHS.forEach(a => {
@@ -22022,28 +22093,135 @@
       });
     }
 
-    // สุ่มคุณภาพกล่องตอนกดแจก (0.01% = 50,000 | 1% = 5,000 | 5% = 1,000 | สูงสุด 50% = Rare | ที่เหลือ = Common ตาม XP)
-    function rollGiftQuality(stats) {
+    // สุ่มคุณภาพกล่องตามเรทสมดุล + โบนัสจากเครื่องรางเพิ่มดวง
+    function rollGiftQuality(st) {
       const r = Math.random() * 100;
-      if (r < 0.01) return { tier: "mythic", label: "🌈 MYTHIC จักรวาลทองคำ (0.01%!)", pts: 50000, ach: "ws_hit_myth", icons: ['🌈','👑','💠','🎉'] };
-      if (r < 1.01) return { tier: "legend", label: "👑 LEGENDARY ทองคำซานต้า (1%)",    pts: 5000,  ach: "ws_hit_leg",  icons: ['👑','✨','💠','🎁'] };
-      if (r < 6.01) return { tier: "epic",   label: "💜 EPIC คริสตัลหิมะ (5%)",          pts: 1000,  ach: "ws_hit_epic", icons: ['💜','❄️','💠','🎁'] };
-      if (r < 6.01 + stats.rareChance) {
-        return { tier: "rare", label: `💙 RARE ริบบิ้นเงิน (${stats.rareChance}%)`, pts: 120, ach: null, icons: ['💙','🎁','💠'] };
-      }
-      return { tier: "common", label: "🎁 กล่องธรรมดา", pts: stats.commonPts, ach: null, icons: ['🎁','🎄','💠'] };
+      const cMythic = 0.01;
+      const cLeg    = cMythic + st.legChance;
+      const cEpic   = cLeg + st.epicChance;
+      const cRare   = cEpic + st.rareChance;
+
+      if (r < cMythic) return { tier: "mythic", label: "🌈 MYTHIC จักรวาลทองคำ (0.01%!)",              pts: 10000, ach: "ws_hit_myth", icons: ['🌈','👑','💠','🎉'] };
+      if (r < cLeg)    return { tier: "legend", label: `👑 LEGENDARY ทองคำซานต้า (${st.legChance}%)`,   pts: 2000,  ach: "ws_hit_leg",  icons: ['👑','✨','💠','🎁'] };
+      if (r < cEpic)   return { tier: "epic",   label: `💜 EPIC คริสตัลหิมะ (${st.epicChance}%)`,       pts: 400,   ach: "ws_hit_epic", icons: ['💜','❄️','💠','🎁'] };
+      if (r < cRare)   return { tier: "rare",   label: `💙 RARE ริบบิ้นเงิน (${st.rareChance}%)`,        pts: 100,   ach: null,          icons: ['💙','🎁','💠'] };
+      return                  { tier: "common", label: "🎁 กล่องธรรมดา",                                 pts: st.commonPts, ach: null,     icons: ['🎁','🎄','💠'] };
     }
 
-    // อัปเกรด UI โรงงานให้โชว์เลเวล, เวลาผลิตปัจจุบัน, และเรทสุ่มคุณภาพกล่อง
-    const _prevUpdateWs = updateXmasWorkshopUI;
-    updateXmasWorkshopUI = function() {
-      _prevUpdateWs();
-      const ws = document.getElementById('xmasWorkshopBox');
-      if (!ws) return;
+    // 🛒 ฟังก์ชันซื้ออัปเกรดโรงงานด้วยผลึก BGT (3 ทางเลือก)
+    window.buyXmasUpgrade = function(type) {
+      if (!currentUser) {
+        openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนซื้ออัปเกรดโรงงานนะครับ 🏭");
+        return;
+      }
+      if (!db || Date.now() - _upgBuyLock < 350) return;
 
-      const u = (currentUser && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+      const uid = currentUser.id;
+      const u = (usersCache && usersCache[uid]) ? usersCache[uid] : {};
       const st = getWorkshopStats(u);
+      const eco = getUserEcoData(uid);
 
+      let cost = 0;
+      let field = "";
+      let incVal = 0;
+      let label = "";
+
+      if (type === "exp") {
+        if (st.exp >= MAX_EXP_FOR_3S) { showToast("⚡ โรงงานเลเวลตัน (Lv.25 / 3 วิ) แล้วครับ!"); return; }
+        cost = EXP_BUY_COST;
+        field = "xmasWorkshopBonusExp";
+        incVal = EXP_BUY_STEP;
+        label = `⚡ เร่งเลเวลโรงงาน (+${EXP_BUY_STEP} EXP)`;
+      } else if (type === "bag") {
+        if (st.bagLv >= 5) { showToast("🎒 กระเป๋าขยายเต็ม Lv.5 (15 กล่อง) แล้วครับ!"); return; }
+        cost = BAG_COSTS[st.bagLv];
+        field = "xmasBagLv";
+        incVal = 1;
+        label = `🎒 ขยายกระเป๋าเป็น ${st.maxBag + 2} กล่อง`;
+      } else if (type === "luck") {
+        if (st.luckLv >= 5) { showToast("🍀 เครื่องรางเพิ่มดวงเต็ม Lv.5 แล้วครับ!"); return; }
+        cost = LUCK_COSTS[st.luckLv];
+        field = "xmasLuckLv";
+        incVal = 1;
+        label = `🍀 อัปเครื่องรางเพิ่มดวง Lv.${st.luckLv + 1}`;
+      } else {
+        return;
+      }
+
+      if (eco.points < cost) {
+        showToast(`⚠️ ผลึกไม่พอ! ต้องใช้ ${formatNum(cost)} 💠 (คุณมี ${formatNum(eco.points)} 💠)`);
+        return;
+      }
+
+      _upgBuyLock = Date.now();
+      playCoinSound();
+
+      if (!usersCache[uid]) usersCache[uid] = {};
+      usersCache[uid].pawPoints = Math.max(0, eco.points - cost);
+      usersCache[uid][field] = (Number(usersCache[uid][field]) || 0) + incVal;
+
+      const updates = {};
+      updates[`users/${uid}/pawPoints`] = firebase.database.ServerValue.increment(-cost);
+      updates[`users/${uid}/${field}`]  = firebase.database.ServerValue.increment(incVal);
+
+      db.ref().update(updates).then(() => {
+        if (type === "exp" && (st.exp + incVal) >= MAX_EXP_FOR_3S && typeof unlockAchievement === "function") {
+          unlockAchievement("ws_max_speed");
+        }
+        showToast(`✅ อัปเกรดสำเร็จ: ${label} (-${formatNum(cost)} 💠)`);
+        updateProfileEcoUI();
+        updateXmasWorkshopUI();
+      }).catch(() => {
+        showToast("⚠️ อัปเกรดไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
+      });
+    };
+
+    // อัปเดต UI โรงงานเต็มรูปแบบ (รองรับกระเป๋าสูงสุด 15 กล่อง + แสดงปุ่มอัปเกรด 3 ช่อง)
+    updateXmasWorkshopUI = function() {
+      const ws      = document.getElementById('xmasWorkshopBox');
+      const bagEl   = document.getElementById('xmasBagText');
+      const stateEl = document.getElementById('xmasCraftStateText');
+      const fillEl  = document.getElementById('xmasCraftFill');
+      const cBtn    = document.getElementById('xmasCraftBtn');
+      const gBtn    = document.getElementById('xmasGiveBtn');
+      if (!ws || !bagEl || !cBtn || !gBtn) return;
+
+      const u  = (currentUser && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+      const st = getWorkshopStats(u);
+      const now = Date.now();
+
+      if (xmasCraftEndAt > 0 && now >= xmasCraftEndAt) {
+        xmasCraftEndAt = 0;
+        if (xmasBagCount < st.maxBag) {
+          xmasBagCount++;
+          playSuccessSound();
+          showToast(`🎁 ผลิตของขวัญเสร็จแล้ว! (ในกระเป๋ามี ${xmasBagCount}/${st.maxBag} กล่อง)`);
+        }
+        saveXmasWorkshopLocal();
+      }
+
+      const isCrafting = xmasCraftEndAt > now;
+      bagEl.textContent = `🎒 กระเป๋าของขวัญ: ${xmasBagCount} / ${st.maxBag} กล่อง`;
+
+      if (isCrafting) {
+        const remainMs = xmasCraftEndAt - now;
+        const pct = Math.min(100, Math.max(0, ((st.craftMs - remainMs) / st.craftMs) * 100));
+        const secLeft = (remainMs / 1000).toFixed(1);
+        if (fillEl) fillEl.style.width = pct.toFixed(1) + '%';
+        if (stateEl) stateEl.textContent = `⚙️ กำลังห่อของขวัญ... เหลือ ${secLeft} วิ`;
+        cBtn.disabled = true;
+        cBtn.textContent = `⏳ กำลังผลิต... (${secLeft} วิ)`;
+      } else {
+        if (fillEl) fillEl.style.width = xmasBagCount >= st.maxBag ? '100%' : '0%';
+        if (stateEl) stateEl.textContent = xmasBagCount >= st.maxBag ? '🎒 กระเป๋าเต็มแล้ว! กดแจกก่อนนะ' : '✨ พร้อมผลิตของขวัญ';
+        cBtn.disabled = xmasBagCount >= st.maxBag;
+        cBtn.textContent = xmasBagCount >= st.maxBag ? '🎒 กระเป๋าเต็มแล้ว' : `🔨 ผลิตของขวัญ (${st.craftSec} วิ)`;
+      }
+
+      gBtn.disabled = xmasBagCount <= 0;
+      gBtn.textContent = `🎁 แจก & สุ่มคุณภาพ! (${xmasBagCount} กล่อง)`;
+
+      // แถบเลเวลโรงงาน
       let lvBar = document.getElementById('xmasLvBar');
       if (!lvBar) {
         lvBar = document.createElement('div');
@@ -22052,10 +22230,11 @@
         ws.prepend(lvBar);
       }
       lvBar.innerHTML = `
-        <span>🏭 โรงงาน <strong>Lv.${st.lv}</strong> (${formatNum(st.exp)} กล่อง)</span>
+        <span>🏭 โรงงาน <strong>Lv.${st.lv}</strong> (${formatNum(st.exp)}/${MAX_EXP_FOR_3S} EXP)</span>
         <span>⚡ เวลาผลิต: <strong style="color:#4ade80;">${st.craftSec} วิ</strong> ${st.craftMs <= 3000 ? '(MAX!)' : '(ต่ำสุด 3 วิ)'}</span>
       `;
 
+      // แถบเรทสุ่ม
       let rateRow = document.getElementById('xmasRatePills');
       if (!rateRow) {
         rateRow = document.createElement('div');
@@ -22064,45 +22243,62 @@
         ws.appendChild(rateRow);
       }
       rateRow.innerHTML = `
-        <span class="xmas-rate-pill r-mythic">🌈 0.01%: 50,000💠</span>
-        <span class="xmas-rate-pill r-legend">👑 1%: 5,000💠</span>
-        <span class="xmas-rate-pill r-epic">💜 5%: 1,000💠</span>
-        <span class="xmas-rate-pill r-rare">💙 ${st.rareChance}%: 120💠</span>
+        <span class="xmas-rate-pill r-mythic">🌈 0.01%: 10,000💠</span>
+        <span class="xmas-rate-pill r-legend">👑 ${st.legChance}%: 2,000💠</span>
+        <span class="xmas-rate-pill r-epic">💜 ${st.epicChance}%: 400💠</span>
+        <span class="xmas-rate-pill r-rare">💙 ${st.rareChance}%: 100💠</span>
         <span class="xmas-rate-pill">🎁 ธรรมดา: ${st.commonPts}💠</span>
       `;
 
-      const cBtn = document.getElementById('xmasCraftBtn');
-      const gBtn = document.getElementById('xmasGiveBtn');
-      const fillEl = document.getElementById('xmasCraftFill');
-      const now = Date.now();
-      const isCrafting = xmasCraftEndAt > now;
-      if (isCrafting && fillEl) {
-        const remainMs = xmasCraftEndAt - now;
-        const pct = Math.min(100, Math.max(0, ((st.craftMs - remainMs) / st.craftMs) * 100));
-        fillEl.style.width = pct.toFixed(1) + '%';
+      // แผงปุ่มอัปเกรดด้วยผลึก BGT (3 ปุ่ม)
+      let upgGrid = document.getElementById('xmasUpgradeGrid');
+      if (!upgGrid) {
+        upgGrid = document.createElement('div');
+        upgGrid.id = 'xmasUpgradeGrid';
+        upgGrid.className = 'xmas-upgrade-grid';
+        const rstBtn = document.getElementById('adminResetXmasBtn');
+        if (rstBtn) ws.insertBefore(upgGrid, rstBtn);
+        else ws.appendChild(upgGrid);
       }
-      if (cBtn && !isCrafting && xmasBagCount < XMAS_MAX_BAG) {
-        cBtn.textContent = `🔨 ผลิตของขวัญ (${st.craftSec} วิ)`;
+      const expMax  = st.exp >= MAX_EXP_FOR_3S;
+      const bagMax  = st.bagLv >= 5;
+      const luckMax = st.luckLv >= 5;
+      const upgSig  = `${expMax}|${st.bagLv}|${st.luckLv}`;
+      if (upgGrid.dataset.upgSig !== upgSig) {
+        upgGrid.dataset.upgSig = upgSig;
+        upgGrid.innerHTML = `
+          <button type="button" class="xmas-upg-btn" onclick="buyXmasUpgrade('exp')" ${expMax ? 'disabled' : ''}>
+            <span class="xmas-upg-title">⚡ เร่งเลเวลโรงงาน</span>
+            <span class="xmas-upg-sub">+${EXP_BUY_STEP} EXP (ไม่นับลงอันดับ)</span>
+            <span class="xmas-upg-cost">${expMax ? '✅ MAX (Lv.25)' : `💎 ${formatNum(EXP_BUY_COST)} 💠`}</span>
+          </button>
+          <button type="button" class="xmas-upg-btn" onclick="buyXmasUpgrade('bag')" ${bagMax ? 'disabled' : ''}>
+            <span class="xmas-upg-title">🎒 ขยายกระเป๋า (Lv.${st.bagLv}/5)</span>
+            <span class="xmas-upg-sub">จุ ${st.maxBag} ${bagMax ? 'กล่อง' : `→ ${st.maxBag + 2} กล่อง`}</span>
+            <span class="xmas-upg-cost">${bagMax ? '✅ MAX (15 กล่อง)' : `💎 ${formatNum(BAG_COSTS[st.bagLv])} 💠`}</span>
+          </button>
+          <button type="button" class="xmas-upg-btn" onclick="buyXmasUpgrade('luck')" ${luckMax ? 'disabled' : ''}>
+            <span class="xmas-upg-title">🍀 เพิ่มดวง (Lv.${st.luckLv}/5)</span>
+            <span class="xmas-upg-sub">Epic +0.5% • Leg +0.1%</span>
+            <span class="xmas-upg-cost">${luckMax ? '✅ MAX' : `💎 ${formatNum(LUCK_COSTS[st.luckLv])} 💠`}</span>
+          </button>
+        `;
       }
-      if (gBtn) {
-        gBtn.textContent = `🎁 แจก & สุ่มคุณภาพ! (${xmasBagCount} กล่อง)`;
-      }
-    };
 
-    // แทนที่ฟังก์ชันเริ่มผลิต ให้ใช้เวลาตามเลเวลโรงงาน (15 วิ -> 3 วิ)
+    // แทนที่ฟังก์ชันเริ่มผลิต ให้ใช้เวลาและขนาดกระเป๋าตามอัปเกรด
     startCraftXmasGift = function() {
       if (!currentUser) {
         openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนผลิตของขวัญคริสต์มาสนะครับ 🎄");
         return;
       }
-      if (xmasBagCount >= XMAS_MAX_BAG) {
+      const u = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
+      const st = getWorkshopStats(u);
+
+      if (xmasBagCount >= st.maxBag) {
         showToast("🎒 กระเป๋าเต็มแล้วครับ! กดแจกของขวัญให้เพื่อนๆ ก่อนนะ 🎁");
         return;
       }
       if (xmasCraftEndAt > Date.now()) return;
-
-      const u = (usersCache && usersCache[currentUser.id]) ? usersCache[currentUser.id] : {};
-      const st = getWorkshopStats(u);
 
       playClickSound();
       xmasCraftEndAt = Date.now() + st.craftMs;
@@ -22117,7 +22313,7 @@
       }
     };
 
-    // แทนที่ฟังก์ชันแจกของขวัญ ให้สุ่มคุณภาพกล่องตามเรท + ปลดล็อกอชีฟเม้น
+    // แทนที่ฟังก์ชันแจกของขวัญ ให้สุ่มคุณภาพกล่องตามเรทใหม่ + ปลดล็อกอชีฟเม้น
     giveXmasGiftAway = function(e) {
       if (!currentUser) {
         openLoginInfo("🔐 กรุณาเข้าสู่ระบบก่อนแจกของขวัญนะครับ 🎁");
@@ -22145,17 +22341,18 @@
         receiverName = pick.customName || pick.name || "เพื่อนสมาชิก BGT";
       }
 
-      const nextExp = st.exp + 1;
+      const nextReal = st.realGifts + 1;
+      const nextExp  = st.exp + 1;
       const updates = {};
       updates[`users/${currentUser.id}/xmasGiftCountV2`] = firebase.database.ServerValue.increment(1);
-      updates[`users/${currentUser.id}/pawPoints`]     = firebase.database.ServerValue.increment(drop.pts);
+      updates[`users/${currentUser.id}/pawPoints`]       = firebase.database.ServerValue.increment(drop.pts);
       db.ref().update(updates).then(() => {
         if (typeof unlockAchievement === "function") {
           unlockAchievement("event_xmas");
-          if (nextExp >= 10)  unlockAchievement("ws_craft_10");
-          if (nextExp >= 100) unlockAchievement("ws_craft_100");
-          if (nextExp >= 500) unlockAchievement("ws_max_speed");
-          if (drop.ach)       unlockAchievement(drop.ach);
+          if (nextReal >= 10)  unlockAchievement("ws_craft_10");
+          if (nextReal >= 100) unlockAchievement("ws_craft_100");
+          if (nextExp >= 500)  unlockAchievement("ws_max_speed");
+          if (drop.ach)        unlockAchievement(drop.ach);
         }
         if (drop.tier === "mythic" || drop.tier === "legend") {
           triggerMilestoneCelebration(`🎉 แจ็กพอตแตก! แจกให้ "${receiverName}" ได้ ${drop.label} รับ +${formatNum(drop.pts)} 💠!!`);
@@ -22164,7 +22361,7 @@
         }
         updateProfileEcoUI();
       }).catch(() => {
-        xmasBagCount = Math.min(XMAS_MAX_BAG, xmasBagCount + 1);
+        xmasBagCount = Math.min(st.maxBag, xmasBagCount + 1);
         saveXmasWorkshopLocal();
         updateXmasWorkshopUI();
         showToast("⚠️ แจกของขวัญไม่สำเร็จ ลองใหม่อีกครั้งนะครับ");
@@ -22183,7 +22380,7 @@
       }
     };
 
-    // เชื่อมยศโรงงานของขวัญเข้ากับฉายา Steam + กระดานอันดับ + การ์ดโฮเวอร์
+    // เชื่อมยศโรงงานของขวัญ (นับจากยอดผลิตจริง xmasGiftCountV2 เพื่อความแฟร์)
     if (typeof getUnlockedTitlesForUser === "function") {
       const _prevTitlesWs = getUnlockedTitlesForUser;
       getUnlockedTitlesForUser = function(uid, uData) {
@@ -22221,7 +22418,7 @@
         wrap.appendChild(sp);
       }
     };
-  })(); 
+  })();
 
   // =========================================================================
   // 🎄🏆 เพิ่มแท่นเกียรติยศกิจกรรมคริสต์มาส 2026 (แท่นเดียว -> หน้า 2/2)
