@@ -21656,78 +21656,84 @@
 
     if (pager) {
       pager.className = "wish-pagination-wrap";
-      pager.style.display = 'flex';
       pager.innerHTML = "";
 
-      const row = document.createElement('div');
-      row.className = "wish-pager-row";
+      // ถ้ามีมากกว่า 1 หน้า ค่อยโชว์ปุ่ม < PREV 01 02 NEXT >
+      if (totalPages > 1) {
+        pager.style.display = 'flex';
+        const row = document.createElement('div');
+        row.className = "wish-pager-row";
 
-      const goPage = (p) => {
-        playClickSound();
-        wishPage = p;
-        renderWishBoard(searchQuery);
-        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      };
+        const goPage = (p) => {
+          playClickSound();
+          wishPage = p;
+          renderWishBoard(searchQuery);
+          grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
 
-      // ปุ่ม < PREV
-      const prevBtn = document.createElement('button');
-      prevBtn.type = "button";
-      prevBtn.className = "wish-pg-btn nav";
-      prevBtn.innerHTML = "‹ PREV";
-      prevBtn.disabled = wishPage <= 1;
-      prevBtn.onclick = () => goPage(wishPage - 1);
-      row.appendChild(prevBtn);
+        const prevBtn = document.createElement('button');
+        prevBtn.type = "button";
+        prevBtn.className = "wish-pg-btn nav";
+        prevBtn.innerHTML = "‹ PREV";
+        prevBtn.disabled = wishPage <= 1;
+        prevBtn.onclick = () => goPage(wishPage - 1);
+        row.appendChild(prevBtn);
 
-      // คำนวณเลขหน้าแบบย่อด้วย ... (เช่น 01 02 03 04 05 ... 34)
-      const pages = [];
-      if (totalPages <= 7) {
-        for (let p = 1; p <= totalPages; p++) pages.push(p);
-      } else {
-        pages.push(1);
-        let left = Math.max(2, wishPage - 2);
-        let right = Math.min(totalPages - 1, wishPage + 2);
-        if (wishPage <= 4) { left = 2; right = 5; }
-        if (wishPage >= totalPages - 3) { left = totalPages - 4; right = totalPages - 1; }
-        if (left > 2) pages.push("...");
-        for (let p = left; p <= right; p++) pages.push(p);
-        if (right < totalPages - 1) pages.push("...");
-        pages.push(totalPages);
-      }
-
-      pages.forEach(p => {
-        if (p === "...") {
-          const dots = document.createElement('span');
-          dots.className = "wish-pg-dots";
-          dots.textContent = "...";
-          row.appendChild(dots);
+        const pages = [];
+        if (totalPages <= 7) {
+          for (let p = 1; p <= totalPages; p++) pages.push(p);
         } else {
-          const b = document.createElement('button');
-          b.type = "button";
-          b.className = "wish-pg-btn" + (p === wishPage ? " active" : "");
-          b.textContent = String(p).padStart(2, '0');
-          if (p !== wishPage) b.onclick = () => goPage(p);
-          row.appendChild(b);
+          pages.push(1);
+          let left = Math.max(2, wishPage - 2);
+          let right = Math.min(totalPages - 1, wishPage + 2);
+          if (wishPage <= 4) { left = 2; right = 5; }
+          if (wishPage >= totalPages - 3) { left = totalPages - 4; right = totalPages - 1; }
+          if (left > 2) pages.push("...");
+          for (let p = left; p <= right; p++) pages.push(p);
+          if (right < totalPages - 1) pages.push("...");
+          pages.push(totalPages);
         }
-      });
 
-      // ปุ่ม NEXT >
-      const nextBtn = document.createElement('button');
-      nextBtn.type = "button";
-      nextBtn.className = "wish-pg-btn nav";
-      nextBtn.innerHTML = "NEXT ›";
-      nextBtn.disabled = wishPage >= totalPages;
-      nextBtn.onclick = () => goPage(wishPage + 1);
-      row.appendChild(nextBtn);
+        pages.forEach(p => {
+          if (p === "...") {
+            const dots = document.createElement('span');
+            dots.className = "wish-pg-dots";
+            dots.textContent = "...";
+            row.appendChild(dots);
+          } else {
+            const b = document.createElement('button');
+            b.type = "button";
+            b.className = "wish-pg-btn" + (p === wishPage ? " active" : "");
+            b.textContent = String(p).padStart(2, '0');
+            if (p !== wishPage) b.onclick = () => goPage(p);
+            row.appendChild(b);
+          }
+        });
 
-      pager.appendChild(row);
+        const nextBtn = document.createElement('button');
+        nextBtn.type = "button";
+        nextBtn.className = "wish-pg-btn nav";
+        nextBtn.innerHTML = "NEXT ›";
+        nextBtn.disabled = wishPage >= totalPages;
+        nextBtn.onclick = () => goPage(wishPage + 1);
+        row.appendChild(nextBtn);
 
-      // ข้อความสรุป: คำขอ 1–12 จาก ...
-      const showFrom = start + 1;
-      const showTo = Math.min(start + pageList.length, rest.length);
-      const sum = document.createElement('div');
-      sum.className = "wish-pg-summary";
-      sum.innerHTML = `คำขอ <strong>${formatNum(showFrom)}–${formatNum(showTo)}</strong> จาก <strong>${formatNum(rest.length)}</strong>`;
-      pager.appendChild(sum);
+        pager.appendChild(row);
+
+        const showFrom = start + 1;
+        const showTo = Math.min(start + pageList.length, rest.length);
+        const sum = document.createElement('div');
+        sum.className = "wish-pg-summary";
+        sum.innerHTML = `แสดงเกมที่ <strong>${formatNum(showFrom)}–${formatNum(showTo)}</strong> จากทั้งหมด <strong>${formatNum(rest.length)} เกม</strong>`;
+        pager.appendChild(sum);
+      } else {
+        // มีแค่ 1 หน้า -> ซ่อนปุ่มเปลี่ยนหน้าไปเลย โชว์แค่จำนวนเกมชัดๆ!
+        pager.style.display = 'flex';
+        const sum = document.createElement('div');
+        sum.className = "wish-pg-summary";
+        sum.innerHTML = `แสดงครบทั้งหมด <strong>${formatNum(rest.length)} เกม</strong> ในกระดานแล้ว ✨`;
+        pager.appendChild(sum);
+      }
     }
   };
   // =========================================================================
@@ -23324,7 +23330,7 @@
   // 🔄📢 ระบบแจ้งเตือนเว็บอัปเดตอัตโนมัติ (เพิ่มเลข SITE_BUILD_VER ทุกครั้งที่อัปเว็บ!)
   // =========================================================================
   (function initSiteUpdateNotifier() {
-    const SITE_BUILD_VER = 7; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
+    const SITE_BUILD_VER = 8; // 👈 อัปเดตเว็บรอบหน้าแค่เปลี่ยนเลขนี้ +1
 
     const banner = document.createElement('div');
     banner.id = 'bgtUpdateBanner';
@@ -24558,6 +24564,236 @@ let projReleasedPage = 1;
 
   setTimeout(renderTranslationHubNew, 350);
 })();
+  // =========================================================================
+  // 💠❓ หน้าต่างคู่มือ "ผลึก BGT เอาไปใช้ทำอะไรได้บ้าง?" (กดจากปุ่มแต้มได้เลย + วาร์ปได้ในคลิกเดียว)
+  // =========================================================================
+  (function initCrystalGuideModal() {
+    // 1. ใส่ CSS ให้หน้าต่างคู่มือสวยเข้าธีม & รองรับมือถือ
+    if (!document.getElementById('bgtCrystalGuideStyle')) {
+      const st = document.createElement('style');
+      st.id = 'bgtCrystalGuideStyle';
+      st.textContent = `
+        #bgtCrystalGuideModal .modal-box {
+          background: linear-gradient(160deg, #0f172a, #1e1b4b);
+          color: #f8fafc;
+          border: 2px solid #38bdf8;
+          max-width: 560px;
+          text-align: left;
+          padding: 22px 20px;
+        }
+        .cg-balance-banner {
+          background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(168,85,247,0.22));
+          border: 1.5px solid rgba(56,189,248,0.55);
+          border-radius: 16px;
+          padding: 12px 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-bottom: 14px;
+        }
+        .cg-sec-title {
+          font-family: 'Kanit', sans-serif;
+          font-size: 0.96rem;
+          font-weight: 700;
+          color: #fde047;
+          margin: 12px 0 8px;
+        }
+        .cg-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .cg-item {
+          background: rgba(15, 23, 42, 0.85);
+          border: 1px solid rgba(148, 163, 184, 0.25);
+          border-radius: 14px;
+          padding: 10px 12px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+        .cg-item-info { min-width: 0; flex: 1; }
+        .cg-item-title {
+          font-family: 'Kanit', sans-serif;
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: #ffffff;
+        }
+        .cg-item-desc {
+          font-size: 0.74rem;
+          color: #94a3b8;
+          line-height: 1.4;
+        }
+        .cg-go-btn {
+          background: linear-gradient(135deg, #0284c7, #38bdf8);
+          color: #0f172a;
+          border: none;
+          border-radius: 999px;
+          padding: 6px 12px;
+          font-family: 'Kanit', sans-serif;
+          font-size: 0.76rem;
+          font-weight: 800;
+          cursor: pointer;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .cg-go-btn:hover { filter: brightness(1.1); }
+        .cg-earn-list {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 7px;
+          font-size: 0.76rem;
+          color: #cbd5e1;
+        }
+        .cg-earn-chip {
+          background: rgba(30, 41, 59, 0.75);
+          border: 1px solid rgba(56, 189, 248, 0.25);
+          border-radius: 10px;
+          padding: 7px 9px;
+          line-height: 1.35;
+        }
+        .cg-help-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: rgba(56, 189, 248, 0.2);
+          border: 1px solid rgba(56, 189, 248, 0.55);
+          color: #bae6fd;
+          font-family: 'Kanit', sans-serif;
+          font-size: 0.74rem;
+          font-weight: 700;
+          padding: 3px 10px;
+          border-radius: 999px;
+          cursor: pointer;
+          margin-left: 6px;
+        }
+        .cg-help-pill:hover { background: #0284c7; color: #fff; }
+        @media (max-width: 560px) {
+          .cg-earn-list { grid-template-columns: 1fr; }
+          .cg-item { flex-direction: column; align-items: flex-start; }
+          .cg-go-btn { width: 100%; text-align: center; }
+        }
+      `;
+      document.head.appendChild(st);
+    }
+
+    // 2. สร้างหน้าต่าง Modal คู่มือแต้ม
+    if (!document.getElementById('bgtCrystalGuideModal')) {
+      const m = document.createElement('div');
+      m.id = 'bgtCrystalGuideModal';
+      m.className = 'modal-overlay';
+      m.onclick = (e) => { if (e.target === m) m.style.display = 'none'; };
+      m.innerHTML = `
+        <div class="modal-box">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2 style="margin:0; font-size:1.22rem; color:#7dd3fc;">💠 คู่มือผลึก BGT (ใช้ทำอะไรได้บ้าง?)</h2>
+            <button type="button" class="modal-cancel-btn" style="padding:4px 11px; border-radius:999px; font-size:0.82rem;" onclick="document.getElementById('bgtCrystalGuideModal').style.display='none';">✕ ปิด</button>
+          </div>
+
+          <div class="cg-balance-banner">
+            <div>
+              <div style="font-size:0.74rem; color:#bae6fd;">ผลึก BGT คงเหลือของคุณ</div>
+              <div id="cgBalanceNum" style="font-family:'Kanit',sans-serif; font-size:1.45rem; font-weight:800; color:#ffffff;">💠 0</div>
+            </div>
+            <button type="button" class="cg-go-btn" style="background:linear-gradient(135deg,#f59e0b,#fde047);" onclick="document.getElementById('bgtCrystalGuideModal').style.display='none'; openAchievementModal();">
+              🏆 เปิดหอเกียรติยศอชีฟเม้น
+            </button>
+          </div>
+
+          <div class="cg-sec-title">🛒 เอาไปใช้ทำอะไรได้บ้าง?</div>
+          <div class="cg-grid">
+            <div class="cg-item">
+              <div class="cg-item-info">
+                <div class="cg-item-title">🔥 โหวตดันเกมที่อยากให้แปล (เริ่มต้น 50 💠/ครั้ง)</div>
+                <div class="cg-item-desc">ดันเกมที่ชอบขึ้น Top 3 เพื่อลุ้นแปลไทยฟรี + ติดอันดับสายเปย์ดันเกม!</div>
+              </div>
+              <button type="button" class="cg-go-btn" onclick="cgJumpTo('vote')">ไปหน้าขอเกม →</button>
+            </div>
+
+            <div class="cg-item">
+              <div class="cg-item-info">
+                <div class="cg-item-title">🏭 อัปเกรดโรงงาน & จ้างเอลฟ์ (เริ่มต้น 200 💠)</div>
+                <div class="cg-item-desc">ขยายกระเป๋า เพิ่มดวงสุ่มกล่อง MYTHIC และจ้างเอลฟ์ช่วยผลิตออฟไลน์!</div>
+              </div>
+              <button type="button" class="cg-go-btn" onclick="cgJumpTo('workshop')">ไปโรงงาน →</button>
+            </div>
+
+            <div class="cg-item">
+              <div class="cg-item-info">
+                <div class="cg-item-title">🤝 เปย์ใจให้ผู้พัฒนาต้นฉบับ (25 💠/ครั้ง)</div>
+                <div class="cg-item-desc">ส่งกำลังใจให้ค่ายเกมที่ชอบ + สะสมแต้มขึ้นทำเนียบใจรักผู้พัฒนา!</div>
+              </div>
+              <button type="button" class="cg-go-btn" onclick="cgJumpTo('dev')">ไปหน้าผู้พัฒนา →</button>
+            </div>
+          </div>
+
+          <div class="cg-sec-title">⚡ หาผลึก BGT ฟรีจากไหนได้บ้าง?</div>
+          <div class="cg-earn-list">
+            <div class="cg-earn-chip"><strong>📅 เช็กอินรายวัน</strong><br>รับฟรี +200 💠 ขึ้นไป (+โบนัสยศ VIP)</div>
+            <div class="cg-earn-chip"><strong>❤️ กดหัวใจ & 🎁 แจกกล่อง</strong><br>ฟาร์มได้ทุกวัน + ลุ้นแจ็กพอต 10,000 💠!</div>
+            <div class="cg-earn-chip"><strong>📝 ประเมิน / 💬 คอมเมนต์</strong><br>รับโบนัสอย่างละ +100 💠 ทุกวัน</div>
+            <div class="cg-earn-chip"><strong>🏆 ปลดล็อกอชีฟเม้น</strong><br>รับรางวัลก้อนใหญ่ +100 ถึง +3,000 💠</div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(m);
+    }
+
+    window.openCrystalGuideModal = function() {
+      if (typeof playClickSound === "function") playClickSound();
+      const balEl = document.getElementById('cgBalanceNum');
+      if (balEl) {
+        const pts = (currentUser && typeof getUserEcoData === "function") ? getUserEcoData(currentUser.id).points : 0;
+        balEl.textContent = `💠 ${formatNum(pts)} ผลึก BGT`;
+      }
+      const m = document.getElementById('bgtCrystalGuideModal');
+      if (m) m.style.display = 'flex';
+    };
+
+    window.cgJumpTo = function(target) {
+      const m = document.getElementById('bgtCrystalGuideModal');
+      if (m) m.style.display = 'none';
+      if (target === 'workshop') {
+        switchPage('home');
+        setTimeout(() => {
+          const el = document.getElementById('loyKrathongEventCard');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 120);
+      } else {
+        switchPage(target);
+      }
+    };
+
+    // 3. ผูกปุ่มแต้มมุมขวาบน + ปุ่มแต้มบนโปรไฟล์ + ปุ่ม ? ในการ์ดกิจกรรมให้เปิดคู่มือนี้
+    function bindCrystalGuideTriggers() {
+      const topPill = document.getElementById('navTopPointsPill');
+      if (topPill) {
+        topPill.onclick = () => window.openCrystalGuideModal();
+        topPill.title = "คลิกเพื่อดูวิธีใช้ & วิธีหา 💠 ผลึก BGT";
+      }
+      const profChip = document.getElementById('profilePointsChip');
+      if (profChip) {
+        profChip.style.cursor = "pointer";
+        profChip.onclick = () => window.openCrystalGuideModal();
+        profChip.title = "คลิกเพื่อดูวิธีใช้ 💠 ผลึก BGT";
+      }
+      const evBadge = document.querySelector('#loyKrathongEventCard .lk-event-badge-tag');
+      if (evBadge && !document.getElementById('evCrystalHelpBtn')) {
+        const btn = document.createElement('button');
+        btn.id = 'evCrystalHelpBtn';
+        btn.type = 'button';
+        btn.className = 'cg-help-pill';
+        btn.textContent = '❓ 💠 ใช้ทำอะไร?';
+        btn.onclick = () => window.openCrystalGuideModal();
+        evBadge.insertAdjacentElement('afterend', btn);
+      }
+    }
+
+    setTimeout(bindCrystalGuideTriggers, 400);
+  })();
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
